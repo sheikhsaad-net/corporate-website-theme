@@ -1318,6 +1318,8 @@ body.header-below:not(.template-slider) #Header{min-height:0}
     width: 100% !important;
 }#Top_bar .menu .mfn-megamenu li.submenu:first-child {
     width: 20% !important;
+}#Top_bar .menu .mfn-megamenu li.submenu:first-child ul.sub-menu.mfn-megamenu {
+    padding-left: 70px;
 }
 #Top_bar .menu > li{margin:0;z-index:203;display:block;float:left}
 #Top_bar .menu > li:not(.mfn-megamenu-parent){position:relative}
