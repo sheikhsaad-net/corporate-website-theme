@@ -6359,4 +6359,9 @@ a.icon_bar{color:#444;}
     transition: 0.5s;
 }.equal .bold .elementor-widget-container {
     min-height: 415px !important;
+}.elementor-popup-modal .elementor {
+    overflow: hidden !important;
+    width: 100%;
+}.iframe .elementor-widget-container {
+    display: flex;
 }
