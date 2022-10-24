@@ -6332,7 +6332,7 @@ a.icon_bar{color:#444;}
 .custom-acco .elementor-accordion-item {
     transition: 0.5s;
     border: 1px solid #fff !important;
-    box-shadow: 0 0 15px 0 #ccc;
+    box-shadow: 0 0 5px 0 #ccc;
 }
 .custom-acco .elementor-tab-content {
     background: #f1f1f1;
@@ -6353,4 +6353,10 @@ a.icon_bar{color:#444;}
     color: #91bc3d;
 }.one .custom-acco a.elementor-accordion-title i.fas, .one .custom-acco a.elementor-accordion-title img {
     top: 42px;
+}.bold:hover {
+    transform: scale(1.05);
+}.bold {
+    transition: 0.5s;
+}.equal .bold .elementor-widget-container {
+    min-height: 415px !important;
 }
