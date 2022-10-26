@@ -6366,6 +6366,4 @@ a.icon_bar{color:#444;}
     width: 100%;
 }.iframe .elementor-widget-container {
     display: flex;
-}.hide .elementor-thumbnails-swiper.swiper-container.swiper-container-initialized.swiper-container-horizontal {
-    display: none;
 }
