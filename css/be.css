@@ -6366,4 +6366,28 @@ a.icon_bar{color:#444;}
     width: 100%;
 }.iframe .elementor-widget-container {
     display: flex;
+}.hide .elementor-thumbnails-swiper.swiper-container.swiper-container-initialized.swiper-container-horizontal {
+    display: none;
+}span.elementor-price-table__period.elementor-typo-excluded {
+    position: relative;
+    right: -60px;
+}.ssq-center-center h3 {
+    text-transform: uppercase;
+    color: #fff;
+    text-shadow: 2px 2px 2px #000;
+}
+
+.ssq-center-center p {
+    color: #fff;
+    text-shadow: 2px 2px 2px #000;
+    margin-bottom: 38px;
+}
+
+.ssq-center-center p a {
+    padding: 15px 25px 15px 25px;
+    background: #90bb3c;
+    font-size: 14px;
+    text-shadow: 0 0 BLACK;
+    font-weight: 500;
+    color: #fff;
 }
