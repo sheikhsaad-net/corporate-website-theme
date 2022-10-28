@@ -2668,7 +2668,7 @@ body.mobile-side-slide{position:relative;overflow-x:visible;}
 .mfn-footer .footer_copy .social li a {color:rgba(255,255,255,.3);}
 .mfn-footer .footer_copy .social li a:hover{color:#fff}
 
-.mfn-footer .footer_copy{text-align:center;background-image: linear-gradient(180deg, #222222, black);padding-top: 30px;}
+.mfn-footer .footer_copy{text-align:center;background-image: linear-gradient(180deg, #2e2e2e, black);padding-top: 30px;}
 .footer-copy-center #Footer .footer_copy .copyright{float:none;margin:0 0 10px;color: #adadad;font-size: 15px;}
 .footer-copy-center #Footer .footer_copy #back_to_top{float:none;margin:-10px 0 10px}
 .footer-copy-center #Footer .footer_copy .social{float:none;margin:0}
@@ -6386,4 +6386,8 @@ a.icon_bar{color:#444;}
     text-shadow: 0 0 BLACK;
     font-weight: 500;
     color: #fff;
+}li.sub-logo a img {
+    width: 70px;
+}body.page-id-6978 #Top_bar .top_bar_right .action_button {
+    background-image: linear-gradient(240deg, #54b5c5 50%, #54b5c5 100%) !important;
 }
