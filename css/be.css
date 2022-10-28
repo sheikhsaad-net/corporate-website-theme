@@ -6375,15 +6375,11 @@ a.icon_bar{color:#444;}
     text-transform: uppercase;
     color: #fff;
     text-shadow: 2px 2px 2px #000;
-}
-
-.ssq-center-center p {
+}.ssq-center-center p {
     color: #fff;
     text-shadow: 2px 2px 2px #000;
     margin-bottom: 38px;
-}
-
-.ssq-center-center p a {
+}.ssq-center-center p a {
     padding: 15px 25px 15px 25px;
     background: #90bb3c;
     font-size: 14px;
