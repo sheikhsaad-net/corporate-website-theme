@@ -184,12 +184,36 @@ add_filter( 'show_admin_bar', '__return_false' );
 function remove_menu(){
 
 	remove_menu_page('edit-comments.php'); 	//Comments
-	remove_menu_page('edit.php');			//Posts
+	//remove_menu_page('edit.php');			//Posts
 	remove_menu_page('betheme');			//Theme Options
 	remove_menu_page('scrollsequence-dashboard');	//Moving Animation
 	
 }
 add_action('admin_menu', 'remove_menu');
+
+
+
+add_action( 'init', 'cp_change_post_object' );
+// Change dashboard Posts to News
+function cp_change_post_object() {
+    $get_post_type = get_post_type_object('portfolio');
+    $labels = $get_post_type->labels;
+        $labels->name = 'Corsi';
+        $labels->singular_name = 'corsa';
+        $labels->add_new = 'Add corsa';
+        $labels->add_new_item = 'Add corsa';
+        $labels->edit_item = 'Edit corsa';
+        $labels->new_item = 'corsa';
+        $labels->view_item = 'View corsa';
+        $labels->search_items = 'Search corsa';
+        $labels->not_found = 'No corsafound';
+        $labels->not_found_in_trash = 'No corsafound in Trash';
+        $labels->all_items = 'All corsa';
+        $labels->menu_name = 'Corsi';
+        $labels->name_admin_bar = 'Corsi';
+}
+
+
 
 /**
  * @deprecated 21.0.5
