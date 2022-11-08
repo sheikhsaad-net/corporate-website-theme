@@ -187,6 +187,7 @@ function remove_menu(){
 	//remove_menu_page('edit.php');			//Posts
 	remove_menu_page('betheme');			//Theme Options
 	remove_menu_page('scrollsequence-dashboard');	//Moving Animation
+	remove_menu_page('edit-tags');	//Portfolio Cetagory
 	
 }
 add_action('admin_menu', 'remove_menu');

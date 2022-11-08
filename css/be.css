@@ -6398,7 +6398,7 @@ a.icon_bar{color:#444;}
     overflow: visible !important;
 }.video-tab .e-tab-title {
     height: auto !important;
-    margin: 40px 0 40px 45px;
+    margin: 30px 0 10px 45px;
 }.video-tab .e-tab-title.e-active h4.e-tab-title-text a {
 	position: relative;
 	color: #000000 !important;
@@ -6415,6 +6415,7 @@ a.icon_bar{color:#444;}
     color: #787878;
     opacity: 0;
     display: block;
+    min-height: 50px;
 }.video-tab .e-tab-title.e-active h4.e-tab-title-text a span {
     display: block;
     font-size: 16px;
@@ -6440,4 +6441,6 @@ a.icon_bar{color:#444;}
 }.details .elementor-tabs-wrapper .elementor-tab-title.elementor-active {
     background: #2e2e2e !important;
     color: #fff;
+}.pregresse img {
+    padding-right: 45px;
 }
