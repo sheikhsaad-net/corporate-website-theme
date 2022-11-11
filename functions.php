@@ -182,22 +182,45 @@ add_filter( 'show_admin_bar', '__return_false' );
 
 /* Remove Menu Pages in Admin Area */
 function remove_menu(){
-
-	remove_menu_page('edit-comments.php'); 	//Comments
-	//remove_menu_page('edit.php');			//Posts
+	
+	remove_menu_page('tools.php');			//tools Options
+	remove_menu_page('users.php');			//users Options
 	remove_menu_page('betheme');			//Theme Options
+	//remove_menu_page('options-general.php');//Setting Options
+	remove_menu_page('edit.php?post_type=template');			//template Options
 	remove_menu_page('scrollsequence-dashboard');	//Moving Animation
-	remove_menu_page('edit-tags');	//Portfolio Cetagory
 	
 }
 add_action('admin_menu', 'remove_menu');
 
+/* Add PostType for Courses */
+register_post_type( 'corsi',
+array(
 
+'labels' => array(
+'name' => __( 'Corsi' ),
+'singular_name' => __( 'Corsa' ),
+'add_new' => __( 'Add New Corsa' ),
+'add_new_item' => __( 'Add New Corsa' ),
+'new_item' => __( 'New Corsa' ),
+'view_item' => __( 'View Corsa' ),
+'search_items' => __( 'Search Corsa Items' ),
+'not_found_in_trash' => __( 'No Corsi Items Found in Trash' ),
+),
+'public' => true,
+'menu_icon' => 'dashicons-book',
+'supports' => array( 'title', 'editor', 'excerpt', 'author', 'thumbnail', 'comments', 'revisions', ),
+)
+);
+
+
+/*
 
 add_action( 'init', 'cp_change_post_object' );
 // Change dashboard Posts to News
 function cp_change_post_object() {
     $get_post_type = get_post_type_object('portfolio');
+	$get_post_type->menu_icon = 'dashicons-book';
     $labels = $get_post_type->labels;
         $labels->name = 'Corsi';
         $labels->singular_name = 'corsa';
@@ -207,14 +230,16 @@ function cp_change_post_object() {
         $labels->new_item = 'corsa';
         $labels->view_item = 'View corsa';
         $labels->search_items = 'Search corsa';
-        $labels->not_found = 'No corsafound';
+        $labels->not_found = 'No corsa found';
         $labels->not_found_in_trash = 'No corsafound in Trash';
         $labels->all_items = 'All corsa';
         $labels->menu_name = 'Corsi';
+		$labels->category = 'Corsi categories';
         $labels->name_admin_bar = 'Corsi';
+		
 }
 
-
+*/
 
 /**
  * @deprecated 21.0.5
