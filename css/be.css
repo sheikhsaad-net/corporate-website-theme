@@ -6482,3 +6482,11 @@ a.icon_bar{color:#444;}
 
 
 
+
+@media only screen and (max-width: 767px) {
+	#Side_slide #menu ul li ul li ul li a, #Side_slide #menu ul li ul li a {
+		padding: 11px 5px 10px 20px;
+	}#Side_slide #menu ul li ul li ul li a img {
+		display: none;
+	}
+	}
