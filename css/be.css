@@ -169,7 +169,7 @@ button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}
 /* button | round */
 
 .button-round .button,.button-round button, .button-round .action_button,
-.button-round input[type="button"],.button-round input[type="reset"],.button-round input[type="submit"]{border:none;padding:10px 35px;border-radius:50px}
+.button-round input[type="button"],.button-round input[type="reset"],.button-round input[type="submit"]{border:none;padding:10px 35px;}
 
 .button-round .button .button_icon{position:relative;margin:0 -8px}
 
@@ -6479,3 +6479,6 @@ a.icon_bar{color:#444;}
     padding: 8px 20px;
     display: block;
 }
+
+
+
