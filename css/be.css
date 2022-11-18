@@ -6484,9 +6484,19 @@ a.icon_bar{color:#444;}
 
 
 @media only screen and (max-width: 767px) {
-	#Side_slide #menu ul li ul li ul li a, #Side_slide #menu ul li ul li a {
-		padding: 11px 5px 10px 20px;
-	}#Side_slide #menu ul li ul li ul li a img {
-		display: none;
-	}
-	}
+#Side_slide #menu ul li ul li ul li a, #Side_slide #menu ul li ul li a {
+    padding: 11px 5px 10px 20px;
+}#Side_slide #menu ul li ul li ul li a img {
+    display: none;
+}#Footer .widgets_wrapper {
+    padding: 0;
+}#Footer .footer_copy .one {
+    margin: 0;
+    padding: 0;
+}.custom-acco a.elementor-accordion-title i.fas, .custom-acco a.elementor-accordion-title img {display: none;}
+
+.custom-acco h3 {
+    padding: 20px !important;
+    margin-left: 0px !important;
+}
+}
