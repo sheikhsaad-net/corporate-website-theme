@@ -6482,6 +6482,21 @@ a.icon_bar{color:#444;}
     background: #fff !important;
 }
 
+/*New Letter Style*/
+
+aside#block-46 {
+    position: absolute;
+    width: 500px;
+}.news {
+    padding-top: 10px;
+}.news br {
+    display: none;
+}.news span, .news input {
+    display: inline-block;
+}.news span {
+    width: 350px;
+}.news input.wpcf7-submit {background: #94c03d !important;padding: 10px 15px;}
+
 
 
 @media only screen and (max-width: 767px) {
