@@ -414,10 +414,10 @@ if( ! class_exists('Mfn_Builder_Items') )
 						$background_attr = explode(';', $bg_pos);
 						$aBg[] = 'background-repeat:'. $background_attr[0];
 						$aBg[] = 'background-position:'. $background_attr[1];
-					}
-					$background = implode('; ', $aBg);
 
-					$style .= implode(';', $aBg) .';';
+						$style .= implode(';', $aBg) .';';
+					}
+	
 				}
 
 				// background size
@@ -439,10 +439,14 @@ if( ! class_exists('Mfn_Builder_Items') )
 				$style .= $fields['style'];
 			}
 
+			if( empty(Mfn_Builder_Front::$item_id) && !empty($fields['vb_postid']) && get_post_type($fields['vb_postid']) != 'template' && strpos($fields['content'], '}') !== false ){
+				$fields['content'] = str_replace('}', ':'.$fields['vb_postid'].'}', $fields['content']);
+			}
+
 			// output -----
 
 			echo '<div class="column_attr mfn-inline-editor clearfix'. esc_attr( $column_class ) .'"'. $column_attr .' style="'. $style .'">';
-				echo do_shortcode( $fields['content'] );
+				echo do_shortcode( be_dynamic_data($fields['content']) );
 			echo '</div>';
 		}
 
@@ -673,6 +677,14 @@ if( ! class_exists('Mfn_Builder_Items') )
 		}
 
 		/**
+		 * [list_2]
+		 */
+
+		public static function item_list_2( $fields ){
+			echo sc_list_2( $fields );
+		}
+
+		/**
 		 * [list]
 		 */
 
@@ -796,6 +808,19 @@ if( ! class_exists('Mfn_Builder_Items') )
 			}
 
 			echo sc_photo_box( $fields, $fields['content'] );
+		}
+
+		/**
+		 * [plain_text]
+		 */
+
+		public static function item_plain_text( $fields ){
+
+			if( empty($fields['content']) ){
+				$fields['content'] = '';
+			}
+
+			echo sc_plain_text( $fields, $fields['content'] );
 		}
 
 		/**
@@ -1007,6 +1032,14 @@ if( ! class_exists('Mfn_Builder_Items') )
 		}
 
 		/**
+		 * [toggle]
+		 */
+
+		public static function item_toggle( $fields ){
+			echo sc_toggle( $fields );
+		}
+
+		/**
 		 * [trailer_box]
 		 */
 
@@ -1031,8 +1064,13 @@ if( ! class_exists('Mfn_Builder_Items') )
 			if( empty($fields['content']) ){
 				$fields['content'] = '';
 			}
+
+			if( empty(Mfn_Builder_Front::$item_id) && !empty($fields['vb_postid']) && get_post_type($fields['vb_postid']) != 'template' && strpos($fields['content'], '}') !== false ){
+				$fields['content'] = str_replace('}', ':'.$fields['vb_postid'].'}', $fields['content']);
+			}
+			
 			echo '<div class="mfn-visualeditor-content mfn-inline-editor">';
-				echo do_shortcode($fields['content']);
+				echo do_shortcode( be_dynamic_data($fields['content']) );
 			echo '</div>';
 		}
 

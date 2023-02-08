@@ -70,22 +70,22 @@ class Mfn_Helper {
 									if( strpos( $x, ':filter' ) !== false && $g != 'string' ) continue;
 
 									if( strpos( $x, '_tablet' ) !== false || strpos( $g, '_tablet' ) !== false){
-										$return['tablet'] = array_merge_recursive($return['tablet'], self::mfnLocalStyle($x.'_'.$g, $d, $section['uid']));
+										$return['tablet'] = array_merge_recursive($return['tablet'], self::mfnLocalStyle($x.'_'.$g, $d, $section['uid'], $post_id));
 									}elseif( strpos( $x, '_mobile' ) !== false || strpos( $g, '_mobile' ) !== false){
-										$return['mobile'] = array_merge_recursive($return['mobile'], self::mfnLocalStyle($x.'_'.$g, $d, $section['uid']));
+										$return['mobile'] = array_merge_recursive($return['mobile'], self::mfnLocalStyle($x.'_'.$g, $d, $section['uid'], $post_id));
 									}else{
-										$return['global'] = array_merge_recursive($return['global'], self::mfnLocalStyle($x.'_'.$g, $d, $section['uid']));
+										$return['global'] = array_merge_recursive($return['global'], self::mfnLocalStyle($x.'_'.$g, $d, $section['uid'], $post_id));
 									}
 								}
 
 							}else{
 
 								if(strpos( $x, '_tablet' ) !== false){
-									$return['tablet'] = array_merge_recursive($return['tablet'], self::mfnLocalStyle($x, $sattr, $section['uid']));
+									$return['tablet'] = array_merge_recursive($return['tablet'], self::mfnLocalStyle($x, $sattr, $section['uid'], $post_id));
 								}elseif(strpos( $x, '_mobile' ) !== false){
-									$return['mobile'] = array_merge_recursive($return['mobile'], self::mfnLocalStyle($x, $sattr, $section['uid']));
+									$return['mobile'] = array_merge_recursive($return['mobile'], self::mfnLocalStyle($x, $sattr, $section['uid'], $post_id));
 								}else{
-									$return['global'] = array_merge_recursive($return['global'], self::mfnLocalStyle($x, $sattr, $section['uid']));
+									$return['global'] = array_merge_recursive($return['global'], self::mfnLocalStyle($x, $sattr, $section['uid'], $post_id));
 								}
 
 							}
@@ -110,21 +110,21 @@ class Mfn_Helper {
 										if( strpos( $a, 'gradient' ) !== false && $o != 'string' ) continue;
 
 										if(strpos( $a, '_tablet' ) !== false || strpos( $o, '_tablet' ) !== false){
-											$return['tablet'] = array_merge_recursive($return['tablet'], self::mfnLocalStyle($a.'_'.$o, $p, $wrap['uid']));
+											$return['tablet'] = array_merge_recursive($return['tablet'], self::mfnLocalStyle($a.'_'.$o, $p, $wrap['uid'], $post_id));
 		  								}elseif(strpos( $a, '_mobile' ) !== false || strpos( $o, '_mobile' ) !== false){
-		  									$return['mobile'] = array_merge_recursive($return['mobile'], self::mfnLocalStyle($a.'_'.$o, $p, $wrap['uid']));
+		  									$return['mobile'] = array_merge_recursive($return['mobile'], self::mfnLocalStyle($a.'_'.$o, $p, $wrap['uid'], $post_id));
 		  								}else{
-		  									$return['global'] = array_merge_recursive($return['global'], self::mfnLocalStyle($a.'_'.$o, $p, $wrap['uid']));
+		  									$return['global'] = array_merge_recursive($return['global'], self::mfnLocalStyle($a.'_'.$o, $p, $wrap['uid'], $post_id));
 		  								}
 									}
 
 								}else{
 									if(strpos( $a, '_tablet' ) !== false){
-										$return['tablet'] = array_merge_recursive($return['tablet'], self::mfnLocalStyle($a, $attr, $wrap['uid']));
+										$return['tablet'] = array_merge_recursive($return['tablet'], self::mfnLocalStyle($a, $attr, $wrap['uid'], $post_id));
 	  								}elseif(strpos( $a, '_mobile' ) !== false){
-	  									$return['mobile'] = array_merge_recursive($return['mobile'], self::mfnLocalStyle($a, $attr, $wrap['uid']));
+	  									$return['mobile'] = array_merge_recursive($return['mobile'], self::mfnLocalStyle($a, $attr, $wrap['uid'], $post_id));
 	  								}else{
-	  									$return['global'] = array_merge_recursive($return['global'], self::mfnLocalStyle($a, $attr, $wrap['uid']));
+	  									$return['global'] = array_merge_recursive($return['global'], self::mfnLocalStyle($a, $attr, $wrap['uid'], $post_id));
 	  								}
 								}
 
@@ -158,20 +158,21 @@ class Mfn_Helper {
 
 											foreach($field as $n=>$m){
 
-												if( strpos( $n, 'font-family' ) !== false && !in_array($m, $return['fonts']) ){
+												if( strpos( $n, 'font-family' ) !== false && !in_array($m, $return['fonts']) && !empty($m) ){
 													$return['fonts'][] = $m;
+													$m = "'".$m."'";
 												}
 
 												if( strpos( $f, 'gradient' ) !== false && $n != 'string' ) continue;
 
 												if( strpos( $f, '_tablet' ) !== false || strpos( $n, '_tablet' ) !== false ){
-		  											$return['tablet'] = array_merge_recursive($return['tablet'], self::mfnLocalStyle($f.'_'.$n, $m, $item['uid']));
+		  											$return['tablet'] = array_merge_recursive($return['tablet'], self::mfnLocalStyle($f.'_'.$n, $m, $item['uid'], $post_id));
 				  								}elseif( strpos( $f, '_mobile' ) !== false || strpos( $n, '_mobile' ) !== false ){
-				  									$return['mobile'] = array_merge_recursive($return['mobile'], self::mfnLocalStyle($f.'_'.$n, $m, $item['uid']));
+				  									$return['mobile'] = array_merge_recursive($return['mobile'], self::mfnLocalStyle($f.'_'.$n, $m, $item['uid'], $post_id));
 				  								}elseif( strpos( $f, '_custom' ) !== false || strpos( $n, '_custom' ) !== false ){
-				  									$return['custom'] = array_merge_recursive($return['custom'], self::mfnLocalStyle($f.'_'.$n, $m, $item['uid']));
+				  									$return['custom'] = array_merge_recursive($return['custom'], self::mfnLocalStyle($f.'_'.$n, $m, $item['uid'], $post_id));
 				  								}else{
-				  									$return['global'] = array_merge_recursive($return['global'], self::mfnLocalStyle($f.'_'.$n, $m, $item['uid']));
+				  									$return['global'] = array_merge_recursive($return['global'], self::mfnLocalStyle($f.'_'.$n, $m, $item['uid'], $post_id));
 				  								}
 											}
 
@@ -179,16 +180,16 @@ class Mfn_Helper {
 
 
 											if( strpos( $f, '_tablet' ) !== false ){
-	  											$return['tablet'] = array_merge_recursive($return['tablet'], self::mfnLocalStyle($f, $field, $item['uid']));
-	  											if( strpos( $f, ':flex_tablet' ) !== false ) $return['tablet'] = array_merge_recursive($return['tablet'], self::mfnLocalStyle(str_replace(':flex', ':max-width', $f), $field, $item['uid']));
+	  											$return['tablet'] = array_merge_recursive($return['tablet'], self::mfnLocalStyle($f, $field, $item['uid'], $post_id));
+	  											if( strpos( $f, ':flex_tablet' ) !== false ) $return['tablet'] = array_merge_recursive($return['tablet'], self::mfnLocalStyle(str_replace(':flex', ':max-width', $f), $field, $item['uid'], $post_id));
 			  								}elseif(strpos( $f, '_mobile' ) !== false){
-			  									$return['mobile'] = array_merge_recursive($return['mobile'], self::mfnLocalStyle($f, $field, $item['uid']));
-			  									if( strpos( $f, ':flex_mobile' ) !== false ) $return['mobile'] = array_merge_recursive($return['mobile'], self::mfnLocalStyle(str_replace(':flex', ':max-width', $f), $field, $item['uid']));
+			  									$return['mobile'] = array_merge_recursive($return['mobile'], self::mfnLocalStyle($f, $field, $item['uid'], $post_id));
+			  									if( strpos( $f, ':flex_mobile' ) !== false ) $return['mobile'] = array_merge_recursive($return['mobile'], self::mfnLocalStyle(str_replace(':flex', ':max-width', $f), $field, $item['uid'], $post_id));
 			  								}elseif(strpos( $f, '_custom' ) !== false){
-			  									$return['custom'] = array_merge_recursive($return['custom'], self::mfnLocalStyle($f, $field, $item['uid']));
+			  									$return['custom'] = array_merge_recursive($return['custom'], self::mfnLocalStyle($f, $field, $item['uid'], $post_id));
 			  								}else{
-			  									$return['global'] = array_merge_recursive($return['global'], self::mfnLocalStyle($f, $field, $item['uid']));
-			  									if( strpos( $f, ':flex' ) !== false && strpos( $f, ':flex-' ) === false ) $return['global'] = array_merge_recursive($return['global'], self::mfnLocalStyle(str_replace(':flex', ':max-width', $f), $field, $item['uid']));
+			  									$return['global'] = array_merge_recursive($return['global'], self::mfnLocalStyle($f, $field, $item['uid'], $post_id));
+			  									if( strpos( $f, ':flex' ) !== false && strpos( $f, ':flex-' ) === false ) $return['global'] = array_merge_recursive($return['global'], self::mfnLocalStyle(str_replace(':flex', ':max-width', $f), $field, $item['uid'], $post_id));
 			  								}
 										}
 
@@ -212,7 +213,7 @@ class Mfn_Helper {
 	 * Local style
 	 */
 
-	public static function mfnLocalStyle($sel, $val, $uid = false) {
+	public static function mfnLocalStyle($sel, $val, $uid, $post_id = false) {
 
 		if( empty($val) || $val == 'cover-ultrawide' ) {
 			return array();
@@ -239,12 +240,20 @@ class Mfn_Helper {
 		$values_prefixes = array(
 			'flex' => '0 0 ',
 			'background-image' => 'url(',
+			'background-image_tablet' => 'url(',
+			'background-image_mobile' => 'url(',
 			'-webkit-mask-image' => 'url(',
+			'transformtranslatex' => 'translateX(',
+			'transformtranslatey' => 'translateY(',
 		);
 
 		$values_postfixes = array(
 			'background-image' => ')',
+			'background-image_tablet' => ')',
+			'background-image_mobile' => ')',
 			'-webkit-mask-image' => ')',
+			'transformtranslatex' => ')',
+			'transformtranslatey' => ')',
 		);
 
 		$additional_styles = array(
@@ -253,21 +262,23 @@ class Mfn_Helper {
 
 		$selector = str_replace('|', ':', $selector);
 
-		$style_name = str_replace(array('_mobile', '_tablet', 'typography_'), '', $style_name);
+		$style_name = str_replace(array('_mobile', '_tablet', 'typography_', 'translatex', 'translatey'), '', $style_name);
 		$style_name = str_replace(array('_'), '-', $style_name);
 
 		$style_value = str_replace('gradient-string', 'background-image', $style_name).':';
 		$style_value = str_replace('filter-string', 'filter', $style_value);
 
-		if( !empty($values_prefixes[$style_name]) ){
-			$style_value .= $values_prefixes[$style_name];
+		if( !empty($values_prefixes[$style_sel[1]]) ){
+			$style_value .= $values_prefixes[$style_sel[1]];
 		}
 
 		$style_value .= $val;
 
-		if( !empty($values_postfixes[$style_name]) ){
-			$style_value .= $values_postfixes[$style_name];
+		if( !empty($values_postfixes[$style_sel[1]]) ){
+			$style_value .= $values_postfixes[$style_sel[1]];
 		}
+
+		if( strpos( $val, '{featured_image' ) !== false ) $style_value = 'background-image: var(--mfn-featured-image)';
 
 		$style_value .= ';';
 

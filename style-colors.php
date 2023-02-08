@@ -19,7 +19,7 @@ body{
   --mfn-sliding-box-bg:<?php echo esc_attr(mfn_opts_get('background-slidingbox-title', '#0089F7')); ?>; /* Sliding box - Title bar bg */
 
   --mfn-woo-body-color:<?php echo esc_attr(mfn_opts_get('color-text', '#626262')) ?>; /* Text color */
-  --mfn-woo-heading-color:<?php echo esc_attr(mfn_opts_get('color-h1', '#161922')) ?>; /* H1 */
+  --mfn-woo-heading-color:<?php echo esc_attr(mfn_opts_get('color-text', '#626262')) ?>; /* Text color, previously H1 #161922 */
   --mfn-woo-themecolor:<?php echo esc_attr($color_theme); ?>; /* Theme color */
   --mfn-woo-bg-themecolor:<?php echo esc_attr($color_theme); ?>; /* Theme color */
   --mfn-woo-border-themecolor:<?php echo esc_attr($color_theme); ?>; /* Theme color */
@@ -98,7 +98,8 @@ body, ul.timeline_items, .icon_box a .desc, .icon_box a:hover .desc, .feature_li
 .woocommerce ul.product_list_widget li .quantity .amount, .woocommerce .product div.entry-summary .price, .woocommerce .product .woocommerce-variation-price .price, .woocommerce .star-rating span,
 #Error_404 .error_pic i, .style-simple #Filters .filters_wrapper ul li a:hover, .style-simple #Filters .filters_wrapper ul li.current-cat a,
 .style-simple .quick_fact .title, .mfn-cart-holder .mfn-ch-content .mfn-ch-product .woocommerce-Price-amount,
-.woocommerce .comment-form-rating p.stars a:before, .wishlist .wishlist-row .price, .search-results .search-item .post-product-price{
+.woocommerce .comment-form-rating p.stars a:before, .wishlist .wishlist-row .price, .search-results .search-item .post-product-price,
+.progress_icons.transparent .progress_icon.themebg{
 	color: <?php echo esc_attr($theme_color) ?>;
 }
 

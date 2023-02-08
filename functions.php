@@ -194,18 +194,18 @@ function remove_menu(){
 add_action('admin_menu', 'remove_menu');
 
 /* Add PostType for Courses */
-register_post_type( 'corsi',
+register_post_type( 'courses',
 array(
 
 'labels' => array(
-'name' => __( 'Corsi' ),
-'singular_name' => __( 'Corsa' ),
-'add_new' => __( 'Add New Corsa' ),
-'add_new_item' => __( 'Add New Corsa' ),
-'new_item' => __( 'New Corsa' ),
-'view_item' => __( 'View Corsa' ),
-'search_items' => __( 'Search Corsa Items' ),
-'not_found_in_trash' => __( 'No Corsi Items Found in Trash' ),
+'name' => __( 'Courses' ),
+'singular_name' => __( 'Course' ),
+'add_new' => __( 'Add New Course' ),
+'add_new_item' => __( 'Add New Course' ),
+'new_item' => __( 'New Course' ),
+'view_item' => __( 'View Course' ),
+'search_items' => __( 'Search Course Items' ),
+'not_found_in_trash' => __( 'No Course Items Found in Trash' ),
 ),
 'public' => true,
 'menu_icon' => 'dashicons-book',

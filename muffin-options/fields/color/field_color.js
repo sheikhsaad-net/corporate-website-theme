@@ -106,7 +106,9 @@
       var $form = $(this).closest('.color-picker-group');
       var val = $(this).val();
 
-      if( ! val ){
+      // update colorpicker only after full hash is entered
+      if( val.length < 7 ){
+        $(this).trigger('change');
         return false;
       }
 

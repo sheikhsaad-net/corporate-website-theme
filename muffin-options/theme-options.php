@@ -1204,6 +1204,14 @@ if( ! function_exists( 'mfn_opts_setup' ) )
 					'data_attr' => 'data-csspath="body.button-custom .button:not(.button_theme)" data-responsive="desktop" data-style="border-color" data-unit=""',
 				),
 
+				array(
+  				'id' => 'button-box-shadow',
+  				'type' => 'box_shadow',
+					'class' => 'preview-box-shadow custom',
+  				'title' => __('Box shadow', 'mfn-opts'),
+					'condition' => array( 'id' => 'button-style', 'opt' => 'is', 'val' => 'custom' ),
+  			),
+
 				// highlighted
 
 				array(
@@ -1254,6 +1262,14 @@ if( ! function_exists( 'mfn_opts_setup' ) )
 					'data_attr' => 'data-csspath="html .button-custom .button_theme,.button-custom button,.button-custom .woocommerce #respond input#submit,body.button-custom.woocommerce a.button:not(.default),.button-custom .woocommerce button.button,.button-custom .woocommerce input.button" data-responsive="desktop" data-style="border-color" data-unit=""',
 				),
 
+				array(
+  				'id' => 'button-highlighted-box-shadow',
+  				'type' => 'box_shadow',
+					'class' => 'preview-box-shadow highlighted custom',
+  				'title' => __('Box shadow', 'mfn-opts'),
+					'condition' => array( 'id' => 'button-style', 'opt' => 'is', 'val' => 'custom' ),
+  			),
+
 				// action
 
 				array(
@@ -1303,6 +1319,14 @@ if( ! function_exists( 'mfn_opts_setup' ) )
 					'condition' => array( 'id' => 'button-style', 'opt' => 'is', 'val' => 'custom' ),
 					'data_attr' => 'data-csspath="html body.button-custom .action_button" data-responsive="desktop" data-style="border-color" data-unit=""',
 				),
+
+				array(
+  				'id' => 'button-action-box-shadow',
+  				'type' => 'box_shadow',
+					'class' => 'custom',
+  				'title' => __('Box shadow', 'mfn-opts'),
+					'condition' => array( 'id' => 'button-style', 'opt' => 'is', 'val' => 'custom' ),
+  			),
 
 			),
 		);
@@ -1655,6 +1679,16 @@ if( ! function_exists( 'mfn_opts_setup' ) )
 				),
 
 				array(
+					'id' => 'builder-blocks',
+					'type' => 'switch',
+					'title' => __( 'BeBuilder Blocks', 'mfn-opts' ),
+					'options' => array(
+						0 => __( 'Disable', 'mfn-opts' ),
+						1 => __( 'Enable', 'mfn-opts' ),
+					),
+				),
+
+				array(
 					'id' => 'display-order',
 					'type' => 'select',
 					'title' => __( 'Content display order', 'mfn-opts' ),
@@ -1803,6 +1837,18 @@ if( ! function_exists( 'mfn_opts_setup' ) )
 						'1' => __('Enable', 'mfn-opts'),
 					),
 					'std' => '0'
+				),
+
+				array(
+					'id' => 'builder-autosave',
+					'type' => 'switch',
+					'title' => __('BeBuilder autosave', 'mfn-opts'),
+					'desc' => __('An option that disable/enable autosave for the BeBuilder. Please note that when this option is disabled, any changes made in the BeBuilder will not be automatically saved.', 'mfn-opts'),
+					'options' => array(
+						'1' => __('Disable', 'mfn-opts'),
+						'' => __('Enable', 'mfn-opts'),
+					),
+					'std' => ''
 				),
 
 				array(
@@ -3083,7 +3129,7 @@ if( ! function_exists( 'mfn_opts_setup' ) )
 					'title' => __('Featured image click', 'mfn-opts'),
 					'options' => array(
 						'0' => __('Disable', 'mfn-opts'),
-						'1' => __('Open in lighbox', 'mfn-opts'),
+						'1' => __('Open in lightbox', 'mfn-opts'),
 					),
 					'std' => '1',
 				),
@@ -4377,6 +4423,30 @@ if( ! function_exists( 'mfn_opts_setup' ) )
 				),
 
 				array(
+					'id' => 'shop-hide-content',
+					'type' => 'switch',
+					'title' => __('The content', 'mfn-opts'),
+					'desc' => __('The content from the WordPress editor', 'mfn-opts'),
+					'options' => array(
+						'1'	=> __('Hide', 'mfn-opts'),
+						'' => __('Show', 'mfn-opts'),
+					),
+					'std' => '',
+				),
+
+				array(
+					'id' => 'shop-product-cart-button-extra',
+					'type' => 'switch',
+					'title' => __('Cart button extra options', 'mfn-opts'),
+					'desc' => __('Enable if you use any WooCommerce plugin which changes "Add to cart" button area', 'mfn-opts'),
+					'options' => array(
+						'0' => __('Disable', 'mfn-opts'),
+						'1'	 => __('Enable', 'mfn-opts'),
+					),
+					'std' => '0',
+				),
+
+				array(
 					'id' => 'shop-related',
 					'type' => 'text',
 					'title' => __('Related products count', 'mfn-opts'),
@@ -4628,7 +4698,7 @@ if( ! function_exists( 'mfn_opts_setup' ) )
 					'id' => 'footer-copy',
 					'type' => 'textarea',
 					'title' => __( 'Copyright', 'mfn-opts' ),
-					'desc' => __( 'This field accepts HTML & plain text. Leave this field empty to display default copyright.', 'mfn-opts' ),
+					'desc' => __( 'This field accepts HTML & plain text. Leave this field empty to display default copyright.<br />Use <b>[year]</b> shortcode to show current year.', 'mfn-opts' ),
 				),
 
 				array(
@@ -8785,6 +8855,26 @@ if( ! function_exists( 'mfn_opts_setup' ) )
 					'action' => 'mfn_regenerate_fonts',
 					'button' => __('Download files', 'mfn-opts'),
 				),
+
+				// images
+
+				array(
+					'title' => __('Images', 'mfn-opts'),
+					'join' => true,
+				),
+
+				array(
+					'id' => 'lazy-load',
+					'type' => 'switch',
+					'title' => __('Lazy load', 'mfn-opts'),
+					'options' => array(
+						'' => __('Disable', 'mfn-opts'),
+						'lazy' => __('Enable', 'mfn-opts'),
+					),
+					'std' => '',
+				),
+
+				// assets
 
 				array(
 					'title' => __('Assets', 'mfn-opts'),

@@ -1,7 +1,7 @@
 <?php
 
-// error_reporting(E_ALL);
-// ini_set("display_errors", 1);
+/*error_reporting(E_ALL);
+ini_set("display_errors", 1);*/
 
 if( ! defined( 'ABSPATH' ) ){
 	exit; // Exit if accessed directly
@@ -23,6 +23,7 @@ if( is_admin() ){
 	add_action( 'edit_form_after_title', 'mfnvb_ce_live_button' );
 
 	function mfnvb_ce_live_button($post) {
+		if( !current_user_can( 'edit_post', $post->ID ) ){ return; }
 		if( in_array($post->post_type, array('page', 'post', 'portfolio', 'template', 'product')) ){
 			global $replaced_logo;
 
@@ -53,6 +54,7 @@ if( is_admin() ){
 	add_filter( 'page_row_actions', 'mfnvb_list_row_actions', 10, 2 );
 
 	function mfnvb_list_row_actions( $actions, $post ) {
+		if( !current_user_can( 'edit_post', $post->ID ) ) return $actions;
 	    if ( in_array($post->post_type, array("page", "post", "portfolio", "template", "product")) ) {
 	 		$actions[] = '<span class="mfn-edit-link"><a href="'.admin_url( 'post.php?post=' . $post->ID . '&action='. apply_filters('betheme_slug', 'mfn') .'-live-builder' ).'" aria-label="Edit with '. apply_filters('betheme_label', "Be") .'Builder">Edit with '. apply_filters('betheme_label', "Be") .'Builder</a></span>';
 	    }
@@ -61,10 +63,13 @@ if( is_admin() ){
 
 	// init vb class
 	add_action( 'post_action_'. apply_filters('betheme_slug', 'mfn') .'-live-builder', 'mfnvb_init_vb' );
-
 }
 
-function mfnvb_init_vb(){
+function mfnvb_init_vb($id){
+
+	if( ! current_user_can( 'edit_post', $id ) && ! defined('BEBUILDER_DEMO_VERSION') ){
+		wp_die();
+	}
 
 	$mfnVisualBuilder = new MfnVisualBuilder();
 
@@ -85,7 +90,8 @@ add_action( 'wp_ajax_mfnvbsavedraft', 'mfnvb_save_draft'  );
 
 function mfnvb_save_draft(){
 
-	if(!is_user_logged_in()){ wp_die(); }
+	if( !current_user_can( 'edit_post', $_POST['id'] ) ){ wp_die(); }
+
 	check_ajax_referer( 'mfn-builder-nonce', 'mfn-builder-nonce' );
 
 	if( get_post_status($_POST['id']) == 'auto-draft' ){
@@ -116,7 +122,8 @@ add_action( 'wp_ajax_takepostediting', 'mfnvb_take_post_editing'  );
 
 function mfnvb_take_post_editing(){
 
-	if(!is_user_logged_in()){ wp_die(); }
+	if( !current_user_can( 'edit_post', $_POST['pageid'] ) ){ wp_die(); }
+
 	check_ajax_referer( 'mfn-builder-nonce', 'mfn-builder-nonce' );
 
 	$request = $_POST;
@@ -135,7 +142,8 @@ function mfnvb_updateVbView(){
 	$admin = new Mfn_Builder_Admin();
 	$sel_prefix = '';
 
-	if(!is_user_logged_in()){ wp_die(); }
+	if( !current_user_can( 'edit_post', $_POST['pageid'] ) ){ wp_die(); }
+
 	check_ajax_referer( 'mfn-builder-nonce', 'mfn-builder-nonce' );
 
 	$style_str = '';
@@ -238,7 +246,7 @@ add_action( 'wp_ajax_generatepreview', 'mfnvb_generatePreview'  );
 
 function mfnvb_generatePreview(){
 
-	if(!is_user_logged_in()){ wp_die(); }
+	if( !current_user_can( 'edit_post', $_POST['pageid'] ) ){ wp_die(); }
 	check_ajax_referer( 'mfn-builder-nonce', 'mfn-builder-nonce' );
 
 	$request = $_POST;
@@ -289,7 +297,7 @@ add_action( 'wp_ajax_setrevision', 'mfnvb_set_revision'  );
 
 function mfnvb_set_revision(){
 
-	if(!is_user_logged_in()){ wp_die(); }
+	if( !current_user_can( 'edit_post', $_POST['pageid'] ) ){ wp_die(); }
 	check_ajax_referer( 'mfn-builder-nonce', 'mfn-builder-nonce' );
 
 	$request = $_POST;
@@ -323,13 +331,12 @@ add_action( 'wp_ajax_mfntoclipboard', 'mfnvb_copytoclipboard' );
 
 function mfnvb_copytoclipboard(){
 
-	if(!is_user_logged_in()){ wp_die(); }
+	if( !current_user_can( 'edit_posts' ) ){ wp_die(); }
 	check_ajax_referer( 'mfn-builder-nonce', 'mfn-builder-nonce' );
 
 	if( !empty($_POST['sections']) ){
 		$save = wp_unslash( $_POST['sections'] );
-		$view = call_user_func('base'.'64_encode', serialize($save));
-		echo $view;
+		wp_send_json(json_encode($save));
 	}else{
 		echo '';
 	}
@@ -343,7 +350,7 @@ add_action( 'wp_ajax_mfnsavepreset', 'mfnvb_savepreset' );
 
 function mfnvb_savepreset(){
 
-	if(!is_user_logged_in()){ wp_die(); }
+	if( !current_user_can( 'edit_posts' ) ){ wp_die(); }
 	check_ajax_referer( 'mfn-builder-nonce', 'mfn-builder-nonce' );
 
 	$mfnvb = new MfnVisualBuilder();
@@ -373,7 +380,7 @@ function mfnvb_savepreset(){
 add_action('wp_ajax_mfnremovepreset', 'mfnvb_removepreset');
 
 function mfnvb_removepreset() {
-	if(!is_user_logged_in()){ wp_die(); }
+	if( !current_user_can( 'edit_posts' ) ){ wp_die(); }
 	check_ajax_referer( 'mfn-builder-nonce', 'mfn-builder-nonce' );
 
 	$mfnvb = new MfnVisualBuilder();
@@ -401,7 +408,7 @@ function mfnvb_removepreset() {
 add_action('wp_ajax_mfnimportpreset', 'mfnvb_importpresets');
 
 function mfnvb_importpresets() {
-	if(!is_user_logged_in()){ wp_die(); }
+	if( !current_user_can( 'edit_posts' ) ){ wp_die(); }
 	check_ajax_referer( 'mfn-builder-nonce', 'mfn-builder-nonce' );
 
 	$mfnvb = new MfnVisualBuilder();
@@ -440,7 +447,7 @@ add_action( 'wp_ajax_restorerevision', 'mfnvb_restore_revision'  );
 
 function mfnvb_restore_revision(){
 
-	if(!is_user_logged_in()){ wp_die(); }
+	if( !current_user_can( 'edit_post', $_POST['pageid'] ) ){ wp_die(); }
 	check_ajax_referer( 'mfn-builder-nonce', 'mfn-builder-nonce' );
 
 	$uids = [];
@@ -506,7 +513,11 @@ function mfnvb_contentrender(){
 	$val = wp_unslash($_POST['val']);
 	//echo do_shortcode($val);
 
-	$return['html'] = do_shortcode($val, true);
+	if( !empty($_POST['vb_postid']) && get_post_type($_POST['vb_postid']) != 'template' && strpos($val, '}') !== false ){
+		$val = str_replace('}', ':'.$_POST['vb_postid'].'}', $val);
+	}
+
+	$return['html'] = do_shortcode( be_dynamic_data($val), true);
 	$return['uid'] = $_POST['uid'];
 
 	wp_send_json($return);
@@ -517,12 +528,12 @@ add_action('wp_ajax_mfn_post_option', 'mfnvb_savepostoption');
 
 function mfnvb_savepostoption(){
 
-	if(!is_user_logged_in()){ wp_die(); }
+	if( !current_user_can( 'edit_post', $_POST['id'] ) ){ wp_die(); }
 	check_ajax_referer( 'mfn-builder-nonce', 'mfn-builder-nonce' );
 
 	$id = $_POST['id'];
-	$option = $_POST['option'];
-	$value = $_POST['value'];
+	$option = esc_html($_POST['option']);
+	$value = esc_html($_POST['value']);
 
 	if( $value == '0' && in_array($option, array('mfn_header_template', 'mfn_footer_template')) ){
 		delete_post_meta($id, $option);
@@ -538,7 +549,7 @@ function mfnvb_savepostoption(){
 add_action('wp_ajax_rerenderwidget', 'mfnvb_render_widget');
 
 function mfnvb_render_widget(){
-	if(!is_user_logged_in()){ wp_die(); }
+	//if(!is_user_logged_in()){ wp_die(); }
 	check_ajax_referer( 'mfn-builder-nonce', 'mfn-builder-nonce' );
 
 	$type = $_POST['type'];
@@ -580,18 +591,26 @@ function mfnvb_render_widget(){
 add_action('wp_ajax_importdata', 'mfnvb_import_data');
 
 function mfnvb_import_data(){
-	if(!is_user_logged_in()){ wp_die(); }
+	if( !current_user_can( 'edit_posts' ) ){ wp_die(); }
+
 	check_ajax_referer( 'mfn-builder-nonce', 'mfn-builder-nonce' );
 
 	$return = array();
 
 	$id = $_POST['id'];
 	$count = $_POST['count'];
+	$single = $_POST['single'] ? true : false;
 
-	$mfn_items = unserialize( call_user_func('base'.'64_decode', $_POST['import']) );
+	$import = wp_unslash( $_POST['import'] );
+	$mfn_items = json_decode( $import, true );
 
 	if( ! is_array( $mfn_items ) ) return false;
 
+	if( $single ){
+		$mfn_items = [
+			$mfn_items[0]
+		];
+	}
 
 	$navigator = MfnVisualBuilder::getNavigatorTree($mfn_items);
 
@@ -610,8 +629,9 @@ function mfnvb_import_data(){
 add_action('wp_ajax_importsinglepage', 'mfnvb_import_single_page');
 
 function mfnvb_import_single_page(){
-	if(!is_user_logged_in()){ wp_die(); }
+	if( !current_user_can( 'edit_post', $_POST['pageid'] ) ){ wp_die(); }
 	check_ajax_referer( 'mfn-builder-nonce', 'mfn-builder-nonce' );
+
 	$request = $_POST;
 	$post_id = $request['pageid'];
 	$page = $request['import'];
@@ -632,7 +652,7 @@ function mfnvb_import_single_page(){
 
 		// unserialize response
 
-		$mfn_items = unserialize(call_user_func('base'.'64_decode', $response));
+		$mfn_items = json_decode( $response, true );
 
 		if( ! is_array( $mfn_items ) ){
 			return false;
@@ -647,7 +667,7 @@ function mfnvb_import_single_page(){
 
 		if ( is_array( $mfn_items ) ) {
 
-			$render = mfnvb_renderView( $mfn_items, $id );
+			$render = mfnvb_renderView( $mfn_items, $post_id );
 
 			$return['html'] = $render['html'];
 			$return['form'] = $render['form'];
@@ -655,6 +675,8 @@ function mfnvb_import_single_page(){
 
 			wp_send_json($return);
 
+		}else{
+			echo 'Something went wrong.';
 		}
 
 	}
@@ -667,7 +689,7 @@ function mfnvb_import_single_page(){
 add_action('wp_ajax_importtemplate', 'mfnvb_import_template');
 
 function mfnvb_import_template(){
-	if(!is_user_logged_in()){ wp_die(); }
+	if( !current_user_can( 'edit_posts' ) ){ wp_die(); }
 	check_ajax_referer( 'mfn-builder-nonce', 'mfn-builder-nonce' );
 
 	$return = array();
@@ -717,7 +739,7 @@ function mfnvb_import_template(){
 add_action('wp_ajax_importtemplate_wraponly', 'mfnvb_import_template_wraponly');
 
 function mfnvb_import_template_wraponly(){
-	if(!is_user_logged_in()){ wp_die(); }
+	if( !current_user_can( 'edit_posts' ) ){ wp_die(); }
 	check_ajax_referer( 'mfn-builder-nonce', 'mfn-builder-nonce' );
 
 	$return = array();
@@ -839,14 +861,14 @@ function mfnvb_insert_prebuilt(){
 add_action('wp_ajax_importfromclipboard', 'mfnvb_importfromclipboard');
 
 function mfnvb_importfromclipboard(){
-	if(!is_user_logged_in()) { wp_die(); }
+	if( !current_user_can( 'edit_posts' ) ){ wp_die(); }
 	check_ajax_referer( 'mfn-builder-nonce', 'mfn-builder-nonce' );
 	$return = array();
 
 	$id = $_POST['id'];
 	$type = $_POST['type'];
 
-	$mfn_items = unserialize( call_user_func('base'.'64_decode', $_POST['import']) );
+	$mfn_items = json_decode( wp_unslash($_POST['import']), true);
 
 	if( ! is_array( $mfn_items ) ) return false;
 
@@ -865,7 +887,7 @@ function mfnvb_importfromclipboard(){
 add_action('wp_ajax_mfn_builder_favorites', 'mfnvb_builder_favorites');
 
 function mfnvb_builder_favorites(){
-	if(!is_user_logged_in()){ wp_die(); }
+	if( !current_user_can( 'edit_posts' ) ){ wp_die(); }
 	check_ajax_referer( 'mfn-builder-nonce', 'mfn-builder-nonce' );
 
 	$return = 'set';
@@ -901,7 +923,7 @@ add_action('wp_ajax_mfncreatetemplate', 'mfnvb_createtemplate');
 
 function mfnvb_createtemplate(){
 
-	if(!is_user_logged_in()){ wp_die(); }
+	if( !current_user_can( 'edit_posts' ) ){ wp_die(); }
 	check_ajax_referer( 'mfn-builder-nonce', 'mfn-builder-nonce' );
 
 	if( get_post_status($_POST['id']) == 'auto-draft' ){
@@ -921,6 +943,9 @@ function mfnvb_createtemplate(){
 			update_post_meta($_POST['id'], 'mfn_template_type', $tmpl);
 		}
 
+		// prevent 404
+		flush_rewrite_rules();
+
 	}
 
 	wp_die();
@@ -931,7 +956,7 @@ function mfnvb_createtemplate(){
 add_action('wp_ajax_mfn_vb_themeoptions', 'mfnvb_savethemeoptions');
 
 function mfnvb_savethemeoptions(){
-	if(!is_user_logged_in()){ wp_die(); }
+	if( !current_user_can( 'edit_posts' ) ){ wp_die(); }
 	check_ajax_referer( 'mfn-builder-nonce', 'mfn-builder-nonce' );
 
 	update_option('betheme', wp_unslash($_POST['betheme']));
@@ -940,12 +965,49 @@ function mfnvb_savethemeoptions(){
 	wp_die();
 }
 
+// render rerender section html
+add_action('wp_ajax_mfnrerendersection', 'mfnvb_rerendersection');
+
+function mfnvb_rerendersection(){
+	if(!is_user_logged_in()){ wp_die(); }
+	check_ajax_referer( 'mfn-builder-nonce', 'mfn-builder-nonce' );
+	$html = '';
+
+	$id = $_POST['id'];
+	$mfn_items = $_POST['sections'];
+	$type = $_POST['type'];
+
+	if( ! is_array( $mfn_items ) ) return false;
+
+	$front = new Mfn_Builder_Front($id);
+
+	ob_start();
+	if($type && $type == 'item'){
+		foreach( $mfn_items as $i=>$item){
+			$front->show_items($item, $i, true);
+		}
+	}else if($type && $type == 'wrap'){
+		foreach( $mfn_items as $w=>$wrap){
+			$front->show_wraps($wrap, $w, true);
+		}
+	}else{
+		$front->show_sections($mfn_items);
+	}
+	$html = ob_get_contents();
+	ob_end_clean();
+
+	echo wp_unslash($html);
+
+	wp_die();
+}
+
 
 // render html
 add_action('wp_ajax_mfnrenderhtml', 'mfnvb_renderhtml');
+add_action('wp_ajax_nopriv_mfnrenderhtml', 'mfnvb_renderhtml');
 
 function mfnvb_renderhtml(){
-	if(!is_user_logged_in()){ wp_die(); }
+
 	check_ajax_referer( 'mfn-builder-nonce', 'mfn-builder-nonce' );
 	$return = array();
 
@@ -966,6 +1028,14 @@ function mfnvb_renderhtml(){
 }
 
 function mfnvb_renderView( $mfn_items, $id, $type = false ){
+
+	if( ! current_user_can( 'edit_posts' ) ){
+		if( ! defined('BEBUILDER_DEMO_VERSION') ){
+			wp_die();
+		}
+	}
+
+	$html = '';
 	$front = new Mfn_Builder_Front($id);
 	$return = array();
 
@@ -979,12 +1049,13 @@ function mfnvb_renderView( $mfn_items, $id, $type = false ){
 	if($type && $type == 'column'){
 		foreach($mfn_items as $section){ foreach($section['wraps'] as $wrap){ foreach($wrap['items'] as $item){ $front->show_items($item, $count, true); } } }
 	}else if($type && $type == 'wrap'){
-		foreach($mfn_items as $section){foreach($section['wraps'] as $wrap){$front->show_wraps($wrap, $count, true);}}
+		foreach($mfn_items as $section){ foreach($section['wraps'] as $wrap){$front->show_wraps($wrap, $count, true);} }
 	}else{
 		$front->show($mfn_items);
 	}
-	$html = ob_get_contents();
-	ob_end_clean();
+	/*$html = ob_get_contents();
+	ob_end_clean();*/
+	$html = ob_get_clean();
 
 	$mfnvb = new MfnVisualBuilder();
 	$form = $mfnvb->loadElementsArr($mfn_items);
@@ -999,4 +1070,3 @@ function mfnvb_renderView( $mfn_items, $id, $type = false ){
 }
 
 
-?>

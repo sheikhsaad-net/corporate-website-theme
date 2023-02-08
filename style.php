@@ -71,7 +71,10 @@ html{
 		}
 
 		if( mfn_opts_get('google-font-mode') !== 'local') {
-			$fonts[$font_k] .= ',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif';
+			if( $fonts[$font_k] ){
+				$fonts[$font_k] .= ',';
+			}
+			$fonts[$font_k] .= '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif';
 		}
 
 	}
@@ -289,17 +292,23 @@ h6 {
 			$multiplier = 0.85;
 
 			foreach ($aFont as $key => $font) {
-				$aFont[$key]['size'] = round($font['size'] * $multiplier);
-				if ($aFont[$key]['size'] < $min_size) {
-					$aFont[$key]['size'] = $min_size;
+				if (is_numeric($font['size'])) {
+					$aFont[$key]['size'] = round($font['size'] * $multiplier);
+					if ($aFont[$key]['size'] < $min_size) {
+						$aFont[$key]['size'] = $min_size;
+					}
 				}
 
-				$aFont[$key]['line_height'] = round($font['line_height'] * $multiplier);
-				if ($aFont[$key]['line_height'] < $min_line) {
-					$aFont[$key]['line_height'] = $min_line;
+				if (is_numeric($font['line_height'])) {
+					$aFont[$key]['line_height'] = round($font['line_height'] * $multiplier);
+					if ($aFont[$key]['line_height'] < $min_line) {
+						$aFont[$key]['line_height'] = $min_line;
+					}
 				}
 
-				$aFont[$key]['letter_spacing'] = round($font['letter_spacing'] * $multiplier);
+				if (is_numeric($font['letter_spacing'])) {
+					$aFont[$key]['letter_spacing'] = round($font['letter_spacing'] * $multiplier);
+				}
 			}
 
 		} else {
@@ -497,17 +506,23 @@ h6 {
 			$multiplier = 0.75;
 
 			foreach ($aFont as $key => $font) {
-				$aFont[$key]['size'] = round($font['size'] * $multiplier);
-				if ($aFont[$key]['size'] < $min_size) {
-					$aFont[$key]['size'] = $min_size;
+				if (is_numeric($font['size'])) {
+					$aFont[$key]['size'] = round($font['size'] * $multiplier);
+					if ($aFont[$key]['size'] < $min_size) {
+						$aFont[$key]['size'] = $min_size;
+					}
 				}
 
-				$aFont[$key]['line_height'] = round($font['line_height'] * $multiplier);
-				if ($aFont[$key]['line_height'] < $min_line) {
-					$aFont[$key]['line_height'] = $min_line;
+				if (is_numeric($font['line_height'])) {
+					$aFont[$key]['line_height'] = round($font['line_height'] * $multiplier);
+					if ($aFont[$key]['line_height'] < $min_line) {
+						$aFont[$key]['line_height'] = $min_line;
+					}
 				}
 
-				$aFont[$key]['letter_spacing'] = round($font['letter_spacing'] * $multiplier);
+				if (is_numeric($font['letter_spacing'])) {
+					$aFont[$key]['letter_spacing'] = round($font['letter_spacing'] * $multiplier);
+				}
 			}
 
 		} else {
@@ -704,17 +719,23 @@ h6 {
 			$multiplier = 0.6;
 
 			foreach ($aFont as $key => $font) {
-				$aFont[$key]['size'] = round($font['size'] * $multiplier);
-				if ($aFont[$key]['size'] < $min_size) {
-					$aFont[$key]['size'] = $min_size;
+				if (is_numeric($font['size'])) {
+					$aFont[$key]['size'] = round($font['size'] * $multiplier);
+					if ($aFont[$key]['size'] < $min_size) {
+						$aFont[$key]['size'] = $min_size;
+					}
 				}
 
-				$aFont[$key]['line_height'] = round($font['line_height'] * $multiplier);
-				if ($aFont[$key]['line_height'] < $min_line) {
-					$aFont[$key]['line_height'] = $min_line;
+				if (is_numeric($font['line_height'])) {
+					$aFont[$key]['line_height'] = round($font['line_height'] * $multiplier);
+					if ($aFont[$key]['line_height'] < $min_line) {
+						$aFont[$key]['line_height'] = $min_line;
+					}
 				}
 
-				$aFont[$key]['letter_spacing'] = round($font['letter_spacing'] * $multiplier);
+				if (is_numeric($font['letter_spacing'])) {
+					$aFont[$key]['letter_spacing'] = round($font['letter_spacing'] * $multiplier);
+				}
 			}
 
 		}
@@ -1208,6 +1229,11 @@ h6 {
 	padding: <?php echo mfn_opts_get( 'button-padding', '12px 20px', [ 'implode' => ' ', 'unit' => 'px' ] ); ?>;
 	border-width: <?php echo mfn_opts_get( 'button-border-width', 0, [ 'unit' => 'px' ] ); ?>;
 	border-radius: <?php echo mfn_opts_get( 'button-border-radius', 0, [ 'unit' => 'px' ] ); ?>;
+	<?php
+		if ( ! empty( mfn_opts_get( 'button-box-shadow' ) ) ) {
+			echo 'box-shadow:'. mfn_opts_get( 'button-box-shadow' );
+		}
+	?>
 }
 
 body.button-custom .button{
@@ -1222,13 +1248,21 @@ body.button-custom .button:hover{
 }
 
 body .button-custom .button_theme,body.button-custom .button_theme,.button-custom button,.button-custom input[type="button"],.button-custom input[type="reset"],.button-custom input[type="submit"],
-.button-custom .woocommerce #respond input#submit,body.button-custom.woocommerce a.button:not(.default),.button-custom .woocommerce button.button,.button-custom .woocommerce input.button{
+.button-custom .woocommerce #respond input#submit,body.button-custom.woocommerce a.button:not(.default),.button-custom .woocommerce button.button,.button-custom .woocommerce input.button,.button-custom .woocommerce a.button_theme:not(.default){
 	color: <?php echo mfn_opts_get( 'button-highlighted-color', '#ffffff', [ 'key' => 'normal' ] ); ?>;
 	background-color: <?php echo mfn_opts_get( 'button-highlighted-background', '#0095eb', [ 'key' => 'normal' ] ); ?>;
 	border-color: <?php echo mfn_opts_get( 'button-highlighted-border-color', 'transparent', [ 'key' => 'normal', 'not_empty' => true ] ); ?>;
+	<?php
+		if ( ! empty( mfn_opts_get( 'button-highlighted-box-shadow' ) ) ) {
+			echo 'box-shadow:'. mfn_opts_get( 'button-highlighted-box-shadow' );
+		} else {
+			echo 'box-shadow:unset';
+		}
+	?>
 }
+
 body .button-custom .button_theme:hover,body.button-custom .button_theme:hover,.button-custom button:hover,.button-custom input[type="button"]:hover,.button-custom input[type="reset"]:hover,.button-custom input[type="submit"]:hover,
-.button-custom .woocommerce #respond input#submit:hover,body.button-custom.woocommerce a.button:not(.default):hover,.button-custom .woocommerce button.button:hover,.button-custom .woocommerce input.button:hover{
+.button-custom .woocommerce #respond input#submit:hover,body.button-custom.woocommerce a.button:not(.default):hover,.button-custom .woocommerce button.button:hover,.button-custom .woocommerce input.button:hover,.button-custom .woocommerce a.button_theme:not(.default):hover{
 	color: <?php echo mfn_opts_get( 'button-highlighted-color', '#ffffff', [ 'key' => 'hover' ] ); ?>;
 	background-color: <?php echo mfn_opts_get( 'button-highlighted-background', '#007cc3', [ 'key' => 'hover' ] ); ?>;
 	border-color: <?php echo mfn_opts_get( 'button-highlighted-border-color', 'transparent', [ 'key' => 'hover', 'not_empty' => true ] ); ?>;
@@ -1238,6 +1272,13 @@ body.button-custom .action_button{
 	color: <?php echo mfn_opts_get( 'button-action-color', '#626262', [ 'key' => 'normal' ] ); ?>;
 	background-color: <?php echo mfn_opts_get( 'button-action-background', '#dbdddf', [ 'key' => 'normal' ] ); ?>;
 	border-color: <?php echo mfn_opts_get( 'button-action-border-color', 'transparent', [ 'key' => 'normal', 'not_empty' => true ] ); ?>;
+	<?php
+		if ( ! empty( mfn_opts_get( 'button-action-box-shadow' ) ) ) {
+			echo 'box-shadow:'. mfn_opts_get( 'button-action-box-shadow' );
+		} else {
+			echo 'box-shadow:unset';
+		}
+	?>
 }
 body.button-custom .action_button:hover{
 	color: <?php echo mfn_opts_get( 'button-action-color', '#626262', [ 'key' => 'hover' ] ); ?>;

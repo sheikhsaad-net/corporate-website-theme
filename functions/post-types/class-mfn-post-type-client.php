@@ -68,6 +68,17 @@ if ( ! class_exists( 'Mfn_Post_Type_Client' ) ) {
   				  'desc' => __('Link to client site', 'mfn-opts'),
   			  ),
 
+  			  array(
+  				  'id' => 'mfn-post-target',
+  				  'type' => 'switch',
+  				  'title' => __('Target', 'mfn-opts'),
+  				  'options' => [
+							'_self' => __('_self', 'mfn-opts'),
+							'' => __('_blank', 'mfn-opts'),
+						],
+						'std' => '',
+  			  ),
+
   		  ),
   	  );
 

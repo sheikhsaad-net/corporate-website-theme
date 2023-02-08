@@ -53,10 +53,13 @@
 							<div class="column one">
 								<div class="mcb-column-inner">
 									<?php
-										$logo_src = mfn_opts_get('logo-img', get_theme_file_uri('/images/logo/logo.png'));
-										echo '<a id="logo" href="'. esc_url(get_home_url()) .'" title="'. esc_attr(get_bloginfo('name')) .'">';
-											echo '<img class="scale-with-grid" src="'. esc_url($logo_src) .'" alt="'. esc_attr(get_bloginfo('name')) .'" />';
-										echo '</a>';
+										if( $logo_text = mfn_opts_get('logo-text') ){
+											echo '<span class="text-logo">'. esc_html($logo_text) .'</span>';
+										} elseif( $logo_src = mfn_opts_get('logo-img', get_theme_file_uri('/images/logo/logo.png')) ) {
+											echo '<a id="logo" href="'. esc_url(get_home_url()) .'" title="'. esc_attr(get_bloginfo('name')) .'">';
+												echo '<img class="scale-with-grid" src="'. esc_url($logo_src) .'" alt="'. esc_attr(get_bloginfo('name')) .'" />';
+											echo '</a>';
+										}
 									?>
 								</div>
 							</div>
@@ -185,7 +188,10 @@
 		</div>
 	</div>
 
-<?php wp_footer(); ?>
+<?php
+	wp_enqueue_script('mfn-countdown', get_theme_file_uri('/js/plugins/countdown.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+	wp_footer();
+?>
 
 </body>
 </html>

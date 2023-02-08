@@ -19,11 +19,15 @@
         <h6>This tool does NOT create backups</h6>
 
         <ul class="reset-list">
-          <li class="delete"><b>Deletes:</b> Posts, custom posts, pages, menus, categories, comments, etc.</li>
+          <li class="delete"><b>Deletes:</b> Posts, custom posts, pages, menus, categories, comments, sliders, etc.</li>
           <li class="keep"><b>Remains:</b> Users and passwords, wp_options, files on your server.</li>
         </ul>
 
-        <div class="select-inner square">
+        <div class="select-inner remove-media square">
+          <span>Remove media from wp-uploads</span>
+        </div>
+
+        <div class="select-inner reset-confirm square">
           <span>I understand that there is NO UNDO</span>
         </div>
 

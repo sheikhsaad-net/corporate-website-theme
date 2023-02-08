@@ -40,7 +40,12 @@ class MFN_Options_upload extends Mfn_Options_field
 
 			echo '<div class="form-control has-icon has-icon-right">';
 
+				if( !empty($this->field['dynamic_data']) ){
+					echo Mfn_Options_field::dynamic_data_options($this->field['dynamic_data']);
+				}
+
 				if( $js ){
+
 				echo '<input class="mfn-form-control mfn-field-value mfn-form-input '. esc_attr( $preview ) .'" type="text" '. $this->get_name( $meta ) .' value="\'+('.$js.' ? '.$js.' : "")+\'" data-type="'. esc_attr( $data ) .'"/>';
 				}else{
 					echo '<input class="mfn-form-control mfn-field-value mfn-form-input '. esc_attr( $preview ) .'" type="text" '. $this->get_name( $meta ) .' value="'. esc_attr( $this->value ) .'" data-type="'. esc_attr( $data ) .'"/>';
@@ -55,7 +60,7 @@ class MFN_Options_upload extends Mfn_Options_field
 			if( $js ){
 				echo '<div class="break"></div>';
 				echo '<div class="selected-image">';
-					echo '<img src="\'+('.$js.' && '.$js.'.length ? '.$js.' : "" ) +\'" alt="" />';
+					echo '\'+( '.$js.' && '.$js.'.length && !'.$js.'.includes(\'{\') ? \'<img src="\'+('.$js.')+\'" alt="" />\' : \'\' )+\'';
 				echo '</div>';
 			}elseif ( 'image' == $data ) {
 				echo '<div class="break"></div>';

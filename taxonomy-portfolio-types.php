@@ -9,6 +9,8 @@
 
 get_header();
 
+wp_enqueue_script('mfn-isotope', get_theme_file_uri('/js/plugins/isotope.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+
 // class
 
 $portfolio_classes 	= '';
@@ -45,6 +47,10 @@ $section_class = implode(' ', $section_class);
 
 // load more
 $load_more = mfn_opts_get('portfolio-load-more');
+
+if( mfn_opts_get('portfolio-infinite-scroll') ) {
+	wp_enqueue_script('mfn-waypoints', get_theme_file_uri('/js/plugins/waypoints.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+}
 
 // translate
 

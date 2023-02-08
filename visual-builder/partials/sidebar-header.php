@@ -150,10 +150,10 @@ echo '<div class="sidebar-panel-header">
         </div>
         <div class="options-group">
             <div class="mfn-option-dropdown">
-                <a title="More" href="#" class="mfn-option-btn btn-large mfn-option-text btn-icon-right mfn-option-blank"><span class="text revisions-current">Autosave</span><span class="mfn-icon mfn-icon-arrow-down"></span></a>
-                <div class="dropdown-wrapper">
-                    <a class="mfn-dropdown-item mfn-revisions-opt active" data-filter="panel-revisions" href="#"> Autosave</a>
-                    <a class="mfn-dropdown-item mfn-revisions-opt" data-filter="panel-revisions-update" href="#"> Update</a>
+                <a title="More" href="#" class="mfn-option-btn btn-large mfn-option-text btn-icon-right mfn-option-blank"><span class="text revisions-current">'. ( empty(mfn_opts_get('builder-autosave')) ? 'Autosave' : 'Update' ) .'</span><span class="mfn-icon mfn-icon-arrow-down"></span></a>
+                <div class="dropdown-wrapper">';
+                    if( empty(mfn_opts_get('builder-autosave')) ) echo '<a class="mfn-dropdown-item mfn-revisions-opt active" data-filter="panel-revisions" href="#"> Autosave</a>';
+                    echo '<a class="mfn-dropdown-item mfn-revisions-opt" data-filter="panel-revisions-update" href="#"> Update</a>
                     <a class="mfn-dropdown-item mfn-revisions-opt" data-filter="panel-revisions-revision" href="#"> Revision</a>
                     <a class="mfn-dropdown-item mfn-revisions-opt" data-filter="panel-revisions-backup" href="#"> Backup</a>
                 </div>

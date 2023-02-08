@@ -65,7 +65,7 @@ class Mfn_Elementor
 		require_once( get_theme_file_path( '/functions/plugins/elementor/class-mfn-elementor-helper.php' ) );
 
 		add_action( 'elementor/elements/categories_registered', 'Mfn_Elementor_Helper::categories_registered' );
-		add_action( 'elementor/widgets/widgets_registered', [ $this, 'init_widgets' ] );
+		add_action( 'elementor/widgets/register', [ $this, 'init_widgets' ] );
 
 		add_action( 'elementor/frontend/before_enqueue_scripts', [ $this, 'enqueue_styles' ] );
 		add_action( 'elementor/editor/before_enqueue_scripts', [ $this, 'enqueue_styles_editor' ] );
@@ -159,6 +159,7 @@ class Mfn_Elementor
 			'icon-box',
 			'info-box',
 			'list',
+			'live-search',
 			'lottie',
 			'offer',
 			'offer-thumb',
@@ -192,7 +193,7 @@ class Mfn_Elementor
 			require_once( get_theme_file_path( '/functions/plugins/elementor/class-mfn-elementor-widget-'. $widget .'.php' ) );
 
 			$class = '\Mfn_Elementor_Widget_'. str_replace( ' ', '_', ucfirst(str_replace( '-', ' ', $widget )));
-			\Elementor\Plugin::instance()->widgets_manager->register_widget_type( new $class() );
+			\Elementor\Plugin::instance()->widgets_manager->register( new $class() );
 
 		}
 

@@ -44,7 +44,15 @@
         removeText: ({lineFrom, lineTo}, {chFrom, chTo}) => __editor.instance.codemirror.doc.replaceRange('', {line:lineFrom, ch:chFrom}, {line:lineTo, ch:chTo}),
         getSelectedText: _ =>  __editor.instance.codemirror.doc.getSelections(),
         getPosOfTextCursor: _ => __editor.instance.codemirror.doc.getCursor(),
-        addCodeIntoTextArea: (code) => __editor.instance.codemirror.doc.replaceRange(code, __editor.methods.getPosOfTextCursor() ),
+        addCodeIntoTextArea: (code) => {
+          __editor.instance.codemirror.doc.replaceRange(code, __editor.methods.getPosOfTextCursor() );
+
+          var it = 'mcb-item-'+edited_item.uid;
+          var val = __editor.instance.codemirror.getValue();
+          edited_item.fields.content = val;
+          updateView(val, it);
+
+        },
         wrapTextIntoShortcode: (startSc, endSc) => __editor.instance.codemirror.doc.replaceSelections( [startSc + __editor.methods.getSelectedText() + endSc], __editor.methods.getPosOfTextCursor() ),
 
       },
@@ -335,6 +343,7 @@
 
                   let shortcodeDOM = $(__scEditor.shortcodeParentDOM).find(`.mfn-isc-builder-${scName}`);
                   __scEditor.methods.modal.prepareToEdit(shortcodeDOM);
+
                   break;
                 case 'remove':
                   let {first, second} = __scEditor.methods.getFromToPos();
@@ -342,12 +351,12 @@
                     {lineFrom: first.line, lineTo: second.line},
                     {chFrom: first.bracket1, chTo: second.bracket2}
                   );
+
                   var it = 'mcb-item-'+edited_item.uid;
                   var val = __editor.instance.codemirror.getValue();
                   edited_item.fields.content = val;
                   updateView(val, it);
                   setTimeout(function() {$content.find('.'+it).removeClass('loading disabled');}, 100);
-                  
                   break;
               }
 
@@ -1057,6 +1066,10 @@
           __editor.methods.addImage();
           break;
 
+        case (actionName == 'dynamic_data'):
+          return false;
+          break;
+
         default:
           console.error('CodeMirror textarea action not recognized');
       }
@@ -1111,11 +1124,12 @@
         __editor.instance.codemirror.setOption("theme", 'base16-dark');
       }
 
+
       // inlineEditor
 
       //var itemEl = $('.panel-edit-item .mfn-element-fields-wrapper').attr('data-element');
       var itemEl = 'mcb-item-'+edited_item.uid;
-      var $iframeCont = $content.find( '.'+itemEl+' .mfn-inline-editor');
+      var $iframeCont = $content.find( '.vb-item.'+itemEl+' .mfn-inline-editor' );
       var inlineIndex = $iframeCont.attr('data-mfnindex');
 
       // focus: update content
@@ -1124,12 +1138,12 @@
         inlineEditors[inlineIndex].setContent( edited_item.fields.content );
       }
 
-      $iframeCont.on('click', function() {
+      /*$iframeCont.on('click', function() {
         if( !$iframeCont.hasClass('mfn-focused') && edited_item && edited_item.fields && edited_item.fields.content){
           $iframeCont.addClass('mfn-focused');
           inlineEditors[inlineIndex].setContent( edited_item.fields.content );
         }
-      });
+      });*/
       
       // writing
       if( !$iframeCont.hasClass('mfn-watchChanges') ){
@@ -1140,7 +1154,7 @@
         });
       }
 
-      $('.mfn-visualbuilder .sidebar-panel-content .panel-edit-item .mfn-form').on('click', '.html-editor .editor-header .mfn-option-dropdown .mfn-dropdown-item', function(e){
+      $('.mfn-visualbuilder .sidebar-panel-content .panel-edit-item .mfn-form').on('click', '.html-editor .editor-header .mfn-option-dropdown .mfn-dropdown-item', function(e) {
         e.preventDefault();
         var buttonName = $(this).attr('data-type');
         var isItSCEditor = $(this).closest('.mfn-option-dropdown').hasClass('dropdown-megamenu');
@@ -1199,12 +1213,7 @@
       });
 
       __editor.instance.codemirror.on('blur', function(cMirror) {
-          var container = $('.panel-edit-item .mfn-form-row.content');
-          var it = 'mcb-item-'+edited_item.uid;
-          $content.find('.'+it).addClass('loading disabled');
-          if( !container.is(blurWatcher) && container.has(blurWatcher).length === 0 ){
-            re_render_content(edited_item.fields.content, it);
-          }
+          $('.sidebar-wrapper').removeClass('mfn-vb-sidebar-overlay');
       });
 
       __editor.instance.codemirror.on('paste', function(cMirror) {
@@ -1226,30 +1235,38 @@
 
     }
 
-    function re_render_content(val, it) {
+    /*function re_render_content(val, it) {
 
         edited_item.fields.content = val;
 
-        $.ajax({
-            url: MfnVbApp.ajaxurl,
-            data: {
-                action: 'rendercontent',
-                'mfn-builder-nonce': MfnVbApp.wpnonce,
-                val: val,
-                uid: edited_item.uid
-            },
-            type: 'POST',
-            success: function(response){
-                
-                updateView(response['html'], it);
-                $iframeCont.removeClass('mfn-focused');
-                $('.sidebar-wrapper').removeClass('mfn-vb-sidebar-overlay');
-                setTimeout(function() {
-                  MfnVbApp.addHistory();
-                }, 100);
-            }
-        });
-    }
+        if( $content.find('.'+it).closest('.mfn-queryloop-item-wrapper').length ){
+            MfnVbApp.re_render2( $content.find('.'+it).closest('.mcb-section.vb-item').attr('data-uid') );
+        }else{
+
+          $.ajax({
+              url: MfnVbApp.ajaxurl,
+              data: {
+                  action: 'rendercontent',
+                  'mfn-builder-nonce': MfnVbApp.wpnonce,
+                  val: val,
+                  'vb_postid': mfnvbvars.pageid,
+                  uid: edited_item.uid
+              },
+              type: 'POST',
+              success: function(response){
+                  
+                  updateView(response['html'], it);
+                  $iframeCont.removeClass('mfn-focused');
+                  $('.sidebar-wrapper').removeClass('mfn-vb-sidebar-overlay');
+                  setTimeout(function() {
+                    MfnVbApp.addHistory();
+                  }, 100);
+              }
+          });
+
+        }
+
+    }*/
 
     function updateView(val, it){
 
@@ -1268,7 +1285,7 @@
       }
 
       $('.sidebar-wrapper').removeClass('mfn-vb-sidebar-overlay');
-      $content.find('.'+it+' .mfn-focused').removeClass('mfn-focused');
+      //$content.find('.'+it+' .mfn-focused').removeClass('mfn-focused');
       MfnVbApp.enableBeforeUnload();
       preventEdit = false;
       $content.find('.'+it).removeClass('loading disabled');
@@ -1283,7 +1300,6 @@
         }else{
           shortcodeEditor.toTextEditor();
         }
-        __editor.instance.codemirror.focus();
 
         $('.modal-add-shortcode .browse-icon .mfn-form-control').val('');
         $('.modal-add-shortcode .browse-icon.has-addons-prepend').addClass('empty');
@@ -1291,13 +1307,43 @@
 
         var it = 'mcb-item-'+edited_item.uid;
 
+        __editor.instance.codemirror.focus();
+
         if( $(this).closest('.modalbox-footer').length ){
+          edited_item.fields.content = __editor.instance.codemirror.getValue();
+          updateView(__editor.instance.codemirror.getValue(), 'mcb-item-'+edited_item.uid);
+        }
+
+        $('.sidebar-wrapper').removeClass('mfn-vb-sidebar-overlay');
+
+        /*if( $(this).closest('.modalbox-footer').length ){
           var val = __editor.instance.codemirror.getValue();
           edited_item.fields.content = val;
           updateView(val, it);
         }
         
-        setTimeout(function() { $content.find('.'+it).removeClass('loading disabled'); }, 100);
+        setTimeout(function() { $content.find('.'+it).removeClass('loading disabled'); }, 100);*/
+
+      });
+
+    $(document).on('click', '.modal-dynamic-data.mfn-dd-element-column .modalbox-content ul li a', function(e) {
+          e.preventDefault();
+
+          if( $('.mfn-element-fields-wrapper .modalbox-card-content .visual-editor').length ) return;
+
+          let dd_code = $(this).find('.mfn-dd-code').text();
+          let type = $(this).attr('data-type');
+
+          __editor.methods.addCodeIntoTextArea(dd_code);
+
+          __editor.instance.codemirror.focus();
+
+          $('.modal-dynamic-data').removeClass('show');
+
+          var it = 'mcb-item-'+edited_item.uid;
+          var val = __editor.instance.codemirror.getValue();
+          edited_item.fields.content = val;
+          updateView(val, it);
 
       });
 

@@ -1,6 +1,36 @@
 <?php
 
-if( ! class_exists('Be_custom') ){
+if( defined('BEBUILDER_DEMO_VERSION') ){
+
+  echo '<div class="mfn-intro-overlay demo" style="display:none">';
+    echo '<div class="mfn-intro-container">';
+
+      echo '<a class="mfn-intro-close close-button mfn-option-btn btn-large" href="#"><span class="mfn-icon mfn-icon-close-light"></span></a>';
+
+      echo '<ul>';
+
+        echo '<li>
+          <img class="icon" alt="" src="'. get_theme_file_uri( '/visual-builder/assets/svg/others/welcome-demo.svg' ) .'">
+          <div class="desc">
+            <h4>Bear in mind that this is a <b>Bebuilder demo</b>, therefore following features are <b>unavailable</b>:</h4>
+            <div class="demo-pills">
+              <span class="pill">Site update and preview</span>
+              <span class="pill">Import and Export</span>
+              <span class="pill">History</span>
+              <span class="pill">Page options</span>
+              <span class="pill">Theme options</span>
+              <span class="pill">Settings</span>
+            </div>
+            <a class="mfn-intro-close mfn-btn" href="#">Continue</a>
+          </div>
+        </li>';
+
+      echo '</ul>';
+
+    echo '</div>';
+  echo '</div>';
+
+} else if( ! class_exists('Be_custom') ){
 
   $slides = [
     '<h1>Fast & intuitive BeBuilder</h1>',

@@ -322,7 +322,7 @@ if( ! class_exists( 'Mfn_Builder_Admin' ) )
 
 			$title .= ' Global section';
 		 }
-		  
+
 
 
 			// uid
@@ -343,7 +343,7 @@ if( ! class_exists( 'Mfn_Builder_Admin' ) )
 				if( !empty($section['mfn_global_section_id']) ) {
 					echo '<a href="edit.php?post_type=template&tab=section" target="_blank" data-tooltip="Edit Global Section" class="btn-edit-section" data-position="before">Edit Global Section</a>';
 				}
-				
+
 				// section | add new before
 
         echo '<a href="#" class="btn-section-add mfn-icon-add-light mfn-section-add siblings prev" data-position="before">'. esc_html__('Add section', 'mfn-opts') .'</a>';
@@ -408,8 +408,12 @@ if( ! class_exists( 'Mfn_Builder_Admin' ) )
 					        } else if( 'no-repeat;center top;fixed;cover' == $attr['bg_position'] ){
 					          $attr['bg_position'] = 'parallax';
 					        } else {
-					          $attr['bg_position'] = explode(';', $attr['bg_position']);
-										$attr['bg_position'] = $attr['bg_position'][1];
+										$attr['bg_position'] = explode(';', $attr['bg_position']);
+					          if( ! empty($attr['bg_position'][1]) ){
+					          	$attr['bg_position'] = $attr['bg_position'][1];
+					          } else {
+					          	$attr['bg_position'] = $attr['bg_position'][0];
+					          }
 					        }
 								}
 
@@ -548,7 +552,7 @@ if( ! class_exists( 'Mfn_Builder_Admin' ) )
 							//be sections global pbl
 							if( $mfn_global_section_id ) {
 								$section = get_post_meta($mfn_global_section_id, 'mfn-page-items', true);
-								
+
 								if ( !is_array($section) ) {
 									$section = unserialize( call_user_func('base'.'64_decode', $section) );
 								}
@@ -703,7 +707,7 @@ if( ! class_exists( 'Mfn_Builder_Admin' ) )
 			$mfn_global_wrap_id = $wrap['attr']['global_wraps_select'];
 			$class[] = 'mfn-global-wrap';
 		}
-		
+
 			$class = implode(' ', $class);
 
   		// output -----
@@ -749,13 +753,13 @@ if( ! class_exists( 'Mfn_Builder_Admin' ) )
 						//be sections global pbl
 						if( $is_global_wrap ) {
 							$section = get_post_meta($mfn_global_wrap_id, 'mfn-page-items', true);
-				
+
 							if ( !is_array($section) ) {
 								$section = unserialize( call_user_func('base'.'64_decode', $section) );
 							}
 
 							$wrap['items'] = $section[0]['wraps'][0]['items'];
-						} 
+						}
 
 						if ( isset( $wrap['items'] ) && is_array( $wrap['items'] ) ) {
   						foreach ( $wrap['items'] as $item ) {
@@ -1237,19 +1241,33 @@ if( ! class_exists( 'Mfn_Builder_Admin' ) )
     {
       global $post;
 
+			// disable BeBuilder Blocks for some template types
+
       if( get_post_type($post->ID) == 'template' && get_post_meta($post->ID, 'mfn_template_type', true) && in_array( get_post_meta($post->ID, 'mfn_template_type', true), array('header', 'footer', 'megamenu') ) ){
       	return;
       }
 
-			$items = $this->fields->get_items(); // default items
-
-      // hide builder if current user does not have a specific capability
+			// hide builder if current user does not have a specific capability
 
       if ( $visibility = mfn_opts_get( 'builder-visibility' ) ) {
         if ( $visibility == 'hide' || ( ! current_user_can( $visibility ) ) ) {
           return false;
         }
       }
+
+			// disable BeBuilder Blocks in Theme options
+
+			if( ! mfn_opts_get('builder-blocks') ){
+				if( apply_filters('bebuilder_access', false) ){
+					echo '<div class="bebuilderblocks-disabled">';
+						echo '<a href="post.php?post='. $post->ID .'&amp;action=mfn-live-builder" class="mfn-live-edit-page-button mfn-switch-live-editor">Edit with '. apply_filters('betheme_label', 'Be') .'Builder</a>';
+						echo '<p>If you prefer our classic builder, you can enable it in<br/><a target="_blank" href="admin.php?page='. apply_filters('betheme_slug', 'be') .'-options#advanced">Theme Options > Global > Advanced > BeBuilder Blocks</a></p>';
+					echo '</div>';
+				}
+				return;
+			}
+
+			$items = $this->fields->get_items(); // default items
 
 			// check if disable items preview
 
@@ -2847,7 +2865,7 @@ if( ! class_exists( 'Mfn_Builder_Admin' ) )
 		 */
 
 		public function reset_woo_templates_conditions($lang) {
-			
+
 			$shoppage_id = wc_get_page_id('shop');
 
 			delete_post_meta( $shoppage_id, 'mfn_shop_template'.$lang );
@@ -2901,7 +2919,7 @@ if( ! class_exists( 'Mfn_Builder_Admin' ) )
 				}
 			}
 
-			$this->reset_woo_templates_conditions($mfn_lang);
+			$this->reset_woo_templates_conditions('');
 
 			// set
 
@@ -2945,6 +2963,7 @@ if( ! class_exists( 'Mfn_Builder_Admin' ) )
 						if( isset($tmpl_lang['language_code']) && $tmpl_lang['language_code'] != $default_lang ){
 							$mfn_lang = '_'.$tmpl_lang['language_code'];
 						}
+						$shoppage_id = apply_filters( 'wpml_object_id', wc_get_page_id('shop'), 'page', null, $tmpl_lang['language_code'] );
 					}
 
 					$conditions = (array) json_decode( get_post_meta($post_id, 'mfn_template_conditions', true) );
@@ -2961,14 +2980,19 @@ if( ! class_exists( 'Mfn_Builder_Admin' ) )
 		  							delete_post_meta( $shoppage_id, $cond_meta_key.$mfn_lang );
 		  						}
 		  					}else{
-
 		  						$products = get_posts( array( 'post_type'	=> 'product', 'numberposts' => -1 ) );
 		  						if(isset($products) && count($products) > 0){
 		  							foreach ($products as $product) {
+
+		  								$product_id = $product->ID;
+		  								if( defined( 'ICL_SITEPRESS_VERSION' ) && !empty($tmpl_lang['language_code']) ){
+		  									$product_id = apply_filters( 'wpml_object_id', $product->ID, 'product', null, $tmpl_lang['language_code'] );
+		  								}
+
 		  								if($con->rule == 'include'){
-		  									update_post_meta( $product->ID, $cond_meta_key.$mfn_lang, $post_id );
+		  									update_post_meta( $product_id, $cond_meta_key.$mfn_lang, $post_id );
 		  								}else{
-		  									delete_post_meta( $product->ID, $cond_meta_key.$mfn_lang );
+		  									delete_post_meta( $product_id, $cond_meta_key.$mfn_lang );
 		  								}
 		  							}
 		  						}
@@ -2985,7 +3009,8 @@ if( ! class_exists( 'Mfn_Builder_Admin' ) )
 											if($con->rule == 'include'){
 												update_term_meta( $item->term_id, $cond_meta_key.$mfn_lang, $post_id);
 											}else{
-												delete_term_meta( $item->term_id, $cond_meta_key.$mfn_lang );
+												//delete_term_meta( $item->term_id, $cond_meta_key.$mfn_lang );
+												update_term_meta( $item->term_id, $cond_meta_key.$mfn_lang, 'excluded');
 											}
 										}
 									}
@@ -2993,10 +3018,17 @@ if( ! class_exists( 'Mfn_Builder_Admin' ) )
 									$products = get_posts( array( 'post_type'	=> 'product', 'numberposts' => -1 ) );
 		  						if(isset($products) && count($products) > 0){
 		  							foreach ($products as $product) {
+
+		  								$product_id = $product->ID;
+		  								if( defined( 'ICL_SITEPRESS_VERSION' ) && !empty($tmpl_lang['language_code']) ){
+		  									$product_id = apply_filters( 'wpml_object_id', $product->ID, 'product', null, $tmpl_lang['language_code'] );
+		  								}
+
 		  								if($con->rule == 'include'){
-		  									update_post_meta( $product->ID, 'mfn_product_cat_template'.$mfn_lang, $post_id );
+		  									update_post_meta( $product_id, 'mfn_product_cat_template'.$mfn_lang, $post_id );
 		  								}else{
-		  									delete_post_meta( $product->ID, 'mfn_product_cat_template'.$mfn_lang );
+		  									//delete_post_meta( $product_id, 'mfn_product_cat_template'.$mfn_lang );
+		  									update_post_meta( $product_id, 'mfn_product_cat_template'.$mfn_lang, 'excluded' );
 		  								}
 		  							}
 		  						}
@@ -3013,16 +3045,25 @@ if( ! class_exists( 'Mfn_Builder_Admin' ) )
 			  							if($con->rule == 'include'){
 			  								update_term_meta( $tag->term_id, $cond_meta_key.$mfn_lang, $post_id);
 			  							}else{
-			  								delete_term_meta( $tag->term_id, $cond_meta_key.$mfn_lang);
+			  								//delete_term_meta( $tag->term_id, $cond_meta_key.$mfn_lang);
+			  								update_term_meta( $tag->term_id, $cond_meta_key.$mfn_lang, 'excluded');
 			  							}
 										}else{
 											$products = get_posts( array( 'post_type'	=> 'product', 'numberposts' => -1, 'tax_query' => array( array( 'taxonomy' => 'product_tag', 'field' => 'term_id', 'terms' => $tag->term_id ) ) ) );
 				  						if(isset($products) && count($products) > 0){
 				  							foreach ($products as $product) {
+
+				  								$product_id = $product->ID;
+				  								if( defined( 'ICL_SITEPRESS_VERSION' ) && !empty($tmpl_lang['language_code']) ){
+				  									$product_id = apply_filters( 'wpml_object_id', $product->ID, 'product', null, $tmpl_lang['language_code'] );
+				  								}
+
+
 				  								if($con->rule == 'include'){
-				  									update_post_meta( $product->ID, 'mfn_product_tag_template'.$mfn_lang, $post_id );
+				  									update_post_meta( $product_id, 'mfn_product_tag_template'.$mfn_lang, $post_id );
 				  								}else{
-				  									delete_post_meta( $product->ID, 'mfn_product_tag_template'.$mfn_lang);
+				  									//delete_post_meta( $product_id, 'mfn_product_tag_template'.$mfn_lang);
+				  									update_post_meta( $product_id, 'mfn_product_tag_template'.$mfn_lang, 'excluded' );
 				  								}
 				  							}
 				  						}
@@ -3045,10 +3086,17 @@ if( ! class_exists( 'Mfn_Builder_Admin' ) )
 										$products = get_posts( array( 'post_type'	=> 'product', 'numberposts' => -1, 'tax_query' => array( array( 'taxonomy' => 'product_cat', 'field' => 'term_id', 'terms' => $con->productcategory ) ) ) );
 			  						if(isset($products) && count($products) > 0){
 			  							foreach ($products as $product) {
+
+			  								$product_id = $product->ID;
+			  								if( defined( 'ICL_SITEPRESS_VERSION' ) && !empty($tmpl_lang['language_code']) ){
+			  									$product_id = apply_filters( 'wpml_object_id', $product->ID, 'product', null, $tmpl_lang['language_code'] );
+			  								}
+
 			  								if($con->rule == 'include'){
-			  									update_post_meta( $product->ID, 'mfn_product_cat_template'.$mfn_lang, $post_id );
+			  									update_post_meta( $product_id, 'mfn_product_cat_template'.$mfn_lang, $post_id );
 			  								}else{
-			  									delete_post_meta( $product->ID, 'mfn_product_cat_template'.$mfn_lang );
+			  									//delete_post_meta( $product_id, 'mfn_product_cat_template'.$mfn_lang );
+			  									update_post_meta( $product_id, 'mfn_product_cat_template'.$mfn_lang, 'excluded' );
 			  								}
 			  							}
 			  						}
@@ -3071,11 +3119,17 @@ if( ! class_exists( 'Mfn_Builder_Admin' ) )
 										$products = get_posts( array( 'post_type'	=> 'product', 'numberposts' => -1, 'tax_query' => array( array( 'taxonomy' => 'product_tag', 'field' => 'term_id', 'terms' => $con->producttag ) ) ) );
 			  						if(isset($products) && count($products) > 0){
 			  							foreach ($products as $product) {
-			  								if($con->rule == 'include'){
-			  									update_post_meta( $product->ID, 'mfn_product_tag_template'.$mfn_lang, $post_id );
-			  								}else{
 
-			  									delete_post_meta( $product->ID, 'mfn_product_tag_template'.$mfn_lang );
+			  								$product_id = $product->ID;
+			  								if( defined( 'ICL_SITEPRESS_VERSION' ) && !empty($tmpl_lang['language_code']) ){
+			  									$product_id = apply_filters( 'wpml_object_id', $product->ID, 'product', null, $tmpl_lang['language_code'] );
+			  								}
+
+			  								if($con->rule == 'include'){
+			  									update_post_meta( $product_id, 'mfn_product_tag_template'.$mfn_lang, $post_id );
+			  								}else{
+			  									update_post_meta( $product_id, 'mfn_product_tag_template'.$mfn_lang, 'excluded' );
+			  									//delete_post_meta( $product_id, 'mfn_product_tag_template'.$mfn_lang );
 
 			  								}
 			  							}
@@ -3094,6 +3148,7 @@ if( ! class_exists( 'Mfn_Builder_Admin' ) )
 
 
 
+
 		/**
 		 * Set Header Templates Conditions
 		 */
@@ -3106,6 +3161,12 @@ if( ! class_exists( 'Mfn_Builder_Admin' ) )
 			delete_option( 'mfn_'.$type.'_product_single' );
 			delete_option( 'mfn_'.$type.'_portfolio_single' );
 			delete_option( 'mfn_'.$type.'_offer_single' );
+
+			delete_option( 'mfn_'.$type.'_post_single_excluded' );
+			delete_option( 'mfn_'.$type.'_page_single_excluded' );
+			delete_option( 'mfn_'.$type.'_product_single_excluded' );
+			delete_option( 'mfn_'.$type.'_portfolio_single_excluded' );
+			delete_option( 'mfn_'.$type.'_offer_single_excluded' );
 
 			delete_option( 'mfn_'.$type.'_post_arch' );
 			delete_option( 'mfn_'.$type.'_product_arch' );
@@ -3121,6 +3182,9 @@ if( ! class_exists( 'Mfn_Builder_Admin' ) )
 
 			$wpdb->delete( $wpdb->prefix . 'postmeta', array( 'meta_key' => 'mfn_'.$type.'_post' ) );
 			$wpdb->delete( $wpdb->prefix . 'termmeta', array( 'meta_key' => 'mfn_'.$type.'_term' ) );
+
+			$wpdb->delete( $wpdb->prefix . 'postmeta', array( 'meta_key' => 'mfn_'.$type.'_post_excluded' ) );
+			$wpdb->delete( $wpdb->prefix . 'termmeta', array( 'meta_key' => 'mfn_'.$type.'_term_excluded' ) );
 		}
 
 		public function set_global_templates_conditions($type) {

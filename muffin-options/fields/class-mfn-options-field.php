@@ -68,7 +68,12 @@ class Mfn_Options_field
 			echo '</div>';
 		}
 
-  }
+  	}
+
+  	public static function dynamic_data_options($filter = false){
+  		$html = '<a class="mfn-option-btn mfn-button-dynamic-data" title="Dynamic data" href="#"><span class="mfn-icon mfn-icon-dynamic-data"></span></a>';
+		return $html;
+	}
 
 	/**
 	 * Responsive switchers

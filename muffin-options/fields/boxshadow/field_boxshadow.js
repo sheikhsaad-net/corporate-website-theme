@@ -6,7 +6,7 @@
 
   var MfnFieldBoxshadow = (function() {
 
-    var $group = $('.mfn-ui .form-group.multiple-inputs');
+    var $group = $('.mfn-ui .form-group.multiple-inputs-with-color');
 
     /**
      * Change field values on keypress

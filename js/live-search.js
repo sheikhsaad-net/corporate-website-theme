@@ -372,7 +372,7 @@ var Mfn_livesearch = {
     this.refreshCategoryContainers();
     this.hideNotUsedCategories();
     item.siblings('.mfn-live-search-box').find('.button').addClass('hidden');
-    item.closest('.mcb-wrap').css('z-index', 1);
+    item.closest('.mcb-wrap').css('z-index', 2);
   },
 
   events() {

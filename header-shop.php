@@ -48,7 +48,7 @@
 			function mfn_woocommerce_show_page_title(){
 				return false;
 			}
-			
+
 			add_filter('woocommerce_show_page_title', 'mfn_woocommerce_show_page_title');
 
 		}else{
@@ -120,7 +120,7 @@
 								echo mfn_slider($shop_id);
 							}
 						}
-						
+
 					echo '</header>';
 
 				}

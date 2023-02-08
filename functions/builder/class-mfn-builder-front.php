@@ -18,7 +18,12 @@ if( ! class_exists('Mfn_Builder_Front') )
     public $post_id = false;
     public $content_field = false; // use post field instead of the_content()
     public $template_type = false;
-    public $is_bebuilder = false;
+    public static $is_bebuilder = false;
+
+    /* For Dynamic Data */
+
+    public static $item_type = false;
+    public static $item_id = false;
 
 		public $classes = array(
 			'divider' => 'divider',
@@ -79,7 +84,9 @@ if( ! class_exists('Mfn_Builder_Front') )
 
  			if( get_post_type($post_id) == 'template' ) $this->template_type = get_post_meta($post_id, 'mfn_template_type', true);
 
- 			$this->is_bebuilder = apply_filters('bebuilder_preview', true);
+ 			self::$is_bebuilder = apply_filters('bebuilder_preview', true);
+
+ 			if( wp_doing_ajax() ) self::$is_bebuilder = true;
     }
 
   	/**
@@ -91,6 +98,12 @@ if( ! class_exists('Mfn_Builder_Front') )
 			// FIX: Elementor - prevent showing first post content on blog page
 
 			if( ( 'post' == get_post_type() ) && ( ! is_singular() ) ){
+				return false;
+			}
+
+			// single product - hide wp editor content
+
+			if( function_exists('is_product') && is_product() && mfn_opts_get('shop-hide-content') ){
 				return false;
 			}
 
@@ -136,7 +149,8 @@ if( ! class_exists('Mfn_Builder_Front') )
 
 			}else{
 
-				$dir = wp_upload_dir()['basedir'] . $path;
+				$css_file_path = '/betheme/css/post-'. $this->post_id .'.css';
+				$dir = wp_upload_dir()['basedir'] . $css_file_path;
 
 				if( get_post_meta($this->post_id, 'mfn-page-local-style', true) && file_exists($dir) ){
 
@@ -186,7 +200,7 @@ if( ! class_exists('Mfn_Builder_Front') )
   		if( isset( $items ) && is_array( $items ) ){
 				// ajax
   			$mfn_items = $items;
-  		} elseif( ( (empty($_GET['preview']) && empty($_GET['mfn-preview']) ) || ( $this->is_bebuilder && !empty($_GET['preview'] ) ) ) ){
+  		} elseif( ( (empty($_GET['preview']) && empty($_GET['mfn-preview']) ) || ( self::$is_bebuilder && !empty($_GET['preview'] ) ) ) ){
 				$mfn_items = get_post_meta($this->post_id, 'mfn-page-items', true);
 			} else {
 				$mfn_items = get_post_meta($this->post_id, 'mfn-builder-preview', true);
@@ -208,7 +222,7 @@ if( ! class_exists('Mfn_Builder_Front') )
 
   		// WordPress Editor | before builder
 
-  		if ( 1 == mfn_opts_get('display-order') ) {
+  		if ( 1 == mfn_opts_get('display-order') && ( !isset($items) || get_post_type( $this->post_id ) != 'template' ) ) {
   			$this->the_content();
   		}
 
@@ -226,7 +240,7 @@ if( ! class_exists('Mfn_Builder_Front') )
 	  		}
 	  	}
 
-  		if ( post_password_required() ) {
+  		if ( post_password_required() && ( !$this->template_type || !in_array($this->template_type, array('header', 'footer', 'megamenu')) ) ) {
 
   			// password protected page
 
@@ -248,7 +262,38 @@ if( ! class_exists('Mfn_Builder_Front') )
 
   			// SECTIONS -----
 
-  			foreach ($mfn_items as $s => $section) {
+  			$this->show_sections($mfn_items, $vbtoolsoff);
+
+  		}
+
+  		if( !$items ) echo '</div>';
+
+  		// WordPress Editor | after builder
+
+  		if ( 0 == mfn_opts_get('display-order') && ( !isset($items) || get_post_type( $this->post_id ) != 'template' ) ) {
+  			$this->the_content();
+  		}
+
+			// CSS local styles
+
+			$is_template = false;
+			if( mfn_ID() !== get_the_ID() ) {
+				$is_template = true;
+			}
+
+			if( $is_template || $vbtoolsoff || ( empty( $_GET['visual'] ) && ( !mfn_opts_get('local-styles-location') || ( $this->template_type && in_array($this->template_type, array('megamenu', 'footer', 'shop-archive', 'single-product')) ) ) ) ){
+				if( $this->template_type != 'header' ) {
+					$this->enqueue_local_style();
+				}
+			}
+
+  	}
+
+  	public function show_sections($mfn_items, $vbtoolsoff = false){
+
+  		if( !is_array($mfn_items) ) return;
+
+  		foreach ($mfn_items as $s => $section) {
 
 					// unique ID
 
@@ -295,7 +340,7 @@ if( ! class_exists('Mfn_Builder_Front') )
 
 						// visual builder
 
-            if( wp_doing_ajax() || $this->is_bebuilder ){
+            if( wp_doing_ajax() || self::$is_bebuilder ){
               $section_class[] = 'hide';
             } else {
               continue;
@@ -315,13 +360,19 @@ if( ! class_exists('Mfn_Builder_Front') )
   					$section_class[] = 'mfn-default-section';
   				}
 
-					if( !empty($section['mfn_global_section_id'])) {
-						//set the original uid of the section. global sections
-						$section_class[] = 'mcb-section-'. $refresh_content[0]['uid'];
-						$inner_section_class_uid = 'mcb-section-inner-'.$refresh_content[0]['uid'];
-					} else {
-						$section_class[] = 'mcb-section-'. $section['uid'];
+  				// unique ID
+
+					if( empty( $section['uid'] ) ) {
+						$section['uid'] = Mfn_Builder_Helper::unique_ID();
 					}
+
+				if( !empty($section['mfn_global_section_id'])) {
+					//set the original uid of the section. global sections
+					$section_class[] = 'mcb-section-'. $refresh_content[0]['uid'];
+					$inner_section_class_uid = 'mcb-section-inner-'.$refresh_content[0]['uid'];
+				} else {
+					$section_class[] = 'mcb-section-'. $section['uid'];
+				}
 
   				if( $this->template_type && $this->template_type == 'header' ) $section_class[] = 'mcb-header-section';
 
@@ -329,7 +380,8 @@ if( ! class_exists('Mfn_Builder_Front') )
 
   				// if( empty( $section['attr'] ) ) continue;
 
-  				if( ! empty($section['attr']['style']) ) {
+					if( ! empty($section['attr']['style']) ) {
+						$section['attr']['style'] = str_replace('full-width', 'full-width full-width-deprecated', $section['attr']['style']); // old full width class
   					$section_class[] = $section['attr']['style'];
   				}
 
@@ -354,6 +406,46 @@ if( ! class_exists('Mfn_Builder_Front') )
 
 					if( ! empty($section['attr']['bg_video_mp4']) ) {
   					$section_class[] = 'has-video';
+  				}
+
+  				// query loop
+
+  				if( isset($section['attr']['type']) && $section['attr']['type'] == 'query' ){
+  					$section_class[] = 'mfn-looped-items';
+
+  					if( !empty($section['attr']['query_display']) && $section['attr']['query_display'] == 'slider' ){
+							$section_class[] = 'mfn-looped-items-slider-wrapper';
+
+							if( !empty($section['attr']['query_slider_arrows']) ){
+								if( !empty($section['attr']['query_slider_arrows_style']) ){
+	  							$section_class[] = 'mfn-arrows-'.$section['attr']['query_slider_arrows_style'];
+	  						}else{
+	  							$section_class[] = 'mfn-arrows-standard';
+	  						}
+	  					}else{
+	  						$section_class[] = 'mfn-arrows-hidden';
+	  					}
+
+	  					if( !empty($section['attr']['query_slider_dots']) ){
+								if( !empty($section['attr']['query_slider_dots_style']) ){
+	  							$section_class[] = 'mfn-dots-'.$section['attr']['query_slider_dots_style'];
+	  						}else{
+	  							$section_class[] = 'mfn-dots-standard';
+	  						}
+	  					}else{
+	  						$section_class[] = 'mfn-dots-hidden';
+	  					}
+
+	  					if( !empty($section['attr']['query_slider_centered']) && $section['attr']['query_slider_centered'] == '2' ){
+								$section_class[] = 'mfn-ql-slider-wrapper-offset';
+							}
+
+						}
+
+						if( !empty($section['attr']['query_display_style']) && $section['attr']['query_display_style'] == 'masonry' ){
+							$section_class[] = 'mfn-looped-items-masonry';
+						}
+
   				}
 
   				// navigation arrows
@@ -522,14 +614,14 @@ if( ! class_exists('Mfn_Builder_Front') )
 
   				// output SECTION -----
 
-  				if( !$vbtoolsoff && ( $this->is_bebuilder || ( isset( $items ) && is_array( $items ) ) ) ){
+  				if( !$vbtoolsoff && ( self::$is_bebuilder || ( isset( $items ) && is_array( $items ) ) ) ){
 
   					if ( $this->template_type && $this->template_type == 'header' && isset( $section['wraps'] ) && is_array($section['wraps']) && count($section['wraps']) >= 3 ) $section_class .= ' mfn-new-wraps-disabled';
 
   					echo '<div class="section vb-item mcb-section '. $section_class .'" '. $section_id .' data-order="'. $s .'" data-uid="'. $section['uid'] .'"  '. $global_section_id .' style="'. $section_style .'" '. $parallax .'>'; // 100%
-  					echo Mfn_Builder_Helper::sectionTools();
+  					echo Mfn_Builder_Helper::sectionTools($section);
 
-
+					  
 					  // Global Section edit button
 					  if( !empty($section['mfn_global_section_id']) ){
 						echo '<a href="'.get_site_url().'/wp-admin/post.php?post='.$section['mfn_global_section_id'].'&action=mfn-live-builder" target="_blank" data-tooltip="Edit Global Section" class="btn-edit-section" data-position="before">Edit Global Section</a>';
@@ -561,7 +653,7 @@ if( ! class_exists('Mfn_Builder_Front') )
 
 								echo Mfn_Builder_Helper::shapedDivider( $shape_name, $position, $is_inverted, $is_flipped, $bring_front );
 
-							} elseif( $this->is_bebuilder || ( isset( $items ) && is_array( $items ) ) ){
+							} elseif( self::$is_bebuilder || ( isset( $items ) && is_array( $items ) ) ){
 
 								echo Mfn_Builder_Helper::shapedDivider( 'empty', $position );
 
@@ -588,7 +680,7 @@ if( ! class_exists('Mfn_Builder_Front') )
 
 							if( !empty($section['attr']['bg_image']) ) $poster = $section['attr']['bg_image'];
 
-							if( $this->is_bebuilder ){
+							if( self::$is_bebuilder ){
 
 							echo '<div class="mfn-vb-video-lazy"><!--';
 							echo '<video poster="'. $poster .'" autoplay="true" loop="true" muted="muted">';
@@ -632,7 +724,7 @@ if( ! class_exists('Mfn_Builder_Front') )
 
 							echo Mfn_Builder_Helper::shapedDivider( $shape_name, $position, $is_inverted, $is_flipped, $bring_front );
 
-						} elseif( $this->is_bebuilder || ( isset( $items ) && is_array( $items ) ) ){
+						} elseif( self::$is_bebuilder || ( isset( $items ) && is_array( $items ) ) ){
 
 							echo Mfn_Builder_Helper::shapedDivider( 'empty', $position );
 
@@ -666,7 +758,7 @@ if( ! class_exists('Mfn_Builder_Front') )
 						// FIX | Muffin Builder 2 compatibility
 						// there were no wraps inside section in Muffin Builder 2
 
-						if ( ! isset( $section['wraps'] ) && ! empty( $section['items'] ) ) {
+						if ( !isset( $section['wraps'] ) && ! empty( $section['items'] ) ) {
 							$fix_wrap = array(
 								'size' => '1/1',
 								'uid' => Mfn_Builder_Helper::unique_ID(),
@@ -675,23 +767,279 @@ if( ! class_exists('Mfn_Builder_Front') )
 							$section['wraps'] = array( $fix_wrap );
 						}
 
+						$vb = false;
+            if( !$vbtoolsoff && ( self::$is_bebuilder || ( isset( $items ) && is_array( $items ) ) ) ) $vb = true;
+
 						// print inside wraps
 
-						if (isset($section['wraps']) && key_exists('wraps', $section) && is_array($section['wraps'])) {
+            /*if( wp_doing_ajax() ){
+            echo '<pre>';
+            print_r($section);
+            echo '</pre>';
+          	}*/
+
+						if(isset($section['wraps']) && key_exists('wraps', $section) && is_array($section['wraps'])) {
               // visual builder
               ksort( $section['wraps'] );
-              $vb = false;
-              if( !$vbtoolsoff && ( $this->is_bebuilder || ( isset( $items ) && is_array( $items ) ) ) ) $vb = true;
-							foreach ($section['wraps'] as $w => $wrap) {
 
-								// Muffin Builder ACM compatibility
-								if( !isset($wrap['tablet_size']) ){
-									$wrap['tablet_size'] = isset($wrap['size']) ? $wrap['size'] : '1/1';
-									$wrap['mobile_size'] = '1/1';
+              /**
+               * 
+               * QUERY loop
+               * 
+               * */
+
+              if( /*!self::$is_bebuilder &&*/ isset($section['attr']['type']) && $section['attr']['type'] == 'query' ){
+
+              	$s_wrapper_params = false;
+
+								if( !self::$is_bebuilder && !empty($section['attr']['query_display']) && $section['attr']['query_display'] == 'slider' ){
+										
+										wp_enqueue_script('mfn-swiper', get_theme_file_uri('/js/swiper.js'), array('jquery'), MFN_THEME_VERSION, true);
+              			wp_enqueue_style('mfn-swiper', get_theme_file_uri('/css/scripts/swiper.css'), false, MFN_THEME_VERSION, false);
+
+			  						$s_wrapper_params = 'data-columns="'.(!empty($section['attr']['query_slider_columns']) ? $section['attr']['query_slider_columns'] : 1).'"';
+			  						$s_wrapper_params .= 'data-columns-tablet="'.(!empty($section['attr']['query_slider_columns_tablet']) ? $section['attr']['query_slider_columns_tablet'] : 1).'"';
+										$s_wrapper_params .= 'data-columns-mobile="'.(!empty($section['attr']['query_slider_columns_mobile']) ? $section['attr']['query_slider_columns_mobile'] : 1).'"';
+			  						//$s_wrapper_params .= ' data-animation="'.(!empty($section['attr']['query_slider_animation']) ? $section['attr']['query_slider_animation'] : 'slide').'"';
+			  						$s_wrapper_params .= ' data-dots="'.(!empty($section['attr']['query_slider_dots']) ? $section['attr']['query_slider_dots'] : '0').'"';
+			  						$s_wrapper_params .= ' data-arrows="'.(!empty($section['attr']['query_slider_arrows']) ? $section['attr']['query_slider_arrows'] : '0').'"';
+			  						$s_wrapper_params .= ' data-autoplay="'.(!empty($section['attr']['query_slider_autoplay']) ? $section['attr']['query_slider_autoplay'] : '0').'"';
+			  						$s_wrapper_params .= ' data-mousewheel="'.(!empty($section['attr']['query_slider_mousewheel']) ? $section['attr']['query_slider_mousewheel'] : '0').'"';
+			  						$s_wrapper_params .= ' data-centered="'.(!empty($section['attr']['query_slider_centered']) ? $section['attr']['query_slider_centered'] : '0').'"';
+			  						$s_wrapper_params .= ' data-infinity="'.(!empty($section['attr']['query_slider_infinity']) ? $section['attr']['query_slider_infinity'] : '0').'"';
+			  						$s_wrapper_params .= ' data-arrownext="'.(!empty($section['attr']['query_display_slider_arrow_next']) ? $section['attr']['query_display_slider_arrow_next'] : 'icon-right-open-big').'"';
+			  						$s_wrapper_params .= ' data-arrowprev="'.(!empty($section['attr']['query_display_slider_arrow_prev']) ? $section['attr']['query_display_slider_arrow_prev'] : 'icon-left-open-big').'"';
+
+		  							$qlslm_left = 12;
+		  							$qlslm_right = 12;
+
+		  							if( !empty($section['attr']['style:.mcb-section-mfnuidelement .mcb-section-inner .mfn-queryloop-item-wrapper:margin']['left']) ) $qlslm_left = str_replace(array('px', '%', 'em', 'rem', 'vw'), '', $section['attr']['style:.mcb-section-mfnuidelement .mcb-section-inner .mfn-queryloop-item-wrapper:margin']['left']);
+		  							if( !empty($section['attr']['style:.mcb-section-mfnuidelement .mcb-section-inner .mfn-queryloop-item-wrapper:margin']['right']) ) $qlslm_right = str_replace(array('px', '%', 'em', 'rem', 'vw'), '', $section['attr']['style:.mcb-section-mfnuidelement .mcb-section-inner .mfn-queryloop-item-wrapper:margin']['right']);
+
+		  							$s_wrapper_params .= ' data-space_desktop="'.($qlslm_left + $qlslm_right).'"';
+			  						
+			  						$s_wrapper_classes = array('swiper', 'mfn-looped-items-slider');
+
+			  						echo '<div class="'.implode(' ', $s_wrapper_classes).'" '.$s_wrapper_params.'><div class="swiper-wrapper">';
+			  				}else if( !empty($section['attr']['query_display_style']) && $section['attr']['query_display_style'] == 'masonry' ){
+			  					wp_enqueue_script('mfn-imagesloaded', get_theme_file_uri('/js/plugins/imagesloaded.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+			  					wp_enqueue_script('mfn-isotope', get_theme_file_uri('/js/plugins/isotope.min.js'), array('jquery'), MFN_THEME_VERSION, true);
+									echo '<div class="mfn-query-loop-masonry">';
+								}else if( self::$is_bebuilder && !empty($section['attr']['query_display']) && $section['attr']['query_display'] == 'slider' ){
+									echo '<div class="swiper mfn-looped-items-slider">';
 								}
 
-								$this->show_wraps($wrap, $w, $vb);
-							}
+              	$q_args = array();
+
+              	if( !empty( $section['attr']['query_type'] ) && $section['attr']['query_type'] == 'terms' ){
+
+              		$q_args['orderby'] = $section['attr']['query_terms_orderby'] ?? 'none'; 
+              		$q_args['order'] = $section['attr']['query_terms_order'] ?? 'ASC'; 
+              		$q_args['hide_empty'] = !empty($section['attr']['query_terms_hide_empty']) ? true : false; 
+              		$q_args['number'] = $section['attr']['query_terms_number'] ?? '0'; 
+
+              		if( self::$is_bebuilder ){
+              			if( !empty($section['attr']['query_terms_number']) ) $q_args['number'] = $section['attr']['query_terms_number'] > 8 ? 8 : $section['attr']['query_terms_number'];
+
+              			if( !empty($section['attr']['query_display']) && $section['attr']['query_display'] == 'slider' ){
+              				if( empty($section['attr']['query_slider_columns']) ) $section['attr']['query_slider_columns'] = 1;
+	              			if( !empty($section['attr']['query_slider_centered']) && $section['attr']['query_slider_centered'] == '2' ){
+	            					$q_args['number'] = $section['attr']['query_slider_columns'] + 2;
+	            				}else{
+	            					$q_args['number'] = $section['attr']['query_slider_columns'];
+	            				}
+	            			}
+
+              		}
+
+              		if( !empty($section['attr']['query_terms_taxonomy']) ){
+              			if( $section['attr']['query_terms_taxonomy'] !== 'product_cat' ){
+              				$choosed_terms = str_replace('_', '-', $section['attr']['query_terms_taxonomy']);
+              			}else{
+              				$choosed_terms = $section['attr']['query_terms_taxonomy'];
+              			}
+              			
+              		}else{
+              			$choosed_terms = 'category';
+              		}
+
+              		$excl_var = 'query_terms_excludes_'.$choosed_terms;
+
+              		if( !empty( $section['attr'][$excl_var] ) && is_array( $section['attr'][$excl_var] ) ){
+              			$arr_helper = array();
+              			foreach( $section['attr'][$excl_var] as $el ) $arr_helper[] = $el['key'];
+              			$q_args['exclude'] = $arr_helper; 
+              		}
+
+              		$incl_var = 'query_terms_includes_'.$choosed_terms;
+
+              		if( !empty( $section['attr'][$incl_var] ) && is_array( $section['attr'][$incl_var] ) ){
+              			$arr_helper = array();
+              			foreach( $section['attr'][$incl_var] as $el ) $arr_helper[] = $el['key'];
+              			$q_args['include'] = $arr_helper; 
+              		}
+
+              		$q_terms = get_terms( $choosed_terms, $q_args );
+
+              		if ( !empty($q_terms) ) :
+										foreach( $q_terms as $t=>$term ) {
+											self::$item_type = 'term';
+											self::$item_id = $term->term_id;
+											if( !self::$is_bebuilder && !empty($section['attr']['query_display']) && $section['attr']['query_display'] == 'slider' ) {
+												echo '<div class="swiper-slide">';
+												echo '<div class="mfn-queryloop-item-wrapper" data-post="'.(!empty(self::$item_id) ? self::$item_id : $this->post_id).'">';
+											}else{
+												echo '<div class="mfn-queryloop-item-wrapper mfn-ql-item-default" data-post="'.(!empty(self::$item_id) ? self::$item_id : $this->post_id).'">';
+											}
+											
+											foreach( $section['wraps'] as $w => $wrap ) {
+              					$this->show_wraps($wrap, $w, $vb, $t);
+              				}
+
+											echo '</div>';
+											if( !self::$is_bebuilder && !empty($section['attr']['query_display']) && $section['attr']['query_display'] == 'slider' ) echo '</div>';
+											self::$item_type = false;
+											self::$item_id = false;
+										}
+
+									else:
+										foreach ($section['wraps'] as $w => $wrap) {
+		              		$this->show_wraps($wrap, $w, $vb);
+		              	}
+									endif;
+
+              	}else{
+
+              		$q_args['post_type'] = $section['attr']['query_post_type'] ?? 'post';
+
+              		if( function_exists('is_woocommerce') && !empty( $section['attr']['query_post_type_product_order'] ) ) {
+
+              			if( $section['attr']['query_post_type_product_order'] == 'on_sale' ){
+
+              				$product_on_sale = wc_get_product_ids_on_sale();
+              				$q_args['post__in'] = array_merge( array( 0 ), wc_get_product_ids_on_sale() );
+
+              				//$meta_q = array('relation' => 'OR', array( 'key' => '_sale_price', 'value' => '', 'compare' => '!=' ), array( 'key' => '_min_variation_sale_price', 'value' => '', 'compare' => '!=' ));
+	              			//$q_args['meta_query'] = $meta_q;
+
+	              		}else if( $section['attr']['query_post_type_product_order'] == 'top_rated' ){
+              				$q_args['meta_key'] = '_wc_average_rating';
+	      							$q_args['orderby'] = 'meta_value_num';
+	      							$q_args['order'] = 'DESC';
+              			}else{
+              				$q_args['meta_key'] = 'total_sales';
+	      							$q_args['orderby'] = 'meta_value_num';
+	      							$q_args['order'] = 'DESC';
+              			}
+              			
+              		}else if( !empty($section['attr']['query_post_orderby']) ){
+              			$q_args['orderby'] = $section['attr']['query_post_orderby']; 
+              			$q_args['order'] = $section['attr']['query_post_order'] ?? 'ASC'; 
+              		}
+              		
+
+              		if( self::$is_bebuilder ){
+              			if( !empty($section['attr']['query_display']) && $section['attr']['query_display'] == 'slider' && !empty($section['attr']['query_slider_columns']) ){
+              				if( !empty($section['attr']['query_slider_centered']) && $section['attr']['query_slider_centered'] == '2' ){
+              					$q_args['posts_per_page'] = $section['attr']['query_slider_columns'] + 2;
+              				}else{
+              					$q_args['posts_per_page'] = $section['attr']['query_slider_columns'];
+              				}
+              			}else{
+              				$q_args['posts_per_page'] = !empty($section['attr']['query_post_per_page']) && $section['attr']['query_post_per_page'] < 8 ? $section['attr']['query_post_per_page'] : '8';
+              			}
+              		}else{
+              			$q_args['posts_per_page'] = !empty($section['attr']['query_post_per_page']) ? $section['attr']['query_post_per_page'] : '-1'; 
+              		}
+
+              		$q_args['offset'] = $section['attr']['query_post_offset'] ?? '0';
+
+              		if( $q_args['post_type'] == 'post' && !empty($section['attr']['query_post_type_post']) ){
+              			$q_args['category_name'] = $section['attr']['query_post_type_post'];
+              		}else if( $q_args['post_type'] == 'product' && !empty($section['attr']['query_post_type_product']) ){
+              			$tax_q = array('relation' => 'AND', array('taxonomy' => 'product_cat', 'field' => 'slug', 'terms' => $section['attr']['query_post_type_product']));
+              			$q_args['tax_query'] = $tax_q;
+              		}else if( $q_args['post_type'] == 'portfolio' && !empty($section['attr']['query_post_type_portfolio']) ){
+              			$tax_q = array('relation' => 'AND', array('taxonomy' => 'portfolio-types', 'field' => 'slug', 'terms' => $section['attr']['query_post_type_portfolio']));
+              			$q_args['tax_query'] = $tax_q;
+              		}else if( $q_args['post_type'] == 'client' && !empty($section['attr']['query_post_type_client']) ){
+              			$tax_q = array('relation' => 'AND', array('taxonomy' => 'client-types', 'field' => 'slug', 'terms' => $section['attr']['query_post_type_client']));
+              			$q_args['tax_query'] = $tax_q;
+              		}else if( $q_args['post_type'] == 'offer' && !empty($section['attr']['query_post_type_offer']) ){
+              			$tax_q = array('relation' => 'AND', array('taxonomy' => 'offer-types', 'field' => 'slug', 'terms' => $section['attr']['query_post_type_offer']));
+              			$q_args['tax_query'] = $tax_q;
+              		}else if( $q_args['post_type'] == 'slide' && !empty($section['attr']['query_post_type_slide']) ){
+              			$tax_q = array('relation' => 'AND', array('taxonomy' => 'slide-types', 'field' => 'slug', 'terms' => $section['attr']['query_post_type_slide']));
+              			$q_args['tax_query'] = $tax_q;
+              		}else if( $q_args['post_type'] == 'testimonial' && !empty($section['attr']['query_post_type_testimonial']) ){
+              			$tax_q = array('relation' => 'AND', array('taxonomy' => 'testimonial-types', 'field' => 'slug', 'terms' => $section['attr']['query_post_type_testimonial']));
+              			$q_args['tax_query'] = $tax_q;
+              		}
+
+              		$section_posts_query = new WP_Query( $q_args );
+
+              		if ( $section_posts_query->have_posts() ) :
+
+              			$s_iterate = 0;
+              			while ( $section_posts_query->have_posts() ) : $section_posts_query->the_post();
+              				self::$item_type = 'post';
+											self::$item_id = get_the_ID();
+              				if( !self::$is_bebuilder && !empty($section['attr']['query_display']) && $section['attr']['query_display'] == 'slider' ){
+              					echo '<div class="swiper-slide">';
+              					echo '<div class="mfn-queryloop-item-wrapper" data-post="'.(!empty(self::$item_id) ? self::$item_id : $this->post_id).'">';
+              				}else{
+              					echo '<div class="mfn-queryloop-item-wrapper mfn-ql-item-default" data-post="'.(!empty(self::$item_id) ? self::$item_id : $this->post_id).'">';
+              				}
+              				foreach ($section['wraps'] as $w => $wrap) {
+              					$this->show_wraps($wrap, $w, $vb, $s_iterate);
+              				}
+              				echo '</div>';
+              				if( !self::$is_bebuilder && !empty($section['attr']['query_display']) && $section['attr']['query_display'] == 'slider' ) echo '</div>';
+              				self::$item_type = false;
+											self::$item_id = false;
+											$s_iterate++;
+              			endwhile;
+
+              			wp_reset_postdata();
+
+              		else:
+
+              			foreach ($section['wraps'] as $w => $wrap) {
+		              		$this->show_wraps($wrap, $w, $vb);
+		              	}
+
+              		endif;
+
+              	}
+
+              	if( !self::$is_bebuilder && !empty($section['attr']['query_display']) && $section['attr']['query_display'] == 'slider' ){
+              		echo '</div></div>';
+              	}else if( !empty($section['attr']['query_display_style']) && $section['attr']['query_display_style'] == 'masonry' ){
+              		wp_enqueue_script('mfn-imagesloaded', get_theme_file_uri('/js/plugins/imagesloaded.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+              		wp_enqueue_script('mfn-isotope', get_theme_file_uri('/js/plugins/isotope.min.js'), array('jquery'), MFN_THEME_VERSION, true);
+									echo '</div>';
+								}else if( self::$is_bebuilder && !empty($section['attr']['query_display']) && $section['attr']['query_display'] == 'slider' ){
+									echo '</div>';
+								}
+
+								if( self::$is_bebuilder && !empty($section['attr']['query_display']) && $section['attr']['query_display'] == 'slider' && !empty($section['attr']['query_slider_arrows']) ) {
+              		echo '<div class="swiper-button-next mfn-swiper-arrow" tabindex="0" role="button" aria-label="Next slide" aria-disabled="false"><i class="'.( !empty($section['attr']['query_display_slider_arrow_next']) ? $section['attr']['query_display_slider_arrow_next'] : "icon-right-open-big" ).'"></i></div>';
+              		echo '<div class="swiper-button-prev mfn-swiper-arrow" tabindex="0" role="button" aria-label="Previous slide" aria-disabled="false"><i class="'.( !empty($section['attr']['query_display_slider_arrow_prev']) ? $section['attr']['query_display_slider_arrow_prev'] : "icon-left-open-big" ).'"></i></div>';
+              	}
+
+              	if( self::$is_bebuilder && !empty($section['attr']['query_display']) && $section['attr']['query_display'] == 'slider' && !empty($section['attr']['query_slider_dots']) ) {
+              		echo '<div class="swiper-pagination swiper-pagination-bullets"><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet swiper-pagination-bullet-active"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span></div>';
+              	}
+
+              }else{
+              	//if( self::$is_bebuilder && isset($section['attr']['type']) && $section['attr']['type'] == 'query' ) { echo '<div class="mfn-queryloop-item-wrapper mfn-ql-item-default">'; }
+              	foreach ($section['wraps'] as $w => $wrap) {
+              		$this->show_wraps($wrap, $w, $vb);
+              	}
+              	//if( self::$is_bebuilder && isset($section['attr']['type']) && $section['attr']['type'] == 'query' ) { echo '</div>'; }
+              }
+
+							
 						}
 
 
@@ -705,7 +1053,7 @@ if( ! class_exists('Mfn_Builder_Front') )
 					}
 
 
-  				if( $this->is_bebuilder || ( isset( $items ) && is_array( $items ) ) ){
+  				if( self::$is_bebuilder || ( isset( $items ) && is_array( $items ) ) ){
   					echo '<a href="#" data-tooltip="Add new section" class="btn-section-add mfn-icon-add-light mfn-section-add siblings next" data-position="after">Add section</a>';
   				}
 
@@ -716,34 +1064,17 @@ if( ! class_exists('Mfn_Builder_Front') )
 
   				echo '</div>';
   			}
-
-  		}
-
-  		if( !$items ) echo '</div>';
-
-  		// WordPress Editor | after builder
-
-  		if ( 0 == mfn_opts_get('display-order') && ( !isset($items) || get_post_type( $this->post_id ) != 'template' ) ) {
-  			$this->the_content();
-  		}
-
-			// CSS local styles
-
-			$is_template = false;
-			if( mfn_ID() !== get_the_ID() ) {
-				$is_template = true;
-			}
-
-			if( $is_template || $vbtoolsoff || ( empty( $_GET['visual'] ) && ( !mfn_opts_get('local-styles-location') || ( $this->template_type && in_array($this->template_type, array('megamenu', 'footer', 'shop-archive', 'single-product')) ) ) ) ){
-				if( $this->template_type != 'header' ) {
-					$this->enqueue_local_style();
-				}
-			}
-
   	}
 
-  	public function show_wraps($wrap, $w, $vb){
 
+  	public function show_wraps($wrap, $w, $vb, $s_iterate = false){
+
+  		// Muffin Builder ACM compatibility
+			if( !isset($wrap['tablet_size']) ){
+				$wrap['tablet_size'] = isset($wrap['size']) ? $wrap['size'] : '1/1';
+				$wrap['mobile_size'] = '1/1';
+			}
+			
 			// unique ID
 
 			if( empty( $wrap['uid'] ) ) {
@@ -757,6 +1088,7 @@ if( ! class_exists('Mfn_Builder_Front') )
 			$global_wrap_attr = '';
 			$is_global_wrap = isset($wrap['attr']['global_wraps_select']) && intval($wrap['attr']['global_wraps_select']);
 			$global_wrap_id = '';
+			$wrap_inner_inline_styles = false;
 
 			// be global sections
 			if( $is_global_wrap ){
@@ -806,6 +1138,41 @@ if( ! class_exists('Mfn_Builder_Front') )
 				$wrap_class[] = $this->mobile_classes[ $wrap['mobile_size'] ];
 			}else{
 				$wrap_class[] = 'mobile-one';
+			}
+
+			// query loop
+
+			if( isset($wrap['attr']['type']) && $wrap['attr']['type'] == 'query' ){
+				$wrap_class[] = 'mfn-looped-items';
+
+				if( !empty($wrap['attr']['query_display']) && $wrap['attr']['query_display'] == 'slider' ){
+					$wrap_class[] = 'mfn-looped-items-slider-wrapper';
+
+					if( !empty($wrap['attr']['query_slider_arrows']) ){
+						if( !empty($wrap['attr']['query_slider_arrows_style']) ){
+							$wrap_class[] = 'mfn-arrows-'.$wrap['attr']['query_slider_arrows_style'];
+						}else{
+							$wrap_class[] = 'mfn-arrows-standard';
+						}
+					}else{
+						$wrap_class[] = 'mfn-arrows-hidden';
+					}
+
+					if( !empty($wrap['attr']['query_slider_dots']) ){
+						if( !empty($wrap['attr']['query_slider_dots_style']) ){
+							$wrap_class[] = 'mfn-dots-'.$wrap['attr']['query_slider_dots_style'];
+						}else{
+							$wrap_class[] = 'mfn-dots-standard';
+						}
+					}else{
+						$wrap_class[] = 'mfn-dots-hidden';
+					}
+
+					if( !empty($wrap['attr']['query_slider_centered']) && $wrap['attr']['query_slider_centered'] == '2' ){
+						$wrap_class[] = 'mfn-ql-slider-wrapper-offset';
+					}
+
+				}
 			}
 
 			if( key_exists('attr', $wrap) ) {
@@ -955,6 +1322,10 @@ if( ! class_exists('Mfn_Builder_Front') )
 						}
 					}
 
+					if ( self::$item_id && !empty( $wrap['attr']['style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner:background-image'] ) && $wrap['attr']['style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner:background-image'] == '{featured_image}' && has_post_thumbnail(self::$item_id) ) {
+						$wrap_inner_inline_styles = 'style="background-image: url('.wp_get_attachment_image_src( get_post_thumbnail_id(self::$item_id), 'large')[0].')"';
+					}
+
 					// parallax for BeBuilder
 
 					if ( ! empty( $wrap['attr']['style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner:background-image'] ) && ! empty( $wrap['attr']['style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner:background-attachment'] ) && ( $wrap['attr']['style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner:background-attachment'] == 'parallax' ) ) {
@@ -1021,7 +1392,7 @@ if( ! class_exists('Mfn_Builder_Front') )
 			// output WRAP -----
 
 
-			if( $vb ){
+			if( $vb && !$s_iterate ){
 				echo '<div '. $wrap_id .' class="wrap vb-item mcb-wrap '. $wrap_class .' clearfix" '. $global_wrap_attr .' data-desktop-col="'. $desktop_size_col .'" data-tablet-col="'. $tablet_size_col .'" data-mobile-col="'. $mobile_size_col .'" data-desktop-size="'. $desktop_size .'" data-tablet-size="'. $tablet_size .'" data-mobile-size="'. $mobile_size .'" data-order="'. $w .'"  data-uid="'. $original_uid .'" style="'. $wrap_style .'" '. $parallax .' '. $wrap_data .'>';
 				// echo Mfn_Builder_Helper::wrapTools($wrap['size']);
 
@@ -1040,10 +1411,13 @@ if( ! class_exists('Mfn_Builder_Front') )
 					echo '<img class="mfn-parallax" src="'. $parallax_bg_image .'" alt="parallax background" style="opacity:0" />';
 				}
 
-				echo '<div class="mcb-wrap-inner mcb-wrap-inner-'.$wrap['uid'].'">';
+				$w_wrapper_params = false;
+				$inner_wrap_class_uid = 'mcb-wrap-inner-'.$wrap['uid'];
 
-					if( $vb ){
-						echo Mfn_Builder_Helper::wrapTools($desktop_size);
+				echo '<div class="mcb-wrap-inner '.$inner_wrap_class_uid.'" '.$w_wrapper_params.' '.$wrap_inner_inline_styles.'>';
+
+					if( $vb && !$s_iterate ){
+						echo Mfn_Builder_Helper::wrapTools($wrap);
 					}
 
 					// Background Overlay
@@ -1057,16 +1431,258 @@ if( ! class_exists('Mfn_Builder_Front') )
             ksort($wrap['items']);
 
             // loop items
-            foreach ($wrap['items'] as $i => $item) {
 
-            	if( !isset($item['tablet_size']) ){
-            		$item['tablet_size'] = !empty($item['size']) ? $item['size'] : '1/1';
-            		$item['mobile_size'] = '1/1';
+            	/**
+               * 
+               * QUERY loop
+               * 
+               * */
+
+              if( /*!self::$is_bebuilder &&*/ isset($wrap['attr']['type']) && $wrap['attr']['type'] == 'query' ){
+
+              	if( !self::$is_bebuilder && !empty($wrap['attr']['query_display']) && $wrap['attr']['query_display'] == 'slider' ){
+              		
+              		wp_enqueue_script('mfn-swiper', get_theme_file_uri('/js/swiper.js'), array('jquery'), MFN_THEME_VERSION, true);
+              		wp_enqueue_style('mfn-swiper', get_theme_file_uri('/css/scripts/swiper.css'), false, MFN_THEME_VERSION, false);
+
+									$w_wrapper_params = 'data-columns="'.(!empty($wrap['attr']['query_slider_columns']) ? $wrap['attr']['query_slider_columns'] : 1).'"';
+									$w_wrapper_params .= 'data-columns-tablet="'.(!empty($wrap['attr']['query_slider_columns_tablet']) ? $wrap['attr']['query_slider_columns_tablet'] : 1).'"';
+									$w_wrapper_params .= 'data-columns-mobile="'.(!empty($wrap['attr']['query_slider_columns_mobile']) ? $wrap['attr']['query_slider_columns_mobile'] : 1).'"';
+									//$w_wrapper_params .= ' data-animation="'.(!empty($wrap['attr']['query_slider_animation']) ? $wrap['attr']['query_slider_animation'] : 'slide').'"';
+									$w_wrapper_params .= ' data-dots="'.(!empty($wrap['attr']['query_slider_dots']) ? $wrap['attr']['query_slider_dots'] : '0').'"';
+									$w_wrapper_params .= ' data-arrows="'.(!empty($wrap['attr']['query_slider_arrows']) ? $wrap['attr']['query_slider_arrows'] : '0').'"';
+									$w_wrapper_params .= ' data-autoplay="'.(!empty($wrap['attr']['query_slider_autoplay']) ? $wrap['attr']['query_slider_autoplay'] : '0').'"';
+									$w_wrapper_params .= ' data-mousewheel="'.(!empty($wrap['attr']['query_slider_mousewheel']) ? $wrap['attr']['query_slider_mousewheel'] : '0').'"';
+									$w_wrapper_params .= ' data-centered="'.(!empty($wrap['attr']['query_slider_centered']) ? $wrap['attr']['query_slider_centered'] : '0').'"';
+									$w_wrapper_params .= ' data-infinity="'.(!empty($wrap['attr']['query_slider_infinity']) ? $wrap['attr']['query_slider_infinity'] : '0').'"';
+									$w_wrapper_params .= ' data-arrownext="'.(!empty($wrap['attr']['query_display_slider_arrow_next']) ? $wrap['attr']['query_display_slider_arrow_next'] : 'icon-right-open-big').'"';
+			  					$w_wrapper_params .= ' data-arrowprev="'.(!empty($wrap['attr']['query_display_slider_arrow_prev']) ? $wrap['attr']['query_display_slider_arrow_prev'] : 'icon-left-open-big').'"';
+
+									$qlslm_left = 12;
+		  						$qlslm_right = 12;
+
+		  						if( !empty($wrap['attr']['style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner .mfn-queryloop-item-wrapper:margin']['left']) ) $qlslm_left = str_replace(array('px', '%', 'em', 'rem', 'vw'), '', $wrap['attr']['style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner .mfn-queryloop-item-wrapper:margin']['left']);
+		  						if( !empty($wrap['attr']['style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner .mfn-queryloop-item-wrapper:margin']['right']) ) $qlslm_right = str_replace(array('px', '%', 'em', 'rem', 'vw'), '', $wrap['attr']['style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner .mfn-queryloop-item-wrapper:margin']['right']);
+
+		  						$w_wrapper_params .= ' data-space_desktop="'.($qlslm_left + $qlslm_right).'"';
+
+									$w_wrapper_classes = array('swiper', 'mfn-looped-items-slider');
+
+									echo '<div class="'.implode(' ', $w_wrapper_classes).'" '.$w_wrapper_params.'><div class="swiper-wrapper">';
+								}else if( !empty($wrap['attr']['query_display_style']) && $wrap['attr']['query_display_style'] == 'masonry' ){
+									wp_enqueue_script('mfn-imagesloaded', get_theme_file_uri('/js/plugins/imagesloaded.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+									wp_enqueue_script('mfn-isotope', get_theme_file_uri('/js/plugins/isotope.min.js'), array('jquery'), MFN_THEME_VERSION, true);
+									echo '<div class="mfn-query-loop-masonry">';
+								}else if( self::$is_bebuilder && !empty($wrap['attr']['query_display']) && $wrap['attr']['query_display'] == 'slider' ){
+									echo '<div class="swiper mfn-looped-items-slider">';
+								}
+
+	              $q_args = array();
+	              if( !empty( $wrap['attr']['query_type'] ) && $wrap['attr']['query_type'] == 'terms' ){
+
+              		$q_args['orderby'] = $wrap['attr']['query_terms_orderby'] ?? 'none'; 
+              		$q_args['order'] = $wrap['attr']['query_terms_order'] ?? 'ASC'; 
+              		$q_args['hide_empty'] = !empty($wrap['attr']['query_terms_hide_empty']) ? true : false; 
+              		$q_args['number'] = $wrap['attr']['query_terms_number'] ?? '0'; 
+
+              		if( self::$is_bebuilder ){
+              			if( !empty($wrap['attr']['query_terms_number']) ) $q_args['number'] = $wrap['attr']['query_terms_number'] > 8 ? 8 : $wrap['attr']['query_terms_number'];
+
+              			if( !empty($wrap['attr']['query_display']) && $wrap['attr']['query_display'] == 'slider' ){
+              				if( empty($wrap['attr']['query_slider_columns']) ) $wrap['attr']['query_slider_columns'] = 1;
+	              			if( !empty($wrap['attr']['query_slider_centered']) && $wrap['attr']['query_slider_centered'] == '2' ){
+	            					$q_args['number'] = $wrap['attr']['query_slider_columns'] + 2;
+	            				}else{
+	            					$q_args['number'] = $wrap['attr']['query_slider_columns'];
+	            				}
+	            			}
+
+              		}
+
+              		if( !empty($wrap['attr']['query_terms_taxonomy']) ){
+              			if( $wrap['attr']['query_terms_taxonomy'] !== 'product_cat' ){
+              				$choosed_terms = str_replace('_', '-', $wrap['attr']['query_terms_taxonomy']);
+              			}else{
+              				$choosed_terms = $wrap['attr']['query_terms_taxonomy'];
+              			}
+              			
+              		}else{
+              			$choosed_terms = 'category';
+              		}
+
+              		$excl_var = 'query_terms_excludes_'.$choosed_terms;
+
+              		if( !empty( $wrap['attr'][$excl_var] ) && is_array( $wrap['attr'][$excl_var] ) ){
+              			$arr_helper = array();
+              			foreach( $wrap['attr'][$excl_var] as $el ) $arr_helper[] = $el['key'];
+              			$q_args['exclude'] = $arr_helper; 
+              		}
+
+              		$incl_var = 'query_terms_includes_'.$choosed_terms;
+
+              		if( !empty( $wrap['attr'][$incl_var] ) && is_array( $wrap['attr'][$incl_var] ) ){
+              			$arr_helper = array();
+              			foreach( $wrap['attr'][$incl_var] as $el ) $arr_helper[] = $el['key'];
+              			$q_args['include'] = $arr_helper; 
+              		}
+
+              		$q_terms = get_terms( $choosed_terms, $q_args );
+
+              		if ( !empty($q_terms) ) :
+										foreach( $q_terms as $t=>$term ) {
+											self::$item_type = 'term';
+											self::$item_id = $term->term_id;
+											if( !self::$is_bebuilder && !empty($wrap['attr']['query_display']) && $wrap['attr']['query_display'] == 'slider' ) {
+												echo '<div class="swiper-slide">';
+												echo '<div class="mfn-queryloop-item-wrapper" data-post="'.(!empty(self::$item_id) ? self::$item_id : $this->post_id).'">';
+											}else{
+												echo '<div class="mfn-queryloop-item-wrapper mfn-ql-item-default" data-post="'.(!empty(self::$item_id) ? self::$item_id : $this->post_id).'">';
+											}
+
+											foreach ($wrap['items'] as $i => $item) {
+              					$this->show_items($item, $i, $vb, $t);
+              				}
+
+											echo '</div>';
+											if( !self::$is_bebuilder && !empty($wrap['attr']['query_display']) && $wrap['attr']['query_display'] == 'slider' ) echo '</div>';
+											self::$item_type = false;
+											self::$item_id = false;
+										}
+
+									else:
+										foreach ($wrap['items'] as $i => $item) {
+		              		$this->show_items($item, $i, $vb);
+		              	}
+									endif;
+
+              	}else{
+
+	              		$q_args['post_type'] = $wrap['attr']['query_post_type'] ?? 'post';
+	              		
+	              		if( function_exists('is_woocommerce') && !empty( $wrap['attr']['query_post_type_product_order'] ) ) {
+
+	              			if( $wrap['attr']['query_post_type_product_order'] == 'on_sale' ){
+
+	              				$product_on_sale = wc_get_product_ids_on_sale();
+              					$q_args['post__in'] = array_merge( array( 0 ), wc_get_product_ids_on_sale() );
+
+	              				/*$meta_q = array('relation' => 'OR', array( 'key' => '_sale_price', 'value' => '', 'compare' => '!=' ), array( 'key' => '_min_variation_sale_price', 'value' => '', 'compare' => '!=' ));
+	              				$q_args['meta_query'] = $meta_q;*/
+
+	              			}else if( $wrap['attr']['query_post_type_product_order'] == 'top_rated' ){
+	              				$q_args['meta_key'] = '_wc_average_rating';
+		      							$q_args['orderby'] = 'meta_value_num';
+		      							$q_args['order'] = 'DESC';
+	              			}else{
+	              				$q_args['meta_key'] = 'total_sales';
+		      							$q_args['orderby'] = 'meta_value_num';
+		      							$q_args['order'] = 'DESC';
+	              			}
+
+	              		}else if( !empty($wrap['attr']['query_post_orderby']) ){
+	              			$q_args['orderby'] = $wrap['attr']['query_post_orderby']; 
+	              			$q_args['order'] = $wrap['attr']['query_post_order'] ?? 'ASC'; 
+	              		}
+
+	              		if( self::$is_bebuilder ){
+	              			if( !empty($wrap['attr']['query_display']) && $wrap['attr']['query_display'] == 'slider' && !empty($wrap['attr']['query_slider_columns']) ){
+	              				if( !empty($wrap['attr']['query_slider_centered']) && $wrap['attr']['query_slider_centered'] == '2' ){
+	              					$q_args['posts_per_page'] = $wrap['attr']['query_slider_columns'] + 2;
+	              				}else{
+	              					$q_args['posts_per_page'] = $wrap['attr']['query_slider_columns'];
+	              				}
+	              			}else{
+	              				$q_args['posts_per_page'] = !empty($wrap['attr']['query_post_per_page']) && $wrap['attr']['query_post_per_page'] < 8 ? $wrap['attr']['query_post_per_page'] : '8';
+	              			}
+	              		}else{
+	              			$q_args['posts_per_page'] = !empty($wrap['attr']['query_post_per_page']) ? $wrap['attr']['query_post_per_page'] : '-1'; 
+	              		}
+
+	              		$q_args['offset'] = $wrap['attr']['query_post_offset'] ?? '0'; 
+
+	              		if( $q_args['post_type'] == 'post' && !empty($wrap['attr']['query_post_type_post']) ){
+	              			$q_args['category_name'] = $wrap['attr']['query_post_type_post'];
+	              		}else if( $q_args['post_type'] == 'product' && !empty($wrap['attr']['query_post_type_product']) ){
+	              			$tax_q = array('relation' => 'AND', array('taxonomy' => 'product_cat', 'field' => 'slug', 'terms' => $wrap['attr']['query_post_type_product']));
+	              			$q_args['tax_query'] = $tax_q;
+	              		}else if( $q_args['post_type'] == 'portfolio' && !empty($wrap['attr']['query_post_type_portfolio']) ){
+	              			$tax_q = array('relation' => 'AND', array('taxonomy' => 'portfolio-types', 'field' => 'slug', 'terms' => $wrap['attr']['query_post_type_portfolio']));
+	              			$q_args['tax_query'] = $tax_q;
+	              		}else if( $q_args['post_type'] == 'client' && !empty($wrap['attr']['query_post_type_client']) ){
+	              			$tax_q = array('relation' => 'AND', array('taxonomy' => 'client-types', 'field' => 'slug', 'terms' => $wrap['attr']['query_post_type_client']));
+	              			$q_args['tax_query'] = $tax_q;
+	              		}else if( $q_args['post_type'] == 'offer' && !empty($wrap['attr']['query_post_type_offer']) ){
+	              			$tax_q = array('relation' => 'AND', array('taxonomy' => 'offer-types', 'field' => 'slug', 'terms' => $wrap['attr']['query_post_type_offer']));
+	              			$q_args['tax_query'] = $tax_q;
+	              		}else if( $q_args['post_type'] == 'slide' && !empty($wrap['attr']['query_post_type_slide']) ){
+	              			$tax_q = array('relation' => 'AND', array('taxonomy' => 'slide-types', 'field' => 'slug', 'terms' => $wrap['attr']['query_post_type_slide']));
+	              			$q_args['tax_query'] = $tax_q;
+	              		}else if( $q_args['post_type'] == 'testimonial' && !empty($wrap['attr']['query_post_type_testimonial']) ){
+	              			$tax_q = array('relation' => 'AND', array('taxonomy' => 'testimonial-types', 'field' => 'slug', 'terms' => $wrap['attr']['query_post_type_testimonial']));
+	              			$q_args['tax_query'] = $tax_q;
+	              		}
+
+	              		$wrap_posts_query = new WP_Query( $q_args );
+
+	              		if ( $wrap_posts_query->have_posts() ) :
+
+	              			$w_iterate = 0;
+	              			while ( $wrap_posts_query->have_posts() ) : $wrap_posts_query->the_post();
+	              				self::$item_type = 'post';
+												self::$item_id = get_the_ID();
+	              				if( !self::$is_bebuilder && !empty($wrap['attr']['query_display']) && $wrap['attr']['query_display'] == 'slider' ){
+	              					echo '<div class="swiper-slide">';
+	              					echo '<div class="mfn-queryloop-item-wrapper" data-post="'.(!empty(self::$item_id) ? self::$item_id : $this->post_id).'">';
+	              				}else{
+	              					echo '<div class="mfn-queryloop-item-wrapper mfn-ql-item-default" data-post="'.(!empty(self::$item_id) ? self::$item_id : $this->post_id).'">';
+	              				}
+	              				foreach ($wrap['items'] as $i => $item) {
+	              					$this->show_items($item, $i, $vb, $w_iterate);
+	              				}
+	              				echo '</div>';
+	              				if( !self::$is_bebuilder && !empty($wrap['attr']['query_display']) && $wrap['attr']['query_display'] == 'slider' ) { echo '</div>'; }
+	              				self::$item_type = false;
+												self::$item_id = false;
+												$w_iterate++;
+	              			endwhile;
+
+	              			wp_reset_postdata();
+
+	              		else:
+	              			foreach ($wrap['items'] as $i => $item) {
+			              		$this->show_items($item, $i, $vb);
+			              	}
+	              		endif;
+
+              	}
+
+              if( !self::$is_bebuilder && !empty($wrap['attr']['query_display']) && $wrap['attr']['query_display'] == 'slider' ){
+              	echo '</div></div>';
+              }else if( !empty($wrap['attr']['query_display_style']) && $wrap['attr']['query_display_style'] == 'masonry' ){
+								echo '</div>';
+							}else if( self::$is_bebuilder && !empty($wrap['attr']['query_display']) && $wrap['attr']['query_display'] == 'slider' ){
+								echo '</div>';
+							}
+
+							if( self::$is_bebuilder && !empty($wrap['attr']['query_display']) && $wrap['attr']['query_display'] == 'slider' && !empty($wrap['attr']['query_slider_arrows']) ) {
+            		echo '<div class="swiper-button-next mfn-swiper-arrow" role="button" aria-label="Next slide" aria-disabled="false"><i class="'.( !empty($wrap['attr']['query_display_slider_arrow_next']) ? $wrap['attr']['query_display_slider_arrow_next'] : "icon-right-open-big" ).'"></i></div>';
+            		echo '<div class="swiper-button-prev mfn-swiper-arrow" role="button" aria-label="Previous slide" aria-disabled="false"><i class="'.( !empty($wrap['attr']['query_display_slider_arrow_prev']) ? $wrap['attr']['query_display_slider_arrow_prev'] : "icon-left-open-big" ).'"></i></div>';
             	}
 
-            	$this->show_items($item, $i, $vb);
-            }
+            	if( self::$is_bebuilder && !empty($wrap['attr']['query_display']) && $wrap['attr']['query_display'] == 'slider' && !empty($wrap['attr']['query_slider_dots']) ) {
+            		echo '<div class="swiper-pagination swiper-pagination-bullets"><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet swiper-pagination-bullet-active"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span></div>';
+            	}
 
+              }else{
+              	//if( self::$is_bebuilder && isset($wrap['attr']['type']) && $wrap['attr']['type'] == 'query' ) echo '<div class="mfn-queryloop-item-wrapper mfn-ql-item-default">';
+              	foreach ($wrap['items'] as $i => $item) {
+              		$this->show_items($item, $i, $vb, $s_iterate);
+              	}
+              	//if( self::$is_bebuilder && isset($wrap['attr']['type']) && $wrap['attr']['type'] == 'query' ) echo '</div>';
+              }
+
+            	//$this->show_items($item, $i, $vb);
+            
 					}else{
 						echo '<div class="mfn-drag-helper placeholder-wrap"></div>';
 					}
@@ -1076,7 +1692,12 @@ if( ! class_exists('Mfn_Builder_Front') )
 			echo '</div>';
   	}
 
-  	public function show_items($item, $i, $vb){
+  	public function show_items($item, $i, $vb, $w_iterate = false){
+
+  		if( !isset($item['tablet_size']) ){
+    		$item['tablet_size'] = !empty($item['size']) ? $item['size'] : '1/1';
+    		$item['mobile_size'] = '1/1';
+    	}
 
 			$type = 'item_'. $item['type'];
 
@@ -1102,6 +1723,12 @@ if( ! class_exists('Mfn_Builder_Front') )
 				}
 
 				$item_class[] = 'mcb-item-'. $item['uid'];
+
+				if( !self::$item_id && !empty($item['fields']['vb_postid']) ){
+					self::$item_id = $item['fields']['vb_postid'];
+				}
+
+				//echo self::$item_id;
 
 				// size
 
@@ -1170,7 +1797,7 @@ if( ! class_exists('Mfn_Builder_Front') )
 
 				// ACM new input name
 				if( ! empty( $item['fields']['custom_css'] ) ){
-					$item_style .= ';'. $item['fields']['custom_css'];
+					$item_style .= $item['fields']['custom_css'];
 				}
 
 				$desktop_size = $item['size'];
@@ -1197,7 +1824,7 @@ if( ! class_exists('Mfn_Builder_Front') )
 				$item_class	= implode(' ', $item_class);
 
 				// output -----
-				if( $vb ){
+				if( $vb && !$w_iterate ){
 					$tooltip = false;
 
 					if( !empty($item['fields']['style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement:hide_under_custom']) ) $tooltip = 'data-position="bottom" data-tooltip="Hide under '.$item['fields']['style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement:hide_under_custom'].'"';
@@ -1211,11 +1838,13 @@ if( ! class_exists('Mfn_Builder_Front') )
 				}
 
 					echo '<div class="mcb-column-inner mcb-column-inner-'.$item['uid'].' mcb-item-'.$item['type'].'-inner">';
-						if( $vb ) { echo Mfn_Builder_Helper::itemTools($desktop_size); }
+						if( $vb && !$w_iterate ) { echo Mfn_Builder_Helper::itemTools($desktop_size); }
 						echo Mfn_Builder_Items::$type( $item['fields'], $vb );
 					echo '</div>';
 
 				echo '</div>';
+
+				// if( $item_id_from_vb ) self::$item_id = false;
 			}
   	}
 

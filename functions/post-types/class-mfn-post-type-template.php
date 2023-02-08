@@ -20,10 +20,12 @@ if (! class_exists('Mfn_Post_Type_Template')) {
 
 		public function __construct(){
 
-			if ( $visibility = mfn_opts_get( 'builder-visibility' ) ) {
-				if( $visibility == 'hide' || ( !current_user_can( $visibility ) ) ) {
-					return false;
-				}
+			if( !apply_filters('bebuilder_access', false) ){
+				return false;
+			}
+
+			if( !current_user_can('editor') && !current_user_can('administrator') ){
+				return false;
 			}
 
 			parent::__construct();
@@ -54,8 +56,8 @@ if (! class_exists('Mfn_Post_Type_Template')) {
 				add_filter('views_edit-template', array( $this, 'list_tabs_wrapper' ));
 				add_action('pre_get_posts', array( $this, 'filter_by_tab'));
 
-    			add_filter( 'manage_template_posts_columns', array( $this, 'mfn_set_template_columns' ) );
-	    		add_action( 'manage_template_posts_custom_column' , array( $this, 'mfn_template_column'), 10, 2 );
+  			add_filter( 'manage_template_posts_columns', array( $this, 'mfn_set_template_columns' ) );
+    		add_action( 'manage_template_posts_custom_column' , array( $this, 'mfn_template_column'), 10, 2 );
 
 				add_action( 'wp_nav_menu_item_custom_fields', array( $this, 'mfn_menu_item_icon_field') );
 				add_action( 'wp_update_nav_menu_item', array( $this, 'mfn_save_menu_item_icon'), 10, 2 );
@@ -66,28 +68,55 @@ if (! class_exists('Mfn_Post_Type_Template')) {
 				if( $GLOBALS['pagenow'] == 'post-new.php' ){
 					add_filter('admin_footer_text', array($this, 'templateStartPopup'));
 				}
-    			
+				if( $GLOBALS['pagenow'] == 'edit.php' ){
+					add_action('all_admin_notices', array($this, 'dashboardHeader'));
+					add_action('admin_enqueue_scripts', array($this, 'dashboardEnqueue'));
+				}
+
 				//add_action('admin_footer-post-new.php', array($this, 'templateStartPopup'));
 			}
 		}
- 
-		public function templateStartPopup() {
-			$post_type = filter_input(INPUT_GET, 'post_type');
-		    $screen = get_current_screen();
 
-		    if( $screen->id == 'template' && !empty($post_type) && $post_type == 'template' ){
-		    	echo '<div class="mfn-ui">';
-					require_once(get_theme_file_path('/visual-builder/partials/template-type-modal.php'));
+		public function dashboardHeader() {
+
+			$post_type = filter_input(INPUT_GET, 'post_type');
+	    	$screen = get_current_screen();
+
+		    if( $screen->id == 'edit-template' && !empty($post_type) && $post_type == 'template' ){
+				echo '<div class="mfn-ui mfn-templates" data-page="templates">';
+					// header
+					include_once get_theme_file_path('/functions/admin/templates/parts/header.php');
 				echo '</div>';
 		    }
 
+		}
 
-		 
-		    /*wp_enqueue_style('boot_css', plugins_url('inc/bootstrap.css',__FILE__ ));
-		    wp_enqueue_script('boot_js', plugins_url('inc/bootstrap.js',__FILE__ ));*/
+		public function dashboardEnqueue() {
+
+			$post_type = filter_input(INPUT_GET, 'post_type');
+	    $screen = get_current_screen();
+
+	    if( $screen->id == 'edit-template' && !empty($post_type) && $post_type == 'template' ){
+				wp_enqueue_style( 'mfn-dashboard', get_theme_file_uri('/functions/admin/assets/dashboard.css'), array(), MFN_THEME_VERSION );
+				wp_enqueue_script('mfn-dashboard', get_theme_file_uri('/functions/admin/assets/dashboard.js'), false, MFN_THEME_VERSION, true);
+	    }
+
+		}
+
+		public function templateStartPopup() {
+
+			$post_type = filter_input(INPUT_GET, 'post_type');
+	    $screen = get_current_screen();
+
+	    if( $screen->id == 'template' && !empty($post_type) && $post_type == 'template' ){
+	    	echo '<div class="mfn-ui">';
+					require_once(get_theme_file_path('/visual-builder/partials/template-type-modal.php'));
+				echo '</div>';
+	    }
 		}
 
 		public function adminClass($classes){
+
 			$tmpl_type = false;
 
 			if( !empty($_GET['post']) ){
@@ -99,6 +128,7 @@ if (! class_exists('Mfn_Post_Type_Template')) {
 			if( empty($tmpl_type) ) $tmpl_type = 'default';
 
 			if( strpos($classes, 'mfn-template-builder') === false ) $classes .= ' mfn-template-builder mfn-template-builder-'.$tmpl_type;
+
 			return $classes;
 		}
 
@@ -118,6 +148,7 @@ if (! class_exists('Mfn_Post_Type_Template')) {
 		 * */
 
 		public function mfn_menu_item_icon_field($item_id) {
+
 			$menu_item_icon = get_post_meta( $item_id, 'mfn_menu_item_icon', true );
 			$menu_item_icon_img = get_post_meta( $item_id, 'mfn_menu_item_icon_img', true );
 			$menu_item_mm = get_post_meta( $item_id, 'mfn_menu_item_megamenu', true );
@@ -172,7 +203,7 @@ if (! class_exists('Mfn_Post_Type_Template')) {
 			</div>';
 
 			echo '</div></div>';
-			
+
 		}
 
 		/**
@@ -180,6 +211,7 @@ if (! class_exists('Mfn_Post_Type_Template')) {
 		 * */
 
 		function mfn_save_menu_item_icon( $menu_id, $menu_item_db_id ) {
+
 			if ( !empty( $_POST['mfn_menu_item_icon'][$menu_item_db_id]  ) ) {
 				$sanitized_data = sanitize_text_field( $_POST['mfn_menu_item_icon'][$menu_item_db_id] );
 				update_post_meta( $menu_item_db_id, 'mfn_menu_item_icon', $sanitized_data );
@@ -196,7 +228,7 @@ if (! class_exists('Mfn_Post_Type_Template')) {
 
 			if ( !empty( $_POST['mfn_menu_item_megamenu'][$menu_item_db_id] ) ) {
 				$sanitized_data = sanitize_text_field( $_POST['mfn_menu_item_megamenu'][$menu_item_db_id] );
-				
+
 				if( $sanitized_data == 'enabled' ){
 					update_post_meta($menu_item_db_id, 'menu-item-mfn-megamenu', 'enabled'); // automatic mega menu
 				}else{
@@ -216,13 +248,15 @@ if (! class_exists('Mfn_Post_Type_Template')) {
 		 */
 
 		public function mfn_set_template_columns($columns) {
+
 			$columns['tmpltype'] = esc_html__('Type', 'mfn-opts');
 			$columns['conditions'] = esc_html__('Conditions', 'mfn-opts');
-			
-    		return $columns;
+
+    	return $columns;
 		}
 
 		public function mfn_template_column($column, $post_id){
+
 			if($column == 'tmpltype'){
 				$tmpl_type = get_post_meta($post_id, 'mfn_template_type', true);
 				echo '<span class="mfn-label-table-list mfn-label-'.$tmpl_type.'">';
@@ -250,7 +284,7 @@ if (! class_exists('Mfn_Post_Type_Template')) {
 								}elseif( !empty($con->archives) ){
 									$pt = get_post_type_object( $con->archives );
 								}
-								
+
 								echo 'Archive: '.$pt->label;
 
 								if( !empty($term->name) ) echo '/'.$term->name;
@@ -260,7 +294,7 @@ if (! class_exists('Mfn_Post_Type_Template')) {
 							if( empty($con->singular) ){
 								echo 'All singulars';
 							}else{
-								
+
 								if( strpos($con->singular, ':') !== false){
 									$expl = explode(':', $con->singular);
 									$pt = get_post_type_object( $expl[0] );
@@ -271,7 +305,7 @@ if (! class_exists('Mfn_Post_Type_Template')) {
 								}elseif( !empty($con->singular) ){
 									$pt = get_post_type_object( $con->singular );
 								}
-								
+
 								echo 'Singular: '.$pt->label;
 
 								if( !empty($term->name) ) echo '/'.$term->name;
@@ -317,7 +351,7 @@ if (! class_exists('Mfn_Post_Type_Template')) {
 				'section' => 'Sections template',
 				'wrap' => 'Wraps template',
 			);
-			
+
 			if(function_exists('is_woocommerce')){
 				$template_types['shop-archive'] = 'Shop archive';
 				$template_types['single-product'] = 'Single product';
@@ -328,22 +362,22 @@ if (! class_exists('Mfn_Post_Type_Template')) {
 			$template_types['footer'] = 'Footer';
 
 			return array(
+
 				'id' => 'mfn-meta-template',
 				'title' => esc_html__('Template Options', 'mfn-opts'),
 				'page' => 'template',
 				'fields' => array(
 
 					array(
-	  					'id' => 'mfn_template_type',
-	  					'type' => 'select',
-	  					'class' => 'mfn_template_type mfn-hidden-field',
-	  					'title' => __('Template type', 'mfn-opts'),
-	  					'options' => $template_types,
-	  					'std' => $type,
-  					),
+  					'id' => 'mfn_template_type',
+  					'type' => 'select',
+  					'class' => 'mfn_template_type mfn-hidden-field',
+  					'title' => __('Template type', 'mfn-opts'),
+  					'options' => $template_types,
+  					'std' => $type,
+					),
 
-
-  					// layout
+					// layout
 
   				array(
   					'title' => __('Layout', 'mfn-opts'),
@@ -361,23 +395,23 @@ if (! class_exists('Mfn_Post_Type_Template')) {
   					'std' => '0'
   				),
 
-				array(
-					'id' => 'mfn-post-layout',
-					'type' => 'radio_img',
-					'title' => __('Layout', 'mfn-opts'),
-					'desc' => __('Full width sections works only without sidebars', 'mfn-opts'),
-					'options' => array(
-						'' => __('Use page options', 'mfn-opts'),
-						'no-sidebar' => __('Full width', 'mfn-opts'),
-						'left-sidebar' => __('Left sidebar', 'mfn-opts'),
-						'right-sidebar' => __('Right sidebar', 'mfn-opts'),
-						'both-sidebars' => __('Both sidebars', 'mfn-opts'),
-						'offcanvas-sidebar' => __('Off-canvas sidebar', 'mfn-opts'),
+					array(
+						'id' => 'mfn-post-layout',
+						'type' => 'radio_img',
+						'title' => __('Layout', 'mfn-opts'),
+						'desc' => __('Full width sections works only without sidebars', 'mfn-opts'),
+						'options' => array(
+							'' => __('Use page options', 'mfn-opts'),
+							'no-sidebar' => __('Full width', 'mfn-opts'),
+							'left-sidebar' => __('Left sidebar', 'mfn-opts'),
+							'right-sidebar' => __('Right sidebar', 'mfn-opts'),
+							'both-sidebars' => __('Both sidebars', 'mfn-opts'),
+							'offcanvas-sidebar' => __('Off-canvas sidebar', 'mfn-opts'),
+						),
+						'std' => mfn_opts_get('sidebar-layout'),
+						'alias' => 'sidebar',
+						'class' => 'form-content-full-width small',
 					),
-					'std' => mfn_opts_get('sidebar-layout'),
-					'alias' => 'sidebar',
-					'class' => 'form-content-full-width small',
-				),
 
   				array(
   					'id' => 'mfn-post-sidebar',
@@ -502,37 +536,6 @@ if (! class_exists('Mfn_Post_Type_Template')) {
   					'js_options' => 'menus',
   				),
 
-					// seo
-
-  				array(
-  					'title' => __('SEO', 'mfn-opts'),
-  				),
-
-  				array(
-  					'id' => 'mfn-meta-seo-title',
-  					'type' => 'text',
-  					'title' => __('Title', 'mfn-opts'),
-  				),
-
-  				array(
-  					'id' => 'mfn-meta-seo-description',
-  					'type' => 'text',
-  					'title' => __('Description', 'mfn-opts'),
-  				),
-
-  				array(
-  					'id' => 'mfn-meta-seo-keywords',
-  					'type' => 'text',
-  					'title' => __('Keywords', 'mfn-opts'),
-  				),
-
-  				array(
-  					'id' => 'mfn-meta-seo-og-image',
-  					'type' => 'upload',
-  					'title' => __('Open Graph image', 'mfn-opts'),
-  					'desc' => __('Facebook share image', 'mfn-opts'),
-  				),
-
 					// custom css
 
   				array(
@@ -547,7 +550,6 @@ if (! class_exists('Mfn_Post_Type_Template')) {
   					'class' => 'form-content-full-width',
 						'cm' => 'css',
   				),
-
 
 				),
 			);
@@ -797,7 +799,7 @@ if (! class_exists('Mfn_Post_Type_Template')) {
 						'html' => '<div class="mfn-admin-button-box"><a href="link_here" class="mfn-btn mfn-switch-live-editor button-hero mfn-btn-green button button-primary">Edit with '. apply_filters('betheme_label', "Be") .'Builder</a></div>',
 					),
 
-  				),
+  			),
 			);
 		}
 
@@ -843,9 +845,9 @@ if (! class_exists('Mfn_Post_Type_Template')) {
 
 			$tab = '';
 
-	        if ( is_admin() && $query->get('post_type') == 'template' && ( !$query->get('post_status') || empty($query->get('post_status')) ) ) {
+      if ( is_admin() && $query->get('post_type') == 'template' && ( !$query->get('post_status') || empty($query->get('post_status')) ) ) {
 
-	        	if(!function_exists('is_woocommerce')){
+		  	if( ! function_exists('is_woocommerce')){
 					$meta_query = array(
 						array(
 							'key'=> 'mfn_template_type',
@@ -861,26 +863,25 @@ if (! class_exists('Mfn_Post_Type_Template')) {
 					$query->set('meta_query',$meta_query);
 				}
 
+        if( !empty($_GET['tab']) ) {
 
-	            if( !empty($_GET['tab']) ) {
+        	$tab = $_GET['tab'];
 
-	            	$tab = $_GET['tab'];
-	            	
-	            	$meta_query = array(
+        	$meta_query = array(
 						array(
 							'key'=> 'mfn_template_type',
 							'value'=> $tab,
 							'compare'=> '=',
 						),
 					);
+
 					$query->set('meta_query',$meta_query);
 
-	            }
+	      }
 
-	        }
+	    }
 
 		}
-
 
 		public function list_tabs_wrapper($actions) {
 			global $post_ID;
@@ -913,17 +914,24 @@ if (! class_exists('Mfn_Post_Type_Template')) {
 
 		}
 
-
 		public function getReferer(){
+
 			$type = 'default';
 
-			$ref = parse_url(wp_get_referer());
+			if( !empty($_GET['post_type']) && ('template' == $_GET['post_type']) && !empty($_GET['tab']) ){
 
-			if( isset($ref['query']) && $ref['query'] ){
-				$ex_ref = explode('post_type=template&tab=', $ref['query']);
-				if(isset($ex_ref[1])){
-					$type = $ex_ref[1];
+				$type = $_GET['tab'];
+
+			} else {
+
+				$ref = parse_url(wp_get_referer());
+				if( isset($ref['query']) && $ref['query'] ){
+					$ex_ref = explode('post_type=template&tab=', $ref['query']);
+					if(isset($ex_ref[1])){
+						$type = $ex_ref[1];
+					}
 				}
+
 			}
 
 			return $type;

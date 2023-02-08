@@ -22,7 +22,7 @@ body {
     --mfn-woo-border-radius-box: 8px;
     /* .php */
     --mfn-woo-body-color: #626262; /* Text color */
-    --mfn-woo-heading-color: #161922; /* H1 */
+    --mfn-woo-heading-color: #626262; /* Text color, previously H1 #161922 */
     --mfn-woo-themecolor: #0089F7; /* Theme color */
     --mfn-woo-bg-themecolor: #0089F7; /* Theme color */
     --mfn-woo-border-themecolor: #0089F7; /* Theme color */
@@ -321,7 +321,7 @@ body.content-brightness-dark {
 .mfn-header-login .woocommerce-MyAccount-navigation { width: 100%; }
 
 .mfn-show-login-modal .mfn-header-login{display:block}
-
+.mfn-show-login-modal .column_header_icon .mfn-header-login { display: none; }
 
 .mfn-header-login.is-side{display: block;position:fixed;top:0;right:-420px;display:flex; flex-direction: column; width:420px;max-width:100%;height:100%;transition: all 0.3s ease-in-out; box-sizing:border-box;margin-top: 0;}
 .mfn-show-login-modal .mfn-header-login.is-side{right: 0;}
@@ -515,7 +515,7 @@ body.content-brightness-dark {
 .woocommerce ul.products:not(.list) li.product .excerpt-list,
 .woocommerce ul.products:not(.list) li.product .button-list{display:none}
 
-.woocommerce ul.products li.product .woocommerce-loop-category__title{font-size:1.4em}
+.woocommerce ul.products li.product .woocommerce-loop-category__title{font-size:1.4em;line-height: 1.4;}
 .woocommerce ul.products li.product .woocommerce-loop-category__title mark{background-color:transparent;color:rgba(0,0,0,.5)}
 
 /* Onsale */
@@ -902,6 +902,7 @@ body.content-brightness-dark {
 .woocommerce .column_product_cart_button .cart .button { width: 100%; }
 .woocommerce .column_product_cart_button .cart .quantity .input-text,
 .woocommerce #Content .column_product_cart_button .cart .button { font-size: 16px; line-height: 20px; padding: 15px 20px; }
+.mfn-cart-button-wrap .column_product_cart_button .cart{flex-wrap:wrap}
 
 /* Product rating */
 .woocommerce .column_product_rating { clear: both; }
@@ -1450,6 +1451,15 @@ a:hover.mfn-woo-cart-link { display: block; text-align: center; margin-top: 15px
 @media screen and ( max-width: 782px ) {
 
 	.admin-bar p.demo_store{top:46px}
+
+}
+
+@media only screen and (width: 768px) {
+
+    .column_product_related ul.products.columns-3 li.product, 
+    .column_product_upsells ul.products.columns-3 li.product { clear: unset; margin: 0 1% 20px; float: left !important; }
+    .column_product_related ul.products.columns-3 li.product:nth-child(3n+1), 
+    .column_product_upsells ul.products.columns-3 li.product:nth-child(3n+1) { clear: both !important; }
 
 }
 

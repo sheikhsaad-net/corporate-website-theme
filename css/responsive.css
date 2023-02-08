@@ -489,9 +489,6 @@ html,body{overflow-x:hidden}
 	.tr-menu.header-stack #Top_bar:not(.is-sticky){top:0!important;background-color:transparent!important}
 	.tr-menu.header-stack.ab-show #Top_bar:not(.is-sticky){top:45px!important}
 
-	/* Contact Form 7 -------------------------------------------------------------------- */
-
-	.section.full-width:not(.no-margin-h) .wrap .wpcf7-form .one.column{width:98%;margin-left:1%;margin-right:1%}
 }
 
 /* #Tablet (Portrait) & Mobile < 768 ------------------------------------------------------- #Tablet (Portrait) & Mobile < 768 */

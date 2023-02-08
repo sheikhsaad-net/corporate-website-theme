@@ -48,7 +48,7 @@
 						get_template_part('includes/header', 'top-area');
 					}
 				}
-				
+
 				if ( 'header-below' != mfn_header_style(true) ) {
 					// header below
 					echo mfn_slider();
@@ -80,7 +80,7 @@
 									}
 
 									$translate['search-results'] = mfn_opts_get('translate') ? mfn_opts_get('translate-search-results', 'results found for:') : __('results found for:', 'betheme');
-									echo '<h1 class="title">'. esc_html($total_results) .' '. esc_html($translate['search-results']) .' '. ( ! empty($_GET['s']) ? esc_html($_GET['s']) : '' ) .'</h1>';
+									echo '<h1 class="title">'. esc_html($total_results) .' '. esc_html($translate['search-results']) .' '. ( ! empty($_GET['s']) ? esc_html(stripslashes($_GET['s'])) : '' ) .'</h1>';
 
 								echo '</div>';
 							echo '</div>';

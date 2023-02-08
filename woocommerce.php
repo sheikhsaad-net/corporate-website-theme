@@ -52,16 +52,18 @@ get_header( 'shop' );
 								 */
 								do_action( 'woocommerce_after_main_content' );
 							?>
+						</div>
 					</div>
 				</div>
 
 			</div>
+			
 		</div>
-
+		
 		<?php get_sidebar(); ?>
 
 	</div>
 </div>
 
+<?php get_footer();
 
-<?php get_footer( 'shop' );

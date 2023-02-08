@@ -64,6 +64,10 @@ class MFN_Options_text extends Mfn_Options_field
 			}else{
 				echo '<input '. ( isset($this->field['default_unit']) ? 'data-unit="'.$this->field['default_unit'].'"' : null ) .' class="mfn-field-value mfn-form-control mfn-form-input '. esc_attr( $preview ) .'" type="'. esc_attr( $type ) .'" value="'. esc_attr( $this->value ) .'" '. $this->get_name( $meta ) .' placeholder="'. esc_attr( $placeholder ) .'"/>';
 			}
+
+			if( !empty($this->field['dynamic_data']) ){
+				echo Mfn_Options_field::dynamic_data_options($this->field['dynamic_data']);
+			}
 			
 			
 		}else{

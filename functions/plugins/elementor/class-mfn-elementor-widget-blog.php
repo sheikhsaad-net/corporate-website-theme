@@ -11,6 +11,7 @@ class Mfn_Elementor_Widget_Blog extends \Elementor\Widget_Base {
 
   public function get_script_depends() {
 		if ( \Elementor\Plugin::$instance->preview->is_preview_mode() ) {
+			wp_enqueue_script( 'mfn-isotope', get_theme_file_uri('/js/plugins/isotope.min.js'), [ 'elementor-frontend' ], MFN_THEME_VERSION, true );
 			wp_register_script( 'mfn-blog', get_theme_file_uri( '/functions/plugins/elementor/assets/widget-blog-preview.js' ), [ 'elementor-frontend' ], MFN_THEME_VERSION, true );
 			return [ 'mfn-blog' ];
 		}
@@ -199,6 +200,19 @@ class Mfn_Elementor_Widget_Blog extends \Elementor\Widget_Base {
 				'description'		=> __('IDs should be separated with <b>coma</b> ( , )', 'mfn-opts'),
 				'type' => \Elementor\Controls_Manager::TEXT,
 				'label_block' => true,
+			]
+		);
+
+		$this->add_control(
+			'related',
+			[
+				'label' => __( 'Use as related posts', 'mfn-opts' ),
+				'type' => \Elementor\Controls_Manager::SELECT,
+				'options'	=> array(
+					0 => __( 'Disable', 'mfn-opts' ),
+					1 => __( 'Enable', 'mfn-opts' ),
+				),
+				'default' => 0,
 			]
 		);
 

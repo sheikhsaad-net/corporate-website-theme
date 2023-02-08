@@ -128,6 +128,50 @@ class Mfn_Elementor_Widget_Clients_Slider extends \Elementor\Widget_Base {
 			]
 		);
 
+		$this->add_control(
+			'per_slide',
+			[
+				'label' => __( 'Clients per slide', 'mfn-opts' ),
+				'description' => __( 'The amount will be automatically reduced in the narrow screen', 'mfn-opts' ),
+				'type' => \Elementor\Controls_Manager::SELECT,
+				'options' => [
+					1 => 1,
+					2 => 2,
+					3 => 3,
+					4 => 4,
+					5 => 5,
+					6 => 6,
+				],
+				'default' => 3,
+			]
+		);
+
+		$this->add_control(
+			'scroll',
+			[
+				'label' => __( 'Slides to scroll', 'mfn-opts' ),
+				'type' => \Elementor\Controls_Manager::SELECT,
+				'options'	=> array(
+					'' => __('One slide', 'mfn-opts'),
+					'1' => __('One client', 'mfn-opts'),
+				),
+				'default' => "",
+			]
+		);
+
+		$this->add_control(
+			'navigation',
+			[
+				'label' => __( 'Navigation position', 'mfn-opts' ),
+				'type' => \Elementor\Controls_Manager::SELECT,
+				'options'	=> array(
+					'' => __('Header', 'mfn-opts'),
+					'content' => __('Content', 'mfn-opts'),
+				),
+				'default' => "",
+			]
+		);
+
 		$this->end_controls_section();
 
 	}

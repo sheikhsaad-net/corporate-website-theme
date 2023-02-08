@@ -332,7 +332,8 @@ class Mfn_Dashboard extends Mfn_API
 			delete_site_option('envato_purchase_code_7758048');
 		}
 
-		wp_safe_redirect(admin_url('admin.php?page=betheme'));
+		// wp_safe_redirect(admin_url('admin.php?page=betheme'));
+		wp_safe_redirect(admin_url('admin.php?page='.apply_filters('betheme_dynamic_slug', 'betheme')));
 
 	}
 

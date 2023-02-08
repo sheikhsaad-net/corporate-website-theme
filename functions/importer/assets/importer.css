@@ -200,6 +200,8 @@
 .mfn-importer .card-finish .congratulations .row-column { padding: 15px 6% 0; }
 .mfn-importer .card-finish .congratulations .row-column:last-child { border-left: 1px solid var(--mfn-ui-toggle-item-border); }
 
+.mfn-importer .card-finish .card-header{max-width:380px}
+
 .mfn-importer .useful-links { margin: 0 0 20px; text-align: left; }
 .mfn-importer .useful-links li { display: flex; padding: 7px 0; margin-bottom: 0; border-bottom: 1px solid var(--mfn-ui-toggle-item-border); }
 .mfn-importer .useful-links li:last-child { border-bottom: 0; }

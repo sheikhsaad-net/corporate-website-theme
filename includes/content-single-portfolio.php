@@ -109,74 +109,76 @@ $button_text = $translate['readmore'];
 				?>
 
 				<div class="column one post-header">
+					<div class="mcb-column-inner">
 
-					<?php if (mfn_opts_get('share-style') != 'simple'): ?>
-						<div class="button-love"><?php echo mfn_love() ?></div>
-					<?php endif; ?>
+						<?php if (mfn_opts_get('share-style') != 'simple'): ?>
+							<div class="button-love"><?php echo mfn_love() ?></div>
+						<?php endif; ?>
 
-					<div class="title_wrapper">
+						<div class="title_wrapper">
 
-						<?php
-							if (mfn_opts_get('portfolio-single-title')) {
-								$h = mfn_opts_get('title-heading', 1);
-								echo '<h'. esc_attr($h) .' class="entry-title" itemprop="headline">'. wp_kses(get_the_title(), mfn_allowed_html()) .'</h'. esc_attr($h) .'>';
-							}
-						?>
-
-						<?php
-							$show_meta = false;
-							$single_meta = mfn_opts_get('portfolio-meta');
-
-							if (is_array($single_meta)) {
-								if (isset($single_meta['author']) || isset($single_meta['date']) || isset($single_meta['categories'])) {
-									$show_meta = true;
+							<?php
+								if (mfn_opts_get('portfolio-single-title')) {
+									$h = mfn_opts_get('title-heading', 1);
+									echo '<h'. esc_attr($h) .' class="entry-title" itemprop="headline">'. wp_kses(get_the_title(), mfn_allowed_html()) .'</h'. esc_attr($h) .'>';
 								}
-							}
-						?>
+							?>
 
-						<?php if ($show_meta): ?>
-							<div class="post-meta clearfix">
+							<?php
+								$show_meta = false;
+								$single_meta = mfn_opts_get('portfolio-meta');
 
-								<div class="author-date">
+								if (is_array($single_meta)) {
+									if (isset($single_meta['author']) || isset($single_meta['date']) || isset($single_meta['categories'])) {
+										$show_meta = true;
+									}
+								}
+							?>
 
-									<?php if (isset($single_meta['author'])): ?>
-										<span class="author">
-											<?php echo esc_html($translate['published']); ?> <i class="icon-user" aria-label="<?php _e('author', 'betheme'); ?>"></i>
-											<a href="<?php echo esc_url(get_author_posts_url(get_the_author_meta('ID'))); ?>"><?php the_author_meta('display_name'); ?></a>
-										</span>
-									<?php endif; ?>
+							<?php if ($show_meta): ?>
+								<div class="post-meta clearfix">
 
-									<?php if (isset($single_meta['date'])): ?>
-										<span class="date">
-											<?php echo esc_html($translate['at']); ?> <i class="icon-clock" aria-label="<?php _e('published', 'betheme'); ?>"></i>
-											<time class="entry-date" datetime="<?php the_date('c'); ?>" itemprop="datePublished" pubdate><?php echo esc_html(get_the_date()); ?></time>
-										</span>
+									<div class="author-date">
+
+										<?php if (isset($single_meta['author'])): ?>
+											<span class="author">
+												<?php echo esc_html($translate['published']); ?> <i class="icon-user" aria-label="<?php _e('author', 'betheme'); ?>"></i>
+												<a href="<?php echo esc_url(get_author_posts_url(get_the_author_meta('ID'))); ?>"><?php the_author_meta('display_name'); ?></a>
+											</span>
+										<?php endif; ?>
+
+										<?php if (isset($single_meta['date'])): ?>
+											<span class="date">
+												<?php echo esc_html($translate['at']); ?> <i class="icon-clock" aria-label="<?php _e('published', 'betheme'); ?>"></i>
+												<time class="entry-date" datetime="<?php the_date('c'); ?>" itemprop="datePublished" pubdate><?php echo esc_html(get_the_date()); ?></time>
+											</span>
+										<?php endif; ?>
+
+									</div>
+
+									<?php if (isset($single_meta['categories'])): ?>
+										<div class="category">
+											<span class="cat-btn"><?php echo esc_html($translate['categories']); ?> <i class="icon-down-dir" aria-hidden="true"></i></span>
+											<div class="cat-wrapper">
+												<ul>
+													<?php
+														if (is_array($terms)) {
+															foreach ($terms as $term) {
+																echo '<li><a href="'. esc_url(get_term_link($term)) .'">'. esc_html($term->name) .'</a></li>';
+															}
+														}
+													?>
+												</ul>
+											</div>
+										</div>
 									<?php endif; ?>
 
 								</div>
+							<?php endif; ?>
 
-								<?php if (isset($single_meta['categories'])): ?>
-									<div class="category">
-										<span class="cat-btn"><?php echo esc_html($translate['categories']); ?> <i class="icon-down-dir" aria-hidden="true"></i></span>
-										<div class="cat-wrapper">
-											<ul>
-												<?php
-													if (is_array($terms)) {
-														foreach ($terms as $term) {
-															echo '<li><a href="'. esc_url(get_term_link($term)) .'">'. esc_html($term->name) .'</a></li>';
-														}
-													}
-												?>
-											</ul>
-										</div>
-									</div>
-								<?php endif; ?>
-
-							</div>
-						<?php endif; ?>
+						</div>
 
 					</div>
-
 				</div>
 
 				<?php if( ! mfn_opts_get('portfolio-featured-image-hide') ): ?>

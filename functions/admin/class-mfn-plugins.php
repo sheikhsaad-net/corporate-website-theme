@@ -23,10 +23,6 @@ class Mfn_Plugins extends Mfn_API {
       'desc' => 'LayerSlider is a premium multi-purpose content creation and animation platform.',
       'premium' => true,
     ],
-    'js_composer' => [
-      'desc' => 'Drag and drop page builder for WordPress.',
-      'premium' => true,
-    ],
     'contact-form-7' => [
       'desc' => 'Just another contact form plugin. Simple but flexible.',
     ],
@@ -49,9 +45,9 @@ class Mfn_Plugins extends Mfn_API {
       'desc' => 'An eCommerce toolkit that helps you sell anything. Beautifully.',
       'dark' => true,
     ],
-    'mfn-header-builder' => [
-      'desc' => 'This plugin has been deprecated. Please use <a target="_blank" href="https://muffingroup.com/betheme/header-builder/">Header Builder 2.0</a> instead.',
-      'deprecated' => true,
+		'js_composer' => [
+      'desc' => 'Drag and drop page builder for WordPress.',
+      'premium' => true,
     ],
   ];
 
@@ -146,7 +142,9 @@ class Mfn_Plugins extends Mfn_API {
 
 			}
 
-      $this->plugins[$slug] = array_merge( $this->plugins[$slug], $plugin );
+			if( is_array($this->plugins[$slug]) && is_array($plugin) ){
+        $this->plugins[$slug] = array_merge( $this->plugins[$slug], $plugin );
+      }
     }
 
     // print_r( $this->plugins );

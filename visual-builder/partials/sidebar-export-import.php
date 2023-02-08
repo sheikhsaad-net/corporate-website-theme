@@ -1,4 +1,4 @@
-<?php  
+<?php
 if( ! defined( 'ABSPATH' ) ){
 	exit; // Exit if accessed directly
 }
@@ -74,9 +74,11 @@ echo '<div class="panel panel-ie panel-export-import-import" style="display: non
         <option value="replace">REPLACE current builder content</option>
     </select>
 
+    <p class="global-sections-import-info">Important: The first section only will be imported from the copied content. Please note that the current section will be replaced by a new one. Instead, we recommend to copy a single section by using “Import & Replace” option located under three vertical dots on the right side at section green bar.</p>
+
     <a data-id="'.get_the_ID().'" class="mfn-btn mfn-btn-blue mfn-import-button" href="#"><span class="btn-wrapper">Import</span></a>
     </div>
-   
+
 
 </div>';
 
@@ -110,7 +112,7 @@ echo '<div class="panel panel-ie panel-export-import-single-page" style="display
 
     <a data-id="'.get_the_ID().'" class="mfn-btn mfn-btn-blue mfn-import-single-page-button" href="#"><span class="btn-wrapper">Import</span></a>
     </div>
-   
+
 
 </div>';
 
@@ -153,9 +155,10 @@ echo '<div class="mfn-form templates-options">
         <option value="replace">REPLACE current builder content</option>
     </select>
 
+		<p class="global-sections-import-info">Important: The first section only will be imported from the template content. Please note that the current section will be replaced by a new one.</p>
+
     <a data-id="'.get_the_ID().'" class="mfn-btn mfn-btn-blue mfn-import-template-button" href="#"><span class="btn-wrapper">Import</span></a>
     </div>
-   
+
 
 </div>';
-

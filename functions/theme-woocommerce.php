@@ -46,6 +46,7 @@ if( get_option('woocommerce_enable_ajax_add_to_cart') == 'yes' ){
 	add_filter( 'wc_add_to_cart_message_html', '__return_false' );
 }
 
+remove_action( 'woocommerce_after_main_content', 'woocommerce_output_content_wrapper_end', 10 );
 remove_action('woocommerce_before_main_content', 'woocommerce_output_content_wrapper', 10);
 remove_action('woocommerce_before_main_content', 'woocommerce_breadcrumb', 20);
 remove_action('woocommerce_before_main_content', 'WC_Structured_Data::generate_website_data', 30);
@@ -187,7 +188,9 @@ if (! function_exists('mfn_woo_styles')) {
 
 		wp_enqueue_style('mfn-woo', get_theme_file_uri('/css/woocommerce'. $min_css .'.css'), 'woocommerce-general-css', MFN_THEME_VERSION, 'all');
 
-		wp_enqueue_script('mfn-woojs', get_theme_file_uri('/js/woocommerce'. $min_js .'.js'), false, time(), true);
+		wp_enqueue_script('mfn-imagesloaded', get_theme_file_uri('/js/plugins/imagesloaded.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+		wp_enqueue_script('mfn-slick', get_theme_file_uri('/js/plugins/slick.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+		wp_enqueue_script('mfn-woojs', get_theme_file_uri('/js/woocommerce'. $min_js .'.js'), ['jquery'], MFN_THEME_VERSION, true);
 
 		if(mfn_opts_get('shop-quick-view') == 1){
 			wp_enqueue_script('wc-add-to-cart-variation');
@@ -331,6 +334,10 @@ function woo_template_body_classes( $classes ) {
 
 	if( get_option('woocommerce_enable_ajax_add_to_cart') == 'yes'){
 		$classes[] = 'mfn-ajax-add-to-cart';
+	}
+
+	if( mfn_opts_get('shop-product-cart-button-extra') == 1 ){
+		$classes[] = 'mfn-cart-button-wrap';
 	}
 
   return $classes;
@@ -686,17 +693,19 @@ function mfn_add_product_taxonomy_meta(){
 
 function mfn_edit_tax_attr_form_fields ($tag) {
 
-	if( mfn_opts_get('variable-swatches') == 0 ){
+	if( mfn_opts_get('variable-swatches') == 0 ) {
 		return;
 	}
 
 	$current_value = '';
-	if(isset( $tag->taxonomy )){
+	
+	if(isset( $tag->taxonomy )) {
 		$current = $tag->taxonomy;
 		$current_value = get_term_meta($tag->term_id, 'mfn_attr_field', true);
 	}else{
 		$current = $tag;
 	}
+
 	$placeholder_url = get_theme_file_uri( '/muffin-options/svg/placeholders/image.svg' );
 	wp_enqueue_media();
 
@@ -707,7 +716,7 @@ function mfn_edit_tax_attr_form_fields ($tag) {
     $field_name = 'mfn_tax_field_'.$current_obj->attribute_type;
 
     if(isset( $tag->taxonomy )){ ?>
-	<tr class="form-field mfn-attr-image">
+	<tr class="form-field mfn-tax-image">
         <th valign="top" scope="row"><label for="mfn_tax_field"><?php echo $field_label; ?></label></th>
         <td><input type="<?php echo $current_obj->attribute_type == 'color' ? 'text' : 'hidden'; ?>" id="mfn_tax_field" value="<?php echo $current_value; ?>" name="mfn_tax_field" class="<?php echo $field_name; ?>" required>
         	<?php if($current_obj->attribute_type == 'image'){
@@ -722,7 +731,7 @@ function mfn_edit_tax_attr_form_fields ($tag) {
     </tr>
     <?php
 	}else{ ?>
-		<div class="form-field mfn-attr-image">
+		<div class="form-field mfn-tax-image">
 	        <label for="mfn_tax_field"><?php echo $field_label; ?></label>
 	        <input type="<?php echo $current_obj->attribute_type == 'color' ? 'text' : 'hidden'; ?>" id="mfn_tax_field" value="<?php echo $current_value; ?>" name="mfn_tax_field" class="<?php echo $field_name; ?>" required>
 	        <?php if($current_obj->attribute_type == 'image'){

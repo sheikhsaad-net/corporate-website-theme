@@ -3,7 +3,7 @@
   /* globals tinymce */
 
   "use strict";
-
+  
   tinymce.PluginManager.add('mfnsc', function(editor, url) {
     editor.addButton('mfnsc', {
       text: 'Shortcode',
@@ -460,7 +460,8 @@
         }, ]
       }]
 
-    });
+    },
+    );
 
   });
 

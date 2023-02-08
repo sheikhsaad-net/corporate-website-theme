@@ -54,9 +54,17 @@ if( $_GET && key_exists( 'mfn-iso', $_GET ) ){
 	$isotope = false;
 }
 
+if ( $isotope ) {
+	wp_enqueue_script('mfn-isotope', get_theme_file_uri('/js/plugins/isotope.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+}
+
 // load more
 
 $load_more = mfn_opts_get( 'portfolio-load-more' );
+
+if( mfn_opts_get('portfolio-infinite-scroll') ) {
+	wp_enqueue_script('mfn-waypoints', get_theme_file_uri('/js/plugins/waypoints.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+}
 
 // translate
 

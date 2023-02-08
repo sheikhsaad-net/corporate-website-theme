@@ -163,6 +163,7 @@ $tresaurus = [
 	'digital' => 'agency portfolio',
 	'disco' => 'party dance music',
 	'dj' => 'disco club music play dance',
+  'doctor' => 'health medic',
 	'drawing' => 'artist painting illustrator',
 	'driving' => 'school learn training car wehicles',
 	'drone' => 'unmanned aerial vehicle fly film',
@@ -458,7 +459,7 @@ $demos = [
 	],
   'bethemestore2' => array(
     'name' => 'Default Store 2',
-    'url' => 'https://themes.muffingroup.com/betheme-store/',
+    'url' => 'https://themes.muffingroup.com/betheme-store2/',
     'layouts' => ['sho','lig','ele','mfn'],
 		'categories' => ['des','cor','tec','pro'],
     'plugins' => [ 'cf7', 'rev', 'woo', 'ele' ],
@@ -468,14 +469,74 @@ $demos = [
 
   // pre-built
 
-
+  'recipes3' => [
+		'name' => 'Recipes 3',
+		'layouts' => [ 'blo', 'ele', 'mfn' ],
+		'categories' => [ 'foo', 'mag', 'lig' ],
+		'plugins' => [ 'cf7', 'ele' ],
+		'wrapper' => '1270',
+    'pages' => [
+      'page_for_posts' => 'News', // Blog page created with builder
+    ],
+	],
+  'cosmetics3' => [
+		'name' => 'Cosmetics 3',
+		'layouts' => [ 'blo', 'sho', 'ele', 'mfn' ],
+		'categories' => [ 'hea', 'pro' ],
+		'plugins' => [ 'cf7', 'woo', 'ele' ],
+		'wrapper' => '1320',
+	],
+  'wedding3' => [
+		'name' => 'Wedding 3',
+		'layouts' => [ 'blo', 'lig', 'ele', 'mfn' ],
+		'categories' => [ 'des', 'ent', 'occ', 'peo' ],
+		'plugins' => [ 'cf7', 'ele' ],
+		'wrapper' => '1260',
+    'pages' => [
+      'page_on_front' => 'HOME',
+      'page_for_posts' => 'NEWS',
+    ],
+	],
+  'estate4' => [
+		'name' => 'Estate 4',
+		'layouts' => [ 'ele', 'mfn' ],
+		'categories' => [ 'foo' ],
+		'plugins' => [ 'cf7', 'rev', 'ele' ],
+		'wrapper' => '1240',
+    'pages' => [
+      'page_for_posts' => 'News', // Blog page created with builder
+    ],
+	],
+  'burger3' => [
+		'name' => 'Burger 3',
+		'layouts' => [ 'ele', 'mfn' ],
+		'categories' => [ 'hou' ],
+		'plugins' => [ 'cf7', 'rev', 'ele' ],
+		'wrapper' => '1280',
+	],
+  'clothingstore2' => [
+		'name' => 'Clothing Store 2',
+		'layouts' => [ 'blo', 'sho', 'lig', 'ele', 'mfn' ],
+		'categories' => [ 'fas', 'occ', 'mag', 'pro' ],
+		'plugins' => [ 'cf7', 'rev', 'woo', 'ele' ],
+		'wrapper' => '1170',
+    'pages' => [
+      'page_for_posts' => 'Discover the world of our brand',
+    ],
+	],
+  'doctor' => array(
+		'name' => 'Doctor',
+    'layouts' => [ 'lig', 'ele', 'mfn' ],
+		'categories' => [ 'hea', 'peo' ],
+		'plugins' => [ 'cf7', 'ele' ],
+		'wrapper' => '1330',
+	),
   'business6' => array(
 		'name' => 'Business 6',
     'layouts' => [ 'blo', 'ele', 'mfn' ],
 		'categories' => [ 'cor', 'hou' ],
 		'plugins' => [ 'cf7', 'rev', 'ele' ],
 		'wrapper' => '1220',
-		'new' => true,
 	),
   'biker4' => array(
 		'name' => 'Biker 4',
@@ -2226,11 +2287,13 @@ $demos = [
 		'plugins' => ['cf7',
 		],
 	],
-	'safari2' => [
+  'safari2' => [
 		'name' => 'Safari 2',
 		'layouts' => ['blo'],
 		'categories' => ['ani','ent','spo'],
-		'plugins' => ['cf7','rev',
+		'plugins' => ['cf7','rev'],
+    'pages' => [
+			'page_for_posts' => 'OUR TRAVELS',
 		],
 	],
 	'baker2' => [
@@ -2291,11 +2354,13 @@ $demos = [
 		'plugins' => ['cf7','rev',
 		],
 	],
-	'sciencecentre' => [
+  'sciencecentre' => [
 		'name' => 'Science Centre',
 		'layouts' => ['blo'],
 		'categories' => ['edu','occ'],
-		'plugins' => ['cf7',
+		'plugins' => ['cf7'],
+    'pages' => [
+			'page_for_posts' => 'News and events',
 		],
 	],
 	'polyglot' => [
@@ -2890,11 +2955,13 @@ $demos = [
 			'page_for_posts' => 'Adventure Stories',
 		],
 	],
-	'accountant3' => [
+  'accountant3' => [
 		'name' => 'Accountant 3',
 		'layouts' => ['blo'],
 		'categories' => ['fin','peo'],
-		'plugins' => ['cf7','rev',
+		'plugins' => ['cf7','rev'],
+    'pages' => [
+			'page_for_posts' => 'Articles',
 		],
 	],
 	'universe' => [
@@ -3221,11 +3288,13 @@ $demos = [
 			'woocommerce_shop_page_id' => 'Manicure store',
 		],
 	],
-	'meeting' => [
+  'meeting' => [
 		'layouts' => ['blo'],
 		'categories' => ['occ'],
-		'plugins' => ['cf7','rev',
-		],
+		'plugins' => ['cf7','rev'],
+    'pages' => [
+      'page_for_posts' => 'Events',
+    ],
 	],
 	'vegetables' => [
 		'categories' => ['foo','pro'],
@@ -3534,7 +3603,9 @@ $demos = [
 	'training' => [
 		'layouts' => ['blo'],
 		'categories' => ['edu','peo','mag'],
-		'plugins' => ['cf7',
+		'plugins' => ['cf7'],
+    'pages' => [
+			'page_for_posts' => 'Events calendar',
 		],
 	],
 	'couturier' => [
@@ -3549,11 +3620,13 @@ $demos = [
 		'plugins' => ['cf7','rev',
 		],
 	],
-	'wallet' => [
+  'wallet' => [
 		'layouts' => ['blo'],
 		'categories' => ['tec','fin'],
-		'plugins' => ['cf7','rev',
-		],
+		'plugins' => ['cf7','rev'],
+    'pages' => [
+      'page_for_posts' => 'Articles',
+    ],
 	],
 	'herbal' => [
 		'layouts' => ['sho'],
@@ -3561,10 +3634,12 @@ $demos = [
 		'plugins' => ['cf7','rev','woo',
 		],
 	],
-	'snapshot' => [
+  'snapshot' => [
 		'layouts' => ['blo','por'],
 		'categories' => ['ani','des','spo'],
-		'plugins' => ['cf7',
+		'plugins' => ['cf7'],
+    'pages' => [
+			'page_for_posts' => 'Read my stories',
 		],
 	],
 	'biolab' => [
@@ -3652,8 +3727,10 @@ $demos = [
 	'goodfood' => [
 		'layouts' => ['blo'],
 		'categories' => ['foo','hea','mag'],
-		'plugins' => ['cf7',
-		],
+		'plugins' => ['cf7'],
+    'pages' => [
+      'page_for_posts' => 'Food blog',
+    ],
 	],
 	'agency2' => [
 		'name' => 'Agency 2',
@@ -3743,10 +3820,12 @@ $demos = [
 		'plugins' => ['rev',
 		],
 	],
-	'eco' => [
+  'eco' => [
 		'layouts' => ['blo'],
 		'categories' => ['ani','edu'],
-		'plugins' => ['cf7','rev',
+		'plugins' => ['cf7','rev'],
+    'pages' => [
+			'page_for_posts' => 'Articles and researches',
 		],
 	],
 	'bistro' => [
@@ -3754,10 +3833,12 @@ $demos = [
 		'plugins' => ['cf7','rev',
 		],
 	],
-	'ngo' => [
+  'ngo' => [
 		'layouts' => ['lig'],
 		'categories' => ['cor'],
-		'plugins' => ['cf7','rev',
+		'plugins' => ['cf7','rev'],
+    'pages' => [
+			'page_for_posts' => 'News and events',
 		],
 	],
 	'casino' => [
@@ -3945,7 +4026,9 @@ $demos = [
 	'journey' => [
 		'layouts' => ['blo'],
 		'categories' => ['spo'],
-		'plugins' => ['cf7',
+		'plugins' => ['cf7'],
+    'pages' => [
+			'page_for_posts' => 'ARTICLES AND STORIES',
 		],
 	],
 	'science' => [
@@ -4057,16 +4140,20 @@ $demos = [
 		'plugins' => ['cf7','rev',
 		],
 	],
-	'space' => [
-		'layouts' => ['blo'],
-		'categories' => ['cor','edu','pro'],
-		'plugins' => ['rev',
-		],
-	],
-	'club' => [
+  'space' => [
+    'layouts' => ['blo'],
+    'categories' => ['cor','edu','pro'],
+    'plugins' => ['rev'],
+    'pages' => [
+      'page_for_posts' => 'Articles',
+    ],
+  ],
+  'club' => [
 		'layouts' => ['blo'],
 		'categories' => ['ent'],
-		'plugins' => ['cf7','rev',
+		'plugins' => ['cf7','rev'],
+    'pages' => [
+			'page_for_posts' => 'UPCOMING EVENTS',
 		],
 	],
 	'buddy' => [
@@ -4158,7 +4245,9 @@ $demos = [
 	'karting' => [
 		'layouts' => ['blo'],
 		'categories' => ['spo'],
-		'plugins' => ['cf7','rev',
+		'plugins' => ['cf7','rev'],
+    'pages' => [
+			'page_for_posts' => 'NEWS & EVENTS',
 		],
 	],
 	'coaching' => [
@@ -4190,10 +4279,12 @@ $demos = [
 		'plugins' => ['cf7','rev',
 		],
 	],
-	'library' => [
+  'library' => [
 		'layouts' => ['blo'],
 		'categories' => ['edu','mag'],
-		'plugins' => ['cf7','rev',
+		'plugins' => ['cf7','rev'],
+    'pages' => [
+			'page_for_posts' => 'EVENTS',
 		],
 	],
 	'digital' => [
@@ -4232,12 +4323,14 @@ $demos = [
 		'plugins' => ['cf7','rev',
 		],
 	],
-	'cosmetics' => [
+  'cosmetics' => [
 		'layouts' => ['sho','lig'],
 		'categories' => ['hea'],
 		'plugins' => ['cf7','rev','woo'],
-		'revslider' => ['cosmetics1.zip','cosmetics2.zip','cosmetics3.zip',
-		],
+		'revslider' => ['cosmetics1.zip','cosmetics2.zip','cosmetics3.zip'],
+    'pages' => [
+      'page_on_front' => 'BE YOURSELF',
+    ],
 	],
 	'jet' => [
 		'layouts' => ['dar'],
@@ -4300,11 +4393,13 @@ $demos = [
 		'plugins' => ['cf7',
 		],
 	],
-	'theater' => [
+  'theater' => [
 		'layouts' => ['blo'],
 		'categories' => ['art','ent'],
-		'plugins' => ['cf7','rev',
-		],
+		'plugins' => ['cf7','rev'],
+    'pages' => [
+      'page_for_posts' => 'Spectacles',
+    ],
 	],
 	'flower' => [
 		'categories' => ['occ'],
@@ -4464,11 +4559,13 @@ $demos = [
 		'plugins' => ['cf7','rev',
 		],
 	],
-	'politics' => [
+  'politics' => [
 		'layouts' => ['blo'],
 		'categories' => ['cor','mag'],
-		'plugins' => ['rev',
-		],
+		'plugins' => ['rev'],
+    'pages' => [
+      'page_for_posts' => 'News',
+    ],
 	],
 	'pole' => [
 		'layouts' => ['one','dar'],
@@ -4540,12 +4637,14 @@ $demos = [
 		'plugins' => ['cf7','rev',
 		],
 	],
-	'language' => [
-		'layouts' => ['blo'],
-		'categories' => ['edu'],
-		'plugins' => ['cf7','rev',
-		],
-	],
+  'language' => [
+    'layouts' => ['blo'],
+    'categories' => ['edu'],
+    'plugins' => ['cf7','rev'],
+    'pages' => [
+      'page_for_posts' => 'A list of latest news and events',
+    ],
+  ],
 	'security' => [
 		'categories' => ['cor','peo','oth'],
 		'plugins' => ['cf7','rev'],
@@ -4711,8 +4810,10 @@ $demos = [
 	'university' => [
 		'layouts' => ['blo','box'],
 		'categories' => ['cor','edu'],
-		'plugins' => ['cf7','rev',
-		],
+		'plugins' => ['cf7','rev'],
+    'pages' => [
+      'page_for_posts' => 'News & Events',
+    ],
 	],
 	'spa' => [
 		'layouts' => ['lig'],

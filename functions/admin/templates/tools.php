@@ -74,6 +74,24 @@
 
 				</div>
 
+				<div class="row-column row-column-4">
+
+					<div class="mfn-card mfn-shadow-1" data-card="tool-item">
+						<div class="card-content">
+							<div class="tool-logo">
+								<span class="regenerate-thumbnails">Regenerate <b>Thumbnails</b>
+								</span>
+							</div>
+							<p>Allows you to regenerate thumbnail sizes for all images that have been uploaded to your media library.</p>
+							<p>This is useful when you switch theme or import <a target="_blank" href="admin.php?page=be-websites">Pre-built Website</a>.</p>
+							<a data-nonce="<?php echo wp_create_nonce( 'mfn-builder-nonce' ); ?>" data-action="mfn_regenerate_thumbnails" href="#" class="mfn-btn mfn-btn-fw mfn-regenerate-thumbnails">
+								<span class="btn-wrapper"><?php esc_html_e( 'Regenerate thumbnails', 'mfn-opts' ); ?></span>
+							</a>
+						</div>
+					</div>
+
+				</div>
+
 			</div>
 		</div>
 

@@ -41,6 +41,81 @@ class Mfn_Builder_Ajax {
 		add_action( 'wp_ajax_mfn_delete_transient', array($this, '_delete_transient') );
 
 		add_action( 'wp_ajax_mfn_refresh_cache', array($this, '_refresh_cache') );
+
+		add_action( 'wp_ajax_mfn_regenerate_thumbnails', array($this, '_regenerate_thumbnails') );
+		add_action( 'wp_ajax_mfn_ajax_progress', array($this, '_ajax_progress') );
+	}
+
+	/**
+	 * Regenerate thumbnails | Progress Bar
+	 */
+
+	public function _ajax_progress(){
+
+		if( empty($_POST['type']) ) {
+			return;
+			wp_die();
+		}
+
+		$type = $_POST['type'];
+
+		if( $type == 'regenerate_thumbnails' && !empty(get_option('be_regenerate_thumbnails')) ){
+
+			$attachments = get_posts(array(
+				'post_type' => 'attachment',
+				'posts_per_page' => -1
+			));
+
+			return wp_send_json(array('current' => get_option('be_regenerate_thumbnails'), 'total' => count($attachments)));
+		}
+
+		return false;
+		wp_die();
+	}
+
+	/**
+	 * Regenerate thumbnails
+	 */
+
+	public function _regenerate_thumbnails() {
+
+		$attachments = get_posts(array(
+			'post_type' => 'attachment',
+			'posts_per_page' => -1
+		));
+
+		$offset = 0;
+
+		if( !empty(get_option('be_regenerate_thumbnails')) ){
+			$offset = get_option('be_regenerate_thumbnails');
+		}
+
+		if( is_iterable($attachments) ){
+			foreach( $attachments as $a=>$at ){
+
+				if( $a < $offset ) continue;
+
+				$imagePath = wp_get_original_image_path($at->ID);
+				$img = get_post_meta($at->ID, '_wp_attached_file', true);
+
+				$imagePath = wp_upload_dir()['basedir'].'/'.$img;
+
+        if ($img && file_exists( $imagePath )) {
+            $attach_data = wp_generate_attachment_metadata($at->ID, $imagePath);
+            wp_update_attachment_metadata( $at->ID, $attach_data );
+            unset($attach_data);
+        }
+
+        unset($attach_data);
+
+        update_option('be_regenerate_thumbnails', $a);
+
+	    }
+    }
+
+    delete_option('be_regenerate_thumbnails');
+
+    wp_die();
 	}
 
 	/*
@@ -146,7 +221,7 @@ class Mfn_Builder_Ajax {
 
 		// get used fonts names
 		$fonts = [];
-		$fonts = mfn_fonts_selected();
+		$fonts = mfn_fonts_selected('builder_fonts');
 		$google_fonts = mfn_fonts('all');
 
 		// theme default font
@@ -701,7 +776,7 @@ class Mfn_Builder_Ajax {
 
 			}
 
-			print_r( $new );
+			print_r( json_encode($mfn_items) );
 
 		}
 
@@ -720,29 +795,21 @@ class Mfn_Builder_Ajax {
 
 		check_ajax_referer( 'mfn-builder-nonce', 'mfn-builder-nonce' );
 
-		$import = htmlspecialchars(stripslashes($_POST['mfn-items-import']));
+		$mfn_items = json_decode( wp_unslash($_POST['mfn-items-import']), true );
 
-		if (! $import) {
+		if( ! $mfn_items || ! is_array( $mfn_items ) ) {
 			exit;
 		}
-
-		// unserialize received items data
-
-		$mfn_items = unserialize(call_user_func('base'.'64_decode', $import));
 
 		// reset uniqueID
 
 		$mfn_items = Mfn_Builder_Helper::unique_ID_reset( $mfn_items );
 
-		if ( is_array( $mfn_items ) ) {
+		$builder = new Mfn_Builder_Admin( 'ajax' );
+		$builder->set_fields();
 
-			$builder = new Mfn_Builder_Admin( 'ajax' );
-			$builder->set_fields();
-
-			foreach ( $mfn_items as $section ) {
-				$builder->section( $section );
-			}
-
+		foreach ( $mfn_items as $section ) {
+			$builder->section( $section );
 		}
 
 		exit;
@@ -850,7 +917,7 @@ class Mfn_Builder_Ajax {
 		}
 
 		// force items form regenerate
-		
+
 		$fields_form = get_template_directory() .'/visual-builder/assets/js/forms/bebuilder-'.MFN_THEME_VERSION.'.js';
 		if( file_exists( $fields_form ) ){
 			wp_delete_file( $fields_form );
@@ -1066,12 +1133,10 @@ class Mfn_Builder_Ajax {
 
 		} else {
 
-			// unserialize response
+			$mfn_items = json_decode( $response, true );
 
-			$mfn_items = unserialize(call_user_func('base'.'64_decode', $response));
-
-			if( ! is_array( $mfn_items ) ){
-				return false;
+			if( ! $mfn_items || ! is_array( $mfn_items ) ) {
+				exit;
 			}
 
 			// remove images url

@@ -9,13 +9,21 @@
   <div class="card-header">
     <span class="mfm-icon mfn-icon-yes-green"></span>
     <h2>Congratulations!</h2>
+		<h5>You have successfully installed your&nbsp;website.</h5>
   </div>
 
   <div class="congratulations mfn-row">
+
     <div class="row-column row-column-6 row-column-center">
-      <p>You have successfully installed your&nbsp;website.</p>
+
+			<p>Regenerate thumbnail sizes for all images that have been uploaded to your media library with demo content.</p>
+			<p>You can do it later in <a target="_blank" href="admin.php?page=be-tools">Betheme > Tools</a></p>
+      <a class="mfn-btn btn-large mfn-regenerate-thumbnails" href="#">Regenerate thumbnails</a>
+
       <a target="_blank" class="mfn-btn mfn-btn-blue btn-large" href="<?php echo esc_url( get_home_url() ); ?>">Check your website</a>
-    </div>
+
+		</div>
+
     <div class="row-column row-column-6">
       <h5>Here’s what to do next:</h5>
       <ul class="useful-links">
@@ -26,6 +34,7 @@
         <li><span class="mfn-icon mfn-icon-community"></span> Join our Community<a class="mfn-social-fb" target="_blank" href="https://www.facebook.com/groups/betheme/"><i class="icon-facebook"></i></a><a class="mfn-social-tw" target="_blank" href="https://www.youtube.com/user/MuffinGroup"><i class="icon-youtube"></i></a></li>
       </ul>
     </div>
+
   </div>
 
   <h5>How much did you like it?</h5>

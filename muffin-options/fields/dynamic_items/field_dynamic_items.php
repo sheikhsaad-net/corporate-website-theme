@@ -94,7 +94,7 @@ class MFN_Options_dynamic_items extends Mfn_Options_field
 										echo '<div class="mfn-modal mfn-modal-payments" id="mfn-modal-'.$input_uid.'"><div class="mfn-modalbox mfn-form mfn-shadow-1"><div class="modalbox-header"><div class="options-group"><div class="modalbox-title-group"><span class="modalbox-icon mfn-icon-add-big"></span><div class="modalbox-desc"><h4 class="modalbox-title">Select payment method</h4></div></div></div><div class="options-group"><a class="mfn-option-btn mfn-option-blank btn-large btn-modal-close inner" href="#"><span class="mfn-icon mfn-icon-close"></span></a></div></div><div class="modalbox-content"><ul class="mfn-items-list list">';
 
 										foreach( $field['options'] as $l=>$li ){
-											echo '<li><a href="#"><span class="mfn-icon"><img src="'.$li.'" alt=""></span><p class="titleicon">'.$l.'</p></a></li>';
+											echo '<li><a href="#"><span class="mfn-icon"><img src="'.esc_url($li).'" alt=""></span><p class="titleicon">'.$l.'</p></a></li>';
 										}
 
 										echo '</ul></div></div></div></div>';

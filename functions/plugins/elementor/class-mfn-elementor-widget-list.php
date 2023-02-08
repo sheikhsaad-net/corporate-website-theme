@@ -161,8 +161,13 @@ class Mfn_Elementor_Widget_List extends \Elementor\Widget_Base {
 
 		$settings = $this->get_settings_for_display();
 
-		$settings['icon'] = $settings['icon']['value'];
-		$settings['image'] = $settings['image']['url'];
+		if( ! empty($settings['icon']['value']) ){
+			$settings['icon'] = $settings['icon']['value'];
+		}
+
+		if( ! empty($settings['image']['url']) ){
+			$settings['image'] = $settings['image']['url'];
+		}
 
 		echo sc_list( $settings, $settings['content'] );
 

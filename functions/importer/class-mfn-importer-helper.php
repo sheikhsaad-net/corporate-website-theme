@@ -5,7 +5,9 @@
  * @package Betheme
  * @author Muffin group
  * @link https://muffingroup.com
- * @version 1.0
+ * @version 1.1
+ *
+ * 1.1 - custom XML importer, database reset: remove media, sliders and shop attributes @since 26.5.2
  */
 
 // error_reporting(E_ALL);
@@ -59,9 +61,30 @@ class Mfn_Importer_Helper {
 	 * Database reset
 	 */
 
-	public static function database_reset(){
+	public static function database_reset( $remove_media = false ){
 
 		global $wpdb;
+
+		// remove attachments
+
+		if( $remove_media ){
+
+			$attachments = get_posts(array(
+				'post_type' => 'attachment',
+				'posts_per_page' => -1
+			));
+
+			if( is_iterable($attachments) ){
+				foreach( $attachments as $at ){
+					wp_delete_attachment( $at->ID );
+				}
+			}
+
+			unset($attachments);
+
+		}
+
+		// empty selected tables
 
 		$wpdb->query( "TRUNCATE TABLE $wpdb->posts" );
 		$wpdb->query( "TRUNCATE TABLE $wpdb->postmeta" );
@@ -73,10 +96,21 @@ class Mfn_Importer_Helper {
 		$wpdb->query( "TRUNCATE TABLE $wpdb->term_relationships" );
 		$wpdb->query( "TRUNCATE TABLE $wpdb->links" );
 
+		if( class_exists('RevSliderFront') ){
+			$wpdb->query( "TRUNCATE TABLE {$wpdb->prefix}revslider_sliders" );
+			$wpdb->query( "TRUNCATE TABLE {$wpdb->prefix}revslider_slides" );
+			$wpdb->query( "TRUNCATE TABLE {$wpdb->prefix}revslider_static_slides" );
+		}
+
+		if( function_exists('is_woocommerce') ){
+			$wpdb->query( "TRUNCATE TABLE {$wpdb->prefix}wc_product_attributes_lookup" );
+			$wpdb->query( "TRUNCATE TABLE {$wpdb->prefix}woocommerce_attribute_taxonomies" );
+		}
+
 		$wpdb->query( $wpdb->prepare(
 			"DELETE FROM $wpdb->options
     	WHERE `option_name` REGEXP %s",
-			'mfn_header|mfn_footer' ) );
+			'mfn_header|mfn_footer|_transient_wc_attribute_taxonomies|_transient_wc_product|product_cat_children' ) );
 
 		return true;
 	}
@@ -133,7 +167,11 @@ class Mfn_Importer_Helper {
 
   public function content( $attachments = false ){
 
-    $result = $this->import_xml( $attachments );
+		// default WP Importer
+    // $result = $this->import_xml( $attachments );
+
+		// custom XML importer
+		$result = $this->custom_import( $attachments );
 
     if( ! $result ){
       return false;
@@ -157,6 +195,326 @@ class Mfn_Importer_Helper {
     }
 
     return true;
+  }
+
+	/**
+	 * Custom XML importer
+	 */
+
+	public function custom_import( $attachments = false ) {
+
+  	global $wpdb;
+
+  	require_once(ABSPATH . 'wp-admin/includes/image.php');
+
+  	$save_option = get_option('uploads_use_yearmonth_folders');
+
+  	if( empty($save_option) ){
+  		update_option( 'uploads_use_yearmonth_folders', '1' );
+  	}
+
+  	$file = wp_normalize_path( $this->demo_path.'/content.xml.gz' );
+
+  	$compressed = $this->get_file_data( $file );
+		if ( !is_wp_error( $compressed ) && 200 === wp_remote_retrieve_response_code( $compressed ) ) {
+			$compressedContent = wp_remote_retrieve_body( $compressed );
+		}else{
+			$compressedContent = file_get_contents($file);
+		}
+
+		$xmlContent = gzdecode($compressedContent);
+
+		$xml = simplexml_load_string($xmlContent, 'SimpleXMLElement', LIBXML_NOCDATA )->channel;
+
+  	$standard_terms = array('category', 'post_tag');
+
+  	$author = get_current_user_id();
+  	$new_url = get_home_url();
+
+  	$old_url = $xml->link;
+
+  	/** TERMS */
+  	$terms = $xml->children('wp', true);
+
+  	if( isset($terms->term) && is_iterable($terms->term) ){
+  		foreach ($terms->term as $term) {
+  			$term_tax = false;
+	  		if( !empty( (string)$term->term_taxonomy ) ) $term_tax = (string)$term->term_taxonomy;
+	  		if( $term_tax && !in_array($term_tax, $standard_terms) ){
+	  			$this->import_term($term, str_replace('attribute_', '', $term_tax));
+				}
+  		}
+  	}
+
+  	/** TERMS - category */
+  	if( isset($terms->category) && is_iterable($terms->category) ){
+  		foreach ($terms->category as $term) {
+  			$this->import_term($term, 'category');
+  		}
+  	}
+
+  	/** TERMS - tag */
+  	if( isset($terms->tag) && is_iterable($terms->tag) ){
+  		foreach ($terms->tag as $term) {
+  			$this->import_term($term, 'post_tag');
+  		}
+  	}
+
+  	/** TERMS - post format */
+  	if( isset($terms->post_format) && is_iterable($terms->post_format) ){
+  		foreach ($terms->post_format as $term) {
+  			$this->import_term($term, 'post_format');
+  		}
+  	}
+
+  	/** POSTS */
+
+  	foreach( $xml->item as $i=>$item ){
+
+  		$title = wp_strip_all_tags( (string) $item->title );
+  		$mime = '';
+  		$title = (string) $item->title;
+  		$mime = '';
+  		
+  		$content_tag = $item->children('content', true);
+  		$content = (string) $content_tag->encoded;
+  		$excerpt_tag = $item->children('excerpt', true);
+  		$excerpt = (string) $excerpt_tag->encoded;
+
+
+  		$link = !empty((string)$item->link) ? str_replace($old_url, $new_url, (string)$item->link) : '';
+
+  		$data = $item->children('wp', true);
+
+  		$post_id = (string)$data->post_id;
+
+  		if( (string)$data->post_type == 'attachment' && !$attachments ) continue;
+  		if( (string)$data->post_type == 'wp_global_styles' ) continue;
+
+  		if( !empty($item->guid) ){
+  			$link = str_replace($old_url, $new_url, $item->guid);
+  		}
+
+  		/** IMAGES */
+  		if( (string)$data->post_type == 'attachment' && !empty($data->attachment_url) ){
+
+				$url = (string)$data->attachment_url;
+
+				$file_name = basename( $url );
+				
+				//$image_data = file_get_contents( $url );
+				$image_data = wp_remote_get( $url );
+				if ( !is_wp_error( $image_data ) && 200 === wp_remote_retrieve_response_code( $image_data ) ) {
+					$image_data = wp_remote_retrieve_body( $image_data );
+				}else{
+					$image_data = file_get_contents( $url );
+				}
+
+				$wp_filetype = wp_check_filetype( $file_name, null );
+				$mime = $wp_filetype['type'];
+
+				$upload = wp_upload_bits( $file_name, null, $image_data, (string)$data->post_date );
+
+        unset($upload);
+        unset($wp_filetype);
+        unset($url);
+
+			}
+
+			$newpost_arr = array(
+				'ID' 									=> $post_id,
+				'guid'   	 						=> $link,
+				'post_title'    			=> $title,
+				'post_name'   				=> (string)$data->post_name,
+				'post_mime_type' 			=> $mime,
+				'menu_order'   				=> (string)$data->menu_order,
+				'post_date'   				=> (string)$data->post_date,
+				'post_date_gmt'   		=> (string)$data->post_date_gmt,
+				'post_modified'   		=> (string)$data->post_modified,
+				'post_modified_gmt'  	=> (string)$data->post_modified_gmt,
+				'ping_status'   			=> (string)$data->ping_status,
+			  'post_content'  			=> $content,
+			  'post_excerpt' 			 	=> $excerpt,
+			  'post_status'   			=> (string)$data->status,
+			  'post_parent'   			=> !empty((string)$data->post_parent) ? (string)$data->post_parent : 0,
+			  'post_type'   				=> (string)$data->post_type,
+			  'post_author'   			=> $author,
+			);
+
+			/** POST */
+			$wpdb->insert( $wpdb->prefix.'posts', $newpost_arr );
+
+			// if id exists
+			if( !$wpdb->insert_id ){
+
+				unset($newpost_arr['ID']);
+				$wpdb->insert( $wpdb->prefix.'posts', $newpost_arr );
+				$post_id = $wpdb->insert_id;
+
+			}
+
+			if( isset($data->postmeta) && is_iterable($data->postmeta)){
+				foreach ($data->postmeta as $pm) {
+
+					$meta_key = (string)$pm->meta_key;
+					$meta_value = (string)$pm->meta_value;
+
+					if( $meta_key !== '_wp_attachment_metadata' ){
+						$wpdb->insert(
+							$wpdb->prefix.'postmeta',
+							array(
+								'post_id' 			=> $post_id,
+								'meta_key'   	 	=> $meta_key,
+								'meta_value'    => $meta_value,
+							)
+						);
+					}
+				}
+			}
+
+			if( isset($item->category) ){
+				foreach ($item->category as $post_cat) {
+					$attrs = $post_cat->attributes();
+
+					if( !empty($attrs->nicename) && !empty($attrs->domain) ){
+
+						$thisterm = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}terms where slug = '".(string)$attrs->nicename."'" );
+
+						if( isset($thisterm->term_id) ){
+							$wpdb->insert(
+								$wpdb->prefix.'term_relationships',
+								array(
+									'object_id' 				=> $post_id,
+									'term_taxonomy_id'  => $thisterm->term_id,
+									'term_order'    		=> 0,
+								)
+							);
+
+						}else{
+
+							$wpdb->insert(
+								$wpdb->prefix.'terms',
+								array(
+									//'term_id' 		=> (string)$term->term_id,
+									'name'   	 		=> (string)$attrs->nicename,
+									'slug'    		=> (string)$attrs->nicename,
+								)
+							);
+
+							$last_term_id = $wpdb->insert_id;
+
+							$wpdb->insert(
+								$wpdb->prefix.'term_taxonomy',
+								array(
+									'term_taxonomy_id' 	=> $last_term_id,
+									'term_id' 					=> $last_term_id,
+									'taxonomy'   				=> (string)$attrs->domain,
+									'parent'    				=> !empty($parent->term_id) ? $parent->term_id : 0,
+									'count' 						=> 1
+								)
+							);
+
+							$wpdb->insert(
+								$wpdb->prefix.'term_relationships',
+								array(
+									'object_id' 				=> $post_id,
+									'term_taxonomy_id'  => $last_term_id,
+									'term_order'    		=> 0,
+								)
+							);
+
+						}
+					}
+
+				}
+
+			}
+
+  		unset($title);
+  		unset($content);
+  		unset($excerpt);
+  		unset($link);
+  		unset($data);
+  		unset($post_id);
+
+  	}
+
+  	unset($xml);
+
+  	if( empty($save_option) ){
+  		update_option( 'uploads_use_yearmonth_folders', '' );
+  	}
+
+  	return true;
+  }
+
+	/**
+	 * Import term
+	 */
+
+  public function import_term($term, $tax){
+  	global $wpdb;
+
+  	$term_name = '';
+  	$term_slug = '';
+
+  	if( !empty( (string)$term->cat_name ) ){
+  		$term_name = (string)$term->cat_name;
+  	}else if( !empty( (string)$term->tag_name ) ){
+  		$term_name = (string)$term->tag_name;
+  	}else{
+  		$term_name = (string)$term->term_name;
+  	}
+
+  	if( !empty( (string)$term->category_nicename ) ){
+  		$term_slug = (string)$term->category_nicename;
+  	}else if( !empty( (string)$term->tag_slug ) ){
+  		$term_slug = (string)$term->tag_slug;
+  	}else{
+  		$term_slug = (string)$term->term_slug;
+  	}
+
+  	$wpdb->insert(
+			$wpdb->prefix.'terms',
+			array(
+				'term_id' 		=> (string)$term->term_id,
+				'name'   	 		=> $term_name,
+				'slug'    		=> $term_slug,
+			)
+		);
+
+		$parent = false;
+
+		if( !empty( (string)$term->term_parent ) ){
+			$parent = get_term_by('slug', (string)$term->term_parent, $tax);
+		}elseif( !empty( (string)$term->category_parent ) ){
+			$parent = get_term_by('slug', (string)$term->category_parent, $tax);
+		}
+
+		$wpdb->insert(
+			$wpdb->prefix.'term_taxonomy',
+			array(
+				'term_taxonomy_id' 	=> (string)$term->term_id,
+				'term_id' 					=> (string)$term->term_id,
+				'taxonomy'   				=> $tax,
+				'parent'    				=> !empty($parent->term_id) ? $parent->term_id : 0,
+				'count' 						=> 1
+			)
+		);
+
+		if( isset($term->termmeta) && is_iterable($term->termmeta) ){
+			foreach($term->termmeta as $tm){
+				$wpdb->insert(
+					$wpdb->prefix.'termmeta',
+					array(
+						'term_id' 				=> (string)$term->term_id,
+						'meta_key'   	 		=> (string)$tm->meta_key,
+						'meta_value'    	=> (string)$tm->meta_value,
+					)
+				);
+			}
+		}
+
   }
 
   /**
@@ -205,6 +563,31 @@ class Mfn_Importer_Helper {
 			}
 
 			update_option( 'betheme', $theme_options );
+
+			// product attributes
+
+			if( ! empty($options['attr_transient']) ){
+				update_option( '_transient_wc_attribute_taxonomies', $options['attr_transient']);
+
+				if( is_array($options['attr_transient']) && is_iterable($options['attr_transient']) ){
+
+					global $wpdb;
+
+					foreach( $options['attr_transient'] as $atr ){
+						$wpdb->insert(
+							$wpdb->prefix.'woocommerce_attribute_taxonomies',
+							array(
+								'attribute_id'						=> $atr->attribute_id,
+								'attribute_name'  				=> $atr->attribute_name,
+								'attribute_label'    			=> $atr->attribute_label,
+								'attribute_type'    			=> $atr->attribute_type,
+								'attribute_orderby'  			=> $atr->attribute_orderby,
+								'attribute_public'    		=> $atr->attribute_public,
+							)
+						);
+					}
+				}
+			}
 
 			// header and footer conditions
 

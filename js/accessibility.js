@@ -21,14 +21,14 @@
       switchExpanded: (el, state) => $(el).attr('aria-expanded', state),
     },
 
-    menuLinks: $('#menu .menu-item a').not('.menu-toggle').toArray(),
+    menuLinks: [...$('#menu .menu-item a').not('.menu-toggle').toArray(), $('a.mfn-menu-link').toArray()],
     subheaderLinks: $('#Subheader a').toArray(),
     wooPopup:  $('.mfn-header-login').find('a, input').toArray(),
     contentLinks: [...$('#Content a').toArray(), ...$('#Footer a').toArray()],
 
     clickListener() {
 
-      jQuery(document).on('keydown', 'a, *[role="link"], button', ( e ) => {
+      jQuery(document).on('keydown', 'a, *[role="link"], input, button', ( e ) => {
         let { originalEvent } = e;
         let { code : keyClicked } = originalEvent;
 
@@ -39,7 +39,7 @@
         setTimeout( _ => this.recognizeGesture(e), 1);
       });
 
-      jQuery(document).on('keyup', 'a, *[role="link"], button', ( e ) => {
+      jQuery(document).on('keyup', 'a, *[role="link"], input, button', ( e ) => {
         let { originalEvent } = e;
         let { code : keyClicked } = originalEvent;
 
@@ -53,7 +53,6 @@
       jQuery('#skip-links-menu').one('focus', 'a', function(){
         $('#skip-links-menu').css('top', '0px');
       });
-
     },
 
     skipLinks() {
@@ -70,6 +69,7 @@
       let modalOpened = $('*[aria-expanded=true]:not(#menu):not(.sub-menu)');
       const menuOpened = $('nav#menu').find('*[aria-expanded=true]');
       const domPrefix = $('body').hasClass('side-slide-is-open') ? '.extras-wrapper ' : '.top_bar_right ';
+      const isHeaderBuilderEnabled = $('body').hasClass('mfn-header-template');
       const shouldChangeDirection = () => {
         let shouldChange = false;
 
@@ -88,6 +88,12 @@
           )
           modalOpened = !elementToClose.length ? modalOpened : $(elementToClose[0]);
 
+          // WooModal - when outside of login modal, go to first link
+          if ( $(modalOpened).hasClass('mfn-header-login') || $(modalOpened).hasClass('woocommerce-MyAccount-navigation') ) {
+            $(modalOpened).closest('.mfn-header-login[aria-disabled=false]').find('a').first().focus();
+            return;
+          }
+
           // All other modals are using mfn-close-icon class, Side_slide is exception
           if( modalOpened.attr('id') !== 'Side_slide' && modalOpened.attr('aria-expanded') == 'true') {
 
@@ -98,14 +104,13 @@
             }
           }
 
-          this.utils.switchExpanded(modalOpened, false);
+          // HB 2.0 --- do not close if modal of megamenu/sideslide is opened
+          if ( !$(modalOpened).is(focusedElement.siblings('.mfn-menu-item-megamenu')) && !$(modalOpened).hasClass('mfn-header-tmpl-menu-sidebar') && isHeaderBuilderEnabled) {
+            this.utils.switchExpanded(modalOpened, false);
+          }
 
           switch(true){
-            case modalOpened.hasClass('woocommerce-MyAccount-navigation'):
-              $(`${domPrefix} .myaccount_button`).trigger('focus');
-              break;
             case modalOpened.hasClass('mfn-cart-holder'):
-              //modalOpened.find('.mfn-close-icon').trigger('click');
               $(`${domPrefix} #header_cart`).trigger('focus');
               break;
             case modalOpened.attr('id') === 'Side_slide':
@@ -127,10 +132,32 @@
         if ( $(item).css('display') == 'none') {
           this.utils.switchExpanded(item, false);
         }
+
+        //HB 2.0 - get into deeper submenus
+        if ( !$(document.activeElement).closest('ul').is($(item)) && !$(document.activeElement).siblings('ul').length && !$(document.activeElement).closest('ul[aria-expanded="true"]').length && isHeaderBuilderEnabled) {
+          this.utils.switchExpanded(item, false);
+        };
       })
 
       if(Enter){
         switch( true ){
+          // WooModal on X click
+          case focusedElement.hasClass('close-login-modal'):
+            $('#Wrapper a.toggle-login-modal').trigger('focus').trigger('click');
+            this.utils.switchExpanded( $('.mfn-header-login[aria-disabled=false]'), false);
+            break;
+
+          // HB 2.0 --- dropdown aria switch
+          case focusedElement.hasClass('mfn-header-menu-burger') && isHeaderBuilderEnabled:
+            $(focusedElement).trigger('click');
+            $(focusedElement).siblings('div').find('ul a').first().focus();
+
+            break;
+          case focusedElement.hasClass('mfn-header-menu-toggle') && isHeaderBuilderEnabled:
+            const hamburgerMenuDOM = $(focusedElement).closest('.mcb-item-header_burger-inner').find('a.mfn-header-menu-burger');
+            hamburgerMenuDOM.trigger('click').focus();
+            break;
+
           //Side slide close by button
           case focusedElement.hasClass('close'):
             this.utils.switchExpanded(modalOpened, false);
@@ -141,12 +168,25 @@
           case focusedElement.hasClass('menu-toggle') && $('body').hasClass('side-slide-is-open'):
             const submenuSide = focusedElement.siblings('.sub-menu');
 
+            // Arias
+            if (submenuSide.attr('aria-expanded') === 'false') {
+              submenuSide.attr('aria-expanded', true);
+            } else {
+              submenuSide.attr('aria-expanded', false);
+
+              // If children has dropdowns, close them
+              submenuSide.find('.sub-menu').each((index, item) => {
+                $(item).closest('li').removeClass('hover');
+                $(item).attr('aria-expanded', false).css('display', 'none');
+              })
+            }
+
+            // Prevention of opening by TAB
             if (submenuSide.css('display') == 'block') {
               submenuSide.find('a').first().trigger('focus');
             }
 
             break;
-
           //Submenu dropdown
           case focusedElement.hasClass('menu-toggle') && !$('body').hasClass('side-slide-is-open'):
             const submenu = focusedElement.siblings('.sub-menu');
@@ -185,11 +225,10 @@
             }
 
             break;
-
           // WooCommerce Header Login
           case focusedElement.hasClass('toggle-login-modal'):
-            $('.woocommerce-MyAccount-navigation').find('a').first().trigger('focus');
-            $('.woocommerce-MyAccount-navigation').attr('aria-expanded', 'true');
+            $('.mfn-header-login[aria-disabled=false]').find('input, a').first().trigger('focus');
+            $('.mfn-header-login[aria-disabled=false]').attr('aria-expanded', 'true');
             break;
 
           // Elements which imitate links
@@ -261,6 +300,39 @@
         //Skip links, are they triggered?
         this.skipLinks();
 
+      //Sideslide, if get out of the submenu by TAB, remove the hover effect too
+        if(!focusedElement.is('.submenu') && !isHeaderBuilderEnabled && $('body').hasClass('side-slide-is-open')){
+          const rootElement = focusedElement.closest('li').siblings('.hover');
+          rootElement.removeClass('hover');
+
+          rootElement.find('.sub-menu').each((index, item) => {
+            $(item).closest('li').removeClass('hover');
+          })
+        }
+
+        // HB 2.0 - regular dropdown
+        if( focusedElement.is('.mfn-menu-link') && $('body').hasClass('mfn-header-template') && isHeaderBuilderEnabled){
+            const subContainer = focusedElement.siblings('.mfn-submenu').length ? 'mfn-submenu' : 'mfn-menu-item-megamenu';
+            const dropdownButton = focusedElement.siblings(`.${subContainer}`);
+
+            // The mega menu is manged by function to force close modals, regular dropdown (nomegamenu) bypass
+            if ( subContainer === 'mfn-submenu' && focusedElement.closest('ul').attr('aria-expanded')) {
+              this.utils.switchExpanded($(focusedElement).siblings('.mfn-submenu'), false);
+            }
+
+            if (dropdownButton.length) {
+              const elChild = $(focusedElement).siblings(`.${subContainer}`);
+              this.utils.switchExpanded(elChild, true);
+            }
+        }
+
+        // HB 2.0 - mega menu inner dropdown
+        if(focusedElement.closest('ul').hasClass('mfn-megamenu-menu') && focusedElement.closest('li').hasClass('menu-item-has-children') && isHeaderBuilderEnabled){
+          this.utils.switchExpanded($(focusedElement).siblings('.sub-menu'), true);
+        }
+        if(focusedElement.closest('ul').hasClass('sub-menu') && focusedElement.closest('li').hasClass('menu-item-has-children') && isHeaderBuilderEnabled){
+          this.utils.switchExpanded($(focusedElement).siblings('.sub-menu'), true);
+        }
       }else if(Tab) {
 
         //Tabs fix, make noticable for tab, overwrite tabindex from -1 to 0
@@ -288,7 +360,43 @@
             } else {
               $('body a').first().trigger('focus');
             }
+            break;
+          //Sideslide, if get out of the submenu by TAB, remove the hover effect too
+          case !focusedElement.is('.submenu') && !isHeaderBuilderEnabled && $('body').hasClass('side-slide-is-open'):
+            const rootElement = focusedElement.closest('li').siblings('.hover');
+            rootElement.removeClass('hover');
 
+            rootElement.find('.sub-menu').each((index, item) => {
+              $(item).closest('li').removeClass('hover');
+            })
+            break;
+          // HB 2.0 - dropdowns (including mega menu dropdowns), trigger focus
+          case focusedElement.is('.mfn-menu-link') && isHeaderBuilderEnabled:
+            const subContainer = focusedElement.siblings('.mfn-submenu').length ? 'mfn-submenu' : 'mfn-menu-item-megamenu';
+            const dropdownButton = focusedElement.siblings(`.${subContainer}`);
+
+            // Calculate the width + position (left,right etc...)
+            const rootMenuItem = $(focusedElement).closest('.mfn-menu-item-has-megamenu').find('a.mfn-menu-link')[0];
+            $(rootMenuItem).trigger('mouseenter').trigger('hover').trigger('mouseover');
+
+            // The mega menu is manged by function to force close modals, regular dropdown (nomegamenu) bypass
+            if ( subContainer === 'mfn-submenu' && focusedElement.closest('ul').attr('aria-expanded') === 'true') {
+              this.utils.switchExpanded($(focusedElement).siblings('.mfn-submenu'), false);
+            }
+
+            if (dropdownButton.length) {
+              const elChild = $(focusedElement).siblings(`.${subContainer}`);
+              this.utils.switchExpanded(elChild, true);
+            }
+
+            break;
+
+          // HB 2.0 - mega menu, set active arias only.
+          case focusedElement.closest('ul').hasClass('mfn-megamenu-menu') && focusedElement.closest('li').hasClass('menu-item-has-children') && isHeaderBuilderEnabled:
+            this.utils.switchExpanded($(focusedElement).siblings('.sub-menu'), true);
+            break;
+          case focusedElement.closest('ul').hasClass('sub-menu') && focusedElement.closest('li').hasClass('menu-item-has-children') && isHeaderBuilderEnabled:
+            this.utils.switchExpanded($(focusedElement).siblings('.sub-menu'), true);
             break;
         }
 
@@ -296,24 +404,45 @@
         var openedSubmenus = Array.from( $('.sub-menu[aria-expanded=true]') );
         var modals = $('.woocommerce').find('nav[aria-expanded=true]');
 
+        // Mega menu, only for builder items.
+         if(focusedElement.closest('div.mfn-menu-item-megamenu') && isHeaderBuilderEnabled){
+          let newFocusedEl = focusedElement.closest('div.mfn-menu-item-megamenu');
 
-        if ( $('body').hasClass('side-slide-is-open') && focusedElement.closest('#Side_slide').length) {
+          this.utils.switchExpanded($(newFocusedEl), false);
+          $(newFocusedEl).siblings('a').trigger('focus');
+        }else if(focusedElement.closest('.mfn-header-login').length){
+          // HB 2.0 - close the woomodal
+          $('#Wrapper a.toggle-login-modal').trigger('focus')
+          $('body').removeClass('mfn-show-login-modal');
+          this.utils.switchExpanded( $('.mfn-header-login[aria-disabled=false]'), false);
+        }else if ( $('body').hasClass('side-slide-is-open') && focusedElement.closest('#Side_slide').length) {
           //side slide
-          this.utils.switchExpanded(modalOpened, false);
           modalOpened.find('.close').trigger('click');
 
           $('.responsive-menu-toggle').trigger('focus');
-        } else if( openedSubmenus.length ) {
-          //menus, dropdown
-          var menuItemOpened = $('nav').find('.sub-menu[aria-expanded=true]').siblings('a.menu-toggle');
+        }else if( openedSubmenus.length && isHeaderBuilderEnabled ) {
+          // HB 2.0 - menus, dropdown
+          if($(focusedElement).closest('.mfn-header-tmpl-menu-sidebar').length){ //sideslide
+            $(focusedElement).closest('.mfn-header-tmpl-menu-sidebar').attr('aria-expanded', false);
+            $('.mfn-header-menu-toggle').trigger('focus');
+          } else { //dropdown
+            const mainMenuItem = $(focusedElement).closest('.mfn-header-mainmenu').find('[aria-expanded=true]').first();
+            $(mainMenuItem).siblings('a').trigger('focus');
+            this.utils.switchExpanded(mainMenuItem, false);
+          }
 
-          openedSubmenus.forEach(submenu => {
-            this.utils.switchExpanded(submenu, false);
-            $(submenu).slideUp();
-          })
+        } else if( openedSubmenus.length && !isHeaderBuilderEnabled ) {
+            //menus, dropdown
+            var menuItemOpened = $('nav').find('.sub-menu[aria-expanded=true]').siblings('a.menu-toggle');
 
-          menuItemOpened.trigger('focus');
-        } else if( $('.mfn-header-login').find('nav[aria-expanded=true]').length ) {
+            openedSubmenus.forEach(submenu => {
+              this.utils.switchExpanded(submenu, false);
+              $(submenu).slideUp();
+            })
+
+            menuItemOpened.trigger('focus');
+
+        } else if( !isHeaderBuilderEnabled && $('.mfn-header-login').find('nav[aria-expanded=true]').length ) {
           //side login
           $('.close-login-modal').trigger('click');
           this.utils.switchExpanded(modals, false);
@@ -330,6 +459,12 @@
           // responsive menu toggle
           $('.responsive-menu-toggle').trigger('click');
           $('.responsive-menu-toggle').trigger('focus');
+        }  else if ( $(focusedElement).closest('ul').hasClass('mfn-megamenu-menu') && isHeaderBuilderEnabled ) {
+          $(focusedElement).closest('.mfn-menu-item-megamenu').attr('aria-expanded', false);
+          $(focusedElement).closest('.mfn-menu-item-megamenu').closest('li').find('a').focus();
+        } else if( $(focusedElement).closest('.mfn-header-tmpl-menu-sidebar') && isHeaderBuilderEnabled ) {
+          $(focusedElement).closest('.mfn-header-tmpl-menu-sidebar').attr('aria-expanded', false);
+          $('.mfn-header-menu-toggle').trigger('focus');
         }
 
 
@@ -378,8 +513,9 @@
         $('#Content').attr('role', 'main');
         $('#Header_wrapper').attr('role', 'banner').attr('aria-label', mfn.accessibility.translation.headerContainer);
 
-        // Woo Menu
+        // HB 2.0 Woo Menu
         $('.woocommerce-MyAccount-navigation').attr('role', 'navigation').attr('aria-expanded', 'false');
+        $('.mfn-header-login[aria-disabled="true"]').find('a, input, button').each((index, item) => $(item).attr('tabindex', '-1'));
 
         /* Remove aria-expanded for headers which does not open on menu click (responsive-menu-button) */
         if ( !$('body').is('.header-creative, .header-simple, .header-overlay') ) {

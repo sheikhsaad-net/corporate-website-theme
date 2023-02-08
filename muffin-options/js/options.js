@@ -577,10 +577,10 @@
           $('.mfn_tax_field_color').wpColorPicker();
         }
 
-        if($('.mfn-attr-image').length){
+        if($('.mfn-tax-image').length){
 
           var frame,
-            metaBox = $('.mfn-attr-image'),
+            metaBox = $('.mfn-tax-image'),
             addImgLink = metaBox.find('.upload-custom-img'),
             delImgLink = metaBox.find( '.delete-custom-img'),
             imgContainer = metaBox.find( '.mfn-custom-img-container'),
@@ -618,7 +618,7 @@
             imgContainer.find('img').attr('src', placeholder);
             //addImgLink.removeClass( 'hidden' );
             delImgLink.addClass( 'hidden' );
-            imgIdInput.val( '' );
+            imgIdInput.val( "" );
 
           });
         }
@@ -932,6 +932,90 @@
     }
 
     /**
+     *
+     * Regenerate thumbnails
+     *
+     */
+
+    var regenerateThumbnails = {
+
+      init: function() {
+
+        $(document).on('click', '.mfn-regenerate-thumbnails', function(e) {
+          e.preventDefault();
+          var $button = $(this);
+          if( $button.hasClass('loading') ) return;
+
+          $button.addClass('loading').text('Processing 0%');
+
+          regenerateThumbnails.process();
+
+        });
+
+      },
+
+      process: function() {
+
+        var $statusupdater = setInterval( function() {
+          ajaxProgress('regenerate_thumbnails');
+        }, 10000);
+
+        $.ajax({
+          url: ajaxurl,
+          data: {
+            'action': 'mfn_regenerate_thumbnails',
+            //'mfn-setup-nonce': $('input[name="mfn-setup-nonce"]', $importer).val()
+          },
+          // dataType: 'JSON',
+          type: 'POST',
+          statusCode: {
+            524: function() {
+              console.log('A timeout occurred. Trying again.');
+              regenerateThumbnails.process();
+            },
+            500: function() {
+              console.log('Error');
+              regenerateThumbnails.process();
+            }
+          }
+        }).done(function(response) {
+          $('.mfn-regenerate-thumbnails').text('All done').removeClass('loading');
+          clearInterval($statusupdater);
+        });
+
+      },
+
+    }
+
+    /**
+     * Progress ajax check
+     */
+
+    function ajaxProgress(type){
+
+      $.ajax({
+        url: ajaxurl,
+        data: {
+          'action': 'mfn_ajax_progress',
+          'type': type,
+          //'mfn-setup-nonce': $('input[name="mfn-setup-nonce"]', $importer).val()
+        },
+        // dataType: 'JSON',
+        type: 'POST',
+      }).done(function(response) {
+        // regenerate thumbnails
+        if( type == 'regenerate_thumbnails' && $('.mfn-regenerate-thumbnails').hasClass('loading') ){
+          var percent = (parseInt( response.current ) / parseInt( response.total ))*100;
+          if(isNaN(percent)){
+            percent = 1;
+          }
+          $('.mfn-regenerate-thumbnails').text( 'Processing '+ Math.round(percent)+'%' );
+        }
+      });
+      
+    }
+
+    /**
      * Ready
      * document.ready
      */
@@ -940,6 +1024,7 @@
 
       survey();
       mfnattributes.run();
+      regenerateThumbnails.init();
 
       if( ! $('#mfn-options').length ){
         return false;

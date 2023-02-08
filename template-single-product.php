@@ -19,6 +19,9 @@ if( ( empty($_GET['visual']) || !empty($_GET['mfn-template-id']) ) && isset( $tm
 		$mfn_builder = new Mfn_Builder_Front( $tmp_id );
 		$mfn_builder->show();
 
+		echo '<div class="section_wrapper clearfix">';
+			do_action('woocommerce_after_single_product');
+		echo '</div>';
 
 	echo '</div>';
 

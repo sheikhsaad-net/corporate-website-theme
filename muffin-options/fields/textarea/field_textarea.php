@@ -80,6 +80,10 @@ class MFN_Options_textarea extends Mfn_Options_field
 			}else{
 				echo '<textarea class="mfn-form-control mfn-field-value mfn-form-textarea '. esc_attr( $preview ) .'" '. $this->get_name( $meta ) .' rows="4" placeholder="'. esc_attr( $placeholder ) .'" '. $cm .' '. $editor .'>'. esc_attr( $this->value ) .'</textarea>';
 			}
+
+			if( !empty($this->field['dynamic_data']) ){
+				echo Mfn_Options_field::dynamic_data_options($this->field['dynamic_data']);
+			}
 			
 
 		}else{
@@ -212,6 +216,14 @@ class MFN_Options_textarea extends Mfn_Options_field
 
 		        echo '<a class="mfn-option-btn btn-medium mfn-option-blank" title="Undo" data-type="undo" href="#"><span class="mfn-icon mfn-icon-undo"></span></a>';
 		        echo '<a class="mfn-option-btn btn-medium mfn-option-blank" title="Redo" data-type="redo" href="#"><span class="mfn-icon mfn-icon-redo"></span></a>';
+
+
+		        if( 'full' == $editor ){
+
+			        echo '<span class="mfn-option-sep"></span>';
+			        echo '<a class="mfn-option-btn btn-medium mfn-option-blank mfn-button-dynamic-data" title="Dynamic Data" data-type="dynamic_data" href="#"><span class="mfn-icon mfn-icon-dynamic-data"></span></a>';
+
+			    }
 
 					echo '</div>';
 				}

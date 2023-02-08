@@ -56,8 +56,7 @@ class MFN_Options_switch extends Mfn_Options_field
 				echo '<ul class="'. esc_attr( $preview ) .'">';
 
 					foreach ( $this->field['options'] as $k => $v ) {
-
-						$check = 'xxx';
+						$check = 'xxxx';
 						$class = false;
 
 						$tooltip = false;
@@ -93,7 +92,7 @@ class MFN_Options_switch extends Mfn_Options_field
 							if( isset($this->field['version']) && $this->field['version'] == 'multiple' ){
 								echo '<li class="\'+( typeof('.$js.') !== \'undefined\' && '.$js.'.includes("'. esc_attr($k) .'") ? "active" : "") +\'" '. $tooltip .' '. $tooltipActive .'>';
 							}else{
-								echo '<li class="\'+( typeof('.$js.') !== \'undefined\' && '.$js.' == "'. esc_attr($k) .'" ? "active" : "") +\'" '. $tooltip .' '. $tooltipActive .'>';
+								echo '<li class="\'+( ( typeof('.$js.') === \'undefined\' && "'. esc_attr($k) .'" == "" ) || '.$js.' == "'. esc_attr($k) .'" ? "active" : "") +\'" '. $tooltip .' '. $tooltipActive .'>';
 							}
 						}else{
 						echo '<li class="'. $class .'" '. $tooltip .' '. $tooltipActive .'>';
@@ -103,7 +102,7 @@ class MFN_Options_switch extends Mfn_Options_field
 									if( isset($this->field['version']) && $this->field['version'] == 'multiple' ){
 										echo '<input type="checkbox" \'+(typeof('.$js.') !== \'undefined\' && '.$js.'.includes("'. esc_attr($k) .'") ? "checked" : "") +\' value="'. esc_attr( $k ) .'" '. $this->get_name( $meta ) .' autocomplete="off" />';
 									}else{
-										echo '<input class="condition-field" type="checkbox" \'+( typeof('.$js.') !== \'undefined\' && '.$js.' == "'. esc_attr($k) .'" ? "checked" : "") +\' value="'. esc_attr( $k ) .'" '. $this->get_name( $meta ) .' autocomplete="off" />';
+										echo '<input class="condition-field" type="checkbox" \'+( ( typeof('.$js.') === \'undefined\' && "'. esc_attr($k) .'" == "" ) || '.$js.' == "'. esc_attr($k) .'" ? "checked" : "") +\' value="'. esc_attr( $k ) .'" '. $this->get_name( $meta ) .' autocomplete="off" />';
 									}
 								}else{
 									echo '<input type="checkbox" '. ( !isset($this->field['version']) || $this->field['version'] == 'single' ? $this->get_name( $meta ) : null ) .' value="'. esc_attr( $k ) .'" '. checked( $check, $k, false ) .' autocomplete="off" />';

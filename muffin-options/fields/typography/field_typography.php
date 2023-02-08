@@ -105,7 +105,7 @@ class MFN_Options_typography extends Mfn_Options_field
 				echo '<div class="form-control" data-key="'. esc_html__('Letter spacing', 'mfn-opts') .'">';
 					echo '<input class="mfn-form-control mfn-form-number" type="number" name="'. esc_attr( $name ) .'[letter_spacing]" value="\'+('.$js.' && typeof '.$js.'["letter_spacing"] !== \'undefined\' ? '.$js.'["letter_spacing"] : "")+\'" '.( !empty($this->field['std']['letter_spacing']) ? 'data-std="'.$this->field['std']['letter_spacing'].'"' : '' ).' data-key="letter-spacing" data-obj="letter_spacing" placeholder="'. esc_attr( $this->field['std']['letter_spacing'] ) .'" data-style="letter-spacing" data-unit="px">';
 				echo '</div>';
-				
+
 				echo '<div class="form-addon-append">';
 					echo '<span class="label">px</span>';
 				echo '</div>';
@@ -113,61 +113,68 @@ class MFN_Options_typography extends Mfn_Options_field
 
 			}else{
 
-			echo '<div class="form-control" data-key="'. esc_html__('Font size', 'mfn-opts') .'">';
-				echo '<input class="mfn-form-control mfn-form-number" type="number" name="'. esc_attr( $name ) .'[size]" value="'. esc_attr( $value['size'] ) .'" data-key="font-size" placeholder="'. esc_attr( $this->field['std']['size'] ) .'">';
-			echo '</div>';
-			echo '<div class="form-addon-append">';
-				echo '<span class="label">px</span>';
-			echo '</div>';
+				if( empty($value['size']) ){
+					$value['size'] = $this->field['std']['size'] ?? '';
+				}
+				if( empty($value['line_height']) ){
+					$value['line_height'] = $this->field['std']['line_height'] ?? '';
+				}
+				if( ! isset($value['letter_spacing']) ){
+					$value['letter_spacing'] = $this->field['std']['letter_spacing'] ?? '';
+				}
 
-			if ( 'line_height' != $disable ) {
-
-				echo '<div class="form-control" data-key="'. esc_html__('Line height', 'mfn-opts') .'">';
-					echo '<input class="mfn-form-control mfn-form-number" type="number" name="'. esc_attr( $name ) .'[line_height]" value="'. esc_attr( $value['line_height'] ) .'" data-key="line-height" placeholder="'. esc_attr( $this->field['std']['line_height'] ) .'">';
+				echo '<div class="form-control" data-key="'. esc_html__('Font size', 'mfn-opts') .'">';
+					echo '<input class="mfn-form-control mfn-form-number" type="number" name="'. esc_attr( $name ) .'[size]" value="'. esc_attr( $value['size'] ) .'" data-key="font-size" placeholder="'. esc_attr( $this->field['std']['size'] ) .'">';
 				echo '</div>';
+				echo '<div class="form-addon-append">';
+					echo '<span class="label">px</span>';
+				echo '</div>';
+
+				if ( 'line_height' != $disable ) {
+
+					echo '<div class="form-control" data-key="'. esc_html__('Line height', 'mfn-opts') .'">';
+						echo '<input class="mfn-form-control mfn-form-number" type="number" name="'. esc_attr( $name ) .'[line_height]" value="'. esc_attr( $value['line_height'] ) .'" data-key="line-height" placeholder="'. esc_attr( $this->field['std']['line_height'] ) .'">';
+					echo '</div>';
+					echo '<div class="form-addon-append">';
+						echo '<span class="label">px</span>';
+					echo '</div>';
+
+				}
+
+				echo '<div class="form-control form-control-font" data-key="'. esc_html__('Font weight & style', 'mfn-opts') .'">';
+					echo '<select class="mfn-form-control mfn-form-select" name="'. esc_attr( $name ) .'[weight_style]" data-key="weight-style">';
+						echo '<option value="" '. selected($value['weight_style'], '', false) .'>'. esc_html__('Default', 'mfn-opts') .'</option>';
+						echo '<option value="100" '. selected($value['weight_style'], '100', false) .'>100 thin</option>';
+						echo '<option value="100italic" '. selected($value['weight_style'], '100italic', false) .'>100 thin italic</option>';
+						echo '<option value="200" '. selected($value['weight_style'], '200', false) .'>200 extra-light</option>';
+						echo '<option value="200italic" '. selected($value['weight_style'], '200italic', false) .'>200 extra-light italic</option>';
+						echo '<option value="300" '. selected($value['weight_style'], '300', false) .'>300 light</option>';
+						echo '<option value="300italic" '. selected($value['weight_style'], '300italic', false) .'>300 light italic</option>';
+						echo '<option value="400" '. selected($value['weight_style'], '400', false) .'>400 regular</option>';
+						echo '<option value="400italic" '. selected($value['weight_style'], '400italic', false) .'>400 regular italic</option>';
+						echo '<option value="500" '. selected($value['weight_style'], '500', false) .'>500 medium</option>';
+						echo '<option value="500italic" '. selected($value['weight_style'], '500italic', false) .'>500 medium italic</option>';
+						echo '<option value="600" '. selected($value['weight_style'], '600', false) .'>600 semi-bold</option>';
+						echo '<option value="600italic" '. selected($value['weight_style'], '600italic', false) .'>600 semi-bold italic</option>';
+						echo '<option value="700" '. selected($value['weight_style'], '700', false) .'>700 bold</option>';
+						echo '<option value="700italic" '. selected($value['weight_style'], '700italic', false) .'>700 bold italic</option>';
+						echo '<option value="800" '. selected($value['weight_style'], '800', false) .'>800 extra-bold</option>';
+						echo '<option value="800italic" '. selected($value['weight_style'], '800italic', false) .'>800 extra-bold italic</option>';
+						echo '<option value="900" '. selected($value['weight_style'], '900', false) .'>900 black</option>';
+						echo '<option value="900italic" '. selected($value['weight_style'], '900italic', false) .'>900 black italic</option>';
+					echo '</select>';
+				echo '</div>';
+
+				echo '<div class="form-control" data-key="'. esc_html__('Letter spacing', 'mfn-opts') .'">';
+					echo '<input class="mfn-form-control mfn-form-number" type="number" name="'. esc_attr( $name ) .'[letter_spacing]" value="'. esc_attr( $value['letter_spacing'] ) .'" data-key="letter-spacing" placeholder="'. esc_attr( $this->field['std']['letter_spacing'] ) .'">';
+				echo '</div>';
+
 				echo '<div class="form-addon-append">';
 					echo '<span class="label">px</span>';
 				echo '</div>';
 
 			}
 
-			echo '<div class="form-control form-control-font" data-key="'. esc_html__('Font weight & style', 'mfn-opts') .'">';
-				echo '<select class="mfn-form-control mfn-form-select" name="'. esc_attr( $name ) .'[weight_style]" data-key="weight-style">';
-					echo '<option value="" '. selected($value['weight_style'], '', false) .'>'. esc_html__('Default', 'mfn-opts') .'</option>';
-					echo '<option value="100" '. selected($value['weight_style'], '100', false) .'>100 thin</option>';
-					echo '<option value="100italic" '. selected($value['weight_style'], '100italic', false) .'>100 thin italic</option>';
-					echo '<option value="200" '. selected($value['weight_style'], '200', false) .'>200 extra-light</option>';
-					echo '<option value="200italic" '. selected($value['weight_style'], '200italic', false) .'>200 extra-light italic</option>';
-					echo '<option value="300" '. selected($value['weight_style'], '300', false) .'>300 light</option>';
-					echo '<option value="300italic" '. selected($value['weight_style'], '300italic', false) .'>300 light italic</option>';
-					echo '<option value="400" '. selected($value['weight_style'], '400', false) .'>400 regular</option>';
-					echo '<option value="400italic" '. selected($value['weight_style'], '400italic', false) .'>400 regular italic</option>';
-					echo '<option value="500" '. selected($value['weight_style'], '500', false) .'>500 medium</option>';
-					echo '<option value="500italic" '. selected($value['weight_style'], '500italic', false) .'>500 medium italic</option>';
-					echo '<option value="600" '. selected($value['weight_style'], '600', false) .'>600 semi-bold</option>';
-					echo '<option value="600italic" '. selected($value['weight_style'], '600italic', false) .'>600 semi-bold italic</option>';
-					echo '<option value="700" '. selected($value['weight_style'], '700', false) .'>700 bold</option>';
-					echo '<option value="700italic" '. selected($value['weight_style'], '700italic', false) .'>700 bold italic</option>';
-					echo '<option value="800" '. selected($value['weight_style'], '800', false) .'>800 extra-bold</option>';
-					echo '<option value="800italic" '. selected($value['weight_style'], '800italic', false) .'>800 extra-bold italic</option>';
-					echo '<option value="900" '. selected($value['weight_style'], '900', false) .'>900 black</option>';
-					echo '<option value="900italic" '. selected($value['weight_style'], '900italic', false) .'>900 black italic</option>';
-				echo '</select>';
-			echo '</div>';
-
-			echo '<div class="form-control" data-key="'. esc_html__('Letter spacing', 'mfn-opts') .'">';
-				echo '<input class="mfn-form-control mfn-form-number" type="number" name="'. esc_attr( $name ) .'[letter_spacing]" value="'. esc_attr( $value['letter_spacing'] ) .'" data-key="letter-spacing" placeholder="'. esc_attr( $this->field['std']['letter_spacing'] ) .'">';
-			echo '</div>';
-
-			echo '<div class="form-addon-append">';
-				echo '<span class="label">px</span>';
-			echo '</div>';
-
-		
-
-			}
-
-		
 		echo '</div>';
 
 		// description

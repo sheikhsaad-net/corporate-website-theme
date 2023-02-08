@@ -34,9 +34,10 @@
 			<li data-page="websites"><a href="admin.php?page=<?php echo apply_filters('betheme_slug', 'be'); ?>-websites"><span class="mfn-icon mfn-icon-websites"></span>Websites</a></li>
 			<?php endif; ?>
 
-			<li data-page="options"><a href="admin.php?page=<?php echo apply_filters('betheme_slug', 'be'); ?>-options"><span class="mfn-icon mfn-icon-theme-options"></span>Theme Options</a></li>
+			<li data-page="templates"><a href="edit.php?post_type=template"><span class="mfn-icon mfn-icon-templates"></span>Templates</a></li>
+			<li data-page="options"><a href="admin.php?page=<?php echo apply_filters('betheme_slug', 'be'); ?>-options"><span class="mfn-icon mfn-icon-theme-options"></span>Options</a></li>
 			<li>
-				<a><span class="mfn-icon mfn-icon-maintenance"></span>Maintenance</a>
+				<a><span class="mfn-icon mfn-icon-maintenance"></span>Other</a>
 				<ul>
 					<?php if( ! WHITE_LABEL && ! isset($disable['demo-data']) ): ?>
 					<li>

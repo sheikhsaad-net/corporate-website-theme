@@ -203,6 +203,14 @@
         $('.modal-confirm-reset', $importer).removeClass('show');
       },
 
+      // modal.media()
+
+      media: function($el){
+
+        $el.toggleClass('active');
+
+      },
+
       // modal.confirm()
 
       confirm: function($el){
@@ -223,6 +231,8 @@
 
       reset: function(dfd){
 
+        var media = $('.modal-confirm-reset .remove-media span', $importer).hasClass('active') ? 1 : 0;
+
         modal.close();
 
         // show reset step
@@ -234,6 +244,7 @@
           url: ajaxurl,
           data: {
             'action': 'mfn_setup_database_reset',
+            'media': media,
             'mfn-setup-nonce': $('input[name="mfn-setup-nonce"]', $importer).val()
           },
           type: 'POST',
@@ -274,7 +285,7 @@
 
         // check for slider
 
-        if( undefined !== typeof(demo.plugins) ){
+        if( 'undefined' !== typeof(demo.plugins) ){
 
           if( demo.plugins.indexOf('rev') >= 0 ){
             $('.card-data .select-inner span[data-type="sliders"]', $importer).removeClass('hidden');
@@ -282,9 +293,9 @@
             $('.card-data .select-inner span[data-type="sliders"]', $importer).addClass('hidden');
           }
 
-          $('.card-data .import-options li[data-type="complete"]', $importer).trigger('click');
-
         }
+
+        $('.card-data .import-options li[data-type="complete"]', $importer).trigger('click');
 
       }
 
@@ -304,7 +315,7 @@
 
         // elementor not available for selected website
 
-        if( demo.layouts.indexOf('ele') < 0 ){
+        if( ! demo.layouts || demo.layouts.indexOf('ele') < 0 ){
           if( 'next' == dir ){
             steps.next();
           } else {
@@ -409,7 +420,7 @@
 
         // check which plugins are required
 
-        if( undefined !== typeof(demo.plugins) ){
+        if( 'undefined' !== typeof(demo.plugins) ){
 
           demo.plugins.forEach(function(plugin){
 
@@ -1318,7 +1329,12 @@
 
       // modal
 
-      $importer.on( 'click', '.modal-confirm-reset .select-inner span', function(e) {
+      $importer.on( 'click', '.modal-confirm-reset .remove-media span', function(e) {
+        e.preventDefault();
+        modal.media($(this));
+      });
+
+      $importer.on( 'click', '.modal-confirm-reset .reset-confirm span', function(e) {
         e.preventDefault();
         modal.confirm($(this));
       });

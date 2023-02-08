@@ -1,4 +1,4 @@
-<?php  
+<?php
 if( ! defined( 'ABSPATH' ) ){
 	exit; // Exit if accessed directly
 }
@@ -23,7 +23,7 @@ echo '<div class="panel panel-items" id="mfn-widgets-list">
 		 		}
 		 	}
 		 	echo '</ul>';
-		 	echo '<span class="empty-favs-info">Collect favourite elements in one place by<br /> <span class="mfn-icon mfn-icon-right-click"></span> &gt; <i>Add to favourites</i></span>';
+		 	echo '<span class="empty-favs-info">Collect favourite elements in one place by<br /> <span class="mfn-icon mfn-icon-right-click"></span> &gt; <i>Add to favourites'. ( ! is_admin() ? ' (Unavailable in Demo)' : '' ) .'</i></span>';
 		 echo '</div></div>';
 	}
 
@@ -41,9 +41,9 @@ echo '<div class="panel panel-items" id="mfn-widgets-list">
 		    }
     	}elseif(
     		// rest
-	    	( !in_array($widget['cat'], array('shop-archive', 'single-product', 'header', 'megamenu', 'footer')) ) || 
-			( isset($this->template_type) && $this->template_type == 'single-product' && $widget['cat'] == 'single-product' ) || 
-			( isset($this->template_type) && $this->template_type == 'footer' && $widget['cat'] == 'footer' ) || 
+	    	( !in_array($widget['cat'], array('shop-archive', 'single-product', 'header', 'megamenu', 'footer')) ) ||
+			( isset($this->template_type) && $this->template_type == 'single-product' && $widget['cat'] == 'single-product' ) ||
+			( isset($this->template_type) && $this->template_type == 'footer' && $widget['cat'] == 'footer' ) ||
 			( isset($this->template_type) && $this->template_type == 'shop-archive' && $widget['cat'] == 'shop-archive' )
 	    ){
 	    	echo '<li class="mfn-item-'.$w.' category-'.$widget['cat'].'" data-title="'.$widget['title'].'" data-type="'.$w.'"><a href="#"><div class="mfn-icon card-icon"></div><span class="title">'.$widget['title'].'</span></a></li>';

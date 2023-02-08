@@ -32,7 +32,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
     /**
       * Constructor
-      */
+    */
 
     public function __construct( $vb = false ) {
 
@@ -243,6 +243,452 @@ if( ! class_exists('Mfn_Builder_Fields') )
   				'title' => __('Title', 'mfn-opts'),
   				'desc' => __('Label in admin panel only', 'mfn-opts'),
   			),
+
+  			array(
+  				'class' => 'hidden-header-builder',
+					'title' => __('Type', 'mfn-opts'),
+				),
+
+  			array(
+  				'id' => 'type',
+  				'attr_id' => 'section_type',
+  				'class' => 'hidden-header-builder mfn-loop-switcher',
+  				'type' => 'switch',
+  				're_render' => true,
+  				'title' => __('Type', 'mfn-opts'),
+  				'desc' => __('Query loop displays section&apos;s content in designed loop', 'mfn-opts'),
+  				'options' => array(
+  					'' => __('Default', 'mfn-opts'),
+  					'query' => __('Query loop', 'mfn-opts'),
+  				),
+  				'std' => ''
+  			),
+
+  			/* query type */
+
+  			array(
+  				'id' => 'query_type',
+  				'attr_id' => 'query_type',
+  				're_render' => true,
+  				'class' => 'hidden-header-builder',
+  				'condition' => array( 'id' => 'section_type', 'opt' => 'is', 'val' => 'query' ),
+  				'type' => 'select',
+  				'title' => __('Query type', 'mfn-opts'),
+  				'options' => array(
+  					'' => __('Select', 'mfn-opts'),
+  					'posts' => __('Posts', 'mfn-opts'),
+  					'terms' => __('Terms', 'mfn-opts')
+  				),
+  				'std' => ''
+  			),
+
+  			/* posts query builder */
+
+  			array(
+  				'id' => 'query_post_type',
+  				'attr_id' => 'query_post_type',
+  				'class' => 'hidden-header-builder',
+  				're_render' => true,
+  				'condition' => array( 'id' => 'query_type', 'opt' => 'is', 'val' => 'posts' ),
+  				'type' => 'select',
+  				'title' => __('Post type', 'mfn-opts'),
+  				'options' => array(
+  					'' => __('- Select -', 'mfn-opts'),
+  					'post' => __('Post', 'mfn-opts'),
+  					'page' => __('Page', 'mfn-opts'),
+  					'portfolio' => __('Portfolio', 'mfn-opts'),
+  					'offer' => __('Offer', 'mfn-opts'),
+  					'client' => __('Clients', 'mfn-opts'),
+  					'slide' => __('Slides', 'mfn-opts'),
+  					'product' => __('Product', 'mfn-opts'),
+  					'testimonial' => __('Testimonial', 'mfn-opts'),
+  				),
+  				'std' => ''
+  			),
+
+  			array(
+					'id' => 'query_post_type_testimonial',
+					'condition' => array( 'id' => 'query_post_type', 'opt' => 'is', 'val' => 'testimonial' ),
+					're_render' => true,
+					'type' => 'select',
+					'title' => __('Category', 'mfn-opts'),
+					'options' => mfn_get_categories('testimonial-types'),
+   				'js_hierarchical_options' => 'testimonial_types',
+					'preview' => 'category',
+				),
+
+  			array(
+					'id' => 'query_post_type_product',
+					'condition' => array( 'id' => 'query_post_type', 'opt' => 'is', 'val' => 'product' ),
+					're_render' => true,
+					'type' => 'select',
+					'title' => __('Category', 'mfn-opts'),
+					'hierarchical_options' => mfn_hierarchical_taxonomy('product_cat'),
+					'js_hierarchical_options' => 'product_cat',
+					'preview' => 'category',
+				),
+
+				array(
+					'id' => 'query_post_type_post',
+					'condition' => array( 'id' => 'query_post_type', 'opt' => 'is', 'val' => 'post' ),
+					're_render' => true,
+					'type' => 'select',
+					'title' => __('Category', 'mfn-opts'),
+					'hierarchical_options' => mfn_get_categories('category'),
+					'js_hierarchical_options' => 'blog_categories',
+					'preview' => 'category',
+				),
+
+				array(
+					'id' => 'query_post_type_portfolio',
+					'condition' => array( 'id' => 'query_post_type', 'opt' => 'is', 'val' => 'portfolio' ),
+					're_render' => true,
+					'type' => 'select',
+					'title' => __('Category', 'mfn-opts'),
+					'hierarchical_options' => mfn_get_categories('portfolio-types'),
+					'js_hierarchical_options' => 'portfolio_types',
+					'preview' => 'category',
+				),
+
+				array(
+					'id' => 'query_post_type_client',
+					'condition' => array( 'id' => 'query_post_type', 'opt' => 'is', 'val' => 'client' ),
+					're_render' => true,
+					'type' => 'select',
+					'title' => __('Category', 'mfn-opts'),
+					'hierarchical_options' => mfn_get_categories('client-types'),
+					'js_hierarchical_options' => 'client_types',
+					'preview' => 'category',
+				),
+
+				array(
+					'id' => 'query_post_type_offer',
+					'condition' => array( 'id' => 'query_post_type', 'opt' => 'is', 'val' => 'offer' ),
+					're_render' => true,
+					'type' => 'select',
+					'title' => __('Category', 'mfn-opts'),
+					'hierarchical_options' => mfn_get_categories('offer-types'),
+					'js_hierarchical_options' => 'offer_types',
+					'preview' => 'category',
+				),
+
+				array(
+					'id' => 'query_post_type_slide',
+					'condition' => array( 'id' => 'query_post_type', 'opt' => 'is', 'val' => 'slide' ),
+					're_render' => true,
+					'type' => 'select',
+					'title' => __('Category', 'mfn-opts'),
+					'hierarchical_options' => mfn_get_categories('slide-types'),
+					'js_options' => 'slide_types',
+					'preview' => 'category',
+				),
+
+				array(
+					'id' => 'query_post_type_product_order',
+					'condition' => array( 'id' => 'query_post_type', 'opt' => 'is', 'val' => 'product' ),
+					're_render' => true,
+					'type' => 'select',
+					'title' => __('Display', 'mfn-opts'),
+					'desc' => __('This option turns off standard order settings', 'mfn-opts'),
+					'options' => array(
+						'' => __('Default', 'mfn-opts'),
+						'on_sale' => __('On sale', 'mfn-opts'),
+						'best_selling' => __('Best selling', 'mfn-opts'),
+						'top_rated' => __('Top rated', 'mfn-opts'),
+					),
+					'std' => '',
+				),
+
+  			array(
+  				'id' => 'query_post_orderby',
+  				'class' => 'hidden-header-builder',
+  				're_render' => true,
+  				'condition' => array( 'id' => 'query_type', 'opt' => 'is', 'val' => 'posts' ),
+  				'type' => 'select',
+  				'title' => __('Order by', 'mfn-opts'),
+  				'options' => array(
+  					'' => __('None', 'mfn-opts'),
+  					'ID' => __('ID', 'mfn-opts'),
+  					'date' => __('Date', 'mfn-opts'),
+  					'modified' => __('Modified', 'mfn-opts'),
+  					'title' => __('Title', 'mfn-opts'),
+  					'rand' => __('Rand', 'mfn-opts'),
+  				),
+  				'std' => 'date'
+  			),
+
+  			array(
+  				'id' => 'query_post_order',
+  				're_render' => true,
+  				'class' => 'hidden-header-builder',
+  				'condition' => array( 'id' => 'query_type', 'opt' => 'is', 'val' => 'posts' ),
+  				'type' => 'select',
+  				'title' => __('Order', 'mfn-opts'),
+  				'options' => array(
+  					'ASC' => __('Ascending', 'mfn-opts'),
+  					'DESC' => __('Descending', 'mfn-opts'),
+  				),
+  				'std' => 'ASC'
+  			),
+
+  			array(
+  				'id' => 'query_post_per_page',
+  				're_render' => true,
+  				'class' => 'hidden-header-builder',
+  				'condition' => array( 'id' => 'query_type', 'opt' => 'is', 'val' => 'posts' ),
+  				'type' => 'text',
+  				'title' => __('Limit', 'mfn-opts'),
+  				'param' => 'number',
+					'preview' => 'number',
+					'std' => '0',
+  			),
+
+  			array(
+  				'id' => 'query_post_offset',
+  				're_render' => true,
+  				'class' => 'hidden-header-builder',
+  				'condition' => array( 'id' => 'query_type', 'opt' => 'is', 'val' => 'posts' ),
+  				'type' => 'text',
+  				'title' => __('Offset', 'mfn-opts'),
+  				'param' => 'number',
+					'preview' => 'number',
+					'std' => '0',
+  			),
+
+  			/* terms query builder */
+
+  			array(
+  				'id' => 'query_terms_taxonomy',
+  				'attr_id' => 'query_terms_taxonomy',
+  				're_render' => true,
+  				'class' => 'hidden-header-builder',
+  				'condition' => array( 'id' => 'query_type', 'opt' => 'is', 'val' => 'terms' ),
+  				'type' => 'select',
+  				'title' => __('Taxonomy', 'mfn-opts'),
+  				'options' => array(
+  					'' => __('- Select -', 'mfn-opts'),
+  					'category' => __('Post category', 'mfn-opts'),
+  					'post_tag' => __('Post tag', 'mfn-opts'),
+  					'portfolio_types' => __('Portfolio category', 'mfn-opts'),
+  					'offer_types' => __('Offer category', 'mfn-opts'),
+  					'testimonial_types' => __('Testimonial category', 'mfn-opts'),
+  					'product_cat' => __('Product category', 'mfn-opts'),
+  				),
+  				'std' => 'category'
+  			),
+
+  			array(
+  				'id' => 'query_terms_excludes_post_tag',
+  				'condition' => array( 'id' => 'query_terms_taxonomy', 'opt' => 'is', 'val' => 'post_tag' ),
+  				're_render' => true,
+  				'type' => 'multiselect',
+  				'title' => __('Excludes', 'mfn-opts'),
+  				'desc' => __('IDs of taxonomies to exclude', 'mfn-opts'),
+  				'options' => mfn_get_categories('post_tag'),
+   				'js_hierarchical_options' => 'blog_tags',
+  			),
+
+  			array(
+  				'id' => 'query_terms_excludes_client_types',
+  				'condition' => array( 'id' => 'query_terms_taxonomy', 'opt' => 'is', 'val' => 'client_types' ),
+  				're_render' => true,
+  				'type' => 'multiselect',
+  				'title' => __('Excludes', 'mfn-opts'),
+  				'desc' => __('IDs of taxonomies to exclude', 'mfn-opts'),
+  				'options' => mfn_get_categories('client-types'),
+   				'js_hierarchical_options' => 'client_types',
+  			),
+
+  			array(
+  				'id' => 'query_terms_excludes_portfolio_types',
+  				'condition' => array( 'id' => 'query_terms_taxonomy', 'opt' => 'is', 'val' => 'portfolio_types' ),
+  				're_render' => true,
+  				'type' => 'multiselect',
+  				'title' => __('Excludes', 'mfn-opts'),
+  				'desc' => __('IDs of taxonomies to exclude', 'mfn-opts'),
+  				'options' => mfn_get_categories('portfolio-types'),
+   				'js_hierarchical_options' => 'portfolio_types',
+  			),
+
+				array(
+  				'id' => 'query_terms_excludes_category',
+  				'condition' => array( 'id' => 'query_terms_taxonomy', 'opt' => 'is', 'val' => 'category' ),
+  				're_render' => true,
+  				'type' => 'multiselect',
+  				'title' => __('Excludes', 'mfn-opts'),
+  				'desc' => __('IDs of taxonomies to exclude', 'mfn-opts'),
+  				'hierarchical_options' => mfn_get_categories('category'),
+					'js_hierarchical_options' => 'blog_categories',
+  			),
+
+  			array(
+  				'id' => 'query_terms_excludes_offer_types',
+  				'condition' => array( 'id' => 'query_terms_taxonomy', 'opt' => 'is', 'val' => 'offer_types' ),
+  				're_render' => true,
+  				'type' => 'multiselect',
+  				'title' => __('Excludes', 'mfn-opts'),
+  				'desc' => __('IDs of taxonomies to exclude', 'mfn-opts'),
+  				'options' => mfn_get_categories('offer-types'),
+   				'js_hierarchical_options' => 'offer_types',
+  			),
+
+  			array(
+  				'id' => 'query_terms_excludes_testimonial_types',
+  				'condition' => array( 'id' => 'query_terms_taxonomy', 'opt' => 'is', 'val' => 'testimonial_types' ),
+  				're_render' => true,
+  				'type' => 'multiselect',
+  				'title' => __('Excludes', 'mfn-opts'),
+  				'desc' => __('IDs of taxonomies to exclude', 'mfn-opts'),
+  				'options' => mfn_get_categories('testimonial-types'),
+   				'js_hierarchical_options' => 'testimonial_types',
+  			),
+
+  			array(
+  				'id' => 'query_terms_excludes_product_cat',
+  				'condition' => array( 'id' => 'query_terms_taxonomy', 'opt' => 'is', 'val' => 'product_cat' ),
+  				're_render' => true,
+  				'type' => 'multiselect',
+  				'title' => __('Excludes', 'mfn-opts'),
+  				'desc' => __('IDs of taxonomies to exclude', 'mfn-opts'),
+  				'hierarchical_options' => mfn_hierarchical_taxonomy('product_cat'),
+					'js_hierarchical_options' => 'product_cat',
+  			),
+
+  			array(
+  				'id' => 'query_terms_includes_post_tag',
+  				'condition' => array( 'id' => 'query_terms_taxonomy', 'opt' => 'is', 'val' => 'post_tag' ),
+  				're_render' => true,
+  				'type' => 'multiselect',
+  				'title' => __('Includes', 'mfn-opts'),
+  				'desc' => __('IDs of taxonomies to exclude', 'mfn-opts'),
+  				'options' => mfn_get_categories('post_tag'),
+   				'js_hierarchical_options' => 'blog_tags',
+  			),
+
+  			array(
+  				'id' => 'query_terms_includes_client_types',
+  				'condition' => array( 'id' => 'query_terms_taxonomy', 'opt' => 'is', 'val' => 'client_types' ),
+  				're_render' => true,
+  				'type' => 'multiselect',
+  				'title' => __('Includes', 'mfn-opts'),
+  				'desc' => __('IDs of taxonomies to exclude', 'mfn-opts'),
+  				'options' => mfn_get_categories('client-types'),
+   				'js_hierarchical_options' => 'client_types',
+  			),
+
+  			array(
+  				'id' => 'query_terms_includes_portfolio_types',
+  				'condition' => array( 'id' => 'query_terms_taxonomy', 'opt' => 'is', 'val' => 'portfolio_types' ),
+  				're_render' => true,
+  				'type' => 'multiselect',
+  				'title' => __('Includes', 'mfn-opts'),
+  				'desc' => __('IDs of taxonomies to exclude', 'mfn-opts'),
+  				'options' => mfn_get_categories('portfolio-types'),
+   				'js_hierarchical_options' => 'portfolio_types',
+  			),
+
+				array(
+  				'id' => 'query_terms_includes_category',
+  				'condition' => array( 'id' => 'query_terms_taxonomy', 'opt' => 'is', 'val' => 'category' ),
+  				're_render' => true,
+  				'type' => 'multiselect',
+  				'title' => __('Includes', 'mfn-opts'),
+  				'desc' => __('IDs of taxonomies to exclude', 'mfn-opts'),
+  				'hierarchical_options' => mfn_get_categories('category'),
+					'js_hierarchical_options' => 'blog_categories',
+  			),
+
+  			array(
+  				'id' => 'query_terms_includes_offer_types',
+  				'condition' => array( 'id' => 'query_terms_taxonomy', 'opt' => 'is', 'val' => 'offer_types' ),
+  				're_render' => true,
+  				'type' => 'multiselect',
+  				'title' => __('Includes', 'mfn-opts'),
+  				'desc' => __('IDs of taxonomies to exclude', 'mfn-opts'),
+  				'options' => mfn_get_categories('offer-types'),
+   				'js_hierarchical_options' => 'offer_types',
+  			),
+
+  			array(
+  				'id' => 'query_terms_includes_testimonial_types',
+  				'condition' => array( 'id' => 'query_terms_taxonomy', 'opt' => 'is', 'val' => 'testimonial_types' ),
+  				're_render' => true,
+  				'type' => 'multiselect',
+  				'title' => __('Includes', 'mfn-opts'),
+  				'desc' => __('IDs of taxonomies to exclude', 'mfn-opts'),
+  				'options' => mfn_get_categories('testimonial-types'),
+   				'js_hierarchical_options' => 'testimonial_types',
+  			),
+
+  			array(
+  				'id' => 'query_terms_includes_product_cat',
+  				'condition' => array( 'id' => 'query_terms_taxonomy', 'opt' => 'is', 'val' => 'product_cat' ),
+  				're_render' => true,
+  				'type' => 'multiselect',
+  				'title' => __('Includes', 'mfn-opts'),
+  				'desc' => __('IDs of taxonomies to exclude', 'mfn-opts'),
+  				'hierarchical_options' => mfn_hierarchical_taxonomy('product_cat'),
+					'js_hierarchical_options' => 'product_cat',
+  			),
+
+  			array(
+  				'id' => 'query_terms_orderby',
+  				're_render' => true,
+  				'class' => 'hidden-header-builder',
+  				'condition' => array( 'id' => 'query_type', 'opt' => 'is', 'val' => 'terms' ),
+  				'type' => 'select',
+  				'title' => __('Order by', 'mfn-opts'),
+  				'options' => array(
+  					'' => __('None', 'mfn-opts'),
+  					'term_order' => __('Term order', 'mfn-opts'),
+  					'term_id' => __('ID', 'mfn-opts'),
+  					'name' => __('Name', 'mfn-opts'),
+  					'count' => __('Count', 'mfn-opts'),
+  				),
+  				'std' => 'ID'
+  			),
+
+  			array(
+  				'id' => 'query_terms_order',
+  				're_render' => true,
+  				'class' => 'hidden-header-builder',
+  				'condition' => array( 'id' => 'query_type', 'opt' => 'is', 'val' => 'terms' ),
+  				'type' => 'select',
+  				'title' => __('Order', 'mfn-opts'),
+  				'options' => array(
+  					'ASC' => __('Ascending', 'mfn-opts'),
+  					'DESC' => __('Descending', 'mfn-opts'),
+  				),
+  				'std' => 'ASC'
+  			),
+
+  			array(
+  				'id' => 'query_terms_hide_empty',
+  				're_render' => true,
+  				'class' => 'hidden-header-builder',
+  				'condition' => array( 'id' => 'query_type', 'opt' => 'is', 'val' => 'terms' ),
+  				'type' => 'select',
+  				'title' => __('Hide empty', 'mfn-opts'),
+  				'options' => array(
+  					'' => __('False', 'mfn-opts'),
+  					'1' => __('True', 'mfn-opts'),
+  				),
+  				'std' => ''
+  			),
+
+  			array(
+  				'id' => 'query_terms_number',
+  				're_render' => true,
+  				'class' => 'hidden-header-builder',
+  				'condition' => array( 'id' => 'query_type', 'opt' => 'is', 'val' => 'terms' ),
+  				'type' => 'text',
+  				'title' => __('Limit', 'mfn-opts'),
+  				'param' => 'number',
+					'preview' => 'number',
+					'std' => '0',
+  			),
+
+  			/* END posts query builder */
 
   			array(
   				'class' => 'hidden-header-builder',
@@ -703,6 +1149,1546 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
 				array(
 					'type' => 'html',
+					'html' => '<div class="modalbox-card modalbox-card-style">',
+				),
+
+
+				array(
+					'class' => 'toggled_header',
+					'title' => __('Container', 'mfn-opts'),
+				),
+
+				array(
+  				'id' => 'query_display',
+  				'attr_id' => 'query_display',
+  				'class' => 'mfn-toggled',
+  				're_render' => true,
+  				'type' => 'switch',
+  				'title' => __('Display', 'mfn-opts'),
+  				'options' => array(
+  					'' => __('Default', 'mfn-opts'),
+  					'slider' => __('Slider', 'mfn-opts'),
+  				),
+  				'std' => ''
+  			),
+
+  			array(
+  				'id' => 'query_slider_columns',
+  				'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+  				'class' => 'mfn_field_desktop narrow mfn-toggled',
+  				'responsive' => 'desktop',
+  				'type' => 'text',
+  				're_render' => true,
+  				'title' => __('Columns', 'mfn-opts'),
+  				'param' => 'number',
+					'preview' => 'number',
+					'std' => '1',
+  			),
+
+  			array(
+  				'id' => 'query_slider_columns_tablet',
+  				'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+  				'class' => 'mfn_field_tablet narrow mfn-toggled',
+  				'responsive' => 'tablet',
+  				'type' => 'text',
+  				'title' => __('Columns', 'mfn-opts'),
+  				'param' => 'number',
+					'preview' => 'number',
+					'std' => '1',
+  			),
+
+  			array(
+  				'id' => 'query_slider_columns_mobile',
+  				'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+  				'class' => 'mfn_field_mobile narrow mfn-toggled',
+  				'responsive' => 'mobile',
+  				'type' => 'text',
+  				'title' => __('Columns', 'mfn-opts'),
+  				'param' => 'number',
+					'preview' => 'number',
+					'std' => '1',
+  			),
+
+  			/*array(
+  				'id' => 'query_slider_animation',
+  				'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+  				'class' => 'mfn-toggled',
+  				'type' => 'switch',
+  				'title' => __('Animation', 'mfn-opts'),
+  				'options' => array(
+  					'' => __('Slide', 'mfn-opts'),
+  					'fade' => __('Fade', 'mfn-opts'),
+  				),
+  				'std' => ''
+  			),*/
+
+  			array(
+  				'id' => 'query_slider_infinity',
+  				'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+  				'class' => 'mfn-toggled',
+  				'type' => 'switch',
+  				'title' => __('Infinite loop', 'mfn-opts'),
+  				'options' => array(
+  					'' => __('Off', 'mfn-opts'),
+  					'1' => __('On', 'mfn-opts'),
+  				),
+  				'std' => ''
+  			),
+
+  			array(
+  				'id' => 'query_slider_autoplay',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'default_unit' => '',
+					'class' => 'mfn-toggled',
+					'title' => __('Autplay speed', 'mfn-opts'),
+					'desc' => __('Leave empty to disallow autoplay', 'mfn-opts'),
+					'param' => array(
+						'min' => '0',
+						'max' => '10000',
+						'step' => '100',
+						'unit' => '',
+					)
+  			),
+
+  			array(
+  				'id' => 'query_slider_arrows',
+  				'attr_id' => 'query_slider_arrows',
+  				'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+  				'class' => 'mfn-toggled',
+  				'type' => 'switch',
+  				'title' => __('Arrows', 'mfn-opts'),
+  				'options' => array(
+  					'0' => __('Hide', 'mfn-opts'),
+  					'1' => __('Show', 'mfn-opts'),
+  				),
+  				'std' => '0'
+  			),
+
+  			array(
+  				'id' => 'query_slider_arrows_style',
+  				'attr_id' => 'query_slider_arrows_style',
+  				'condition' => array( 'id' => 'query_slider_arrows', 'opt' => 'is', 'val' => '1' ),
+  				'class' => 'mfn-toggled',
+  				'type' => 'switch',
+  				'title' => __('Arrows style', 'mfn-opts'),
+  				'options' => array(
+  					'' => __('Standard', 'mfn-opts'),
+  					'overlay' => __('Overlay', 'mfn-opts'),
+  					'custom' => __('Custom', 'mfn-opts'),
+  				),
+  				'std' => ''
+  			),
+
+  			array(
+  				'id' => 'query_slider_dots',
+  				'attr_id' => 'query_slider_dots',
+  				'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+  				'class' => 'mfn-toggled',
+  				'type' => 'switch',
+  				'title' => __('Dots', 'mfn-opts'),
+  				'options' => array(
+  					'0' => __('Hide', 'mfn-opts'),
+  					'1' => __('Show', 'mfn-opts'),
+  				),
+  				'std' => '0'
+  			),
+
+  			array(
+  				'id' => 'query_slider_dots_style',
+  				'attr_id' => 'query_slider_dots_style',
+  				'condition' => array( 'id' => 'query_slider_dots', 'opt' => 'is', 'val' => '1' ),
+  				'class' => 'mfn-toggled',
+  				'type' => 'switch',
+  				'title' => __('Dots style', 'mfn-opts'),
+  				'options' => array(
+  					'' => __('Standard', 'mfn-opts'),
+  					'overlay' => __('Overlay', 'mfn-opts'),
+  					'custom' => __('Custom', 'mfn-opts'),
+  				),
+  				'std' => ''
+  			),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-dots-custom .mcb-section-inner .swiper-pagination:transformtranslatex',
+					'condition' => array( 'id' => 'query_slider_dots_style', 'opt' => 'is', 'val' => 'custom' ),
+					'type' => 'sliderbar',
+					'class' => 'mfn-toggled',
+					'title' => __('Translate(X)', 'mfn-opts'),
+					'param' => array(
+						'min' => '-100',
+						'max' => '100',
+						'step' => '1',
+						'unit' => '%',
+					)
+				),
+
+  			array(
+  				'id' => 'query_slider_mousewheel',
+  				'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+  				'class' => 'mfn-toggled',
+  				'type' => 'switch',
+  				'title' => __('Mousewheel', 'mfn-opts'),
+  				'options' => array(
+  					'' => __('Disabled', 'mfn-opts'),
+  					'1' => __('Enabled', 'mfn-opts'),
+  				),
+  				'std' => ''
+  			),
+
+  			array(
+  				'id' => 'query_slider_centered',
+  				'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+  				'class' => 'mfn-toggled',
+  				're_render' => true,
+  				'type' => 'switch',
+  				'title' => __('Center mode', 'mfn-opts'),
+  				'options' => array(
+  					'' => __('Disabled', 'mfn-opts'),
+  					//'1' => __('Center', 'mfn-opts'),
+  					'2' => __('Wrapper offset', 'mfn-opts'),
+  				),
+  				'std' => ''
+  			),
+
+  			array(
+  				'id' => 'query_display_style',
+  				'condition' => array( 'id' => 'query_display', 'opt' => 'isnt', 'val' => 'slider' ),
+  				'class' => 'mfn-toggled',
+  				// 're_render' => true,
+  				'type' => 'switch',
+  				'title' => __('Style', 'mfn-opts'),
+  				'options' => array(
+  					'' => __('Default', 'mfn-opts'),
+  					'masonry' => __('Masonry', 'mfn-opts'),
+  				),
+  				'std' => ''
+  			),
+
+  			array(
+					'id' => 'style:.mcb-section-mfnuidelement .mcb-section-inner .mfn-queryloop-item-wrapper.mfn-ql-item-default:width',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'isnt', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'default_unit' => 'px',
+					'responsive' => 'desktop',
+					'class' => 'mfn_field_desktop mfn-toggled query_item_default_width',
+					'title' => __('Item width', 'mfn-opts'),
+					'units' => array(
+						'px' 	=> array('min' => 0, 'max' => 1920, 'step' => 1),
+						'%' 	=> array('min' => 0, 'max' => 100, 'step' => 0.1),
+						'vw' 	=> array('min' => 0, 'max' => 100, 'step' => 0.1),
+					),
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement .mcb-section-inner .mfn-queryloop-item-wrapper.mfn-ql-item-default:width_tablet',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'isnt', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'default_unit' => 'px',
+					'responsive' => 'tablet',
+					'class' => 'mfn_field_tablet mfn-toggled query_item_default_width',
+					'title' => __('Item width', 'mfn-opts'),
+					'units' => array(
+						'px' 	=> array('min' => 0, 'max' => 1920, 'step' => 1),
+						'%' 	=> array('min' => 0, 'max' => 100, 'step' => 1),
+						'vw' 	=> array('min' => 0, 'max' => 100, 'step' => 1),
+					),
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement .mcb-section-inner .mfn-queryloop-item-wrapper.mfn-ql-item-default:width_mobile',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'isnt', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'default_unit' => 'px',
+					'responsive' => 'mobile',
+					'class' => 'mfn_field_mobile mfn-toggled query_item_default_width',
+					'title' => __('Item width', 'mfn-opts'),
+					'units' => array(
+						'px' 	=> array('min' => 0, 'max' => 1920, 'step' => 1),
+						'%' 	=> array('min' => 0, 'max' => 100, 'step' => 0.1),
+						'vw' 	=> array('min' => 0, 'max' => 100, 'step' => 0.1),
+					),
+				),
+
+  			array(
+  				'class' => 'toggled_header',
+					'title' => __('Item', 'mfn-opts'),
+				),
+
+				array(
+					'class' => 'mfn-builder-subheader mfn-toggled',
+					'title' => __('Spacing', 'mfn-opts'),
+				),
+
+				array(
+  				'id' => 'style:.mcb-section-mfnuidelement .mcb-section-inner .mfn-queryloop-item-wrapper:padding',
+  				'type' => 'dimensions',
+  				'version' => 'separated-fields',
+  				'title' => __('Padding', 'mfn-opts'),
+					'responsive' => 'desktop',
+					'class' => 'mfn_field_desktop mfn-toggled',
+					'css_attr' => 'padding',
+  			),
+
+  			array(
+  				'id' => 'style:.mcb-section-mfnuidelement .mcb-section-inner .mfn-queryloop-item-wrapper:padding_tablet',
+  				'type' => 'dimensions',
+  				'version' => 'separated-fields',
+  				'title' => __('Padding', 'mfn-opts'),
+					'responsive' => 'tablet',
+					'class' => 'mfn_field_tablet mfn-toggled',
+					'css_attr' => 'padding',
+  			),
+
+  			array(
+  				'id' => 'style:.mcb-section-mfnuidelement .mcb-section-inner .mfn-queryloop-item-wrapper:padding_mobile',
+  				'type' => 'dimensions',
+  				'version' => 'separated-fields',
+  				'title' => __('Padding', 'mfn-opts'),
+					'responsive' => 'mobile',
+					'class' => 'mfn_field_mobile mfn-toggled',
+					'css_attr' => 'padding',
+  			),
+
+				array(
+  				'id' => 'style:.mcb-section-mfnuidelement .mcb-section-inner .mfn-queryloop-item-wrapper:margin',
+  				'type' => 'dimensions',
+  				'version' => 'separated-fields',
+  				'title' => __('Margin', 'mfn-opts'),
+					'responsive' => 'desktop',
+					'class' => 'mfn_field_desktop mfn-toggled',
+					'css_attr' => 'margin',
+  			),
+
+  			array(
+  				'id' => 'style:.mcb-section-mfnuidelement .mcb-section-inner .mfn-queryloop-item-wrapper:margin_tablet',
+  				'type' => 'dimensions',
+  				'version' => 'separated-fields',
+  				'title' => __('Margin', 'mfn-opts'),
+					'responsive' => 'tablet',
+					'class' => 'mfn_field_tablet mfn-toggled',
+					'css_attr' => 'margin',
+  			),
+
+  			array(
+  				'id' => 'style:.mcb-section-mfnuidelement .mcb-section-inner .mfn-queryloop-item-wrapper:margin_mobile',
+  				'type' => 'dimensions',
+  				'version' => 'separated-fields',
+  				'title' => __('Margin', 'mfn-opts'),
+					'responsive' => 'mobile',
+					'class' => 'mfn_field_mobile mfn-toggled',
+					'css_attr' => 'margin',
+  			),
+
+  			array(
+					'class' => 'mfn-builder-subheader mfn-toggled',
+					'title' => __('Border', 'mfn-opts'),
+				),
+
+  			array(
+					'id' => 'style:.mcb-section-mfnuidelement .mcb-section-inner .mfn-queryloop-item-wrapper:border-style',
+					'attr_id' => 'border_style_ql',
+					'type' => 'select',
+					'class' => 'mfn-toggled',
+					'title' => __('Border style', 'mfn-opts'),
+					'options' => [
+						'none' => __('None', 'mfn-opts'),
+						'solid' => __('Solid', 'mfn-opts'),
+						'dashed' => __('Dashed', 'mfn-opts'),
+						'dotted' => __('Dotted', 'mfn-opts'),
+						'double' => __('Double', 'mfn-opts'),
+					],
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement .mcb-section-inner .mfn-queryloop-item-wrapper:border-color',
+					'condition' => array( 'id' => 'border_style_ql', 'opt' => 'isnt', 'val' => 'none' ),
+					'type' => 'color',
+					'class' => 'mfn-toggled',
+					'title' => __('Border color', 'mfn-opts'),
+				),
+
+				array(
+  				'id' => 'style:.mcb-section-mfnuidelement .mcb-section-inner .mfn-queryloop-item-wrapper:border-width',
+  				'condition' => array( 'id' => 'border_style_ql', 'opt' => 'isnt', 'val' => 'none' ),
+  				'type' => 'dimensions',
+  				'title' => __('Border width', 'mfn-opts'),
+					'responsive' => 'desktop',
+					'class' => 'mfn_field_desktop mfn-toggled',
+					'css_attr' => 'border-width',
+  			),
+
+  			array(
+  				'id' => 'style:.mcb-section-mfnuidelement .mcb-section-inner .mfn-queryloop-item-wrapper:border-width_tablet',
+  				'condition' => array( 'id' => 'border_style_ql', 'opt' => 'isnt', 'val' => 'none' ),
+  				'type' => 'dimensions',
+  				'title' => __('Border width', 'mfn-opts'),
+					'responsive' => 'tablet',
+					'class' => 'mfn_field_tablet mfn-toggled',
+					'css_attr' => 'border-width',
+  			),
+
+  			array(
+  				'id' => 'style:.mcb-section-mfnuidelement .mcb-section-inner .mfn-queryloop-item-wrapper:border-width_mobile',
+  				'condition' => array( 'id' => 'border_style_ql', 'opt' => 'isnt', 'val' => 'none' ),
+  				'type' => 'dimensions',
+  				'title' => __('Border width', 'mfn-opts'),
+					'responsive' => 'mobile',
+					'class' => 'mfn_field_mobile mfn-toggled',
+					'css_attr' => 'border-width',
+  			),
+
+				array(
+  				'id' => 'style:.mcb-section-mfnuidelement .mcb-section-inner .mfn-queryloop-item-wrapper:border-radius',
+  				'type' => 'dimensions',
+  				'title' => __('Border radius', 'mfn-opts'),
+					'responsive' => 'desktop',
+					'class' => 'mfn_field_desktop mfn-toggled',
+					'css_attr' => 'border-radius',
+  			),
+
+  			array(
+  				'id' => 'style:.mcb-section-mfnuidelement .mcb-section-inner .mfn-queryloop-item-wrapper:border-radius_tablet',
+  				'type' => 'dimensions',
+  				'title' => __('Border radius', 'mfn-opts'),
+					'responsive' => 'tablet',
+					'class' => 'mfn_field_tablet mfn-toggled',
+					'css_attr' => 'border-radius',
+  			),
+
+  			array(
+  				'id' => 'style:.mcb-section-mfnuidelement .mcb-section-inner .mfn-queryloop-item-wrapper:border-radius_mobile',
+  				'type' => 'dimensions',
+  				'title' => __('Border radius', 'mfn-opts'),
+					'responsive' => 'mobile',
+					'class' => 'mfn_field_mobile mfn-toggled',
+					'css_attr' => 'border-radius',
+  			),
+
+  			array(
+					'class' => 'mfn-builder-subheader mfn-toggled',
+					'title' => __('Background', 'mfn-opts'),
+				),
+
+  			array(
+					'id' => 'background_switcher_ql',
+					'attr_id' => 'background_switcher_ql',
+					'type' => 'switch',
+					'class' => 'mfn-fields-switcher mfn-toggled disable-history',
+					'title' => __('Background type', 'mfn-opts'),
+					'options' => array(
+  					'default' => __('Default', 'mfn-opts'),
+  					'gradient' 	=> __('Gradient', 'mfn-opts'),
+  				),
+					'visual_options' => array(
+  					'default' => '',
+  					'gradient' 	=> '',
+  				),
+  				'std' => 'default',
+				),
+
+				array(
+  				'id' => 'style:.mcb-section-mfnuidelement .mcb-section-inner .mfn-queryloop-item-wrapper:gradient',
+  				'condition' => array( 'id' => 'background_switcher_ql', 'opt' => 'is', 'val' => 'gradient' ),
+  				'type' => 'gradient',
+  				'title' => __('Gradient', 'mfn-opts'),
+  				'class' => 'mfn-toggled',
+					'css_attr' => 'gradient',
+  			),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement .mcb-section-inner .mfn-queryloop-item-wrapper:background-color',
+					'condition' => array( 'id' => 'background_switcher_ql', 'opt' => 'is', 'val' => 'default' ),
+					'type' => 'color',
+					'class' => 'mfn-toggled',
+					'title' => __('Background color', 'mfn-opts'),
+				),
+
+				array(
+  				'id' => 'style:.mcb-section-mfnuidelement .mcb-section-inner .mfn-queryloop-item-wrapper:background-image',
+  				'condition' => array( 'id' => 'background_switcher_ql', 'opt' => 'is', 'val' => 'default' ),
+  				'oldid' => 'bg_color',
+  				'dynamic_data' => 'featured_image',
+  				'type' => 'upload',
+  				'class' => 'mfn-toggled',
+  				'title' => __('Image', 'mfn-opts'),
+					'css_attr' => 'background-image',
+  			),
+
+  			array(
+					'id' => 'style:.mcb-section-mfnuidelement .mcb-section-inner .mfn-queryloop-item-wrapper:background-repeat',
+					'condition' => array( 'id' => 'background_switcher_ql', 'opt' => 'is', 'val' => 'default' ),
+					'type' => 'select',
+					'class' => 'mfn-toggled',
+					'css_attr' => 'background-repeat',
+					'title' => __('Repeat', 'mfn-opts'),
+					'options' => [
+						'' => __('Default', 'mfn-opts'),
+						'repeat' => __('Repeat', 'mfn-opts'),
+						'no-repeat' => __('No repeat', 'mfn-opts'),
+						'repeat-x' => __('Repeat X', 'mfn-opts'),
+						'repeat-y' => __('Repeat Y', 'mfn-opts'),
+					],
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement .mcb-section-inner .mfn-queryloop-item-wrapper:background-position',
+					'condition' => array( 'id' => 'background_switcher_ql', 'opt' => 'is', 'val' => 'default' ),
+					'oldid' => 'bg_position',
+					'type' => 'select',
+					'class' => 'mfn-toggled',
+					'css_attr' => 'background-position',
+					'title' => __('Position', 'mfn-opts'),
+					'options' => [
+						'' => __('Default', 'mfn-opts'),
+						'center' => __('Center Center', 'mfn-opts'),
+						'center left' => __('Center Left', 'mfn-opts'),
+						'center right' => __('Center Right', 'mfn-opts'),
+						'top left' => __('Top Left', 'mfn-opts'),
+						'top right' => __('Top Right', 'mfn-opts'),
+						'top center' => __('Top Center', 'mfn-opts'),
+						'bottom left' => __('Bottom Left', 'mfn-opts'),
+						'bottom right' => __('Bottom Right', 'mfn-opts'),
+						'bottom center' => __('Bottom Center', 'mfn-opts'),
+					],
+				),
+
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement .mcb-section-inner .mfn-queryloop-item-wrapper:background-attachment',
+					'condition' => array( 'id' => 'background_switcher_ql', 'opt' => 'is', 'val' => 'default' ),
+					'type' => 'select',
+					'class' => 'mfn-toggled',
+					'css_attr' => 'background-attachment',
+					'title' => __('Attachment', 'mfn-opts'),
+					'options' => [
+						'' => __('Default', 'mfn-opts'),
+						'scroll' => __('Scroll', 'mfn-opts'),
+						'fixed' => __('Fixed', 'mfn-opts'),
+						'parallax' => __('Parallax', 'mfn-opts'),
+					],
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement .mcb-section-inner .mfn-queryloop-item-wrapper:background-size',
+					'condition' => array( 'id' => 'background_switcher_ql', 'opt' => 'is', 'val' => 'default' ),
+					'oldid' => 'bg_size',
+					'class' => 'mfn-toggled',
+					'type' => 'select',
+					'css_attr' => 'background-size',
+					'title' => __('Size', 'mfn-opts'),
+					'options' => mfna_bg_size()
+				),
+
+				array(
+					'class' => 'toggled_header',
+					'title' => __('Pagination', 'mfn-opts'),
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-dots-custom .mcb-section-inner .swiper-pagination:top',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_dots_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Top', 'mfn-opts'),
+					'responsive' => 'desktop',
+					'class' => 'mfn-toggled dots-custom-style mfn_field_desktop',
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-dots-custom .mcb-section-inner .swiper-pagination:bottom',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_dots_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Bottom', 'mfn-opts'),
+					'responsive' => 'desktop',
+					'class' => 'mfn-toggled dots-custom-style mfn_field_desktop',
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-dots-custom .mcb-section-inner .swiper-pagination:left',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_dots_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Left', 'mfn-opts'),
+						'responsive' => 'desktop',
+					'class' => 'mfn-toggled dots-custom-style mfn_field_desktop',
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-dots-custom .mcb-section-inner .swiper-pagination:right',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_dots_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Right', 'mfn-opts'),
+					'responsive' => 'desktop',
+					'class' => 'mfn-toggled dots-custom-style mfn_field_desktop',
+				),
+
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-dots-custom .mcb-section-inner .swiper-pagination:top_tablet',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_dots_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Top', 'mfn-opts'),
+					'responsive' => 'tablet',
+					'class' => 'mfn-toggled dots-custom-style mfn_field_tablet',
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-dots-custom .mcb-section-inner .swiper-pagination:bottom_tablet',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_dots_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Bottom', 'mfn-opts'),
+					'responsive' => 'tablet',
+					'class' => 'mfn-toggled dots-custom-style mfn_field_tablet',
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-dots-custom .mcb-section-inner .swiper-pagination:left_tablet',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_dots_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Left', 'mfn-opts'),
+						'responsive' => 'tablet',
+					'class' => 'mfn-toggled dots-custom-style mfn_field_tablet',
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-dots-custom .mcb-section-inner .swiper-pagination:right_tablet',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_dots_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Right', 'mfn-opts'),
+					'responsive' => 'tablet',
+					'class' => 'mfn-toggled dots-custom-style mfn_field_tablet',
+				),
+
+
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-dots-custom .mcb-section-inner .swiper-pagination:top_mobile',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_dots_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Top', 'mfn-opts'),
+					'responsive' => 'mobile',
+					'class' => 'mfn-toggled dots-custom-style mfn_field_mobile',
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-dots-custom .mcb-section-inner .swiper-pagination:bottom_mobile',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_dots_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Bottom', 'mfn-opts'),
+					'responsive' => 'mobile',
+					'class' => 'mfn-toggled dots-custom-style mfn_field_mobile',
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-dots-custom .mcb-section-inner .swiper-pagination:left_mobile',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_dots_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Left', 'mfn-opts'),
+						'responsive' => 'mobile',
+					'class' => 'mfn-toggled dots-custom-style mfn_field_mobile',
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-dots-custom .mcb-section-inner .swiper-pagination:right_mobile',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_dots_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Right', 'mfn-opts'),
+					'responsive' => 'mobile',
+					'class' => 'mfn-toggled dots-custom-style mfn_field_mobile',
+				),
+
+
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper .mcb-section-inner .swiper-pagination:--mfn-swiper-pagination-spacing',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'desktop',
+					'class' => 'mfn-toggled mfn_field_desktop',
+					'title' => __('Offset', 'mfn-opts'),
+					'desc' => __('Works with Standard and Overlay pagination mode', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '0',
+						'max' => '300',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper .mcb-section-inner .swiper-pagination:--mfn-swiper-pagination-spacing_tablet',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'tablet',
+					'class' => 'mfn-toggled mfn_field_tablet',
+					'title' => __('Offset', 'mfn-opts'),
+					'desc' => __('Works with Standard and Overlay pagination mode', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '0',
+						'max' => '300',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper .mcb-section-inner .swiper-pagination:--mfn-swiper-pagination-spacing_mobile',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'mobile',
+					'class' => 'mfn-toggled mfn_field_mobile',
+					'title' => __('Offset', 'mfn-opts'),
+					'desc' => __('Works with Standard and Overlay pagination mode', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '0',
+						'max' => '300',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper .mcb-section-inner .swiper-pagination-bullet:--mfn-swiper-pagination-bullet-width',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'desktop',
+					'class' => 'mfn-toggled mfn_field_desktop',
+					'title' => __('Width', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '0',
+						'max' => '100',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper .mcb-section-inner .swiper-pagination-bullet:--mfn-swiper-pagination-bullet-width_tablet',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'tablet',
+					'class' => 'mfn-toggled mfn_field_tablet',
+					'title' => __('Width', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '0',
+						'max' => '100',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper .mcb-section-inner .swiper-pagination-bullet:--mfn-swiper-pagination-bullet-width_mobile',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'mobile',
+					'class' => 'mfn-toggled mfn_field_mobile',
+					'title' => __('Width', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '0',
+						'max' => '100',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper .mcb-section-inner .swiper-pagination-bullet:--mfn-swiper-pagination-bullet-height',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'desktop',
+					'class' => 'mfn-toggled mfn_field_desktop',
+					'title' => __('Height', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '0',
+						'max' => '100',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper .mcb-section-inner .swiper-pagination-bullet:--mfn-swiper-pagination-bullet-height_tablet',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'tablet',
+					'class' => 'mfn-toggled mfn_field_tablet',
+					'title' => __('Height', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '0',
+						'max' => '100',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper .mcb-section-inner .swiper-pagination-bullet:--mfn-swiper-pagination-bullet-height_mobile',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'mobile',
+					'class' => 'mfn-toggled mfn_field_mobile',
+					'title' => __('Height', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '0',
+						'max' => '100',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper .mcb-section-inner .swiper-pagination-bullet:border-radius',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'class' => 'mfn-toggled',
+					'title' => __('Border radius', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '0',
+						'max' => '100',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper .mcb-section-inner .swiper-pagination-bullet:opacity',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'class' => 'mfn-toggled',
+					'title' => __('Opacity', 'mfn-opts'),
+					'param' => array(
+						'min' => '0',
+						'max' => '1',
+						'step' => '0.01',
+					),
+					'std' => '0',
+				),
+
+				array(
+					'type' => 'html',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'html' => '<div class="mfn-form-row mfn-sidebar-fields-tabs mfn-toggled mfn-vb-formrow mfn-vb-mfnuidhere"><ul class="mfn-sft-nav"><li class="active"><a href="#normal" data-tab="normal">Normal</a></li><li><a href="#hover" data-tab="hover">Active</a></li></ul><div class="mfn-sft mfn-sft-normal mfn-tabs-fields-active">',
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper .mcb-section-inner .swiper-pagination .swiper-pagination-bullet:--swiper-pagination-bullet-inactive-color',
+					'type' => 'color',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'class' => 'mfn-toggled',
+					'title' => __('Color', 'mfn-opts'),
+				),
+
+				array(
+					'type' => 'html',
+					'html' => '</div><div class="mfn-sft mfn-sft-hover">',
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper .mcb-section-inner .swiper-pagination .swiper-pagination-bullet-active:--mfn-swiper-pagination-bullet-active-color',
+					'type' => 'color',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'class' => 'mfn-toggled',
+					'title' => __('Active color', 'mfn-opts'),
+				),
+
+				array(
+					'type' => 'html',
+					'html' => '</div></div>',
+				),
+
+				array(
+					'class' => 'toggled_header',
+					'title' => __('Arrows', 'mfn-opts'),
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+				),
+
+				array(
+  				'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'class' => 'mfn-builder-subheader mfn-toggled',
+					'title' => __('Prev arrow custom style', 'mfn-opts'),
+				),
+
+  			array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .mcb-section-inner .swiper-button-prev.mfn-swiper-arrow:top',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Top', 'mfn-opts'),
+					'responsive' => 'desktop',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_desktop',
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .mcb-section-inner .swiper-button-prev.mfn-swiper-arrow:bottom',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Bottom', 'mfn-opts'),
+					'responsive' => 'desktop',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_desktop',
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .mcb-section-inner .swiper-button-prev.mfn-swiper-arrow:left',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Left', 'mfn-opts'),
+					'responsive' => 'desktop',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_desktop',
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .mcb-section-inner .swiper-button-prev.mfn-swiper-arrow:right',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Right', 'mfn-opts'),
+					'responsive' => 'desktop',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_desktop',
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .mcb-section-inner .swiper-button-prev.mfn-swiper-arrow:top_tablet',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Top', 'mfn-opts'),
+					'responsive' => 'tablet',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_tablet',
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .mcb-section-inner .swiper-button-prev.mfn-swiper-arrow:bottom_tablet',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Bottom', 'mfn-opts'),
+					'responsive' => 'tablet',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_tablet',
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .mcb-section-inner .swiper-button-prev.mfn-swiper-arrow:left_tablet',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Left', 'mfn-opts'),
+					'responsive' => 'tablet',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_tablet',
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .mcb-section-inner .swiper-button-prev.mfn-swiper-arrow:right_tablet',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Right', 'mfn-opts'),
+					'responsive' => 'tablet',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_tablet',
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .mcb-section-inner .swiper-button-prev.mfn-swiper-arrow:top_mobile',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Top', 'mfn-opts'),
+					'responsive' => 'mobile',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_mobile',
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .mcb-section-inner .swiper-button-prev.mfn-swiper-arrow:bottom_mobile',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Bottom', 'mfn-opts'),
+					'responsive' => 'mobile',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_mobile',
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .mcb-section-inner .swiper-button-prev.mfn-swiper-arrow:left_mobile',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Left', 'mfn-opts'),
+					'responsive' => 'mobile',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_mobile',
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .mcb-section-inner .swiper-button-prev.mfn-swiper-arrow:right_mobile',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Right', 'mfn-opts'),
+					'responsive' => 'mobile',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_mobile',
+				),
+
+				array(
+  				'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'class' => 'mfn-builder-subheader mfn-toggled',
+					'title' => __('Next arrow custom style', 'mfn-opts'),
+				),
+
+  			array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .mcb-section-inner .swiper-button-next.mfn-swiper-arrow:top',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Top', 'mfn-opts'),
+					'responsive' => 'desktop',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_desktop',
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .mcb-section-inner .swiper-button-next.mfn-swiper-arrow:bottom',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Bottom', 'mfn-opts'),
+					'responsive' => 'desktop',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_desktop',
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .mcb-section-inner .swiper-button-next.mfn-swiper-arrow:left',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Left', 'mfn-opts'),
+					'responsive' => 'desktop',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_desktop',
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .mcb-section-inner .swiper-button-next.mfn-swiper-arrow:right',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Right', 'mfn-opts'),
+					'responsive' => 'desktop',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_desktop',
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .mcb-section-inner .swiper-button-next.mfn-swiper-arrow:top_tablet',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Top', 'mfn-opts'),
+					'responsive' => 'tablet',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_tablet',
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .mcb-section-inner .swiper-button-next.mfn-swiper-arrow:bottom_tablet',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Bottom', 'mfn-opts'),
+					'responsive' => 'tablet',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_tablet',
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .mcb-section-inner .swiper-button-next.mfn-swiper-arrow:left_tablet',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Left', 'mfn-opts'),
+					'responsive' => 'tablet',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_tablet',
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .mcb-section-inner .swiper-button-next.mfn-swiper-arrow:right_tablet',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Right', 'mfn-opts'),
+					'responsive' => 'tablet',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_tablet',
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .mcb-section-inner .swiper-button-next.mfn-swiper-arrow:top_mobile',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Top', 'mfn-opts'),
+					'responsive' => 'mobile',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_mobile',
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .mcb-section-inner .swiper-button-next.mfn-swiper-arrow:bottom_mobile',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Bottom', 'mfn-opts'),
+					'responsive' => 'mobile',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_mobile',
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .mcb-section-inner .swiper-button-next.mfn-swiper-arrow:left_mobile',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Left', 'mfn-opts'),
+					'responsive' => 'mobile',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_mobile',
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .mcb-section-inner .swiper-button-next.mfn-swiper-arrow:right_mobile',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Right', 'mfn-opts'),
+					'responsive' => 'mobile',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_mobile',
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .mcb-section-inner .mfn-swiper-arrow:transformtranslatey',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'type' => 'sliderbar',
+					'class' => 'mfn-toggled',
+					'title' => __('Translate(Y)', 'mfn-opts'),
+					'desc' => __('Moves navigation arrows along the Y-axis by the percent height', 'mfn-opts'),
+					'default_unit' => '%',
+					'after' => '%',
+					'param' => array(
+						'min' => '-100',
+						'max' => '100',
+						'step' => '1',
+						'unit' => '%',
+					)
+				),
+
+				array(
+					'class' => 'mfn-builder-subheader mfn-toggled',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'title' => __('Custom arrows', 'mfn-opts'),
+				),
+
+				array(
+					'id' => 'query_display_slider_arrow_prev',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'icon',
+					'class' => 'mfn-toggled',
+					'title' => __('Prev arrow', 'mfn-opts'),
+					'preview' => 'icon',
+					'std' => 'icon-left-open-big'
+				),
+
+				array(
+					'id' => 'query_display_slider_arrow_next',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'icon',
+					'class' => 'mfn-toggled',
+					'title' => __('Next arrow', 'mfn-opts'),
+					'preview' => 'icon',
+					'std' => 'icon-right-open-big'
+				),
+
+				array(
+					'class' => 'mfn-builder-subheader mfn-toggled',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'title' => __('Size', 'mfn-opts'),
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper .mcb-section-inner .mfn-swiper-arrow:--mfn-swiper-arrow-width',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'desktop',
+					'class' => 'mfn-toggled mfn_field_desktop',
+					'title' => __('Width', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '0',
+						'max' => '300',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper .mcb-section-inner .mfn-swiper-arrow:--mfn-swiper-arrow-height',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'desktop',
+					'class' => 'mfn-toggled mfn_field_desktop',
+					'title' => __('Height', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '0',
+						'max' => '300',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper .mcb-section-inner .mfn-swiper-arrow i:--mfn-swiper-arrow-size',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'desktop',
+					'class' => 'mfn-toggled mfn_field_desktop',
+					'title' => __('Size', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '0',
+						'max' => '300',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper .mcb-section-inner .mfn-swiper-arrow:--mfn-swiper-arrow-spacing',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'desktop',
+					'class' => 'mfn-toggled mfn_field_desktop',
+					'title' => __('Offset', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '-300',
+						'max' => '300',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper .mcb-section-inner .mfn-swiper-arrow:--mfn-swiper-arrow-width_tablet',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'tablet',
+					'class' => 'mfn-toggled mfn_field_tablet',
+					'title' => __('Width', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '0',
+						'max' => '300',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper .mcb-section-inner .mfn-swiper-arrow:--mfn-swiper-arrow-height_tablet',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'tablet',
+					'class' => 'mfn-toggled mfn_field_tablet',
+					'title' => __('Height', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '0',
+						'max' => '300',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper .mcb-section-inner .mfn-swiper-arrow i:--mfn-swiper-arrow-size_tablet',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'tablet',
+					'class' => 'mfn-toggled mfn_field_tablet',
+					'title' => __('Size', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '0',
+						'max' => '300',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper .mcb-section-inner .mfn-swiper-arrow:--mfn-swiper-arrow-spacing_tablet',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'tablet',
+					'class' => 'mfn-toggled mfn_field_tablet',
+					'title' => __('Offset', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '-300',
+						'max' => '300',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper .mcb-section-inner .mfn-swiper-arrow:--mfn-swiper-arrow-width_mobile',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'mobile',
+					'class' => 'mfn-toggled mfn_field_mobile',
+					'title' => __('Width', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '0',
+						'max' => '300',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper .mcb-section-inner .mfn-swiper-arrow:--mfn-swiper-arrow-height_mobile',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'mobile',
+					'class' => 'mfn-toggled mfn_field_mobile',
+					'title' => __('Height', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '0',
+						'max' => '300',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper .mcb-section-inner .mfn-swiper-arrow i:--mfn-swiper-arrow-size_mobile',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'mobile',
+					'class' => 'mfn-toggled mfn_field_mobile',
+					'title' => __('Size', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '0',
+						'max' => '300',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper .mcb-section-inner .mfn-swiper-arrow:--mfn-swiper-arrow-spacing_mobile',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'mobile',
+					'class' => 'mfn-toggled mfn_field_mobile',
+					'title' => __('Offset', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '-300',
+						'max' => '300',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+				array(
+					'class' => 'mfn-builder-subheader mfn-toggled',
+					'title' => __('Border', 'mfn-opts'),
+				),
+
+  			array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper .mcb-section-inner .mfn-swiper-arrow:border-style',
+					'attr_id' => 'border_style_qlarr',
+					'type' => 'select',
+					'class' => 'mfn-toggled',
+					'title' => __('Border style', 'mfn-opts'),
+					'options' => [
+						'none' => __('None', 'mfn-opts'),
+						'solid' => __('Solid', 'mfn-opts'),
+						'dashed' => __('Dashed', 'mfn-opts'),
+						'dotted' => __('Dotted', 'mfn-opts'),
+						'double' => __('Double', 'mfn-opts'),
+					],
+				),
+
+				array(
+  				'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper .mcb-section-inner .mfn-swiper-arrow:border-width',
+  				'condition' => array( 'id' => 'border_style_qlarr', 'opt' => 'isnt', 'val' => 'none' ),
+  				'type' => 'dimensions',
+  				'title' => __('Border width', 'mfn-opts'),
+					'responsive' => 'desktop',
+					'class' => 'mfn_field_desktop mfn-toggled',
+					'css_attr' => 'border-width',
+  			),
+
+  			array(
+  				'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper .mcb-section-inner .mfn-swiper-arrow:border-width_tablet',
+  				'condition' => array( 'id' => 'border_style_qlarr', 'opt' => 'isnt', 'val' => 'none' ),
+  				'type' => 'dimensions',
+  				'title' => __('Border width', 'mfn-opts'),
+					'responsive' => 'tablet',
+					'class' => 'mfn_field_tablet mfn-toggled',
+					'css_attr' => 'border-width',
+  			),
+
+  			array(
+  				'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper .mcb-section-inner .mfn-swiper-arrow:border-width_mobile',
+  				'condition' => array( 'id' => 'border_style_qlarr', 'opt' => 'isnt', 'val' => 'none' ),
+  				'type' => 'dimensions',
+  				'title' => __('Border width', 'mfn-opts'),
+					'responsive' => 'mobile',
+					'class' => 'mfn_field_mobile mfn-toggled',
+					'css_attr' => 'border-width',
+  			),
+
+				array(
+  				'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper .mcb-section-inner .mfn-swiper-arrow:border-radius',
+  				'type' => 'dimensions',
+  				'title' => __('Border radius', 'mfn-opts'),
+					'responsive' => 'desktop',
+					'class' => 'mfn_field_desktop mfn-toggled',
+					'css_attr' => 'border-radius',
+  			),
+
+  			array(
+  				'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper .mcb-section-inner .mfn-swiper-arrow:border-radius_tablet',
+  				'type' => 'dimensions',
+  				'title' => __('Border radius', 'mfn-opts'),
+					'responsive' => 'tablet',
+					'class' => 'mfn_field_tablet mfn-toggled',
+					'css_attr' => 'border-radius',
+  			),
+
+  			array(
+  				'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper .mcb-section-inner .mfn-swiper-arrow:border-radius_mobile',
+  				'type' => 'dimensions',
+  				'title' => __('Border radius', 'mfn-opts'),
+					'responsive' => 'mobile',
+					'class' => 'mfn_field_mobile mfn-toggled',
+					'css_attr' => 'border-radius',
+  			),
+
+  			array(
+  				'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper .mcb-section-inner .mfn-swiper-arrow:box-shadow',
+  				'type' => 'box_shadow',
+  				'title' => __('Box shadow', 'mfn-opts'),
+					'class' => 'mfn-toggled',
+					'css_attr' => 'box-shadow',
+  			),
+
+				array(
+					'class' => 'mfn-builder-subheader mfn-toggled',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'title' => __('Color', 'mfn-opts'),
+				),
+
+
+				array(
+					'type' => 'html',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'html' => '<div class="mfn-form-row mfn-sidebar-fields-tabs mfn-toggled mfn-vb-formrow mfn-vb-mfnuidhere"><ul class="mfn-sft-nav"><li class="active"><a href="#normal" data-tab="normal">Normal</a></li><li><a href="#hover" data-tab="hover">Hover</a></li></ul><div class="mfn-sft mfn-sft-normal mfn-tabs-fields-active">',
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper .mcb-section-inner .mfn-swiper-arrow:--swiper-navigation-color',
+					'type' => 'color',
+					'class' => 'mfn-toggled',
+					'title' => __('Color', 'mfn-opts'),
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper .mcb-section-inner .mfn-swiper-arrow:background-color',
+					'type' => 'color',
+					'class' => 'mfn-toggled',
+					'title' => __('Background', 'mfn-opts'),
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper .mcb-section-inner .mfn-swiper-arrow:border-color',
+					'condition' => array( 'id' => 'border_style_qlarr', 'opt' => 'isnt', 'val' => 'none' ),
+					'type' => 'color',
+					'class' => 'mfn-toggled',
+					'title' => __('Border color', 'mfn-opts'),
+				),
+
+				array(
+					'type' => 'html',
+					'html' => '</div><div class="mfn-sft mfn-sft-hover">',
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper .mcb-section-inner .mfn-swiper-arrow|hover:--swiper-navigation-color',
+					'type' => 'color',
+					'class' => 'mfn-toggled',
+					'title' => __('Color', 'mfn-opts'),
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper .mcb-section-inner .mfn-swiper-arrow|hover:background-color',
+					'type' => 'color',
+					'class' => 'mfn-toggled',
+					'title' => __('Background', 'mfn-opts'),
+				),
+
+				array(
+					'id' => 'style:.mcb-section-mfnuidelement.mfn-looped-items-slider-wrapper .mcb-section-inner .mfn-swiper-arrow|hover:border-color',
+					'condition' => array( 'id' => 'border_style_qlarr', 'opt' => 'isnt', 'val' => 'none' ),
+					'type' => 'color',
+					'class' => 'mfn-toggled',
+					'title' => __('Border color', 'mfn-opts'),
+				),
+
+				array(
+					'type' => 'html',
+					'html' => '</div></div>',
+				),
+
+
+
+
+
+
+
+
+
+
+
+
+
+  			array(
+					'type' => 'html',
+					'html' => '</div>', // end: modalbox-card
+				),
+
+				array(
+					'type' => 'html',
 					'html' => '<div class="modalbox-card modalbox-card-advanced">',
 				),
 
@@ -844,7 +2830,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
   			),
 
   			array(
-  				'class' => 'toggled_header',
+  				'class' => 'toggled_header hide_if_ql',
 					'title' => __('Positioning', 'mfn-opts'),
 				),
 
@@ -1060,6 +3046,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
   				'id' => 'style:.mcb-section-mfnuidelement:background-image',
   				'condition' => array( 'id' => 'background_switcher', 'opt' => 'is', 'val' => 'default' ),
   				'oldid' => 'bg_color',
+  				'dynamic_data' => 'featured_image',
   				'type' => 'upload',
   				'title' => __('Image', 'mfn-opts'),
   				'responsive' => 'desktop',
@@ -1081,6 +3068,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
   				'id' => 'style:.mcb-section-mfnuidelement:background-image_tablet',
   				'condition' => array( 'id' => 'background_switcher', 'opt' => 'is', 'val' => 'default' ),
   				'oldid' => 'bg_image',
+  				'dynamic_data' => 'featured_image',
   				'type' => 'upload',
   				'title' => __('Image', 'mfn-opts'),
   				'responsive' => 'tablet',
@@ -1092,6 +3080,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
   				'id' => 'style:.mcb-section-mfnuidelement:background-image_mobile',
   				'condition' => array( 'id' => 'background_switcher', 'opt' => 'is', 'val' => 'default' ),
   				'type' => 'upload',
+  				'dynamic_data' => 'featured_image',
   				'title' => __('Image', 'mfn-opts'),
   				'responsive' => 'mobile',
 					'class' => 'mfn_field_mobile',
@@ -1358,6 +3347,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
   				'id' => 'style:.mcb-section-mfnuidelement|hover:background-image',
   				'condition' => array( 'id' => 'background_switcher_hover', 'opt' => 'is', 'val' => 'default' ),
   				'oldid' => 'bg_color',
+  				'dynamic_data' => 'featured_image',
   				'type' => 'upload',
   				'title' => __('Image', 'mfn-opts'),
   				'responsive' => 'desktop',
@@ -1960,7 +3950,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
   			array(
   				'id' => 'reverse_order',
-  				'class' => 'mfn-toggled',
+  				'class' => 'mfn-toggled hide_if_ql',
   				'type' => 'switch',
   				'iconinfo' => 'https://support.muffingroup.com/how-to/how-to-reverse-the-order-of-elements-on-mobile/',
   				'title' => __('Order on mobile', 'mfn-opts'),
@@ -2108,6 +4098,467 @@ if( ! class_exists('Mfn_Builder_Fields') )
 					'title' => __('This element has no attributes. Please check <b>advanced</b> tab for more customisation options.', 'mfn-opts'),
 				),
 
+
+
+
+
+
+
+
+
+
+
+
+  			array(
+  				'id' => 'type',
+  				're_render' => true,
+  				'attr_id' => 'wrap_type',
+  				'class' => 'hidden-header-builder mfn-loop-switcher',
+  				'type' => 'switch',
+  				'title' => __('Type', 'mfn-opts'),
+  				'desc' => __('Query loop displays wrap&apos;s content in designed loop', 'mfn-opts'),
+  				'options' => array(
+  					'' => __('Default', 'mfn-opts'),
+  					'query' => __('Query loop', 'mfn-opts'),
+  				),
+  				'std' => ''
+  			),
+
+
+  			/* query type */
+
+  			array(
+  				'id' => 'query_type',
+  				're_render' => true,
+  				'attr_id' => 'query_type',
+  				'class' => 'hidden-header-builder',
+  				'condition' => array( 'id' => 'wrap_type', 'opt' => 'is', 'val' => 'query' ),
+  				'type' => 'select',
+  				'title' => __('Query type', 'mfn-opts'),
+  				'options' => array(
+  					'' => __('Select', 'mfn-opts'),
+  					'posts' => __('Posts', 'mfn-opts'),
+  					'terms' => __('Terms', 'mfn-opts')
+  				),
+  				'std' => ''
+  			),
+
+  			/* posts query builder */
+
+  			array(
+  				'id' => 'query_post_type',
+  				're_render' => true,
+  				'attr_id' => 'query_post_type',
+  				'class' => 'hidden-header-builder',
+  				'condition' => array( 'id' => 'query_type', 'opt' => 'is', 'val' => 'posts' ),
+  				'type' => 'select',
+  				'title' => __('Post type', 'mfn-opts'),
+  				'options' => array(
+  					'' => __('- Select -', 'mfn-opts'),
+  					'post' => __('Post', 'mfn-opts'),
+  					'page' => __('Page', 'mfn-opts'),
+  					'portfolio' => __('Portfolio', 'mfn-opts'),
+  					'offer' => __('Offer', 'mfn-opts'),
+  					'slide' => __('Slides', 'mfn-opts'),
+  					'product' => __('Product', 'mfn-opts'),
+  					'testimonial' => __('Testimonial', 'mfn-opts'),
+  				),
+  				'std' => 'post'
+  			),
+
+  			array(
+					'id' => 'query_post_type_product',
+					'condition' => array( 'id' => 'query_post_type', 'opt' => 'is', 'val' => 'product' ),
+					're_render' => true,
+					'class' => 'mfn-reset-if-term',
+					'type' => 'select',
+					'title' => __('Category', 'mfn-opts'),
+					'hierarchical_options' => mfn_hierarchical_taxonomy('product_cat'),
+					'js_hierarchical_options' => 'product_cat',
+					'preview' => 'category',
+				),
+
+				array(
+					'id' => 'query_post_type_testimonial',
+					'condition' => array( 'id' => 'query_post_type', 'opt' => 'is', 'val' => 'testimonial' ),
+					're_render' => true,
+					'class' => 'mfn-reset-if-term',
+					'type' => 'select',
+					'title' => __('Category', 'mfn-opts'),
+					'options' => mfn_get_categories('testimonial-types'),
+   				'js_hierarchical_options' => 'testimonial_types',
+					'preview' => 'category',
+				),
+
+				array(
+					'id' => 'query_post_type_post',
+					'condition' => array( 'id' => 'query_post_type', 'opt' => 'is', 'val' => 'post' ),
+					're_render' => true,
+					'class' => 'mfn-reset-if-term',
+					'type' => 'select',
+					'title' => __('Category', 'mfn-opts'),
+					'hierarchical_options' => mfn_get_categories('category'),
+					'js_hierarchical_options' => 'blog_categories',
+					'preview' => 'category',
+				),
+
+				array(
+					'id' => 'query_post_type_portfolio',
+					'condition' => array( 'id' => 'query_post_type', 'opt' => 'is', 'val' => 'portfolio' ),
+					're_render' => true,
+					'class' => 'mfn-reset-if-term',
+					'type' => 'select',
+					'title' => __('Category', 'mfn-opts'),
+					'hierarchical_options' => mfn_get_categories('portfolio-types'),
+					'js_hierarchical_options' => 'portfolio_types',
+					'preview' => 'category',
+				),
+
+				array(
+					'id' => 'query_post_type_client',
+					'condition' => array( 'id' => 'query_post_type', 'opt' => 'is', 'val' => 'client' ),
+					're_render' => true,
+					'class' => 'mfn-reset-if-term',
+					'type' => 'select',
+					'title' => __('Category', 'mfn-opts'),
+					'hierarchical_options' => mfn_get_categories('client-types'),
+					'js_hierarchical_options' => 'client_types',
+					'preview' => 'category',
+				),
+
+				array(
+					'id' => 'query_post_type_offer',
+					'condition' => array( 'id' => 'query_post_type', 'opt' => 'is', 'val' => 'offer' ),
+					're_render' => true,
+					'class' => 'mfn-reset-if-term',
+					'type' => 'select',
+					'title' => __('Category', 'mfn-opts'),
+					'hierarchical_options' => mfn_get_categories('offer-types'),
+					'js_hierarchical_options' => 'offer_types',
+					'preview' => 'category',
+				),
+
+				array(
+					'id' => 'query_post_type_slide',
+					'condition' => array( 'id' => 'query_post_type', 'opt' => 'is', 'val' => 'slide' ),
+					're_render' => true,
+					'class' => 'mfn-reset-if-term',
+					'type' => 'select',
+					'title' => __('Category', 'mfn-opts'),
+					'hierarchical_options' => mfn_get_categories('slide-types'),
+					'js_options' => 'slide_types',
+					'preview' => 'category',
+				),
+
+				array(
+					'id' => 'query_post_type_product_order',
+					'condition' => array( 'id' => 'query_post_type', 'opt' => 'is', 'val' => 'product' ),
+					're_render' => true,
+					'type' => 'select',
+					'desc' => __('This option turns off standard order settings', 'mfn-opts'),
+					'title' => __('Display', 'mfn-opts'),
+					'options' => array(
+						'' => __('Default', 'mfn-opts'),
+						'on_sale' => __('On sale', 'mfn-opts'),
+						'best_selling' => __('Best selling', 'mfn-opts'),
+						'top_rated' => __('Top rated', 'mfn-opts'),
+					),
+					'std' => '',
+				),
+
+  			array(
+  				'id' => 'query_post_orderby',
+  				're_render' => true,
+  				'class' => 'hidden-header-builder',
+  				'condition' => array( 'id' => 'query_type', 'opt' => 'is', 'val' => 'posts' ),
+  				'type' => 'select',
+  				'title' => __('Order by', 'mfn-opts'),
+  				'options' => array(
+  					'' => __('None', 'mfn-opts'),
+  					'ID' => __('ID', 'mfn-opts'),
+  					'date' => __('Date', 'mfn-opts'),
+  					'modified' => __('Modified', 'mfn-opts'),
+  					'title' => __('Title', 'mfn-opts'),
+  					'rand' => __('Rand', 'mfn-opts'),
+  				),
+  				'std' => 'date'
+  			),
+
+  			array(
+  				'id' => 'query_post_order',
+  				're_render' => true,
+  				'class' => 'hidden-header-builder',
+  				'condition' => array( 'id' => 'query_type', 'opt' => 'is', 'val' => 'posts' ),
+  				'type' => 'select',
+  				'title' => __('Order', 'mfn-opts'),
+  				'options' => array(
+  					'ASC' => __('Ascending', 'mfn-opts'),
+  					'DESC' => __('Descending', 'mfn-opts'),
+  				),
+  				'std' => 'ASC'
+  			),
+
+  			array(
+  				'id' => 'query_post_per_page',
+  				're_render' => true,
+  				'class' => 'hidden-header-builder',
+  				'condition' => array( 'id' => 'query_type', 'opt' => 'is', 'val' => 'posts' ),
+  				'type' => 'text',
+  				'title' => __('Limit', 'mfn-opts'),
+  				'param' => 'number',
+					'preview' => 'number',
+					'std' => '0',
+  			),
+
+  			array(
+  				'id' => 'query_post_offset',
+  				're_render' => true,
+  				'class' => 'hidden-header-builder',
+  				'condition' => array( 'id' => 'query_type', 'opt' => 'is', 'val' => 'posts' ),
+  				'type' => 'text',
+  				'title' => __('Offset', 'mfn-opts'),
+  				'param' => 'number',
+					'preview' => 'number',
+					'std' => '0',
+  			),
+
+  			/* terms query builder */
+
+  			array(
+  				'id' => 'query_terms_taxonomy',
+  				'attr_id' => 'query_terms_taxonomy',
+  				're_render' => true,
+  				'class' => 'hidden-header-builder',
+  				'condition' => array( 'id' => 'query_type', 'opt' => 'is', 'val' => 'terms' ),
+  				'type' => 'select',
+  				'title' => __('Taxonomy', 'mfn-opts'),
+  				'options' => array(
+  					'' => __('- Select -', 'mfn-opts'),
+  					'category' => __('Post category', 'mfn-opts'),
+  					'post_tag' => __('Post tag', 'mfn-opts'),
+  					'portfolio_types' => __('Portfolio category', 'mfn-opts'),
+  					'offer_types' => __('Offer category', 'mfn-opts'),
+  					'product_cat' => __('Product category', 'mfn-opts'),
+  					'testimonial_types' => __('Testimonial category', 'mfn-opts'),
+  				),
+  				'std' => 'category'
+  			),
+
+  			array(
+  				'id' => 'query_terms_excludes_post_tag',
+  				'condition' => array( 'id' => 'query_terms_taxonomy', 'opt' => 'is', 'val' => 'post_tag' ),
+  				're_render' => true,
+  				'type' => 'multiselect',
+  				'title' => __('Excludes', 'mfn-opts'),
+  				'desc' => __('IDs of taxonomies to exclude', 'mfn-opts'),
+  				'options' => mfn_get_categories('post_tag'),
+   				'js_hierarchical_options' => 'blog_tags',
+  			),
+
+  			array(
+  				'id' => 'query_terms_excludes_client_types',
+  				'condition' => array( 'id' => 'query_terms_taxonomy', 'opt' => 'is', 'val' => 'client_types' ),
+  				're_render' => true,
+  				'type' => 'multiselect',
+  				'title' => __('Excludes', 'mfn-opts'),
+  				'desc' => __('IDs of taxonomies to exclude', 'mfn-opts'),
+  				'options' => mfn_get_categories('client-types'),
+   				'js_hierarchical_options' => 'client_types',
+  			),
+
+  			array(
+  				'id' => 'query_terms_excludes_portfolio_types',
+  				'condition' => array( 'id' => 'query_terms_taxonomy', 'opt' => 'is', 'val' => 'portfolio_types' ),
+  				're_render' => true,
+  				'type' => 'multiselect',
+  				'title' => __('Excludes', 'mfn-opts'),
+  				'desc' => __('IDs of taxonomies to exclude', 'mfn-opts'),
+  				'options' => mfn_get_categories('portfolio-types'),
+   				'js_hierarchical_options' => 'portfolio_types',
+  			),
+
+				array(
+  				'id' => 'query_terms_excludes_category',
+  				'condition' => array( 'id' => 'query_terms_taxonomy', 'opt' => 'is', 'val' => 'category' ),
+  				're_render' => true,
+  				'type' => 'multiselect',
+  				'title' => __('Excludes', 'mfn-opts'),
+  				'desc' => __('IDs of taxonomies to exclude', 'mfn-opts'),
+  				'hierarchical_options' => mfn_get_categories('category'),
+					'js_hierarchical_options' => 'blog_categories',
+  			),
+
+  			array(
+  				'id' => 'query_terms_excludes_offer_types',
+  				'condition' => array( 'id' => 'query_terms_taxonomy', 'opt' => 'is', 'val' => 'offer_types' ),
+  				're_render' => true,
+  				'type' => 'multiselect',
+  				'title' => __('Excludes', 'mfn-opts'),
+  				'desc' => __('IDs of taxonomies to exclude', 'mfn-opts'),
+  				'options' => mfn_get_categories('offer-types'),
+   				'js_hierarchical_options' => 'offer_types',
+  			),
+
+  			array(
+  				'id' => 'query_terms_excludes_testimonial_types',
+  				'condition' => array( 'id' => 'query_terms_taxonomy', 'opt' => 'is', 'val' => 'testimonial_types' ),
+  				're_render' => true,
+  				'type' => 'multiselect',
+  				'title' => __('Excludes', 'mfn-opts'),
+  				'desc' => __('IDs of taxonomies to exclude', 'mfn-opts'),
+  				'options' => mfn_get_categories('testimonial-types'),
+   				'js_hierarchical_options' => 'testimonial_types',
+  			),
+
+  			array(
+  				'id' => 'query_terms_excludes_product_cat',
+  				'condition' => array( 'id' => 'query_terms_taxonomy', 'opt' => 'is', 'val' => 'product_cat' ),
+  				're_render' => true,
+  				'type' => 'multiselect',
+  				'title' => __('Excludes', 'mfn-opts'),
+  				'desc' => __('IDs of taxonomies to exclude', 'mfn-opts'),
+  				'hierarchical_options' => mfn_hierarchical_taxonomy('product_cat'),
+					'js_hierarchical_options' => 'product_cat',
+  			),
+
+  			array(
+  				'id' => 'query_terms_includes_post_tag',
+  				'condition' => array( 'id' => 'query_terms_taxonomy', 'opt' => 'is', 'val' => 'post_tag' ),
+  				're_render' => true,
+  				'type' => 'multiselect',
+  				'title' => __('Includes', 'mfn-opts'),
+  				'desc' => __('IDs of taxonomies to exclude', 'mfn-opts'),
+  				'options' => mfn_get_categories('post_tag'),
+   				'js_hierarchical_options' => 'blog_tags',
+  			),
+
+  			array(
+  				'id' => 'query_terms_includes_client_types',
+  				'condition' => array( 'id' => 'query_terms_taxonomy', 'opt' => 'is', 'val' => 'client_types' ),
+  				're_render' => true,
+  				'type' => 'multiselect',
+  				'title' => __('Includes', 'mfn-opts'),
+  				'desc' => __('IDs of taxonomies to exclude', 'mfn-opts'),
+  				'options' => mfn_get_categories('client-types'),
+   				'js_hierarchical_options' => 'client_types',
+  			),
+
+  			array(
+  				'id' => 'query_terms_includes_portfolio_types',
+  				'condition' => array( 'id' => 'query_terms_taxonomy', 'opt' => 'is', 'val' => 'portfolio_types' ),
+  				're_render' => true,
+  				'type' => 'multiselect',
+  				'title' => __('Includes', 'mfn-opts'),
+  				'desc' => __('IDs of taxonomies to exclude', 'mfn-opts'),
+  				'options' => mfn_get_categories('portfolio-types'),
+   				'js_hierarchical_options' => 'portfolio_types',
+  			),
+
+				array(
+  				'id' => 'query_terms_includes_category',
+  				'condition' => array( 'id' => 'query_terms_taxonomy', 'opt' => 'is', 'val' => 'category' ),
+  				're_render' => true,
+  				'type' => 'multiselect',
+  				'title' => __('Includes', 'mfn-opts'),
+  				'desc' => __('IDs of taxonomies to exclude', 'mfn-opts'),
+  				'hierarchical_options' => mfn_get_categories('category'),
+					'js_hierarchical_options' => 'blog_categories',
+  			),
+
+  			array(
+  				'id' => 'query_terms_includes_offer_types',
+  				'condition' => array( 'id' => 'query_terms_taxonomy', 'opt' => 'is', 'val' => 'offer_types' ),
+  				're_render' => true,
+  				'type' => 'multiselect',
+  				'title' => __('Includes', 'mfn-opts'),
+  				'desc' => __('IDs of taxonomies to exclude', 'mfn-opts'),
+  				'options' => mfn_get_categories('offer-types'),
+   				'js_hierarchical_options' => 'offer_types',
+  			),
+
+  			array(
+  				'id' => 'query_terms_includes_testimonial_types',
+  				'condition' => array( 'id' => 'query_terms_taxonomy', 'opt' => 'is', 'val' => 'testimonial_types' ),
+  				're_render' => true,
+  				'type' => 'multiselect',
+  				'title' => __('Includes', 'mfn-opts'),
+  				'desc' => __('IDs of taxonomies to exclude', 'mfn-opts'),
+  				'options' => mfn_get_categories('testimonial-types'),
+   				'js_hierarchical_options' => 'testimonial_types',
+  			),
+
+  			array(
+  				'id' => 'query_terms_includes_product_cat',
+  				'condition' => array( 'id' => 'query_terms_taxonomy', 'opt' => 'is', 'val' => 'product_cat' ),
+  				're_render' => true,
+  				'type' => 'multiselect',
+  				'title' => __('Includes', 'mfn-opts'),
+  				'desc' => __('IDs of taxonomies to exclude', 'mfn-opts'),
+  				'hierarchical_options' => mfn_hierarchical_taxonomy('product_cat'),
+					'js_hierarchical_options' => 'product_cat',
+  			),
+
+  			array(
+  				'id' => 'query_terms_orderby',
+  				're_render' => true,
+  				'class' => 'hidden-header-builder',
+  				'condition' => array( 'id' => 'query_type', 'opt' => 'is', 'val' => 'terms' ),
+  				'type' => 'select',
+  				'title' => __('Order by', 'mfn-opts'),
+  				'options' => array(
+  					'' => __('None', 'mfn-opts'),
+  					'term_order' => __('Term order', 'mfn-opts'),
+  					'term_id' => __('ID', 'mfn-opts'),
+  					'name' => __('Name', 'mfn-opts'),
+  					'count' => __('Count', 'mfn-opts'),
+  				),
+  				'std' => 'ID'
+  			),
+
+  			array(
+  				'id' => 'query_terms_order',
+  				're_render' => true,
+  				'class' => 'hidden-header-builder',
+  				'condition' => array( 'id' => 'query_type', 'opt' => 'is', 'val' => 'terms' ),
+  				'type' => 'select',
+  				'title' => __('Order', 'mfn-opts'),
+  				'options' => array(
+  					'ASC' => __('Ascending', 'mfn-opts'),
+  					'DESC' => __('Descending', 'mfn-opts'),
+  				),
+  				'std' => 'ASC'
+  			),
+
+  			array(
+  				'id' => 'query_terms_hide_empty',
+  				'class' => 'hidden-header-builder',
+  				're_render' => true,
+  				'condition' => array( 'id' => 'query_type', 'opt' => 'is', 'val' => 'terms' ),
+  				'type' => 'select',
+  				'title' => __('Hide empty', 'mfn-opts'),
+  				'options' => array(
+  					'' => __('False', 'mfn-opts'),
+  					'1' => __('True', 'mfn-opts'),
+  				),
+  				'std' => ''
+  			),
+
+  			array(
+  				'id' => 'query_terms_number',
+  				're_render' => true,
+  				'class' => 'hidden-header-builder',
+  				'condition' => array( 'id' => 'query_type', 'opt' => 'is', 'val' => 'terms' ),
+  				'type' => 'text',
+  				'title' => __('Limit', 'mfn-opts'),
+  				'param' => 'number',
+					'preview' => 'number',
+					'std' => '0',
+  			),
+
+
+
+
+
 				// deprecated
 
 				array(
@@ -2222,6 +4673,1572 @@ if( ! class_exists('Mfn_Builder_Fields') )
 					'type' => 'html',
 					'html' => '</div>',
 				),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+				array(
+					'type' => 'html',
+					'html' => '<div class="modalbox-card modalbox-card-style">',
+				),
+
+
+				array(
+					'class' => 'toggled_header',
+					'title' => __('Container', 'mfn-opts'),
+				),
+
+				array(
+  				'id' => 'query_display',
+  				'attr_id' => 'query_display',
+  				're_render' => true,
+  				'class' => 'mfn-toggled',
+  				'type' => 'switch',
+  				'title' => __('Display', 'mfn-opts'),
+  				'options' => array(
+  					'' => __('Default', 'mfn-opts'),
+  					'slider' => __('Slider', 'mfn-opts'),
+  				),
+  				'std' => ''
+  			),
+
+  			array(
+  				'id' => 'query_slider_columns',
+  				'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+  				'class' => 'mfn_field_desktop narrow mfn-toggled',
+  				'responsive' => 'desktop',
+  				're_render' => true,
+  				'type' => 'text',
+  				'title' => __('Columns', 'mfn-opts'),
+  				'param' => 'number',
+					'preview' => 'number',
+					'std' => '1',
+  			),
+
+  			array(
+  				'id' => 'query_slider_columns_tablet',
+  				'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+  				'class' => 'mfn_field_tablet narrow mfn-toggled',
+  				'responsive' => 'tablet',
+  				'type' => 'text',
+  				'title' => __('Columns', 'mfn-opts'),
+  				'param' => 'number',
+					'preview' => 'number',
+					'std' => '1',
+  			),
+
+  			array(
+  				'id' => 'query_slider_columns_mobile',
+  				'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+  				'class' => 'mfn_field_mobile narrow mfn-toggled',
+  				'responsive' => 'mobile',
+  				'type' => 'text',
+  				'title' => __('Columns', 'mfn-opts'),
+  				'param' => 'number',
+					'preview' => 'number',
+					'std' => '1',
+  			),
+
+  			/*array(
+  				'id' => 'query_slider_animation',
+  				'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+  				'class' => 'mfn-toggled',
+  				'type' => 'switch',
+  				'title' => __('Animation', 'mfn-opts'),
+  				'options' => array(
+  					'' => __('Slide', 'mfn-opts'),
+  					'fade' => __('Fade', 'mfn-opts'),
+  				),
+  				'std' => ''
+  			),*/
+
+  			array(
+  				'id' => 'query_slider_infinity',
+  				'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+  				'class' => 'mfn-toggled',
+  				'type' => 'switch',
+  				'title' => __('Infinite loop', 'mfn-opts'),
+  				'options' => array(
+  					'' => __('Off', 'mfn-opts'),
+  					'1' => __('On', 'mfn-opts'),
+  				),
+  				'std' => ''
+  			),
+
+  			array(
+  				'id' => 'query_slider_autoplay',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'default_unit' => '',
+					'class' => 'mfn-toggled',
+					'title' => __('Autplay speed', 'mfn-opts'),
+					'desc' => __('Leave empty to disallow autoplay', 'mfn-opts'),
+					'param' => array(
+						'min' => '0',
+						'max' => '10000',
+						'step' => '100',
+						'unit' => '',
+					)
+  			),
+
+  			array(
+  				'id' => 'query_slider_arrows',
+  				'attr_id' => 'query_slider_arrows',
+  				'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+  				'class' => 'mfn-toggled',
+  				'type' => 'switch',
+  				'title' => __('Arrows', 'mfn-opts'),
+  				'options' => array(
+  					'0' => __('Hide', 'mfn-opts'),
+  					'1' => __('Show', 'mfn-opts'),
+  				),
+  				'std' => '0'
+  			),
+
+  			array(
+  				'id' => 'query_slider_arrows_style',
+  				'attr_id' => 'query_slider_arrows_style',
+  				'condition' => array( 'id' => 'query_slider_arrows', 'opt' => 'is', 'val' => '1' ),
+  				'class' => 'mfn-toggled',
+  				'type' => 'switch',
+  				'title' => __('Arrows style', 'mfn-opts'),
+  				'options' => array(
+  					'' => __('Standard', 'mfn-opts'),
+  					'overlay' => __('Overlay', 'mfn-opts'),
+  					'custom' => __('Custom', 'mfn-opts'),
+  				),
+  				'std' => ''
+  			),
+
+  			array(
+  				'id' => 'query_slider_dots',
+  				'attr_id' => 'query_slider_dots',
+  				'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+  				'class' => 'mfn-toggled',
+  				'type' => 'switch',
+  				'title' => __('Dots', 'mfn-opts'),
+  				'options' => array(
+  					'0' => __('Hide', 'mfn-opts'),
+  					'1' => __('Show', 'mfn-opts'),
+  				),
+  				'std' => '0'
+  			),
+
+  			array(
+  				'id' => 'query_slider_dots_style',
+  				'attr_id' => 'query_slider_dots_style',
+  				'condition' => array( 'id' => 'query_slider_dots', 'opt' => 'is', 'val' => '1' ),
+  				'class' => 'mfn-toggled',
+  				'type' => 'switch',
+  				'title' => __('Dots style', 'mfn-opts'),
+  				'options' => array(
+  					'' => __('Standard', 'mfn-opts'),
+  					'overlay' => __('Overlay', 'mfn-opts'),
+  					'custom' => __('Custom', 'mfn-opts'),
+  				),
+  				'std' => ''
+  			),
+
+  			array(
+  				'id' => 'query_slider_mousewheel',
+  				'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+  				'class' => 'mfn-toggled',
+  				'type' => 'switch',
+  				'title' => __('Mousewheel', 'mfn-opts'),
+  				'options' => array(
+  					'' => __('Disabled', 'mfn-opts'),
+  					'1' => __('Enabled', 'mfn-opts'),
+  				),
+  				'std' => ''
+  			),
+
+  			array(
+  				'id' => 'query_display_style',
+  				'condition' => array( 'id' => 'query_display', 'opt' => 'isnt', 'val' => 'slider' ),
+  				'class' => 'mfn-toggled',
+  				'type' => 'switch',
+  				'title' => __('Style', 'mfn-opts'),
+  				'options' => array(
+  					'' => __('Default', 'mfn-opts'),
+  					'masonry' => __('Masonry', 'mfn-opts'),
+  				),
+  				'std' => ''
+  			),
+
+  			array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner .mfn-queryloop-item-wrapper.mfn-ql-item-default:width',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'isnt', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'default_unit' => 'px',
+					'responsive' => 'desktop',
+					'class' => 'mfn_field_desktop mfn-toggled query_item_default_width',
+					'title' => __('Item width', 'mfn-opts'),
+					'units' => array(
+						'px' 	=> array('min' => 0, 'max' => 1920, 'step' => 1),
+						'%' 	=> array('min' => 0, 'max' => 100, 'step' => 0.1),
+						'vw' 	=> array('min' => 0, 'max' => 100, 'step' => 0.1),
+					),
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner .mfn-queryloop-item-wrapper.mfn-ql-item-default:width_tablet',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'isnt', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'default_unit' => 'px',
+					'responsive' => 'tablet',
+					'class' => 'mfn_field_tablet mfn-toggled query_item_default_width',
+					'title' => __('Item width', 'mfn-opts'),
+					'units' => array(
+						'px' 	=> array('min' => 0, 'max' => 1920, 'step' => 1),
+						'%' 	=> array('min' => 0, 'max' => 100, 'step' => 1),
+						'vw' 	=> array('min' => 0, 'max' => 100, 'step' => 1),
+					),
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner .mfn-queryloop-item-wrapper.mfn-ql-item-default:width_mobile',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'isnt', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'default_unit' => 'px',
+					'responsive' => 'mobile',
+					'class' => 'mfn_field_mobile mfn-toggled query_item_default_width',
+					'title' => __('Item width', 'mfn-opts'),
+					'units' => array(
+						'px' 	=> array('min' => 0, 'max' => 1920, 'step' => 1),
+						'%' 	=> array('min' => 0, 'max' => 100, 'step' => 0.1),
+						'vw' 	=> array('min' => 0, 'max' => 100, 'step' => 0.1),
+					),
+				),
+
+  			array(
+  				'class' => 'toggled_header',
+					'title' => __('Item', 'mfn-opts'),
+				),
+
+				array(
+					'class' => 'mfn-builder-subheader mfn-toggled',
+					'title' => __('Spacing', 'mfn-opts'),
+				),
+
+				array(
+  				'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner .mfn-queryloop-item-wrapper:padding',
+  				'type' => 'dimensions',
+  				'version' => 'separated-fields',
+  				'title' => __('Padding', 'mfn-opts'),
+					'responsive' => 'desktop',
+					'class' => 'mfn_field_desktop mfn-toggled',
+					'css_attr' => 'padding',
+  			),
+
+  			array(
+  				'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner .mfn-queryloop-item-wrapper:padding_tablet',
+  				'type' => 'dimensions',
+  				'version' => 'separated-fields',
+  				'title' => __('Padding', 'mfn-opts'),
+					'responsive' => 'tablet',
+					'class' => 'mfn_field_tablet mfn-toggled',
+					'css_attr' => 'padding',
+  			),
+
+  			array(
+  				'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner .mfn-queryloop-item-wrapper:padding_mobile',
+  				'type' => 'dimensions',
+  				'version' => 'separated-fields',
+  				'title' => __('Padding', 'mfn-opts'),
+					'responsive' => 'mobile',
+					'class' => 'mfn_field_mobile mfn-toggled',
+					'css_attr' => 'padding',
+  			),
+
+				array(
+  				'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner .mfn-queryloop-item-wrapper:margin',
+  				'type' => 'dimensions',
+  				'version' => 'separated-fields',
+  				'title' => __('Margin', 'mfn-opts'),
+					'responsive' => 'desktop',
+					'class' => 'mfn_field_desktop mfn-toggled',
+					'css_attr' => 'margin',
+  			),
+
+  			array(
+  				'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner .mfn-queryloop-item-wrapper:margin_tablet',
+  				'type' => 'dimensions',
+  				'version' => 'separated-fields',
+  				'title' => __('Margin', 'mfn-opts'),
+					'responsive' => 'tablet',
+					'class' => 'mfn_field_tablet mfn-toggled',
+					'css_attr' => 'margin',
+  			),
+
+  			array(
+  				'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner .mfn-queryloop-item-wrapper:margin_mobile',
+  				'type' => 'dimensions',
+  				'version' => 'separated-fields',
+  				'title' => __('Margin', 'mfn-opts'),
+					'responsive' => 'mobile',
+					'class' => 'mfn_field_mobile mfn-toggled',
+					'css_attr' => 'margin',
+  			),
+
+
+
+
+
+
+
+
+
+  			array(
+					'class' => 'mfn-builder-subheader mfn-toggled',
+					'title' => __('Border', 'mfn-opts'),
+				),
+
+  			array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner .mfn-queryloop-item-wrapper:border-style',
+					'attr_id' => 'border_style_ql',
+					'type' => 'select',
+					'class' => 'mfn-toggled',
+					'title' => __('Border style', 'mfn-opts'),
+					'options' => [
+						'none' => __('None', 'mfn-opts'),
+						'solid' => __('Solid', 'mfn-opts'),
+						'dashed' => __('Dashed', 'mfn-opts'),
+						'dotted' => __('Dotted', 'mfn-opts'),
+						'double' => __('Double', 'mfn-opts'),
+					],
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner .mfn-queryloop-item-wrapper:border-color',
+					'condition' => array( 'id' => 'border_style_ql', 'opt' => 'isnt', 'val' => 'none' ),
+					'type' => 'color',
+					'title' => __('Border color', 'mfn-opts'),
+				),
+
+				array(
+  				'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner .mfn-queryloop-item-wrapper:border-width',
+  				'condition' => array( 'id' => 'border_style_ql', 'opt' => 'isnt', 'val' => 'none' ),
+  				'type' => 'dimensions',
+  				'title' => __('Border width', 'mfn-opts'),
+					'responsive' => 'desktop',
+					'class' => 'mfn_field_desktop mfn-toggled',
+					'css_attr' => 'border-width',
+  			),
+
+  			array(
+  				'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner .mfn-queryloop-item-wrapper:border-width_tablet',
+  				'condition' => array( 'id' => 'border_style_ql', 'opt' => 'isnt', 'val' => 'none' ),
+  				'type' => 'dimensions',
+  				'title' => __('Border width', 'mfn-opts'),
+					'responsive' => 'tablet',
+					'class' => 'mfn_field_tablet mfn-toggled',
+					'css_attr' => 'border-width',
+  			),
+
+  			array(
+  				'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner .mfn-queryloop-item-wrapper:border-width_mobile',
+  				'condition' => array( 'id' => 'border_style_ql', 'opt' => 'isnt', 'val' => 'none' ),
+  				'type' => 'dimensions',
+  				'title' => __('Border width', 'mfn-opts'),
+					'responsive' => 'mobile',
+					'class' => 'mfn_field_mobile mfn-toggled',
+					'css_attr' => 'border-width',
+  			),
+
+				array(
+  				'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner .mfn-queryloop-item-wrapper:border-radius',
+  				'type' => 'dimensions',
+  				'title' => __('Border radius', 'mfn-opts'),
+					'responsive' => 'desktop',
+					'class' => 'mfn_field_desktop mfn-toggled',
+					'css_attr' => 'border-radius',
+  			),
+
+  			array(
+  				'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner .mfn-queryloop-item-wrapper:border-radius_tablet',
+  				'type' => 'dimensions',
+  				'title' => __('Border radius', 'mfn-opts'),
+					'responsive' => 'tablet',
+					'class' => 'mfn_field_tablet mfn-toggled',
+					'css_attr' => 'border-radius',
+  			),
+
+  			array(
+  				'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner .mfn-queryloop-item-wrapper:border-radius_mobile',
+  				'type' => 'dimensions',
+  				'title' => __('Border radius', 'mfn-opts'),
+					'responsive' => 'mobile',
+					'class' => 'mfn_field_mobile mfn-toggled',
+					'css_attr' => 'border-radius',
+  			),
+
+  			array(
+					'class' => 'mfn-builder-subheader mfn-toggled',
+					'title' => __('Background', 'mfn-opts'),
+				),
+
+  			array(
+					'id' => 'background_switcher_ql',
+					'attr_id' => 'background_switcher_ql',
+					'type' => 'switch',
+					'class' => 'mfn-fields-switcher mfn-toggled disable-history',
+					'title' => __('Background type', 'mfn-opts'),
+					'options' => array(
+  					'default' => __('Default', 'mfn-opts'),
+  					'gradient' 	=> __('Gradient', 'mfn-opts'),
+  				),
+					'visual_options' => array(
+  					'default' => '',
+  					'gradient' 	=> '',
+  				),
+  				'std' => 'default',
+				),
+
+				array(
+  				'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner .mfn-queryloop-item-wrapper:gradient',
+  				'condition' => array( 'id' => 'background_switcher_ql', 'opt' => 'is', 'val' => 'gradient' ),
+  				'type' => 'gradient',
+  				'title' => __('Gradient', 'mfn-opts'),
+  				'class' => 'mfn-toggled',
+					'css_attr' => 'gradient',
+  			),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner .mfn-queryloop-item-wrapper:background-color',
+					'condition' => array( 'id' => 'background_switcher_ql', 'opt' => 'is', 'val' => 'default' ),
+					'type' => 'color',
+					'class' => 'mfn-toggled',
+					'title' => __('Background color', 'mfn-opts'),
+				),
+
+				array(
+  				'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner .mfn-queryloop-item-wrapper:background-image',
+  				'condition' => array( 'id' => 'background_switcher_ql', 'opt' => 'is', 'val' => 'default' ),
+  				'oldid' => 'bg_color',
+  				'class' => 'mfn-toggled',
+  				'dynamic_data' => 'featured_image',
+  				'type' => 'upload',
+  				'title' => __('Image', 'mfn-opts'),
+					'css_attr' => 'background-image',
+  			),
+
+  			array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner .mfn-queryloop-item-wrapper:background-repeat',
+					'condition' => array( 'id' => 'background_switcher_ql', 'opt' => 'is', 'val' => 'default' ),
+					'type' => 'select',
+					'class' => 'mfn-toggled',
+					'css_attr' => 'background-repeat',
+					'title' => __('Repeat', 'mfn-opts'),
+					'options' => [
+						'' => __('Default', 'mfn-opts'),
+						'repeat' => __('Repeat', 'mfn-opts'),
+						'no-repeat' => __('No repeat', 'mfn-opts'),
+						'repeat-x' => __('Repeat X', 'mfn-opts'),
+						'repeat-y' => __('Repeat Y', 'mfn-opts'),
+					],
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner .mfn-queryloop-item-wrapper:background-position',
+					'condition' => array( 'id' => 'background_switcher_ql', 'opt' => 'is', 'val' => 'default' ),
+					'oldid' => 'bg_position',
+					'type' => 'select',
+					'class' => 'mfn-toggled',
+					'css_attr' => 'background-position',
+					'title' => __('Position', 'mfn-opts'),
+					'options' => [
+						'' => __('Default', 'mfn-opts'),
+						'center' => __('Center Center', 'mfn-opts'),
+						'center left' => __('Center Left', 'mfn-opts'),
+						'center right' => __('Center Right', 'mfn-opts'),
+						'top left' => __('Top Left', 'mfn-opts'),
+						'top right' => __('Top Right', 'mfn-opts'),
+						'top center' => __('Top Center', 'mfn-opts'),
+						'bottom left' => __('Bottom Left', 'mfn-opts'),
+						'bottom right' => __('Bottom Right', 'mfn-opts'),
+						'bottom center' => __('Bottom Center', 'mfn-opts'),
+					],
+				),
+
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner .mfn-queryloop-item-wrapper:background-attachment',
+					'condition' => array( 'id' => 'background_switcher_ql', 'opt' => 'is', 'val' => 'default' ),
+					'type' => 'select',
+					'class' => 'mfn-toggled',
+					'css_attr' => 'background-attachment',
+					'title' => __('Attachment', 'mfn-opts'),
+					'options' => [
+						'' => __('Default', 'mfn-opts'),
+						'scroll' => __('Scroll', 'mfn-opts'),
+						'fixed' => __('Fixed', 'mfn-opts'),
+						'parallax' => __('Parallax', 'mfn-opts'),
+					],
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner .mfn-queryloop-item-wrapper:background-size',
+					'condition' => array( 'id' => 'background_switcher_ql', 'opt' => 'is', 'val' => 'default' ),
+					'oldid' => 'bg_size',
+					'class' => 'mfn-toggled',
+					'type' => 'select',
+					'css_attr' => 'background-size',
+					'title' => __('Size', 'mfn-opts'),
+					'options' => mfna_bg_size()
+				),
+
+
+				array(
+					'class' => 'toggled_header',
+					'title' => __('Pagination', 'mfn-opts'),
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-dots-custom .swiper-pagination:top',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_dots_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Top', 'mfn-opts'),
+					'responsive' => 'desktop',
+					'class' => 'mfn-toggled dots-custom-style mfn_field_desktop',
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-dots-custom .swiper-pagination:bottom',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_dots_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Bottom', 'mfn-opts'),
+					'responsive' => 'desktop',
+					'class' => 'mfn-toggled dots-custom-style mfn_field_desktop',
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-dots-custom .swiper-pagination:left',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_dots_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Left', 'mfn-opts'),
+						'responsive' => 'desktop',
+					'class' => 'mfn-toggled dots-custom-style mfn_field_desktop',
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-dots-custom .swiper-pagination:right',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_dots_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Right', 'mfn-opts'),
+					'responsive' => 'desktop',
+					'class' => 'mfn-toggled dots-custom-style mfn_field_desktop',
+				),
+
+
+
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-dots-custom .swiper-pagination:top_tablet',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_dots_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Top', 'mfn-opts'),
+					'responsive' => 'tablet',
+					'class' => 'mfn-toggled dots-custom-style mfn_field_tablet',
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-dots-custom .swiper-pagination:bottom_tablet',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_dots_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Bottom', 'mfn-opts'),
+					'responsive' => 'tablet',
+					'class' => 'mfn-toggled dots-custom-style mfn_field_tablet',
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-dots-custom .swiper-pagination:left_tablet',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_dots_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Left', 'mfn-opts'),
+						'responsive' => 'tablet',
+					'class' => 'mfn-toggled dots-custom-style mfn_field_tablet',
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-dots-custom .swiper-pagination:right_tablet',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_dots_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Right', 'mfn-opts'),
+					'responsive' => 'tablet',
+					'class' => 'mfn-toggled dots-custom-style mfn_field_tablet',
+				),
+
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-dots-custom .swiper-pagination:top_mobile',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_dots_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Top', 'mfn-opts'),
+					'responsive' => 'mobile',
+					'class' => 'mfn-toggled dots-custom-style mfn_field_mobile',
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-dots-custom .swiper-pagination:bottom_mobile',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_dots_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Bottom', 'mfn-opts'),
+					'responsive' => 'mobile',
+					'class' => 'mfn-toggled dots-custom-style mfn_field_mobile',
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-dots-custom .swiper-pagination:left_mobile',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_dots_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Left', 'mfn-opts'),
+						'responsive' => 'mobile',
+					'class' => 'mfn-toggled dots-custom-style mfn_field_mobile',
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-dots-custom .swiper-pagination:right_mobile',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_dots_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Right', 'mfn-opts'),
+					'responsive' => 'mobile',
+					'class' => 'mfn-toggled dots-custom-style mfn_field_mobile',
+				),
+
+
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper .swiper-pagination:--mfn-swiper-pagination-spacing',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'desktop',
+					'class' => 'mfn-toggled mfn_field_desktop',
+					'title' => __('Offset', 'mfn-opts'),
+					'desc' => __('Works with Standard and Overlay pagination mode', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '0',
+						'max' => '300',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper .swiper-pagination:--mfn-swiper-pagination-spacing_tablet',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'tablet',
+					'class' => 'mfn-toggled mfn_field_tablet',
+					'title' => __('Offset', 'mfn-opts'),
+					'desc' => __('Works with Standard and Overlay pagination mode', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '0',
+						'max' => '300',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper .swiper-pagination:--mfn-swiper-pagination-spacing_mobile',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'mobile',
+					'class' => 'mfn-toggled mfn_field_mobile',
+					'title' => __('Offset', 'mfn-opts'),
+					'desc' => __('Works with Standard and Overlay pagination mode', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '0',
+						'max' => '300',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper .swiper-pagination .swiper-pagination-bullet:--swiper-pagination-bullet-inactive-color',
+					'type' => 'color',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'class' => 'mfn-toggled',
+					'title' => __('Color', 'mfn-opts'),
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper .swiper-pagination .swiper-pagination-bullet-active:--mfn-swiper-pagination-bullet-active-color',
+					'type' => 'color',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'class' => 'mfn-toggled',
+					'title' => __('Active color', 'mfn-opts'),
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper .swiper-pagination-bullet:--mfn-swiper-pagination-bullet-width',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'desktop',
+					'class' => 'mfn-toggled mfn_field_desktop',
+					'title' => __('Width', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '0',
+						'max' => '100',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper .swiper-pagination-bullet:--mfn-swiper-pagination-bullet-width_tablet',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'tablet',
+					'class' => 'mfn-toggled mfn_field_tablet',
+					'title' => __('Width', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '0',
+						'max' => '100',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper .swiper-pagination-bullet:--mfn-swiper-pagination-bullet-width_mobile',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'mobile',
+					'class' => 'mfn-toggled mfn_field_mobile',
+					'title' => __('Width', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '0',
+						'max' => '100',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper .swiper-pagination-bullet:--mfn-swiper-pagination-bullet-height',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'desktop',
+					'class' => 'mfn-toggled mfn_field_desktop',
+					'title' => __('Height', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '0',
+						'max' => '100',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper .swiper-pagination-bullet:--mfn-swiper-pagination-bullet-height_tablet',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'tablet',
+					'class' => 'mfn-toggled mfn_field_tablet',
+					'title' => __('Height', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '0',
+						'max' => '100',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper .swiper-pagination-bullet:--mfn-swiper-pagination-bullet-height_mobile',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'mobile',
+					'class' => 'mfn-toggled mfn_field_mobile',
+					'title' => __('Height', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '0',
+						'max' => '100',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper .swiper-pagination-bullet:border-radius',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'class' => 'mfn-toggled',
+					'title' => __('Border radius', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '0',
+						'max' => '100',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper .swiper-pagination-bullet:opacity',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'class' => 'mfn-toggled',
+					'title' => __('Opacity', 'mfn-opts'),
+					'param' => array(
+						'min' => '0',
+						'max' => '1',
+						'step' => '0.01',
+					),
+					'std' => '0',
+				),
+
+
+
+
+
+
+
+
+				array(
+					'class' => 'toggled_header',
+					'title' => __('Arrows', 'mfn-opts'),
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+				),
+
+				array(
+  				'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'class' => 'mfn-builder-subheader mfn-toggled',
+					'title' => __('Prev arrow custom style', 'mfn-opts'),
+				),
+
+  			array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .swiper-button-prev.mfn-swiper-arrow:top',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Top', 'mfn-opts'),
+					'responsive' => 'desktop',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_desktop',
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .swiper-button-prev.mfn-swiper-arrow:bottom',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Bottom', 'mfn-opts'),
+					'responsive' => 'desktop',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_desktop',
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .swiper-button-prev.mfn-swiper-arrow:left',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Left', 'mfn-opts'),
+					'responsive' => 'desktop',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_desktop',
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .swiper-button-prev.mfn-swiper-arrow:right',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Right', 'mfn-opts'),
+					'responsive' => 'desktop',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_desktop',
+				),
+
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .swiper-button-prev.mfn-swiper-arrow:top_tablet',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Top', 'mfn-opts'),
+					'responsive' => 'tablet',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_tablet',
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .swiper-button-prev.mfn-swiper-arrow:bottom_tablet',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Bottom', 'mfn-opts'),
+					'responsive' => 'tablet',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_tablet',
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .swiper-button-prev.mfn-swiper-arrow:left_tablet',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Left', 'mfn-opts'),
+					'responsive' => 'tablet',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_tablet',
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .swiper-button-prev.mfn-swiper-arrow:right_tablet',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Right', 'mfn-opts'),
+					'responsive' => 'tablet',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_tablet',
+				),
+
+
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .swiper-button-prev.mfn-swiper-arrow:top_mobile',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Top', 'mfn-opts'),
+					'responsive' => 'mobile',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_mobile',
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .swiper-button-prev.mfn-swiper-arrow:bottom_mobile',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Bottom', 'mfn-opts'),
+					'responsive' => 'mobile',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_mobile',
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .swiper-button-prev.mfn-swiper-arrow:left_mobile',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Left', 'mfn-opts'),
+					'responsive' => 'mobile',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_mobile',
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .swiper-button-prev.mfn-swiper-arrow:right_mobile',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Right', 'mfn-opts'),
+					'responsive' => 'mobile',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_mobile',
+				),
+
+
+
+				array(
+  				'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'class' => 'mfn-builder-subheader mfn-toggled',
+					'title' => __('Next arrow custom style', 'mfn-opts'),
+				),
+
+  			array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .swiper-button-next.mfn-swiper-arrow:top',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Top', 'mfn-opts'),
+					'responsive' => 'desktop',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_desktop',
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .swiper-button-next.mfn-swiper-arrow:bottom',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Bottom', 'mfn-opts'),
+					'responsive' => 'desktop',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_desktop',
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .swiper-button-next.mfn-swiper-arrow:left',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Left', 'mfn-opts'),
+						'responsive' => 'desktop',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_desktop',
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .swiper-button-next.mfn-swiper-arrow:right',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Right', 'mfn-opts'),
+					'responsive' => 'desktop',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_desktop',
+				),
+
+
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .swiper-button-next.mfn-swiper-arrow:top_tablet',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Top', 'mfn-opts'),
+					'responsive' => 'tablet',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_tablet',
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .swiper-button-next.mfn-swiper-arrow:bottom_tablet',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Bottom', 'mfn-opts'),
+					'responsive' => 'tablet',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_tablet',
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .swiper-button-next.mfn-swiper-arrow:left_tablet',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Left', 'mfn-opts'),
+						'responsive' => 'tablet',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_tablet',
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .swiper-button-next.mfn-swiper-arrow:right_tablet',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Right', 'mfn-opts'),
+					'responsive' => 'tablet',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_tablet',
+				),
+
+
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .swiper-button-next.mfn-swiper-arrow:top_mobile',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Top', 'mfn-opts'),
+					'responsive' => 'mobile',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_mobile',
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .swiper-button-next.mfn-swiper-arrow:bottom_mobile',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Bottom', 'mfn-opts'),
+					'responsive' => 'mobile',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_mobile',
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .swiper-button-next.mfn-swiper-arrow:left_mobile',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Left', 'mfn-opts'),
+						'responsive' => 'mobile',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_mobile',
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .swiper-button-next.mfn-swiper-arrow:right_mobile',
+					'type' => 'text',
+					'default_unit' => 'px',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'title' => __('Right', 'mfn-opts'),
+					'responsive' => 'mobile',
+					'class' => 'mfn-toggled arrows-custom-style mfn_field_mobile',
+				),
+
+
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper.mfn-arrows-custom .mfn-swiper-arrow:transformtranslatey',
+					'condition' => array( 'id' => 'query_slider_arrows_style', 'opt' => 'is', 'val' => 'custom' ),
+					'type' => 'sliderbar',
+					'class' => 'mfn-toggled',
+					'title' => __('Translate(Y)', 'mfn-opts'),
+					'desc' => __('Moves navigation arrows along the Y-axis by the percent height', 'mfn-opts'),
+					'after' => '%',
+					'param' => array(
+						'min' => '-100',
+						'max' => '100',
+						'step' => '1',
+						'unit' => '%',
+					)
+				),
+
+				array(
+					'class' => 'mfn-builder-subheader mfn-toggled',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'title' => __('Custom arrows', 'mfn-opts'),
+				),
+
+				array(
+					'id' => 'query_display_slider_arrow_prev',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'icon',
+					'class' => 'mfn-toggled',
+					'title' => __('Prev arrow', 'mfn-opts'),
+					'preview' => 'icon',
+					'std' => 'icon-left-open-big'
+				),
+
+				array(
+					'id' => 'query_display_slider_arrow_next',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'icon',
+					'class' => 'mfn-toggled',
+					'title' => __('Next arrow', 'mfn-opts'),
+					'preview' => 'icon',
+					'std' => 'icon-right-open-big'
+				),
+
+				array(
+					'class' => 'mfn-builder-subheader mfn-toggled',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'title' => __('Size', 'mfn-opts'),
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper .mfn-swiper-arrow:--mfn-swiper-arrow-width',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'desktop',
+					'after' => 'px',
+					'class' => 'mfn-toggled mfn_field_desktop',
+					'title' => __('Width', 'mfn-opts'),
+					'param' => array(
+						'min' => '0',
+						'max' => '300',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper .mfn-swiper-arrow:--mfn-swiper-arrow-height',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'desktop',
+					'after' => 'px',
+					'class' => 'mfn-toggled mfn_field_desktop',
+					'title' => __('Height', 'mfn-opts'),
+					'param' => array(
+						'min' => '0',
+						'max' => '300',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper .mfn-swiper-arrow i:--mfn-swiper-arrow-size',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'desktop',
+					'class' => 'mfn-toggled mfn_field_desktop',
+					'title' => __('Size', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '0',
+						'max' => '300',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper .mfn-swiper-arrow:--mfn-swiper-arrow-spacing',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'desktop',
+					'class' => 'mfn-toggled mfn_field_desktop',
+					'title' => __('Offset', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '-300',
+						'max' => '300',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+
+
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper .mfn-swiper-arrow:--mfn-swiper-arrow-width_tablet',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'tablet',
+					'class' => 'mfn-toggled mfn_field_tablet',
+					'title' => __('Width', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '0',
+						'max' => '300',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper .mfn-swiper-arrow:--mfn-swiper-arrow-height_tablet',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'tablet',
+					'class' => 'mfn-toggled mfn_field_tablet',
+					'title' => __('Height', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '0',
+						'max' => '300',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper .mfn-swiper-arrow i:--mfn-swiper-arrow-size_tablet',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'tablet',
+					'class' => 'mfn-toggled mfn_field_tablet',
+					'title' => __('Size', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '0',
+						'max' => '300',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper .mfn-swiper-arrow:--mfn-swiper-arrow-spacing_tablet',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'tablet',
+					'class' => 'mfn-toggled mfn_field_tablet',
+					'title' => __('Offset', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '-300',
+						'max' => '300',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+
+
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper .mfn-swiper-arrow:--mfn-swiper-arrow-width_mobile',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'mobile',
+					'class' => 'mfn-toggled mfn_field_mobile',
+					'title' => __('Width', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '0',
+						'max' => '300',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper .mfn-swiper-arrow:--mfn-swiper-arrow-height_mobile',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'mobile',
+					'class' => 'mfn-toggled mfn_field_mobile',
+					'title' => __('Height', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '0',
+						'max' => '300',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper .mfn-swiper-arrow i:--mfn-swiper-arrow-size_mobile',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'mobile',
+					'class' => 'mfn-toggled mfn_field_mobile',
+					'title' => __('Size', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '0',
+						'max' => '300',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper .mfn-swiper-arrow:--mfn-swiper-arrow-spacing_mobile',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'type' => 'sliderbar',
+					'responsive' => 'mobile',
+					'class' => 'mfn-toggled mfn_field_mobile',
+					'title' => __('Offset', 'mfn-opts'),
+					'after' => 'px',
+					'param' => array(
+						'min' => '-300',
+						'max' => '300',
+						'step' => '1',
+						'unit' => 'px',
+					)
+				),
+
+
+
+
+
+				array(
+					'class' => 'mfn-builder-subheader mfn-toggled',
+					'title' => __('Border', 'mfn-opts'),
+				),
+
+  			array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper .mfn-swiper-arrow:border-style',
+					'attr_id' => 'border_style_qlarr',
+					'type' => 'select',
+					'class' => 'mfn-toggled',
+					'title' => __('Border style', 'mfn-opts'),
+					'options' => [
+						'none' => __('None', 'mfn-opts'),
+						'solid' => __('Solid', 'mfn-opts'),
+						'dashed' => __('Dashed', 'mfn-opts'),
+						'dotted' => __('Dotted', 'mfn-opts'),
+						'double' => __('Double', 'mfn-opts'),
+					],
+				),
+
+				array(
+  				'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper .mfn-swiper-arrow:border-width',
+  				'condition' => array( 'id' => 'border_style_qlarr', 'opt' => 'isnt', 'val' => 'none' ),
+  				'type' => 'dimensions',
+  				'title' => __('Border width', 'mfn-opts'),
+					'responsive' => 'desktop',
+					'class' => 'mfn_field_desktop mfn-toggled',
+					'css_attr' => 'border-width',
+  			),
+
+  			array(
+  				'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper .mfn-swiper-arrow:border-width_tablet',
+  				'condition' => array( 'id' => 'border_style_qlarr', 'opt' => 'isnt', 'val' => 'none' ),
+  				'type' => 'dimensions',
+  				'title' => __('Border width', 'mfn-opts'),
+					'responsive' => 'tablet',
+					'class' => 'mfn_field_tablet mfn-toggled',
+					'css_attr' => 'border-width',
+  			),
+
+  			array(
+  				'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper .mfn-swiper-arrow:border-width_mobile',
+  				'condition' => array( 'id' => 'border_style_qlarr', 'opt' => 'isnt', 'val' => 'none' ),
+  				'type' => 'dimensions',
+  				'title' => __('Border width', 'mfn-opts'),
+					'responsive' => 'mobile',
+					'class' => 'mfn_field_mobile mfn-toggled',
+					'css_attr' => 'border-width',
+  			),
+
+				array(
+  				'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper .mfn-swiper-arrow:border-radius',
+  				'type' => 'dimensions',
+  				'title' => __('Border radius', 'mfn-opts'),
+					'responsive' => 'desktop',
+					'class' => 'mfn_field_desktop mfn-toggled',
+					'css_attr' => 'border-radius',
+  			),
+
+  			array(
+  				'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper .mfn-swiper-arrow:border-radius_tablet',
+  				'type' => 'dimensions',
+  				'title' => __('Border radius', 'mfn-opts'),
+					'responsive' => 'tablet',
+					'class' => 'mfn_field_tablet mfn-toggled',
+					'css_attr' => 'border-radius',
+  			),
+
+  			array(
+  				'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper .mfn-swiper-arrow:border-radius_mobile',
+  				'type' => 'dimensions',
+  				'title' => __('Border radius', 'mfn-opts'),
+					'responsive' => 'mobile',
+					'class' => 'mfn_field_mobile mfn-toggled',
+					'css_attr' => 'border-radius',
+  			),
+
+  			array(
+  				'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper .mfn-swiper-arrow:box-shadow',
+  				'type' => 'box_shadow',
+  				'title' => __('Box shadow', 'mfn-opts'),
+					'class' => 'mfn-toggled',
+					'css_attr' => 'box-shadow',
+  			),
+
+				array(
+					'class' => 'mfn-builder-subheader mfn-toggled',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'title' => __('Color', 'mfn-opts'),
+				),
+
+
+				array(
+					'type' => 'html',
+					'condition' => array( 'id' => 'query_display', 'opt' => 'is', 'val' => 'slider' ),
+					'html' => '<div class="mfn-form-row mfn-sidebar-fields-tabs mfn-toggled mfn-vb-formrow mfn-vb-mfnuidhere"><ul class="mfn-sft-nav"><li class="active"><a href="#normal" data-tab="normal">Normal</a></li><li><a href="#hover" data-tab="hover">Hover</a></li></ul><div class="mfn-sft mfn-sft-normal mfn-tabs-fields-active">',
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper .mfn-swiper-arrow:--swiper-navigation-color',
+					'type' => 'color',
+					'class' => 'mfn-toggled',
+					'title' => __('Color', 'mfn-opts'),
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper .mfn-swiper-arrow:background-color',
+					'type' => 'color',
+					'class' => 'mfn-toggled',
+					'title' => __('Background', 'mfn-opts'),
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper .mfn-swiper-arrow:border-color',
+					'condition' => array( 'id' => 'border_style_qlarr', 'opt' => 'isnt', 'val' => 'none' ),
+					'type' => 'color',
+					'class' => 'mfn-toggled',
+					'title' => __('Border color', 'mfn-opts'),
+				),
+
+				array(
+					'type' => 'html',
+					'html' => '</div><div class="mfn-sft mfn-sft-hover">',
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper .mfn-swiper-arrow|hover:--swiper-navigation-color',
+					'type' => 'color',
+					'class' => 'mfn-toggled',
+					'title' => __('Color', 'mfn-opts'),
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper .mfn-swiper-arrow|hover:background-color',
+					'type' => 'color',
+					'class' => 'mfn-toggled',
+					'title' => __('Background', 'mfn-opts'),
+				),
+
+				array(
+					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement.mfn-looped-items-slider-wrapper .mfn-swiper-arrow|hover:border-color',
+					'condition' => array( 'id' => 'border_style_qlarr', 'opt' => 'isnt', 'val' => 'none' ),
+					'type' => 'color',
+					'class' => 'mfn-toggled',
+					'title' => __('Border color', 'mfn-opts'),
+				),
+
+				array(
+					'type' => 'html',
+					'html' => '</div></div>',
+				),
+
+
+
+
+
+
+
+
+
+
+
+
+
+  			array(
+					'type' => 'html',
+					'html' => '</div>', // end: modalbox-card
+				),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 				array(
 					'type' => 'html',
@@ -2466,7 +6483,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
   			),
 
   			array(
-  				'class' => 'toggled_header',
+  				'class' => 'toggled_header hide_if_ql',
 					'title' => __('Positioning', 'mfn-opts'),
 				),
 
@@ -2745,7 +6762,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner:position',
 					'attr_id' => 'wrap_position',
 					'type' => 'select',
-					'class' => 'mfn-toggled',
+					'class' => 'mfn-toggled custom-element-position',
 					'title' => __('Position', 'mfn-opts'),
 					'options' => [
 						'' => __('Default', 'mfn-opts'),
@@ -2756,33 +6773,37 @@ if( ! class_exists('Mfn_Builder_Fields') )
 				array(
 					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner:top',
 					'type' => 'text',
+					'default_unit' => 'px',
 					'condition' => array( 'id' => 'wrap_position', 'opt' => 'isnt', 'val' => '' ),
 					'title' => __('Top', 'mfn-opts'),
-					'class' => 'mfn-toggled',
+					'class' => 'mfn-toggled custom-abs-offset-values',
 				),
 
 				array(
 					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner:bottom',
 					'type' => 'text',
+					'default_unit' => 'px',
 					'condition' => array( 'id' => 'wrap_position', 'opt' => 'isnt', 'val' => '' ),
 					'title' => __('Bottom', 'mfn-opts'),
-					'class' => 'mfn-toggled',
+					'class' => 'mfn-toggled custom-abs-offset-values',
 				),
 
 				array(
 					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner:left',
 					'type' => 'text',
+					'default_unit' => 'px',
 					'condition' => array( 'id' => 'wrap_position', 'opt' => 'isnt', 'val' => '' ),
 					'title' => __('Left', 'mfn-opts'),
-						'class' => 'mfn-toggled',
+					'class' => 'mfn-toggled custom-abs-offset-values',
 				),
 
 				array(
 					'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner:right',
 					'type' => 'text',
+					'default_unit' => 'px',
 					'condition' => array( 'id' => 'wrap_position', 'opt' => 'isnt', 'val' => '' ),
 					'title' => __('Right', 'mfn-opts'),
-					'class' => 'mfn-toggled',
+					'class' => 'mfn-toggled custom-abs-offset-values',
 				),
 
   			array(
@@ -2832,6 +6853,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
   				'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner:background-image',
   				'condition' => array( 'id' => 'background_switcher', 'opt' => 'is', 'val' => 'default' ),
   				'oldid' => 'bg_color',
+  				'dynamic_data' => 'featured_image',
   				'type' => 'upload',
   				'title' => __('Image', 'mfn-opts'),
   				'responsive' => 'desktop',
@@ -2843,6 +6865,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
   				'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner:background-image_tablet',
   				'condition' => array( 'id' => 'background_switcher', 'opt' => 'is', 'val' => 'default' ),
   				'oldid' => 'bg_image',
+  				'dynamic_data' => 'featured_image',
   				'type' => 'upload',
   				'title' => __('Image', 'mfn-opts'),
   				'responsive' => 'tablet',
@@ -2854,6 +6877,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
   				'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner:background-image_mobile',
   				'condition' => array( 'id' => 'background_switcher', 'opt' => 'is', 'val' => 'default' ),
   				'type' => 'upload',
+  				'dynamic_data' => 'featured_image',
   				'title' => __('Image', 'mfn-opts'),
   				'responsive' => 'mobile',
 					'class' => 'mfn_field_mobile',
@@ -3120,10 +7144,35 @@ if( ! class_exists('Mfn_Builder_Fields') )
   				'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner|hover:background-image',
   				'condition' => array( 'id' => 'background_switcher_hover', 'opt' => 'is', 'val' => 'default' ),
   				'oldid' => 'bg_color',
+  				'dynamic_data' => 'featured_image',
   				'type' => 'upload',
   				'title' => __('Image', 'mfn-opts'),
   				'responsive' => 'desktop',
 					'class' => 'mfn_field_desktop',
+					'css_attr' => 'background-image',
+  			),
+
+  			array(
+  				'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner|hover:background-image_tablet',
+  				'condition' => array( 'id' => 'background_switcher_hover', 'opt' => 'is', 'val' => 'default' ),
+  				'oldid' => 'bg_color',
+  				'dynamic_data' => 'featured_image',
+  				'type' => 'upload',
+  				'title' => __('Image', 'mfn-opts'),
+  				'responsive' => 'tablet',
+					'class' => 'mfn_field_tablet',
+					'css_attr' => 'background-image',
+  			),
+
+  			array(
+  				'id' => 'style:.mcb-section .mcb-wrap-mfnuidelement .mcb-wrap-inner|hover:background-image_mobile',
+  				'condition' => array( 'id' => 'background_switcher_hover', 'opt' => 'is', 'val' => 'default' ),
+  				'oldid' => 'bg_color',
+  				'dynamic_data' => 'featured_image',
+  				'type' => 'upload',
+  				'title' => __('Image', 'mfn-opts'),
+  				'responsive' => 'mobile',
+					'class' => 'mfn_field_mobile',
 					'css_attr' => 'background-image',
   			),
 
@@ -3821,7 +7870,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
    						'id' => 'menu_display',
    						'type' => 'select',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Menu to display', 'mfn-opts'),
 							'options' => mfna_menu(),
 							'js_options' => 'menus',
@@ -3831,7 +7880,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    						'id' => 'menu_style',
    						'attr_id' => 'menu_style',
    						'type' => 'select',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Style', 'mfn-opts'),
 							'options' => array(
 								'vertical' => __('Vertical', 'mfn-opts'),
@@ -4075,7 +8124,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
    						'id' => 'menu_display',
    						'type' => 'select',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Menu to display', 'mfn-opts'),
 							'options' => mfna_menu(),
 							'js_options' => 'menus',
@@ -4085,7 +8134,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    						'id' => 'menu_style',
    						'attr_id' => 'menu_style',
    						'type' => 'select',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Style', 'mfn-opts'),
 							'options' => array(
 								'vertical' => __('Vertical', 'mfn-opts'),
@@ -4193,7 +8242,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
 							'id' => 'submenu_on',
 							'attr_id' => 'submenu_on',
-							're_render' => 'standard',
+							're_render' => true,
 							'condition' => array( 'id' => 'menu_style', 'opt' => 'is', 'val' => 'vertical' ),
 							'type' => 'switch',
 							'title' => __('Submenu visibility', 'mfn-opts'),
@@ -4206,7 +8255,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
 						array(
 							'id' => 'submenu_hori_on',
-							're_render' => 'standard',
+							're_render' => true,
 							'condition' => array( 'id' => 'menu_style', 'opt' => 'is', 'val' => 'horizontal' ),
 							'type' => 'switch',
 							'title' => __('Submenu visibility', 'mfn-opts'),
@@ -4265,7 +8314,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
 							'id' => 'submenu',
 							'attr_id' => 'submenu',
-							're_render' => 'standard',
+							're_render' => true,
 							'type' => 'switch',
 							'title' => __('Submenu', 'mfn-opts'),
 							'options' => array(
@@ -5331,6 +9380,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
    						'id' => 'image',
    						'type' => 'upload',
+   						'dynamic_data' => 'featured_image',
    						'title' => __('Logo', 'mfn-opts'),
    						'desc' => __('Recommended svg', 'mfn-opts'),
 							'std' => mfn_opts_get('logo-img') ? mfn_opts_get('logo-img') : $this->get_placeholder(),
@@ -5434,7 +9484,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
    						'id' => 'menu_display',
    						'type' => 'select',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Menu to display', 'mfn-opts'),
 							'options' => mfna_menu(),
 							'js_options' => 'menus',
@@ -6857,7 +10907,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
    						'id' => 'menu_display',
    						'type' => 'select',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Menu to display', 'mfn-opts'),
 							'options' => mfna_menu(),
 							'js_options' => 'menus',
@@ -6878,7 +10928,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'menu_pos',
    						'type' => 'select',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Sidebar position', 'mfn-opts'),
 							'options' => array(
 								'left' => __('Left', 'mfn-opts'),
@@ -9119,7 +13169,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
 							'id' => 'type',
 							'attr_id' => 'header_icon_type',
-							're_render' => 'standard',
+							're_render' => true,
 							'type' => 'select',
 							'title' => __('Icon type', 'mfn-opts'),
 							'options' => array(
@@ -9171,7 +13221,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 							'id' => 'cart_total',
 							'condition' => array( 'id' => 'header_icon_type', 'opt' => 'is', 'val' => 'cart' ),
 							'type' => 'switch',
-							're_render' => 'standard',
+							're_render' => true,
 							'title' => __('Cart total ', 'mfn-opts'),
 							'options' => array(
 								'0' => 'Hide',
@@ -9185,7 +13235,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 							'attr_id' => 'header_icon_count',
 							'condition' => array( 'id' => 'header_icon_type', 'opt' => 'is', 'val' => array('wishlist', 'cart') ),
 							'type' => 'switch',
-							're_render' => 'standard',
+							're_render' => true,
 							'title' => __('Icon count', 'mfn-opts'),
 							'options' => array(
 								'0' => 'Hide',
@@ -10350,7 +14400,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'slider_speed',
-   						're_render' => 'tabs',
+   						're_render' => true,
    						'type' => 'text',
    						'title' => __('Autoplay speed', 'mfn-opts'),
    						'std' => '3',
@@ -10493,7 +14543,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
    						'id' => 'products',
    						'type' => 'text',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Products per page', 'mfn-opts'),
    						'std' => '12',
    						'after' => 'products',
@@ -10505,7 +14555,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'layout',
    						'type' => 'select',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Columns', 'mfn-opts'),
 							'options' => array(
 								'grid' => __('Grid, 3 columns', 'mfn-opts'),
@@ -10524,7 +14574,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
 						array(
 							'id' => 'description',
-							're_render' => 'standard',
+							're_render' => true,
 							'type' => 'switch',
 							'title' => __('Description', 'mfn-opts'),
 							'options' => array(
@@ -10537,7 +14587,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
 						array(
 							'id' => 'button',
-							're_render' => 'standard',
+							're_render' => true,
 							'type' => 'switch',
 							'title' => __('Add to cart button', 'mfn-opts'),
 							'desc' => __('Required for some plugins', 'mfn-opts'),
@@ -10552,7 +14602,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
 							'id' => 'title_tag',
 							'type' => 'switch',
-							're_render' => 'standard',
+							're_render' => true,
 							'title' => __('Title tag', 'mfn-opts'),
 							'options' => [
 								'h1' => 'H1',
@@ -10576,7 +14626,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
 							'id' => 'order',
 							'type' => 'order',
-							're_render' => 'standard',
+							're_render' => true,
 							'title' => __('Order', 'mfn-opts'),
 							'std' => 'image,title,price,description,button',
 						),
@@ -11490,7 +15540,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
 							'id' => 'title_tag',
 							'type' => 'switch',
-							're_render' => 'standard',
+							're_render' => true,
 							'title' => __('Title tag', 'mfn-opts'),
 							'options' => [
 								'h1' => 'H1',
@@ -11610,7 +15660,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
 							'id' => 'title_tag',
 							'type' => 'switch',
-							're_render' => 'standard',
+							're_render' => true,
 							'title' => __('Title tag', 'mfn-opts'),
 							'options' => [
 								'h1' => 'H1',
@@ -12424,7 +16474,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
 							'id' => 'breadcrumb_delimiter',
 							'type' => 'text',
-							're_render' => 'standard',
+							're_render' => true,
 							'title' => __('Delimiter', 'mfn-opts'),
 							'std' => '/',
 						),
@@ -12432,7 +16482,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
 							'id' => 'breadcrumb_home',
 							'type' => 'switch',
-							're_render' => 'standard',
+							're_render' => true,
 							'title' => __('Home page', 'mfn-opts'),
 							'options' => [
 								'0' => 'No',
@@ -13251,7 +17301,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 							'id' => 'layout',
 							'attr_id' => 'prod_meta_layout',
 							'type' => 'switch',
-							're_render' => 'standard',
+							're_render' => true,
 							'title' => __('Layout', 'mfn-opts'),
 							'options' => [
 								'inline' => __('Inline', 'mfn-opts'),
@@ -13553,7 +17603,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
 							'id' => 'title',
 							'type' => 'switch',
-							're_render' => 'standard',
+							're_render' => true,
 							'title' => __('Title', 'mfn-opts'),
 							'options' => [
 								'0' => __('Hide', 'mfn-opts'),
@@ -13708,7 +17758,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
    						'id' => 'products',
    						'type' => 'text',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Products per page', 'mfn-opts'),
    						'std' => '4',
    						'after' => 'products',
@@ -13719,7 +17769,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
    						'id' => 'columns',
    						'type' => 'text',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Columns', 'mfn-opts'),
    						'std' => '4',
    						'after' => 'columns',
@@ -13736,7 +17786,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
 							'id' => 'button',
 							'type' => 'switch',
-							're_render' => 'standard',
+							're_render' => true,
 							'title' => __('Add to cart button', 'mfn-opts'),
 							'desc' => __('Required for some plugins', 'mfn-opts'),
 							'options' => array(
@@ -13749,7 +17799,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
 							'id' => 'description',
 							'type' => 'switch',
-							're_render' => 'standard',
+							're_render' => true,
 							'title' => __('Description', 'mfn-opts'),
 							'options' => array(
 								'0' => __('Hide', 'mfn-opts'),
@@ -13765,7 +17815,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
 							'id' => 'order',
 							'type' => 'order',
-							're_render' => 'standard',
+							're_render' => true,
 							'title' => __('Order', 'mfn-opts'),
 							'std' => 'image,title,price,description,button',
 						),
@@ -13773,7 +17823,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
 							'id' => 'title_tag',
 							'type' => 'switch',
-							're_render' => 'standard',
+							're_render' => true,
 							'title' => __('Title tag', 'mfn-opts'),
 							'options' => [
 								'h1' => 'H1',
@@ -14619,7 +18669,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
 						array(
    						'id' => 'products',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'text',
    						'title' => __('Products per page', 'mfn-opts'),
    						'std' => '4',
@@ -14630,7 +18680,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
 						array(
    						'id' => 'columns',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'text',
    						'title' => __('Columns', 'mfn-opts'),
    						'std' => '4',
@@ -14648,7 +18698,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
 							'id' => 'button',
 							'type' => 'switch',
-							're_render' => 'standard',
+							're_render' => true,
 							'title' => __('Add to cart button', 'mfn-opts'),
 							'desc' => __('Required for some plugins', 'mfn-opts'),
 							'options' => array(
@@ -14661,7 +18711,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
 							'id' => 'description',
 							'type' => 'switch',
-							're_render' => 'standard',
+							're_render' => true,
 							'title' => __('Description', 'mfn-opts'),
 							'options' => array(
 								'0' => __('Hide', 'mfn-opts'),
@@ -14677,7 +18727,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
 							'id' => 'order',
 							'type' => 'order',
-							're_render' => 'standard',
+							're_render' => true,
 							'title' => __('Order', 'mfn-opts'),
 							'std' => 'image,title,price,description,button',
 						),
@@ -14685,7 +18735,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
 							'id' => 'title_tag',
 							'type' => 'switch',
-							're_render' => 'standard',
+							're_render' => true,
 							'title' => __('Title tag', 'mfn-opts'),
 							'options' => [
 								'h1' => 'H1',
@@ -15541,7 +19591,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 							'attr_id' => 'divider-2-type',
 							'type' => 'select',
 							'title' => __('Type', 'mfn-opts'),
-							're_render' => 'standard',
+							're_render' => true,
 							'options' => array(
 								'' => 'Empty',
 
@@ -15592,7 +19642,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 							'id' => 'align',
 							'type' => 'switch',
 							'title' => __('Alignment', 'mfn-opts'),
-							're_render' => 'standard',
+							're_render' => true,
 							'options' => array(
 								'start' => __('Start', 'mfn-opts'),
 								'center' => __('Center', 'mfn-opts'),
@@ -15607,7 +19657,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 							'id' => 'align_tablet',
 							'type' => 'switch',
 							'title' => __('Alignment', 'mfn-opts'),
-							're_render' => 'standard',
+							're_render' => true,
 							'options' => array(
 								'start' => __('Start', 'mfn-opts'),
 								'center' => __('Center', 'mfn-opts'),
@@ -15623,7 +19673,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 							'id' => 'align_mobile',
 							'type' => 'switch',
 							'title' => __('Alignment', 'mfn-opts'),
-							're_render' => 'standard',
+							're_render' => true,
 							'options' => array(
 								'start' => __('Start', 'mfn-opts'),
 								'center' => __('Center', 'mfn-opts'),
@@ -15744,7 +19794,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 							'attr_id' => 'divider-2-addon',
 							'type' => 'select',
 							'title' => __('Addon', 'mfn-opts'),
-							're_render' => 'standard',
+							're_render' => true,
 							'options' => array(
 								'' => 'None',
 								'label' => 'Label',
@@ -15759,7 +19809,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 							'type' => 'text',
 							'title' => __('Label', 'mfn-opts'),
 							'condition' => array( 'id' => 'divider-2-addon', 'opt' => 'is', 'val' => 'label' ),
-							're_render' => 'standard',
+							're_render' => true,
 							'std' => ''
 						),
 
@@ -15768,7 +19818,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 							'type' => 'upload',
 							'title' => __('Image', 'mfn-opts'),
 							'condition' => array( 'id' => 'divider-2-addon', 'opt' => 'is', 'val' => 'image' ),
-							're_render' => 'standard',
+							're_render' => true,
 							'std' => ''
 						),
 
@@ -15777,7 +19827,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 							'type' => 'icon',
 							'title' => __('Icon', 'mfn-opts'),
 							'condition' => array( 'id' => 'divider-2-addon', 'opt' => 'is', 'val' => 'icon' ),
-							're_render' => 'standard',
+							're_render' => true,
 							'std' => ''
 						),
 
@@ -16266,7 +20316,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'height',
    						'type' => 'text',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Height', 'mfn-opts'),
 							'param' => 'number',
 							'class' => 'narrow',
@@ -16277,7 +20327,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    						'id' => 'style',
 							'attr_id' => 'divider_style',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Style', 'mfn-opts'),
    						'options' => array(
    							'default' => __('Default', 'mfn-opts'),
@@ -16290,7 +20340,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'line',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Line', 'mfn-opts'),
 							'condition' => array( 'id' => 'divider_style', 'opt' => 'is', 'val' => 'default' ),
    						'options' => array(
@@ -16305,7 +20355,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'color',
    						'type' => 'color',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Color', 'mfn-opts'),
 							'alpha' => true,
    					),
@@ -16313,7 +20363,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'themecolor',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Theme color', 'mfn-opts'),
    						'desc' => __('Overwrites color selected above', 'mfn-opts'),
    						'options' => array(
@@ -16474,7 +20524,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'open1st',
-   						're_render' => 'tabs',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Open first', 'mfn-opts'),
    						'options' => array(
@@ -16486,7 +20536,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'openAll',
-   						're_render' => 'tabs',
+   						're_render' => true,
    						'type' => 'switch',
 							'title' => __('Open all', 'mfn-opts'),
    						'options' => array(
@@ -18222,7 +22272,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'count',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'text',
    						'title' => __('Posts number', 'mfn-opts'),
    						'std' => '3',
@@ -18234,7 +22284,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'style',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'select',
    						'title' => __('Style', 'mfn-opts'),
    						'options' => array(
@@ -18252,7 +22302,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'columns',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Columns', 'mfn-opts'),
    						'desc' => __('for style: Grid, Masonry, Photo 2', 'mfn-opts'),
@@ -18268,7 +22318,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
 						array(
    						'id' => 'title_tag',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Title tag', 'mfn-opts'),
    						'options' => array(
@@ -18283,7 +22333,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'images',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Post image', 'mfn-opts'),
    						'desc' => __('for all styles except Masonry tiles', 'mfn-opts'),
@@ -18301,17 +22351,17 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'category',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'select',
    						'title' => __('Category', 'mfn-opts'),
    						'options' => mfn_get_categories('category'),
-   						'js_options' => 'blog_categories',
+   						'js_hierarchical_options' => 'blog_categories',
    						'preview' => 'category',
    					),
 
    					array(
    						'id' => 'category_multi',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'text',
    						'title' => __('Multiple categories', 'mfn-opts'),
    						'desc' => __('Slugs should be separated with <b>coma</b> ( , )', 'mfn-opts'),
@@ -18320,7 +22370,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'orderby',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Order by', 'mfn-opts'),
    						'desc' => __('Do <b>not</b> use random order with pagination or load more', 'mfn-opts'),
@@ -18334,7 +22384,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'order',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Order', 'mfn-opts'),
    						'options' => array(
@@ -18352,15 +22402,28 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'exclude_id',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'text',
    						'title' => __('Exclude posts', 'mfn-opts'),
    						'desc' => __('IDs should be separated with <b>coma</b> ( , )', 'mfn-opts'),
    					),
 
+						array(
+   						'id' => 'related',
+   						're_render' => true,
+   						'type' => 'switch',
+   						'title' => __('Use as related posts', 'mfn-opts'),
+   						'desc' => __('Exclude current post on single post page. This option will overwrite exclude posts option above.', 'mfn-opts'),
+   						'options' => array(
+   							0 => __('Disable', 'mfn-opts'),
+   							1 => __('Enable', 'mfn-opts'),
+   						),
+							'std' => 0,
+   					),
+
    					array(
    						'id' => 'filters',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'select',
    						'title' => __('Filters', 'mfn-opts'),
    						'desc' => __('for style: Masonry and category: All<br />Does <b>not</b> work with pagination or load more', 'mfn-opts'),
@@ -18376,7 +22439,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
 						array(
    						'id' => 'excerpt',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
 							'title' => __('Excerpt', 'mfn-opts'),
    						'options' => array(
@@ -18388,7 +22451,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'more',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
 							'title' => __('Read more', 'mfn-opts'),
    						'options' => array(
@@ -18406,7 +22469,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'pagination',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Pagination', 'mfn-opts'),
    						'desc' => __('Does <b>not</b> work on WMPL homepage', 'mfn-opts'),
@@ -18419,7 +22482,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'load_more',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Load more', 'mfn-opts'),
    						'desc' => __('Sliders will be replaced with featured images', 'mfn-opts'),
@@ -19387,7 +23450,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
    						'id' => 'count',
    						'type' => 'text',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Posts number', 'mfn-opts'),
    						'std' => '5',
 							'after' => 'posts',
@@ -19399,7 +23462,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'style',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Style', 'mfn-opts'),
    						'options' => array(
    							'' => __('Default', 'mfn-opts'),
@@ -19416,17 +23479,17 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'category',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'select',
    						'title' => __('Category', 'mfn-opts'),
    						'options' => mfn_get_categories('category'),
-   						'js_options' => 'blog_categories',
+   						'js_hierarchical_options' => 'blog_categories',
    						'preview' => 'category',
    					),
 
    					array(
    						'id' => 'category_multi',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'text',
    						'title' => __('Multiple categories', 'mfn-opts'),
    						'desc' => __('Slugs should be separated with <b>coma</b> ( , )', 'mfn-opts'),
@@ -19436,7 +23499,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'orderby',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Order by', 'mfn-opts'),
    						'desc' => __('Do <b>not</b> use random order with pagination or load more', 'mfn-opts'),
    						'options' => array(
@@ -19450,7 +23513,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'order',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Order', 'mfn-opts'),
    						'options' => array(
 								'DESC' => __('Descending', 'mfn-opts'),
@@ -19468,7 +23531,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'excerpt',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Excerpt', 'mfn-opts'),
    						'options' => array(
    							0 => __('Hide', 'mfn-opts'),
@@ -19481,14 +23544,14 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'link',
    						'type' => 'text',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Button link', 'mfn-opts'),
    					),
 
    					array(
    						'id' => 'link_title',
    						'type' => 'text',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Button title', 'mfn-opts'),
    					),
 
@@ -20025,7 +24088,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    						'id' => 'style',
    						'attr_id' => 'blog_slider_style',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Style', 'mfn-opts'),
    						'options' => array(
    							'' => __('Default', 'mfn-opts'),
@@ -20049,7 +24112,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
    						'id' => 'count',
    						'type' => 'text',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Posts number', 'mfn-opts'),
    						'std' => '5',
 							'after' => 'posts',
@@ -20067,17 +24130,17 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'category',
    						'type' => 'select',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Category', 'mfn-opts'),
    						'options' => mfn_get_categories('category'),
-   						'js_options' => 'blog_categories',
+   						'js_hierarchical_options' => 'blog_categories',
 							'preview' => 'category',
    					),
 
    					array(
    						'id' => 'category_multi',
    						'type' => 'text',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Multiple categories', 'mfn-opts'),
    						'desc' => __('Slugs should be separated with <b>coma</b> ( , )', 'mfn-opts'),
 							'preview' => 'category-all',
@@ -20086,7 +24149,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'orderby',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Order by', 'mfn-opts'),
    						'desc' => __('Do <b>not</b> use random order with pagination or load more', 'mfn-opts'),
    						'options' => array(
@@ -20100,7 +24163,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'order',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Order', 'mfn-opts'),
    						'options' => array(
 								'DESC' => __('Descending', 'mfn-opts'),
@@ -20119,7 +24182,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
 							'id' => 'one_post_per_slide',
 							'type' => 'switch',
-							're_render' => 'standard',
+							're_render' => true,
 							'title' => __('One post per slide', 'mfn-opts'),
 							'desc' => __('Display single post per slide, instead few of them', 'mfn-opts'),
 							'options' => array(
@@ -20129,11 +24192,24 @@ if( ! class_exists('Mfn_Builder_Fields') )
 							'std' => 0,
 						),
 
+						array(
+   						'id' => 'excerpt',
+   						'type' => 'switch',
+   						're_render' => true,
+   						'title' => __('Excerpt', 'mfn-opts'),
+   						'options' => array(
+								'' => __('Hide', 'mfn-opts'),
+   							'1' => __('Show', 'mfn-opts'),
+
+   						),
+   						'std' => ''
+   					),
+
    					array(
    						'id' => 'more',
    						'condition' => array( 'id' => 'blog_slider_style', 'opt' => 'is', 'val' => '' ),
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Read more', 'mfn-opts'),
    						'options' => array(
    							0 => __('Hide', 'mfn-opts'),
@@ -20146,7 +24222,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    						'id' => 'navigation',
    						'condition' => array( 'id' => 'blog_slider_style', 'opt' => 'is', 'val' => '' ),
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Navigation', 'mfn-opts'),
    						'options' => array(
    							'' => __('Default', 'mfn-opts'),
@@ -20385,6 +24461,56 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
 		  			array(
 							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .blog_slider_ul li .desc h4:typography',
+							'type' => 'typography_vb',
+							'label_after' => '<a href="#" title="Edit" class="mfn-option-btn mfn-option-blank btn-medium mfn-vb-label-button"><span class="mfn-icon mfn-icon-edit"></span></a>',
+							'class' => 'mfn-toggled toggle_fields',
+							'title' => __('Typography', 'mfn-opts'),
+						),
+
+						array(
+							'class' => 'toggled_header',
+   						'title' => __('Excerpt', 'mfn-opts'),
+   					),
+
+		  			array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .blog_slider_ul li .desc .post_excerpt:color',
+							'type' => 'color',
+							'class' => 'main-color mfn-toggled',
+							'title' => __('Color', 'mfn-opts'),
+						),
+
+						array(
+		  				'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .blog_slider_ul li .desc .post_excerpt:margin',
+		  				'type' => 'dimensions',
+		  				'version' => 'separated-fields',
+		  				'title' => __('Margin', 'mfn-opts'),
+							'responsive' => 'desktop',
+							'class' => 'mfn_field_desktop mfn-toggled',
+							'css_attr' => 'margin',
+		  			),
+
+		  			array(
+		  				'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .blog_slider_ul li .desc .post_excerpt:margin_tablet',
+		  				'type' => 'dimensions',
+		  				'version' => 'separated-fields',
+		  				'title' => __('Margin', 'mfn-opts'),
+							'responsive' => 'tablet',
+							'class' => 'mfn_field_tablet mfn-toggled',
+							'css_attr' => 'margin',
+		  			),
+
+		  			array(
+		  				'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .blog_slider_ul li .desc .post_excerpt:margin_mobile',
+		  				'type' => 'dimensions',
+		  				'version' => 'separated-fields',
+		  				'title' => __('Margin', 'mfn-opts'),
+							'responsive' => 'mobile',
+							'class' => 'mfn_field_mobile mfn-toggled',
+							'css_attr' => 'margin',
+		  			),
+
+		  			array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .blog_slider_ul li .desc .post_excerpt:typography',
 							'type' => 'typography_vb',
 							'label_after' => '<a href="#" title="Edit" class="mfn-option-btn mfn-option-blank btn-medium mfn-vb-label-button"><span class="mfn-icon mfn-icon-edit"></span></a>',
 							'class' => 'mfn-toggled toggle_fields',
@@ -21034,7 +25160,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'title_tag',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Title tag', 'mfn-opts'),
    						'desc' => __('Title tag for 1st item, others use a smaller one', 'mfn-opts'),
    						'options' => array(
@@ -21057,17 +25183,17 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'category',
    						'type' => 'select',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Category', 'mfn-opts'),
    						'options' => mfn_get_categories('category'),
-   						'js_options' => 'blog_categories',
+   						'js_hierarchical_options' => 'blog_categories',
 							'preview' => 'category',
    					),
 
    					array(
    						'id' => 'category_multi',
    						'type' => 'text',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Multiple categories', 'mfn-opts'),
    						'desc' => __('Slugs should be separated with <b>coma</b> ( , )', 'mfn-opts'),
 							'preview' => 'category-all',
@@ -21075,7 +25201,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'orderby',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Order by', 'mfn-opts'),
    						'desc' => __('Do <b>not</b> use random order with pagination or load more', 'mfn-opts'),
@@ -21089,7 +25215,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'order',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Order', 'mfn-opts'),
    						'options' => array(
@@ -21109,7 +25235,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'margin',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Margin', 'mfn-opts'),
    						'options' => array(
 								'0' => __('Disable', 'mfn-opts'),
@@ -21533,6 +25659,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    						'type' => 'text',
    						'edit_tag' => '.button | span.button_label',
    						'edit_position' => 'append',
+   						'dynamic_data' => 'title',
    						'title' => __('Title', 'mfn-opts'),
 							'std' => __('Click here', 'mfn-opts'),
 							'preview' => 'title',
@@ -21541,6 +25668,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'link',
    						'type' => 'text',
+   						'dynamic_data' => 'permalink',
    						'title' => __('Link', 'mfn-opts'),
    					),
 
@@ -21610,7 +25738,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'button_style',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Style', 'mfn-opts'),
    						'options' => array(
@@ -21631,6 +25759,13 @@ if( ! class_exists('Mfn_Builder_Fields') )
 							'type' => 'text',
 							'title' => __('Class', 'mfn-opts'),
 							'desc' => __('This option is useful when you want to use <b>scroll</b>', 'mfn-opts'),
+						),
+
+						array(
+							'id' => 'button_id',
+							'type' => 'text',
+							'title' => __('ID', 'mfn-opts'),
+							'desc' => __('This option is useful when you want to use <b>GTM</b>', 'mfn-opts'),
 						),
 
 						array(
@@ -22656,7 +26791,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'percent',
    						'type' => 'text',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Percent', 'mfn-opts'),
    						'desc' => __('0-100', 'mfn-opts'),
 							'param' => 'number',
@@ -22808,7 +26943,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'color',
    						'type' => 'color',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'class' => 'mfn-toggled',
    						'title' => __('Color', 'mfn-opts'),
    						'desc' => __('Overrides color set in Theme Options', 'mfn-opts'),
@@ -22857,7 +26992,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'in_row',
    						'type' => 'text',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Items in row', 'mfn-opts'),
    						'desc' => __('Recommended: 3-6', 'mfn-opts'),
 							'after' => 'items',
@@ -22871,7 +27006,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    						'id' => 'style',
    						'type' => 'switch',
    						'attr_id' => 'clients_style',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Style', 'mfn-opts'),
    						'options' => array(
    							'' => __('Default', 'mfn-opts'),
@@ -22889,17 +27024,17 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'category',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'select',
    						'title' => __('Category', 'mfn-opts'),
    						'options' => mfn_get_categories('client-types'),
-   						'js_options' => 'client_types',
+   						'js_hierarchical_options' => 'client_types',
 							'preview' => 'category',
    					),
 
    					array(
    						'id' => 'orderby',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Order by', 'mfn-opts'),
    						'options' => array(
@@ -22913,7 +27048,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'order',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Order', 'mfn-opts'),
    						'options' => array(
@@ -23110,17 +27245,17 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'category',
    						'type' => 'select',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Category', 'mfn-opts'),
    						'options' => mfn_get_categories('client-types'),
-   						'js_options' => 'client_types',
+   						'js_hierarchical_options' => 'client_types',
 							'preview' => 'category',
    					),
 
    					array(
    						'id' => 'orderby',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Order by', 'mfn-opts'),
    						'options' => array(
    							'date' => __('Date', 'mfn-opts'),
@@ -23134,7 +27269,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'order',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Order', 'mfn-opts'),
    						'options' => array(
 								'DESC' => __('Descending', 'mfn-opts'),
@@ -23146,7 +27281,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
 							'id' => 'per_slide',
 							'type' => 'sliderbar',
-							're_render' => 'standard',
+							're_render' => true,
 							'title' => __('Clients per slide', 'mfn-opts'),
 							'desc' => __('The amount will be automatically reduced in the narrow screen', 'mfn-opts'),
 							'param' => array(
@@ -23158,9 +27293,21 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						),
 
 						array(
+							'id' => 'scroll',
+							'type' => 'switch',
+							're_render' => true,
+							'title' => __('Slides to scroll', 'mfn-opts'),
+							'options' => array(
+								'' => __('One slide', 'mfn-opts'),
+								'1' => __('One client', 'mfn-opts'),
+							),
+							'std' => '',
+						),
+
+						array(
    						'id' => 'navigation',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Navigation position', 'mfn-opts'),
    						'options' => array(
 								'' => __('Header', 'mfn-opts'),
@@ -23626,6 +27773,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    						'type' => $this->get_column_editor(), // textarea, visual
    						'title' => __('Content', 'mfn-opts'),
    						'class' => 'form-content-full-width',
+   						'dynamic_data' => 'content',
 							'editor' => 'full', // basic (bold, i, etc), full (media, shortcodes)
 							'preview' => 'content',
 							'vbstd' => '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>',
@@ -24124,7 +28272,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'date',
    						'type' => 'text',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Launch date', 'mfn-opts'),
    						'desc' => __('month/day/year hour:minute:second', 'mfn-opts'),
    						'std' => '12/30/2022 12:00:00',
@@ -24134,7 +28282,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'timezone',
    						'type' => 'select',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Timezone', 'mfn-opts'),
    						'options' => mfna_utc(),
    						'std' => '0',
@@ -24148,7 +28296,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'show',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'select',
    						'title' => __('Show', 'mfn-opts'),
    						'options' => array(
@@ -24550,7 +28698,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'type',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Style', 'mfn-opts'),
    						'desc' => __('Vertical style works for column widths: 1/4, 1/3 & 1/2', 'mfn-opts'),
    						'options' => array(
@@ -25119,7 +29267,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'style',
    						'type' => 'select',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Style', 'mfn-opts'),
    						'options' => array(
    							'circle up' => __('Circle up', 'mfn-opts'),
@@ -25193,6 +29341,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'title',
    						'type' => 'text',
+   						'dynamic_data' => 'title',
    						'edit_tag' => '.fancy_heading | .title',
    						'edit_position' => 'append',
    						'title' => __('Title', 'mfn-opts'),
@@ -25202,7 +29351,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'h1',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Tag', 'mfn-opts'),
    						'options' => array(
@@ -25233,7 +29382,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    						'id' => 'style',
    						'type' => 'switch',
    						'attr_id' => 'fancy_header_style',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Style', 'mfn-opts'),
    						'options' => array(
    							'icon' => __('Icon', 'mfn-opts'),
@@ -25622,7 +29771,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
 						array(
    						'id' => 'open1st',
-   						're_render' => 'tabs',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Open first', 'mfn-opts'),
    						'options' => array(
@@ -25634,7 +29783,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'openAll',
-   						're_render' => 'tabs',
+   						're_render' => true,
    						'type' => 'switch',
 							'title' => __('Open all', 'mfn-opts'),
    						'options' => array(
@@ -25646,7 +29795,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
 						array(
    						'id' => 'style',
-   						're_render' => 'tabs',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Style', 'mfn-opts'),
    						'options' => array(
@@ -26451,7 +30600,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'columns',
-   						're_render' => 'tabs',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Columns', 'mfn-opts'),
    						'options' => array(
@@ -27021,6 +31170,8 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'title',
    						'type' => 'text',
+						'dynamic_data' => 'title',
+   						'class' => 'form-content-full-width',
    						'edit_tag' => '.mcb-item-heading-inner | .title',
    						'edit_position' => 'append',
    						'edit_tag_var' => 'preview-header_taginput',
@@ -27031,17 +31182,20 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
 							'id' => 'header_tag',
-							're_render' => 'standard',
+							're_render' => true,
 							'type' 	=> 'switch',
-							're_render' => 'standard',
+							're_render' => true,
 							'title' => __('Title tag', 'mfn-opts'),
 							'options' => array(
-								'h1' => 'H1',
-								'h2' => 'H2',
-								'h3' => 'H3',
-								'h4' => 'H4',
-								'h5' => 'H5',
-								'h6' => 'H6',
+								'h1' => 'h1',
+								'h2' => 'h2',
+								'h3' => 'h3',
+								'h4' => 'h4',
+								'h5' => 'h5',
+								'h6' => 'h6',
+								'p' => 'p',
+								'span' => 'span',
+								'div' => 'div',
 							),
 							'std' => 'h2',
 						),
@@ -27054,6 +31208,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'link',
+   						'dynamic_data' => 'permalink',
    						'type' => 'text',
    						'title' => __('Link', 'mfn-opts'),
    					),
@@ -27169,11 +31324,31 @@ if( ! class_exists('Mfn_Builder_Fields') )
 							'preview' => 'align',
    					),
 
-   					array(
+						array(
+							'type' => 'html',
+							'html' => '<div class="mfn-form-row mfn-sidebar-fields-tabs mfn-vb-formrow mfn-vb-mfnuidhere"><ul class="mfn-sft-nav"><li class="active"><a href="#normal" data-tab="normal">Normal</a></li><li><a href="#hover" data-tab="hover">Hover</a></li></ul><div class="mfn-sft mfn-sft-normal mfn-tabs-fields-active">',
+						),
+
+						array(
 							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .title,.mcb-section .mcb-wrap .mcb-item-mfnuidelement .title a:color',
 							'type' => 'color',
-							'desc' => __('May be overwritten by individual tags or inline CSS', 'mfn-opts'),
 							'title' => __('Color', 'mfn-opts'),
+						),
+
+						array(
+							'type' => 'html',
+							'html' => '</div><div class="mfn-sft mfn-sft-hover">',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .title|hover,.mcb-section .mcb-wrap .mcb-item-mfnuidelement .title a|hover:color',
+							'type' => 'color',
+							'title' => __('Color', 'mfn-opts'),
+						),
+
+						array(
+							'type' => 'html',
+							'html' => '</div></div>',
 						),
 
 						array(
@@ -27235,7 +31410,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'title_tag',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Tag', 'mfn-opts'),
    						'options' => array(
    							'h1' => 'H1',
@@ -28010,7 +32185,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'border',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Line', 'mfn-opts'),
    						'options' => array(
    							0 => __('Hide', 'mfn-opts'),
@@ -28022,7 +32197,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'style',
    						'type' => 'select',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Style', 'mfn-opts'),
    						'options' => array(
    							'' => __('Small centered image (image size: max 116px)', 'mfn-opts'),
@@ -28421,6 +32596,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 							'type' => 'text',
 							'edit_tag' => '.mfn-icon-box .desc-wrapper | .title',
 							'edit_position' => 'prepend',
+							'dynamic_data' => 'title',
 							'title' => __('Title', 'mfn-opts'),
 							'std' => __('This is the title', 'mfn-opts'),
 							'preview' => 'title',
@@ -28446,6 +32622,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 							'type' => 'textarea',
 							'edit_tag' => '.mfn-icon-box .desc-wrapper | .desc',
 							'edit_position' => 'prepend',
+							'dynamic_data' => 'content',
 							'title' => __('Content', 'mfn-opts'),
 							'std' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.',
 							'preview' => 'content',
@@ -28561,6 +32738,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
 							'id' => 'image',
 							'type' => 'upload',
+							'dynamic_data' => 'featured_image',
 							'title' => __('Image', 'mfn-opts'),
 							'attr_id' => 'ib2-image',
 							'desc' => __('Image instead of an icon', 'mfn-opts'),
@@ -28570,6 +32748,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
 							'id' => 'label',
 							'type' => 'text',
+							'attr_id' => 'ib2-label',
 							'title' => __('Label', 'mfn-opts'),
 						),
 
@@ -28581,6 +32760,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
 						array(
 							'id' => 'link',
+							'dynamic_data' => 'permalink',
 							'type' => 'text',
 							'title' => __('Link', 'mfn-opts'),
 						),
@@ -28841,6 +33021,23 @@ if( ! class_exists('Mfn_Builder_Fields') )
 							'responsive' => 'mobile',
 							'class' => 'mfn_field_mobile mfn-toggled',
 							'css_attr' => 'margin',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .icon-label:color',
+							'condition' => array( 'id' => 'ib2-label', 'opt' => 'isnt', 'val' => '' ),
+							'type' => 'color',
+							'class' => 'main-color mfn-toggled',
+							'title' => __('Color', 'mfn-opts'),
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .icon-label:typography',
+							'condition' => array( 'id' => 'ib2-label', 'opt' => 'isnt', 'val' => '' ),
+							'type' => 'typography_vb',
+							'label_after' => '<a href="#" title="Edit" class="mfn-option-btn mfn-option-blank btn-medium mfn-vb-label-button"><span class="mfn-icon mfn-icon-edit"></span></a>',
+							'class' => 'mfn-toggled toggle_fields',
+							'title' => __('Typography', 'mfn-opts'),
 						),
 
 						array(
@@ -29304,7 +33501,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'title_tag',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Tag', 'mfn-opts'),
    						'options' => array(
    							'h1' => 'H1',
@@ -29345,7 +33542,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
    						'id' => 'icon_position',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Icon position', 'mfn-opts'),
    						'desc' => __('Left position works only for column widths: 1/4, 1/3 & 1/2', 'mfn-opts'),
    						'options' => array(
@@ -29837,7 +34034,8 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'src',
    						'type' => 'upload',
-   						're_render' => 'standard',
+						'dynamic_data' => 'featured_image',
+   						're_render' => true,
    						'title' => __('Image', 'mfn-opts'),
 							'std' => $this->get_placeholder(),
    						'preview' => 'image',
@@ -29846,7 +34044,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'size',
    						'type' => 'select',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Size', 'mfn-opts'),
    						'desc' => __('Select image size from <a target="_blank" href="options-media.php">Settings > Media > Image sizes</a> (Media Library images only)<br />or use below fields for HTML resize', 'mfn-opts'),
    						'options' => array(
@@ -29861,7 +34059,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
    						'id' => 'stretch',
    						'type' => 'select',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Stretch', 'mfn-opts'),
    						'desc' => __('Stretch image to column width, height will be changed proportionally', 'mfn-opts'),
    						'options' => array(
@@ -29869,6 +34067,24 @@ if( ! class_exists('Mfn_Builder_Fields') )
    							'1' => __('Yes', 'mfn-opts'),
    							'ultrawide' => __('Yes, on ultrawide screens only > 1920px', 'mfn-opts'),
    						),
+   					),
+
+						// lazy load
+
+   					array(
+   						'title' => __('Lazy load', 'mfn-opts'),
+   					),
+
+   					array(
+   						'id' => 'lazy_load',
+   						'type' => 'switch',
+   						'title' => __('Lazy load', 'mfn-opts'),
+							'options' => array(
+								'' => __('Default', 'mfn-opts'),
+								'disable' => __('Disable', 'mfn-opts'),
+								'lazy' => __('Enable', 'mfn-opts'),
+							),
+							'std' => '',
    					),
 
    					// link
@@ -29886,6 +34102,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'link',
+   						'dynamic_data' => 'permalink',
    						'type' => 'text',
    						'title' => __('Link', 'mfn-opts'),
    					),
@@ -30072,7 +34289,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'border',
    						'class' => 'mfn-deprecated',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Border', 'mfn-opts'),
    						'options' => array(
@@ -30085,7 +34302,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'align',
    						'class' => 'mfn-deprecated',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Align', 'mfn-opts'),
    						'desc' => __('If you want image to be <b>resized</b> to column width use <b>align none</b>', 'mfn-opts'),
@@ -30363,7 +34580,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'columns',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'text',
    						'title' => __('Columns', 'mfn-opts'),
    						'desc' => __('min: <b>1</b> | max: <b>9</b>', 'mfn-opts'),
@@ -30375,7 +34592,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'size',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'select',
    						'title' => __('Size', 'mfn-opts'),
    						'options' => array(
@@ -30389,7 +34606,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'style',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Style', 'mfn-opts'),
    						'options' => array(
@@ -30785,11 +35002,692 @@ if( ! class_exists('Mfn_Builder_Fields') )
    				),
    			),
 
+   			// List NEW -----------------------------------------------------------
+
+   			'list_2' => array(
+   				'type' => 'list_2',
+   				'title' => __('List', 'mfn-opts'),
+   				'size' => '1/4',
+   				'tablet_size' => '1/4',
+   				'mobile_size' => '1/1',
+   				'tablet_resized' => '0',
+   				'cat' => 'blocks',
+   				'fields' => array(
+
+   					array(
+							'type' => 'html',
+							'html' => $this->itemtabs,
+						),
+
+   					array(
+							'type' => 'html',
+							'html' => '<div class="modalbox-card modalbox-re_render modalbox-card-content active">',
+						),
+
+						array(
+   						'id' => 'tabs',
+   						'type' => 'tabs',
+   						'title' => __('Items', 'mfn-opts'),
+							'options' => [
+
+								'content' => [
+									'textarea',
+									__('Content', 'mfn-opts'),
+									'This is the list item',
+								],
+								'link' => [
+									'input',
+									__('Link', 'mfn-opts'),
+									'',
+								],
+								'target' => [
+									'select',
+									__('Target', 'mfn-opts'),
+									'',
+									[
+										'' => __('Default | _self', 'mfn-opts'),
+										'_blank' => __('New tab or window | _blank', 'mfn-opts'),
+									],
+								],
+								'icon' => [
+									'icon',
+									__('Icon', 'mfn-opts'),
+									'',
+								],
+								'image' => [
+									'image',
+									__('Image', 'mfn-opts'),
+									'',
+								],
+								'color' => [
+									'color',
+									__('Icon color', 'mfn-opts'),
+									'',
+								],
+								'background' => [
+									'color',
+									__('Icon background', 'mfn-opts'),
+									'',
+								],
+
+							],
+							'std' => [
+								0 => [
+									'content' => __('This is the 1st item', 'mfn-opts'),
+								],
+								1 => [
+									'content' => __('This is the 2nd item', 'mfn-opts'),
+								],
+							],
+							'preview' => 'tabs',
+							'primary' => 'content',
+   					),
+
+						// options
+
+   					array(
+   						'title' => __('Options', 'mfn-opts'),
+   					),
+
+						array(
+							'id' => 'type',
+							'attr_id' => 'list-2-type',
+							'type' => 'switch',
+							'title' => __('Type', 'mfn-opts'),
+							're_render' => true,
+							'options' => array(
+								'' => __('Unordered', 'mfn-opts'),
+								'ordered' => __('Ordered', 'mfn-opts'),
+							),
+							'std' => ''
+						),
+
+						array(
+							'id' => 'align',
+							'type' => 'switch',
+							'title' => __('Alignment', 'mfn-opts'),
+							're_render' => true,
+							'options' => array(
+								'left' => __('Left', 'mfn-opts'),
+								'center' => __('Center', 'mfn-opts'),
+								'right' => __('Right', 'mfn-opts'),
+							),
+							'std' => 'left',
+							'responsive' => 'desktop',
+							'class' => 'mfn_field_desktop',
+						),
+
+						array(
+							'id' => 'align_tablet',
+							'type' => 'switch',
+							'title' => __('Alignment', 'mfn-opts'),
+							're_render' => true,
+							'options' => array(
+								'left' => __('Left', 'mfn-opts'),
+								'center' => __('Center', 'mfn-opts'),
+								'right' => __('Right', 'mfn-opts'),
+								'' => __('Default', 'mfn-opts'),
+							),
+							'std' => '',
+							'responsive' => 'tablet',
+							'class' => 'mfn_field_tablet',
+						),
+
+						array(
+							'id' => 'align_mobile',
+							'type' => 'switch',
+							'title' => __('Alignment', 'mfn-opts'),
+							're_render' => true,
+							'options' => array(
+								'left' => __('Left', 'mfn-opts'),
+								'center' => __('Center', 'mfn-opts'),
+								'right' => __('Right', 'mfn-opts'),
+								'' => __('Default', 'mfn-opts'),
+							),
+							'std' => '',
+							'responsive' => 'mobile',
+							'class' => 'mfn_field_mobile',
+						),
+
+						array(
+							'id' => 'valign',
+							'type' => 'switch',
+							'title' => __('Vertical alignment', 'mfn-opts'),
+							'attr_id' => 'list-2-valign',
+							're_render' => true,
+							'options' => array(
+								'top' => __('Top', 'mfn-opts'),
+								'middle' => __('Middle', 'mfn-opts'),
+								'bottom' => __('Bottom', 'mfn-opts'),
+							),
+							'std' => 'middle',
+							'responsive' => 'desktop',
+							'class' => 'mfn_field_desktop',
+						),
+
+						array(
+							'id' => 'valign_tablet',
+							'type' => 'switch',
+							'title' => __('Vertical alignment', 'mfn-opts'),
+							'attr_id' => 'list-2-valign_tablet',
+							're_render' => true,
+							'options' => array(
+								'top' => __('Top', 'mfn-opts'),
+								'middle' => __('Middle', 'mfn-opts'),
+								'bottom' => __('Bottom', 'mfn-opts'),
+								'' => __('Default', 'mfn-opts'),
+							),
+							'std' => '',
+							'responsive' => 'tablet',
+							'class' => 'mfn_field_tablet',
+						),
+
+						array(
+							'id' => 'valign_mobile',
+							'type' => 'switch',
+							'title' => __('Vertical alignment', 'mfn-opts'),
+							'attr_id' => 'list-2-valign_mobile',
+							're_render' => true,
+							'options' => array(
+								'top' => __('Top', 'mfn-opts'),
+								'middle' => __('Middle', 'mfn-opts'),
+								'bottom' => __('Bottom', 'mfn-opts'),
+								'' => __('Default', 'mfn-opts'),
+							),
+							'std' => '',
+							'responsive' => 'mobile',
+							'class' => 'mfn_field_mobile',
+						),
+
+						array(
+							'id' => 'divider',
+							'type' => 'switch',
+							'title' => __('Divider', 'mfn-opts'),
+							're_render' => true,
+							'options' => array(
+								'' => __('Disable', 'mfn-opts'),
+								'enable' => __('Enable', 'mfn-opts'),
+							),
+							'std' => '',
+						),
+
+						// icon
+
+   					array(
+   						'title' => __('Icon', 'mfn-opts'),
+   					),
+
+   					array(
+   						'id' => 'icon',
+   						'type' => 'icon',
+   						'title' => __('Icon', 'mfn-opts'),
+							're_render' => true,
+							'preview' => 'icon',
+							'std' => 'icon-dot',
+   					),
+
+   					array(
+   						'id' => 'image',
+   						'type' => 'upload',
+							're_render' => true,
+   						'title' => __('Image', 'mfn-opts'),
+   						'desc' => __('Image replaces icon selected above', 'mfn-opts'),
+							'preview' => 'image',
+   					),
+
+						array(
+							'type' => 'html',
+							'html' => '</div><div class="modalbox-card modalbox-card-style modalbox-re_render modalbox-card-style-mfnuidhere">',
+						),
+
+						// list item
+
+						array(
+							'class' => 'toggled_header',
+   						'title' => __('List item', 'mfn-opts'),
+   					),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-list .mfn-list-item:padding',
+							'type' => 'dimensions',
+							'version' => 'separated-fields',
+							'title' => __('Padding', 'mfn-opts'),
+							'responsive' => 'desktop',
+							'class' => 'mfn_field_desktop mfn-toggled',
+							'css_attr' => 'padding',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-list .mfn-list-item:padding_tablet',
+							'type' => 'dimensions',
+							'version' => 'separated-fields',
+							'title' => __('Padding', 'mfn-opts'),
+							'responsive' => 'tablet',
+							'class' => 'mfn_field_tablet mfn-toggled',
+							'css_attr' => 'padding',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-list .mfn-list-item:padding_mobile',
+							'type' => 'dimensions',
+							'version' => 'separated-fields',
+							'title' => __('Padding', 'mfn-opts'),
+							'responsive' => 'mobile',
+							'class' => 'mfn_field_mobile mfn-toggled',
+							'css_attr' => 'padding',
+						),
+
+						// icon wrapper
+
+						array(
+							'class' => 'toggled_header',
+   						'title' => __('Icon wrapper', 'mfn-opts'),
+   					),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-list-icon:width',
+							'type' => 'text',
+							'default_unit' => 'px',
+							'title' => __('Width', 'mfn-opts'),
+							'responsive' => 'desktop',
+							'class' => 'mfn_field_desktop mfn-toggled mfn-slider-input',
+							'css_attr' => 'width',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-list-icon:width_tablet',
+							'type' => 'text',
+							'default_unit' => 'px',
+							'title' => __('Width', 'mfn-opts'),
+							'responsive' => 'tablet',
+							'class' => 'mfn_field_tablet mfn-toggled mfn-slider-input',
+							'css_attr' => 'width',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-list-icon:width_mobile',
+							'type' => 'text',
+							'default_unit' => 'px',
+							'title' => __('Width', 'mfn-opts'),
+							'responsive' => 'mobile',
+							'class' => 'mfn_field_mobile mfn-toggled mfn-slider-input',
+							'css_attr' => 'width',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-list-icon:height',
+							'type' => 'text',
+							'default_unit' => 'px',
+							'title' => __('Height', 'mfn-opts'),
+							'responsive' => 'desktop',
+							'class' => 'mfn_field_desktop mfn-toggled mfn-slider-input',
+							'css_attr' => 'height',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-list-icon:height_tablet',
+							'type' => 'text',
+							'default_unit' => 'px',
+							'title' => __('Height', 'mfn-opts'),
+							'responsive' => 'tablet',
+							'class' => 'mfn_field_tablet mfn-toggled mfn-slider-input',
+							'css_attr' => 'height',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-list-icon:height_mobile',
+							'type' => 'text',
+							'default_unit' => 'px',
+							'title' => __('Height', 'mfn-opts'),
+							'responsive' => 'mobile',
+							'class' => 'mfn_field_mobile mfn-toggled mfn-slider-input',
+							'css_attr' => 'height',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-list-icon:top',
+							'condition' => array( 'id' => 'list-2-valign', 'opt' => 'is', 'val' => 'top' ),
+							'type' => 'text',
+							'default_unit' => 'px',
+							'responsive' => 'desktop',
+							'class' => 'mfn_field_desktop mfn-toggled mfn-slider-input',
+							'title' => __('Top', 'mfn-opts'),
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-list-icon:top_tablet',
+							'condition' => array( 'id' => 'list-2-valign', 'opt' => 'is', 'val' => 'top' ),
+							'type' => 'text',
+							'default_unit' => 'px',
+							'responsive' => 'tablet',
+							'class' => 'mfn_field_tablet mfn-toggled mfn-slider-input',
+							'title' => __('Top', 'mfn-opts'),
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-list-icon:top_mobile',
+							'condition' => array( 'id' => 'list-2-valign', 'opt' => 'is', 'val' => 'top' ),
+							'type' => 'text',
+							'default_unit' => 'px',
+							'responsive' => 'mobile',
+							'class' => 'mfn_field_mobile mfn-toggled mfn-slider-input',
+							'title' => __('Top', 'mfn-opts'),
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-list:--mfn-list-icon-spacing',
+							'type' => 'sliderbar',
+							'default_unit' => 'px',
+							'title' => __('Spacing', 'mfn-opts'),
+							'responsive' => 'desktop',
+							'class' => 'mfn_field_desktop mfn-toggled',
+							'param' => array(
+								'unit' => 'px',
+								'min' => '0',
+								'max' => '200',
+								'step' => '1',
+							),
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-list:--mfn-list-icon-spacing_tablet',
+							'type' => 'sliderbar',
+							'default_unit' => 'px',
+							'title' => __('Spacing', 'mfn-opts'),
+							'responsive' => 'tablet',
+							'class' => 'mfn_field_tablet mfn-toggled',
+							'param' => array(
+								'unit' => 'px',
+								'min' => '0',
+								'max' => '200',
+								'step' => '1',
+							),
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-list:--mfn-list-icon-spacing_mobile',
+							'type' => 'sliderbar',
+							'default_unit' => 'px',
+							'title' => __('Spacing', 'mfn-opts'),
+							'responsive' => 'mobile',
+							'class' => 'mfn_field_mobile mfn-toggled',
+							'param' => array(
+								'unit' => 'px',
+								'min' => '0',
+								'max' => '200',
+								'step' => '1',
+							),
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-list:--mfn-list-icon-size',
+							'condition' => array( 'id' => 'list-2-type', 'opt' => 'isnt', 'val' => 'ordered' ),
+							'type' => 'sliderbar',
+							'default_unit' => 'px',
+							'responsive' => 'desktop',
+							'class' => 'mfn_field_desktop mfn-toggled narrow',
+							'title' => __('Icon size', 'mfn-opts'),
+							'units' => array(
+								'px' 	=> array('min' => 1, 		'max' => 100, 'step' => 1),
+								'em' 	=> array('min' => 0.1, 	'max' => 10, 	'step' => 0.1),
+								'rem' => array('min' => 0.1, 	'max' => 10, 	'step' => 0.1),
+								'vw' 	=> array('min' => 1, 		'max' => 100, 'step' => 1),
+							)
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-list:--mfn-list-icon-size_tablet',
+							'condition' => array( 'id' => 'list-2-type', 'opt' => 'isnt', 'val' => 'ordered' ),
+							'type' => 'sliderbar',
+							'default_unit' => 'px',
+							'responsive' => 'tablet',
+							'class' => 'mfn_field_tablet mfn-toggled narrow',
+							'title' => __('Icon size', 'mfn-opts'),
+							'units' => array(
+								'px' 	=> array('min' => 1, 		'max' => 100, 'step' => 1),
+								'em' 	=> array('min' => 0.1, 	'max' => 10, 	'step' => 0.1),
+								'rem' => array('min' => 0.1, 	'max' => 10, 	'step' => 0.1),
+								'vw' 	=> array('min' => 1, 		'max' => 100, 'step' => 1),
+							)
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-list:--mfn-list-icon-size_mobile',
+							'condition' => array( 'id' => 'list-2-type', 'opt' => 'isnt', 'val' => 'ordered' ),
+							'type' => 'sliderbar',
+							'default_unit' => 'px',
+							'responsive' => 'mobile',
+							'class' => 'mfn_field_mobile mfn-toggled narrow',
+							'title' => __('Icon size', 'mfn-opts'),
+							'units' => array(
+								'px' 	=> array('min' => 1, 		'max' => 100, 'step' => 1),
+								'em' 	=> array('min' => 0.1, 	'max' => 10, 	'step' => 0.1),
+								'rem' => array('min' => 0.1, 	'max' => 10, 	'step' => 0.1),
+								'vw' 	=> array('min' => 1, 		'max' => 100, 'step' => 1),
+							)
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-list .mfn-list-icon|after:typography',
+							'condition' => array( 'id' => 'list-2-type', 'opt' => 'is', 'val' => 'ordered' ),
+							'type' => 'typography_vb',
+							'label_after' => '<a href="#" title="Edit" class="mfn-option-btn mfn-option-blank btn-medium mfn-vb-label-button"><span class="mfn-icon mfn-icon-edit"></span></a>',
+							'class' => 'mfn-toggled toggle_fields',
+							'title' => __('Typography', 'mfn-opts'),
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-list:--mfn-list-icon-color',
+							'type' => 'color',
+							'title' => __('Color', 'mfn-opts'),
+							'class' => 'mfn-toggled',
+						),
+
+						array(
+							'id' => 'background_switcher',
+							'attr_id' => 'background_switcher_list2',
+							'type' => 'switch',
+							'class' => 'mfn-fields-switcher mfn-toggled disable-history',
+							'title' => __('Background type', 'mfn-opts'),
+							'options' => array(
+		  					'default' => __('Default', 'mfn-opts'),
+		  					'gradient' 	=> __('Gradient', 'mfn-opts'),
+		  				),
+							'visual_options' => array(
+		  					'default' => '',
+		  					'gradient' 	=> '',
+		  				),
+		  				'std' => 'default',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-list-icon:background-color',
+							'condition' => array( 'id' => 'background_switcher_list2', 'opt' => 'is', 'val' => 'default' ),
+							'type' => 'color',
+							'class' => 'mfn-toggled',
+							'title' => __('Background color', 'mfn-opts'),
+						),
+
+						array(
+		  				'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-list-icon:gradient',
+		  				'condition' => array( 'id' => 'background_switcher_list2', 'opt' => 'is', 'val' => 'gradient' ),
+		  				'type' => 'gradient',
+		  				'title' => __('Gradient', 'mfn-opts'),
+		  				'class' => 'mfn-toggled',
+							'css_attr' => 'gradient',
+		  			),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-list-icon:border-style',
+							'attr_id' => 'list2-border-style',
+							'type' => 'select',
+							'class' => 'mfn-toggled',
+							'title' => __('Border style', 'mfn-opts'),
+							'options' => [
+								'none' => __('None', 'mfn-opts'),
+								'solid' => __('Solid', 'mfn-opts'),
+								'dashed' => __('Dashed', 'mfn-opts'),
+								'dotted' => __('Dotted', 'mfn-opts'),
+								'double' => __('Double', 'mfn-opts'),
+							],
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-list-icon:border-color',
+							'condition' => array( 'id' => 'list2-border-style', 'opt' => 'isnt', 'val' => 'none' ),
+							'type' => 'color',
+							'class' => 'mfn-toggled',
+							'title' => __('Border color', 'mfn-opts'),
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-list-icon:border-width',
+							'condition' => array( 'id' => 'list2-border-style', 'opt' => 'isnt', 'val' => 'none' ),
+							'type' => 'dimensions',
+							'title' => __('Border width', 'mfn-opts'),
+							'class' => 'mfn-toggled',
+							'css_attr' => 'border-width',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-list-icon:border-radius',
+							'type' => 'dimensions',
+							'title' => __('Border radius', 'mfn-opts'),
+							'class' => 'mfn-toggled',
+							'css_attr' => 'border-radius',
+						),
+
+						// description wrapper
+
+						array(
+							'class' => 'toggled_header',
+   						'title' => __('Description wrapper', 'mfn-opts'),
+   					),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-list-desc:color',
+							'type' => 'color',
+							'class' => 'main-color mfn-toggled',
+							'title' => __('Color', 'mfn-opts'),
+						),
+
+						array(
+							'type' => 'html',
+							'html' => '<div class="mfn-form-row mfn-sidebar-fields-tabs mfn-toggled mfn-vb-formrow mfn-vb-mfnuidhere"><ul class="mfn-sft-nav"><li class="active"><a href="#normal" data-tab="normal">Normal</a></li><li><a href="#hover" data-tab="hover">Hover</a></li></ul><div class="mfn-sft mfn-sft-normal mfn-tabs-fields-active">',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-list-desc a:color',
+							'type' => 'color',
+							'class' => 'main-color mfn-toggled',
+							'title' => __('Link color', 'mfn-opts'),
+						),
+
+						array(
+							'type' => 'html',
+							'html' => '</div><div class="mfn-sft mfn-sft-hover">',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-list-desc a|hover:color',
+							'type' => 'color',
+							'class' => 'main-color mfn-toggled',
+							'title' => __('Link color', 'mfn-opts'),
+						),
+
+						array(
+							'type' => 'html',
+							'html' => '</div></div>',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-list-desc:typography',
+							'type' => 'typography_vb',
+							'label_after' => '<a href="#" title="Edit" class="mfn-option-btn mfn-option-blank btn-medium mfn-vb-label-button"><span class="mfn-icon mfn-icon-edit"></span></a>',
+							'class' => 'mfn-toggled toggle_fields',
+							'title' => __('Typography', 'mfn-opts'),
+						),
+
+						// divider
+
+						array(
+							'class' => 'toggled_header',
+   						'title' => __('Divider', 'mfn-opts'),
+   					),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-list:--mfn-list-divider-width',
+							'type' => 'sliderbar',
+							'responsive' => 'desktop',
+							'class' => 'mfn_field_desktop mfn-toggled',
+							'title' => __('Width', 'mfn-opts'),
+							'units' => array(
+								'px' 	=> array('min' => 1, 'max' => 1000, 'step' => 1),
+								'%' 	=> array('min' => 1, 'max' => 100, 	'step' => 1),
+								'vw' 	=> array('min' => 1, 'max' => 100, 'step' => 1),
+							)
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-list:--mfn-list-divider-width_tablet',
+							'type' => 'sliderbar',
+							'responsive' => 'tablet',
+							'class' => 'mfn_field_tablet mfn-toggled',
+							'title' => __('Width', 'mfn-opts'),
+							'units' => array(
+								'px' 	=> array('min' => 1, 'max' => 1000, 'step' => 1),
+								'%' 	=> array('min' => 1, 'max' => 100, 	'step' => 1),
+								'vw' 	=> array('min' => 1, 'max' => 100, 'step' => 1),
+							)
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-list:--mfn-list-divider-width_mobile',
+							'type' => 'sliderbar',
+							'responsive' => 'mobile',
+							'class' => 'mfn_field_mobile mfn-toggled',
+							'title' => __('Width', 'mfn-opts'),
+							'units' => array(
+								'px' 	=> array('min' => 1, 'max' => 1000, 'step' => 1),
+								'%' 	=> array('min' => 1, 'max' => 100, 	'step' => 1),
+								'vw' 	=> array('min' => 1, 'max' => 100, 'step' => 1),
+							)
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-list:--mfn-list-divider-height',
+							'type' => 'sliderbar',
+							'default_unit' => 'px',
+							'title' => __('Border width', 'mfn-opts'),
+							'class' => 'mfn-toggled',
+							'param' => array(
+								'unit' => 'px',
+								'min' => '0',
+								'max' => '20',
+								'step' => '1',
+							),
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-list:--mfn-list-divider-color',
+							'type' => 'color',
+							'title' => __('Color', 'mfn-opts'),
+							'class' => 'mfn-toggled',
+						),
+
+						array(
+							'type' => 'html',
+							'html' => '</div>',
+						),
+
+   				),
+   			),
+
    			// List -----------------------------------------------------------
 
    			'list' => array(
    				'type' => 'list',
-   				'title' => __('List', 'mfn-opts'),
+   				'title' => __('List Basic', 'mfn-opts'),
    				'size' => '1/4',
    				'tablet_size' => '1/4',
    				'mobile_size' => '1/1',
@@ -30845,7 +35743,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
    						'id' => 'style',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Style', 'mfn-opts'),
    						'options' => array(
    							1 => __('With bg', 'mfn-opts'),
@@ -31087,7 +35985,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    				),
    			),
 
-			// Live search -----------------------------------------------------------
+				// Live search -----------------------------------------------------------
 
 				'livesearch' => array(
 
@@ -31193,7 +36091,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'iframe',
    						'type' => 'textarea',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Iframe', 'mfn-opts'),
    						'desc' => __('Visit <a target="_blank" href="https://google.com/maps">Google Maps</a> and follow these instructions:<br />1. Find place. 2. Click the share button in the left panel. 3. Select "embed a map" 4. Choose size. 5. Click "copy HTML" and paste it above', 'mfn-opts'),
    					),
@@ -31215,14 +36113,14 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'address',
    						'type' => 'text',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Address or place name', 'mfn-opts'),
    					),
 
    					array(
    						'id' => 'zoom',
    						'type' => 'text',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Zoom', 'mfn-opts'),
    						'param' => 'number',
    						'class' => 'narrow',
@@ -31232,7 +36130,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'height',
    						'type' => 'text',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Height', 'mfn-opts'),
 							'param' => 'number',
    						'class' => 'narrow',
@@ -31281,7 +36179,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'lat',
    						'type' => 'text',
-   						're_render' => 'tabs',
+   						're_render' => true,
    						'title' => __('Latitude', 'mfn-opts'),
    						'before' => 'LAT',
    						'placeholder' => '-33.87',
@@ -31291,7 +36189,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'lng',
    						'type' => 'text',
-   						're_render' => 'tabs',
+   						're_render' => true,
    						'title' => __('Longitude', 'mfn-opts'),
 							'before' => 'LNG',
 							'placeholder' => '151.21',
@@ -31301,7 +36199,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
             array(
    						'id' => 'info_window',
    						'type' => 'textarea',
-   						're_render' => 'tabs',
+   						're_render' => true,
    						'title' => __('Info window (optional)', 'mfn-opts'),
 							'desc' => __('Additional information that would appear in Info window on marker click', 'mfn-opts'),
    					),
@@ -31309,7 +36207,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'zoom',
    						'type' => 'text',
-   						're_render' => 'tabs',
+   						're_render' => true,
    						'title' => __('Zoom', 'mfn-opts'),
    						'param' => 'number',
    						'class' => 'narrow',
@@ -31325,7 +36223,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'type',
    						'type' => 'switch',
-   						're_render' => 'tabs',
+   						're_render' => true,
    						'title' => __('Type', 'mfn-opts'),
    						'options' => array(
    							'ROADMAP' => __('Map', 'mfn-opts'),
@@ -31339,7 +36237,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'controls',
    						'type' => 'select',
-   						're_render' => 'tabs',
+   						're_render' => true,
    						'title' => __('Controls', 'mfn-opts'),
    						'options' => array(
    							'' => __('Zoom', 'mfn-opts'),
@@ -31356,7 +36254,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'draggable',
    						'type' => 'switch',
-   						're_render' => 'tabs',
+   						're_render' => true,
    						'title' => __('Draggable', 'mfn-opts'),
    						'options' => array(
    							'disable' => __('Disable', 'mfn-opts'),
@@ -31369,7 +36267,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'border',
    						'type' => 'switch',
-   						're_render' => 'tabs',
+   						're_render' => true,
    						'title' => __('Border', 'mfn-opts'),
    						'options' => array(
    							0 => __('Hide', 'mfn-opts'),
@@ -31386,7 +36284,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'icon',
-   						're_render' => 'tabs',
+   						're_render' => true,
    						'type' => 'upload',
    						'title' => __('Marker icon', 'mfn-opts'),
    						'desc' => __('.png', 'mfn-opts'),
@@ -31394,14 +36292,14 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'color',
-   						're_render' => 'tabs',
+   						're_render' => true,
    						'type' => 'color',
    						'title' => __('Map color', 'mfn-opts'),
    					),
 
    					array(
    						'id' => 'styles',
-   						're_render' => 'tabs',
+   						're_render' => true,
    						'type' => 'textarea',
    						'title' => __('Styles', 'mfn-opts'),
    						'desc' => __('You can get predefined styles from <a target="_blank" href="https://snazzymaps.com/explore">snazzymaps.com/explore</a> or generate your own <a target="_blank" href="https://snazzymaps.com/editor">snazzymaps.com/editor</a>', 'mfn-opts'),
@@ -31459,14 +36357,14 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'title',
-   						're_render' => 'tabs',
+   						're_render' => true,
    						'type' => 'text',
    						'title' => __('Title', 'mfn-opts'),
    					),
 
    					array(
    						'id' => 'content',
-   						're_render' => 'tabs',
+   						're_render' => true,
    						'type' => 'textarea',
    						'title' => __('Address', 'mfn-opts'),
    						'desc' => __('HTML tags allowed', 'mfn-opts'),
@@ -31474,28 +36372,28 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'telephone',
-   						're_render' => 'tabs',
+   						're_render' => true,
    						'type' => 'text',
    						'title' => __('Telephone', 'mfn-opts'),
    					),
 
    					array(
    						'id' => 'email',
-   						're_render' => 'tabs',
+   						're_render' => true,
    						'type' => 'text',
    						'title' => __('Email', 'mfn-opts'),
    					),
 
    					array(
    						'id' => 'www',
-   						're_render' => 'tabs',
+   						're_render' => true,
    						'type' => 'text',
    						'title' => __('WWW', 'mfn-opts'),
    					),
 
    					array(
    						'id' => 'style',
-   						're_render' => 'tabs',
+   						're_render' => true,
    						'type' => 'select',
    						'title' => __('Style', 'mfn-opts'),
    						'options' => array(
@@ -31743,10 +36641,10 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'category',
    						'type' => 'select',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Category', 'mfn-opts'),
    						'options' => mfn_get_categories('offer-types'),
-   						'js_options' => 'offer_types',
+   						'js_hierarchical_options' => 'offer_types',
 							'preview' => 'category',
    					),
 
@@ -32272,17 +37170,17 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'category',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'select',
    						'title' => __('Category', 'mfn-opts'),
    						'options' => mfn_get_categories('offer-types'),
-   						'js_options' => 'offer_types',
+   						'js_hierarchical_options' => 'offer_types',
 							'preview' => 'category',
    					),
 
    					array(
    						'id' => 'style',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Thumbnails position', 'mfn-opts'),
    						'options' => array(
@@ -33528,7 +38426,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'style',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Style', 'mfn-opts'),
    						'options' => array(
    							'circle' => __('Circle', 'mfn-opts'),
@@ -35099,7 +39997,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    						'id' => 'file',
    						'condition' => array( 'id' => 'lottie_source_switcher', 'opt' => 'is', 'val' => 'file' ),
    						'type' => 'upload',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Lottie File', 'mfn-opts'),
    						'desc' => __('Upload self-hosted JSON file', 'mfn-opts'),
 							'preview' => 'image',
@@ -35109,7 +40007,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    						'id' => 'src',
    						'condition' => array( 'id' => 'lottie_source_switcher', 'opt' => 'is', 'val' => 'url' ),
    						'type' => 'text',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Lottie URL', 'mfn-opts'),
    						'desc' => __('Your Lottie JSON url', 'mfn-opts'),
    					),
@@ -35122,7 +40020,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    						'id' => 'trigger',
    						'attr_id' => 'lottie_trigger',
    						'type' => 'select',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Trigger', 'mfn-opts'),
    						'options' => array(
    							'default' => __('Default', 'mfn-opts'),
@@ -35163,7 +40061,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 		  				'id' => 'viewport',
 		  				'condition' => array( 'id' => 'lottie_trigger', 'opt' => 'is', 'val' => 'viewport,scroll' ),
 		  				'type' => 'sliderbar',
-		  				're_render' => 'standard',
+		  				're_render' => true,
 							'title' => __('Viewport bottom offset', 'mfn-opts'),
 							'std' => '10',
 							'param' => array(
@@ -36029,6 +40927,134 @@ if( ! class_exists('Mfn_Builder_Fields') )
    				),
    			),
 
+				// Plain text
+
+				'plain_text' => array(
+   				'type' => 'plain_text',
+   				'title' => __('Plain Text / HTML', 'mfn-opts'),
+   				'size' => '1/4',
+   				'tablet_size' => '1/4',
+   				'mobile_size' => '1/4',
+   				'tablet_resized' => '0',
+   				'cat' => 'typography',
+   				'fields' => array(
+
+   					array(
+							'type' => 'html',
+							'html' => $this->itemtabs,
+						),
+
+   					array(
+							'type' => 'html',
+							'html' => '<div class="modalbox-card modalbox-re_render modalbox-card-content active">',
+						),
+
+   					array(
+   						'id' => 'content',
+   						'type' => 'textarea',
+   						'dynamic_data' => 'content',
+   						'edit_tag' => '.mcb-column-inner | div.desc',
+   						'edit_position' => 'append',
+   						'title' => __('Text', 'mfn-opts'),
+   						'desc' => __('Some shortcodes and HTML tags allowed', 'mfn-opts'),
+							'std' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.',
+							'vbstd' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.',
+							'preview' => 'content',
+							'class' => 'form-content-full-width',
+   					),
+
+   					array(
+   						'id' => 'shortcodes_parser',
+   						'type' => 'switch',
+   						'title' => __('Shortcodes parser', 'mfn-opts'),
+   						'options' => array(
+   							'' => __('Disabled', 'mfn-opts'),
+   							'1' => __('Enabled', 'mfn-opts'),
+   						),
+							'preview' => '1',
+   					),
+
+   					array(
+							'type' => 'html',
+							'html' => '</div><div class="modalbox-card modalbox-card-style modalbox-re_render modalbox-card-style-mfnuidhere">',
+						),
+
+						array(
+   						'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .desc:text-align',
+							'responsive' => 'desktop',
+   						'type' => 'switch',
+   						'class' => 'mfn_field_desktop',
+   						'title' => __('Text align', 'mfn-opts'),
+   						'options' => array(
+   							'' => __('Default', 'mfn-opts'),
+   							'left' => __('Left', 'mfn-opts'),
+								'center' => __('Center', 'mfn-opts'),
+   							'right' => __('Right', 'mfn-opts'),
+   							'justify' => __('Justify', 'mfn-opts'),
+   						),
+							'preview' => 'align',
+   					),
+   					array(
+   						'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .desc:text-align_tablet',
+							'responsive' => 'tablet',
+   						'type' => 'switch',
+   						'class' => 'mfn_field_tablet',
+   						'title' => __('Text align', 'mfn-opts'),
+   						'options' => array(
+   							'' => __('Default', 'mfn-opts'),
+   							'left' => __('Left', 'mfn-opts'),
+								'center' => __('Center', 'mfn-opts'),
+   							'right' => __('Right', 'mfn-opts'),
+   							'justify' => __('Justify', 'mfn-opts'),
+   						),
+							'preview' => 'align',
+   					),
+   					array(
+   						'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .desc:text-align_mobile',
+							'responsive' => 'mobile',
+   						'type' => 'switch',
+   						'class' => 'mfn_field_mobile',
+   						'title' => __('Text align', 'mfn-opts'),
+   						'options' => array(
+   							'' => __('Default', 'mfn-opts'),
+   							'left' => __('Left', 'mfn-opts'),
+								'center' => __('Center', 'mfn-opts'),
+   							'right' => __('Right', 'mfn-opts'),
+   							'justify' => __('Justify', 'mfn-opts'),
+   						),
+							'preview' => 'align',
+   					),
+
+   					array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .desc,.mcb-section .mcb-wrap .mcb-item-mfnuidelement .desc a:color',
+							'type' => 'color',
+							'desc' => __('May be overwritten by individual tags or inline CSS', 'mfn-opts'),
+							'title' => __('Color', 'mfn-opts'),
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .desc:text-shadow',
+							'type' => 'text_shadow',
+							'title' => __('Text shadow', 'mfn-opts'),
+						),
+
+   					array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .desc:typography',
+							'type' => 'typography_vb',
+							'label_after' => '<a href="#" title="Edit" class="mfn-option-btn mfn-option-blank btn-medium mfn-vb-label-button"><span class="mfn-icon mfn-icon-edit"></span></a>',
+							'class' => 'toggle_fields',
+							'title' => __('Typography', 'mfn-opts'),
+						),
+
+   					array(
+							'type' => 'html',
+							'html' => '</div>',
+						),
+
+   				),
+   			),
+
+
    			// Portfolio ------------------------------------------------------
 
    			'portfolio' => array(
@@ -36053,7 +41079,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'count',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'text',
    						'title' => __('Projects number', 'mfn-opts'),
    						'param' => 'number',
@@ -36065,7 +41091,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'style',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'select',
    						'title' => __('Style', 'mfn-opts'),
    						'options' => array(
@@ -36084,7 +41110,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'columns',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Columns', 'mfn-opts'),
    						'desc' => __('for styles: Flat, Grid, Masonry blog style, Masonry hover description', 'mfn-opts'),
@@ -36106,18 +41132,18 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'category',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'select',
    						'title' => __('Category', 'mfn-opts'),
    						'options' => mfn_get_categories('portfolio-types'),
-   						'js_options' => 'portfolio_types',
+   						'js_hierarchical_options' => 'portfolio_types',
    						'wpml' => 'portfolio-types',
 							'preview' => 'category',
    					),
 
    					array(
    						'id' => 'category_multi',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'text',
    						'title' => __('Multiple categories', 'mfn-opts'),
    						'desc' => __('Slugs should be separated with <b>coma</b> ( , )', 'mfn-opts'),
@@ -36127,7 +41153,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'orderby',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Order by', 'mfn-opts'),
    						'desc' => __('Do <b>not</b> use random order with pagination or load more', 'mfn-opts'),
    						'options' => array(
@@ -36141,7 +41167,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'order',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Order', 'mfn-opts'),
    						'options' => array(
@@ -36159,7 +41185,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'exclude_id',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'text',
    						'title' => __('Exclude posts', 'mfn-opts'),
    						'desc' => __('IDs should be separated with <b>coma</b> ( , )', 'mfn-opts'),
@@ -36167,7 +41193,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'related',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Use as related projects', 'mfn-opts'),
    						'desc' => __('Exclude current project on single project page. This option will overwrite exclude posts option above.', 'mfn-opts'),
@@ -36180,7 +41206,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'filters',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Filters', 'mfn-opts'),
    						'desc' => __('for category: all or multiple categories (only selected categories show in filters)', 'mfn-opts'),
@@ -36199,7 +41225,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'pagination',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Pagination', 'mfn-opts'),
    						'desc' => __('Does <b>not</b> work on WMPL homepage', 'mfn-opts'),
@@ -36212,7 +41238,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'load_more',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Load More button', 'mfn-opts'),
    						'desc' => __('Sliders will be replaced with featured images. Please use with pagination enabled.', 'mfn-opts'),
@@ -36931,7 +41957,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
 						array(
    						'id' => 'count',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'text',
    						'title' => __('Projects number', 'mfn-opts'),
    						'param' => 'number',
@@ -36949,18 +41975,18 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'category',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'select',
    						'title' => __('Category', 'mfn-opts'),
    						'options' => mfn_get_categories('portfolio-types'),
-   						'js_options' => 'portfolio_types',
+   						'js_hierarchical_options' => 'portfolio_types',
    						'wpml' => 'portfolio-types',
 							'preview' => 'category',
    					),
 
    					array(
    						'id' => 'category_multi',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'text',
    						'title' => __('Multiple categories', 'mfn-opts'),
    						'desc' => __('Slugs should be separated with <b>coma</b> ( , )', 'mfn-opts'),
@@ -36969,7 +41995,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'orderby',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Order by', 'mfn-opts'),
    						'options' => array(
@@ -36983,7 +42009,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'order',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Order', 'mfn-opts'),
    						'options' => array(
@@ -37056,7 +42082,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
 						array(
    						'id' => 'count',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'text',
    						'title' => __('Projects number', 'mfn-opts'),
    						'param' => 'number',
@@ -37074,18 +42100,18 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'category',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'select',
    						'title' => __('Category', 'mfn-opts'),
    						'options' => mfn_get_categories('portfolio-types'),
-   						'js_options' => 'portfolio_types',
+   						'js_hierarchical_options' => 'portfolio_types',
    						'wpml' => 'portfolio-types',
 							'preview' => 'category',
    					),
 
    					array(
    						'id' => 'category_multi',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'text',
    						'title' => __('Multiple categories', 'mfn-opts'),
    						'desc' => __('Slugs should be separated with <b>coma</b> ( , )', 'mfn-opts'),
@@ -37094,7 +42120,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'orderby',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Order by', 'mfn-opts'),
    						'options' => array(
@@ -37108,7 +42134,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'order',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Order', 'mfn-opts'),
    						'options' => array(
@@ -37148,7 +42174,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'margin',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Margin', 'mfn-opts'),
    						'options' => array(
@@ -37490,7 +42516,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
 						array(
    						'id' => 'count',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'text',
    						'title' => __('Projects number', 'mfn-opts'),
    						'param' => 'number',
@@ -37508,18 +42534,18 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'category',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'select',
    						'title' => __('Category', 'mfn-opts'),
    						'options' => mfn_get_categories('portfolio-types'),
-   						'js_options' => 'portfolio_types',
+   						'js_hierarchical_options' => 'portfolio_types',
    						'wpml' => 'portfolio-types',
 							'preview' => 'category',
    					),
 
    					array(
    						'id' => 'category_multi',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'text',
    						'title' => __('Multiple categories', 'mfn-opts'),
    						'desc' => __('Slugs should be separated with <strong>coma</strong> (,).', 'mfn-opts'),
@@ -37529,7 +42555,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'orderby',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Order by', 'mfn-opts'),
    						'options' => array(
    							'date' => __('Date', 'mfn-opts'),
@@ -37543,7 +42569,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'order',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Order', 'mfn-opts'),
    						'options' => array(
    							'ASC' => __('Ascending', 'mfn-opts'),
@@ -37560,7 +42586,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'arrows',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Navigation', 'mfn-opts'),
    						'options' => array(
@@ -37574,7 +42600,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'size',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Image size', 'mfn-opts'),
    						'options' => array(
    							'small' => __('Small', 'mfn-opts'),
@@ -37587,7 +42613,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'scroll',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Slides to scroll', 'mfn-opts'),
    						'options' => array(
    							'page' => __('One page', 'mfn-opts'),
@@ -37735,7 +42761,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'currency_pos',
-   						're_render' => 'tabs',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Currency position', 'mfn-opts'),
    						'options' => array(
@@ -37810,21 +42836,21 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'link_title',
-   						're_render' => 'tabs',
+   						're_render' => true,
    						'type' => 'text',
    						'title' => __('Title', 'mfn-opts'),
    					),
 
    					array(
    						'id' => 'icon',
-   						're_render' => 'tabs',
+   						're_render' => true,
    						'type' => 'icon',
    						'title' => __('Icon', 'mfn-opts'),
    					),
 
    					array(
    						'id' => 'link',
-   						're_render' => 'tabs',
+   						're_render' => true,
    						'type' => 'text',
    						'title' => __('Link', 'mfn-opts'),
    						'desc' => __('Button will appear only if this field is filled.', 'mfn-opts'),
@@ -37849,7 +42875,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'style',
-   						're_render' => 'tabs',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Style', 'mfn-opts'),
    						'options' => array(
@@ -38115,14 +43141,14 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					),
 
 						array(
-							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .pricing-box .plan-header .price sup.currency,.mcb-section .mcb-wrap .mcb-item-mfnuidelement  .pricing-box .plan-header .price span:color',
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement  .pricing-box .plan-header .price span:color',
 							'type' => 'color',
 							'class' => 'mfn-toggled',
 							'title' => __('Color', 'mfn-opts'),
 						),
 
 						array(
-							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .pricing-box .plan-header .price sup.currency,.mcb-section .mcb-wrap .mcb-item-mfnuidelement .pricing-box .plan-header .price span:typography',
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .pricing-box .plan-header .price span:typography',
 							'type' => 'typography_vb',
 							'label_after' => '<a href="#" title="Edit" class="mfn-option-btn mfn-option-blank btn-medium mfn-vb-label-button"><span class="mfn-icon mfn-icon-edit"></span></a>',
 							'class' => 'mfn-toggled toggle_fields',
@@ -38172,7 +43198,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						),
 
 						array(
-							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .pricing-box .plan-header .price sup.currency:typography',
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-wrap-inner .mcb-item-mfnuidelement .mcb-column-inner .pricing-box .plan-header .price sup.currency:typography',
 							'type' => 'typography_vb',
 							'label_after' => '<a href="#" title="Edit" class="mfn-option-btn mfn-option-blank btn-medium mfn-vb-label-button"><span class="mfn-icon mfn-icon-edit"></span></a>',
 							'class' => 'mfn-toggled toggle_fields',
@@ -38192,7 +43218,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						),
 
 						array(
-							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .pricing-box .plan-header .price sup.period:typography',
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mcb-column-inner .pricing-box .plan-header .price sup.period:typography',
 							'type' => 'typography_vb',
 							'label_after' => '<a href="#" title="Edit" class="mfn-option-btn mfn-option-blank btn-medium mfn-vb-label-button"><span class="mfn-icon mfn-icon-edit"></span></a>',
 							'class' => 'mfn-toggled toggle_fields',
@@ -39125,13 +44151,13 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'btn_text',
    						'type' => 'text',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Text', 'mfn-opts'),
    					),
    					array(
    						'id' => 'btn_link',
    						'type' => 'text',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Link', 'mfn-opts'),
    					),
 
@@ -39155,7 +44181,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'position',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Image position', 'mfn-opts'),
    						'options' => array(
    							'left' => __('Left', 'mfn-opts'),
@@ -39167,7 +44193,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'border',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Border right', 'mfn-opts'),
    						'options' => array(
    							0 => __('Hide', 'mfn-opts'),
@@ -39716,7 +44742,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
 							'id' => 'heading_tag',
 							'type' 	=> 'switch',
-							're_render' => 'standard',
+							're_render' => true,
 							'title' => __('Heading tag', 'mfn-opts'),
 							'options' => array(
 								'h1' => 'H1',
@@ -39743,7 +44769,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
 							'id' => 'title_tag',
 							'type' 	=> 'switch',
-							're_render' => 'standard',
+							're_render' => true,
 							'title' => __('Title tag', 'mfn-opts'),
 							'options' => array(
 								'h1' => 'H1',
@@ -40277,7 +45303,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
    						'id' => 'columns',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Columns', 'mfn-opts'),
 							'options' => array(
 								2 => 2,
@@ -40302,7 +45328,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
    						'id' => 'category',
    						'condition' => array( 'id' => 'shop_cat_display', 'opt' => 'isnt', 'val' => '1' ),
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'select',
    						'title' => __('Parent category', 'mfn-opts'),
    						'hierarchical_options' => mfn_hierarchical_taxonomy('product_cat'),
@@ -40324,7 +45350,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
    						'id' => 'empty',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Empty categories', 'mfn-opts'),
    						'desc' => __('Show categories without products', 'mfn-opts'),
 							'options' => array(
@@ -40343,7 +45369,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
    						'id' => 'image',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Image', 'mfn-opts'),
 							'options' => array(
 								0 => __('Hide', 'mfn-opts'),
@@ -40355,7 +45381,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
    						'id' => 'title',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Title', 'mfn-opts'),
 							'options' => array(
 								0 => __('Hide', 'mfn-opts'),
@@ -40367,7 +45393,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
    						'id' => 'count',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Count', 'mfn-opts'),
 							'desc' => __('Number of products in category', 'mfn-opts'),
 							'options' => array(
@@ -40380,7 +45406,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
 							'id' => 'title_tag',
 							'type' => 'switch',
-							're_render' => 'standard',
+							're_render' => true,
 							'title' => __('Title tag', 'mfn-opts'),
 							'options' => [
 								'h1' => 'H1',
@@ -40404,7 +45430,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
 							'id' => 'order',
 							'type' => 'order',
-							're_render' => 'standard',
+							're_render' => true,
 							'title' => __('Order', 'mfn-opts'),
 							'std' => 'image,title',
 						),
@@ -40786,7 +45812,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'limit',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'text',
    						'title' => __('Products number', 'mfn-opts'),
    						'std' => '6',
@@ -40798,7 +45824,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'columns',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Columns', 'mfn-opts'),
 							'options' => array(
@@ -40811,7 +45837,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
 						array(
    						'id' => 'type',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'select',
    						'title' => __('Display', 'mfn-opts'),
    						'options' => array(
@@ -40830,7 +45856,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'category',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'select',
    						'title' => __('Category', 'mfn-opts'),
    						'hierarchical_options' => mfn_hierarchical_taxonomy('product_cat'),
@@ -40840,7 +45866,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'orderby',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'select',
    						'title' => __('Order by', 'mfn-opts'),
    						'options' => array(
@@ -40857,7 +45883,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'order',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Order', 'mfn-opts'),
    						'options' => array(
@@ -40875,7 +45901,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
 						array(
    						'id' => 'paginate',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Pagination', 'mfn-opts'),
    						'options' => array(
@@ -41670,7 +46696,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'count',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'text',
    						'title' => __('Products number', 'mfn-opts'),
    						'std' => '5',
@@ -41682,7 +46708,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'show',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'select',
    						'title' => __('Display', 'mfn-opts'),
    						'options' => array(
@@ -41695,7 +46721,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'out_of_stock',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Out of stock products', 'mfn-opts'),
    						'options' => array(
@@ -41713,7 +46739,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
 						array(
    						'id' => 'category',
-   						're_render' => 'standard',
+   						're_render' => true,
    						// 'type' => 'category',
    						'type' => 'select',
    						'title' => __('Category', 'mfn-opts'),
@@ -41725,7 +46751,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'orderby',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Order by', 'mfn-opts'),
    						'options' => array(
@@ -41737,7 +46763,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'order',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Order', 'mfn-opts'),
    						'options' => array(
@@ -42448,7 +47474,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'category',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'select',
    						'title' => __('Category', 'mfn-opts'),
    						'options' => mfn_get_categories('slide-types'),
@@ -42459,7 +47485,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'orderby',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Order by', 'mfn-opts'),
    						'options' => array(
    							'date' => __('Date', 'mfn-opts'),
@@ -42472,7 +47498,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'order',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Order', 'mfn-opts'),
    						'options' => array(
    							'ASC' => __('Ascending', 'mfn-opts'),
@@ -42489,7 +47515,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'style',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'select',
 							'title' => __('Style', 'mfn-opts'),
    						'options' => array(
@@ -42504,7 +47530,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'navigation',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Navigation', 'mfn-opts'),
    						'options' => array(
@@ -43233,7 +48259,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'style',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Style', 'mfn-opts'),
    						'options' => array(
    							'' => __('Horizontal Image', 'mfn-opts'),
@@ -43647,7 +48673,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'type',
-   						're_render' => 'tabs',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Style', 'mfn-opts'),
    						'options' => array(
@@ -44039,17 +49065,17 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'category',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'select',
    						'title' => __('Category', 'mfn-opts'),
    						'options' => mfn_get_categories('testimonial-types'),
-   						'js_options' => 'testimonial_types',
+   						'js_hierarchical_options' => 'testimonial_types',
 							'preview' => 'category',
    					),
 
    					array(
    						'id' => 'orderby',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Order by', 'mfn-opts'),
    						'options' => array(
@@ -44062,7 +49088,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'order',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Order', 'mfn-opts'),
    						'options' => array(
@@ -44080,7 +49106,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'style',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Style', 'mfn-opts'),
    						'options' => array(
@@ -44093,7 +49119,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'hide_photos',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'switch',
    						'title' => __('Photos', 'mfn-opts'),
    						'options' => array(
@@ -44631,18 +49657,18 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'category',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'select',
    						'title' => __('Category', 'mfn-opts'),
    						'options' => mfn_get_categories('testimonial-types'),
-   						'js_options' => 'testimonial_types',
+   						'js_hierarchical_options' => 'testimonial_types',
 							'preview' => 'category',
    					),
 
    					array(
    						'id' => 'orderby',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Order by', 'mfn-opts'),
    						'options' => array(
    							'date' => __('Date', 'mfn-opts'),
@@ -44655,7 +49681,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'order',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Order', 'mfn-opts'),
    						'options' => array(
    							'ASC' => __('Ascending', 'mfn-opts'),
@@ -44673,7 +49699,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'style',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Style', 'mfn-opts'),
    						'options' => array(
    							'' => __('Default', 'mfn-opts'),
@@ -44986,7 +50012,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
 							'id' => 'title_tag',
 							'type' => 'switch',
-							're_render' => 'standard',
+							're_render' => true,
 							'title' => __('Title tag', 'mfn-opts'),
 							'options' => [
 								'h1' => 'H1',
@@ -45002,7 +50028,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
 			  			'id' => 'tags_anchors',
 		  				'type' => 'pills',
-		  				're_render' => 'standard',
+		  				're_render' => true,
 							'std' => 'H1 H2 H3 H4 H5 H6',
 							'desc' => 'Separated with space button.<br/>Maximal depth level: <b>3</b>',
 		  				'title' => __('Anchor by HTML tags', 'mfn-opts'),
@@ -45010,7 +50036,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
 						array(
 							'id' => 'marker_view',
-							're_render' => 'standard',
+							're_render' => true,
 							'title' => __('Marker view', 'mfn-opts'),
 							'type' => 'switch',
 							'options' => [
@@ -45023,14 +50049,14 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
 							'id' => 'icon',
 							'type' => 'icon',
-							're_render' => 'standard',
+							're_render' => true,
 							'title' => __('Bullets icon', 'mfn-opts'),
 							'desc' => __('Only for <b>Bullets</b> type of marker', 'mfn-opts'),
 						),
 
             array(
 							'id' => 'url_format',
-							're_render' => 'standard',
+							're_render' => true,
 							'title' => __('Link format', 'mfn-opts'),
 							'desc' => __('Use <b>Simple</b> for languages based on non URL frindly characters', 'mfn-opts'),
 							'type' => 'switch',
@@ -45045,7 +50071,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 							'id' => 'allow_hide',
 							'attr_id' => 'toc_allow_hide',
 							'type' => 'select',
-							're_render' => 'standard',
+							're_render' => true,
 							'title' => __('Toggle the Visibility', 'mfn-opts'),
 							'options' => [
 								'' => __('Disable', 'mfn-opts'),
@@ -45058,7 +50084,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
 							'id' => 'text_show',
 							'type' => 'text',
-							're_render' => 'standard',
+							're_render' => true,
 							'title' => __('Show text', 'mfn-opts'),
 							'condition' => array( 'id' => 'toc_allow_hide', 'opt' => 'isnt', 'val' => '' ),
 							'std' => __('Show', 'mfn-opts'),
@@ -45067,7 +50093,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
 							'id' => 'text_hide',
 							'type' => 'text',
-							're_render' => 'standard',
+							're_render' => true,
 							'title' => __('Hide text', 'mfn-opts'),
 							'condition' => array( 'id' => 'toc_allow_hide', 'opt' => 'isnt', 'val' => '' ),
 							'std' => __('Hide', 'mfn-opts'),
@@ -45444,7 +50470,1264 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    				),
    			),
+/*
+				// Toggle -----------------------------------------------------------
 
+   			'toggle' => array(
+   				'type' => 'toggle',
+   				'title' => __('Toggle', 'mfn-opts'),
+   				'size' => '1/4',
+   				'tablet_size' => '1/4',
+   				'mobile_size' => '1/1',
+   				'tablet_resized' => '0',
+   				'cat' => 'blocks',
+   				'fields' => array(
+
+   					array(
+							'type' => 'html',
+							'html' => $this->itemtabs,
+						),
+
+   					array(
+							'type' => 'html',
+							'html' => '<div class="modalbox-card modalbox-re_render modalbox-card-content active">',
+						),
+
+						array(
+   						'id' => 'tabs',
+   						'type' => 'tabs',
+   						'title' => __('Items', 'mfn-opts'),
+							'options' => [
+
+								'title' => [
+									'input',
+									__('Title', 'mfn-opts'),
+									'This is the title',
+								],
+								'content' => [
+									'textarea',
+									__('Content', 'mfn-opts'),
+									'This is the content',
+								],
+								'icon' => [
+									'icon',
+									__('Icon', 'mfn-opts'),
+									'',
+								],
+								'image' => [
+									'image',
+									__('Image', 'mfn-opts'),
+									'',
+								],
+
+							],
+							'std' => [
+								0 => [
+									'title' => __('This is the 1st title', 'mfn-opts'),
+									'content' => __('This is the 1st content', 'mfn-opts'),
+								],
+								1 => [
+									'title' => __('This is the 2nd title', 'mfn-opts'),
+									'content' => __('This is the 2nd content', 'mfn-opts'),
+								],
+							],
+							'preview' => 'tabs',
+							'primary' => 'title',
+   					),
+
+						array(
+							'id' => 'tag',
+							'type' => 'switch',
+							'title' => __('Question tag', 'mfn-opts'),
+							're_render' => true,
+							'options' => array(
+								'h1' => 'H1',
+								'h2' => 'H2',
+								'h3' => 'H3',
+								'h4' => 'H4',
+								'h5' => 'H5',
+								'h6' => 'H6',
+								'p' => 'p',
+							),
+							'std' => 'h5',
+						),
+
+						// options
+
+   					array(
+   						'title' => __('Options', 'mfn-opts'),
+   					),
+
+						array(
+							'id' => 'type',
+							'attr_id' => 'toggle-type',
+							'type' => 'switch',
+							'title' => __('Type', 'mfn-opts'),
+							're_render' => true,
+							'options' => array(
+								'unordered' => __('Unordered', 'mfn-opts'),
+								'ordered' => __('Ordered', 'mfn-opts'),
+							),
+							'std' => 'unordered'
+						),
+
+						array(
+							'id' => 'divider',
+							'attr_id' => 'toggle-divider',
+							'type' => 'switch',
+							'title' => __('Divider', 'mfn-opts'),
+							're_render' => true,
+							'options' => array(
+								'disable' => __('Disable', 'mfn-opts'),
+								'enable' => __('Enable', 'mfn-opts'),
+							),
+							'std' => 'disable',
+						),
+
+						array(
+							'id' => 'open_first',
+							'type' => 'switch',
+							'title' => __('Open first', 'mfn-opts'),
+							're_render' => true,
+							'options' => array(
+								'disable' => __('Disable', 'mfn-opts'),
+								'enable' => __('Enable', 'mfn-opts'),
+							),
+							'std' => 'disable',
+						),
+
+						array(
+							'id' => 'open_all',
+							'type' => 'switch',
+							'title' => __('Open all', 'mfn-opts'),
+							're_render' => true,
+							'options' => array(
+								'disable' => __('Disable', 'mfn-opts'),
+								'enable' => __('Enable', 'mfn-opts'),
+							),
+							'std' => 'disable',
+						),
+
+						array(
+							'id' => 'open_more',
+							'type' => 'switch',
+							'title' => __('Open more than one at a time', 'mfn-opts'),
+							'options' => array(
+								'disable' => __('Disable', 'mfn-opts'),
+								'enable' => __('Enable', 'mfn-opts'),
+							),
+							'std' => 'disable',
+						),
+
+						// icon
+
+   					array(
+   						'title' => __('Icon', 'mfn-opts'),
+   					),
+
+						array(
+							'type' => 'html',
+							'html' => '<div class="mfn-form-row mfn-sidebar-fields-tabs mfn-vb-formrow mfn-vb-mfnuidhere"><ul class="mfn-sft-nav"><li class="active"><a href="#normal" data-tab="normal">Normal</a></li><li><a href="#hover" data-tab="hover">Active</a></li></ul><div class="mfn-sft mfn-sft-normal mfn-tabs-fields-active">',
+						),
+
+						array(
+   						'id' => 'icon',
+   						'type' => 'icon',
+   						'title' => __('Icon', 'mfn-opts'),
+							're_render' => true,
+							'preview' => 'icon',
+							'std' => 'fas fa-plus',
+   					),
+
+						array(
+							'type' => 'html',
+							'html' => '</div><div class="mfn-sft mfn-sft-hover">',
+						),
+
+						array(
+   						'id' => 'active_icon',
+   						'type' => 'icon',
+   						'title' => __('Icon', 'mfn-opts'),
+							're_render' => true,
+							'preview' => 'icon',
+							'std' => 'fas fa-minus',
+   					),
+
+						array(
+							'type' => 'html',
+							'html' => '</div></div>',
+						),
+
+						array(
+							'id' => 'icon_animation',
+							'type' => 'switch',
+							'title' => __('Animation', 'mfn-opts'),
+							'options' => array(
+								'zoom' => __('Zoom', 'mfn-opts'),
+								'rotate' => __('Rotate', 'mfn-opts'),
+							),
+							'std' => 'zoom',
+						),
+
+						// style ---
+
+						array(
+							'type' => 'html',
+							'html' => '</div><div class="modalbox-card modalbox-card-style modalbox-re_render modalbox-card-style-mfnuidhere">',
+						),
+
+						// item
+
+						array(
+							'class' => 'toggled_header',
+   						'title' => __('Toggle item', 'mfn-opts'),
+   					),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle:--mfn-toggle-gap',
+							'type' => 'sliderbar',
+							'title' => __('Gap', 'mfn-opts'),
+							'responsive' => 'desktop',
+							'class' => 'mfn_field_desktop mfn-toggled',
+							'param' => array(
+								'min' => '0',
+								'max' => '100',
+								'step' => '1',
+								'unit' => 'px',
+							),
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle:--mfn-toggle-gap_tablet',
+							'type' => 'sliderbar',
+							'title' => __('Gap', 'mfn-opts'),
+							'responsive' => 'tablet',
+							'class' => 'mfn_field_tablet mfn-toggled',
+							'param' => array(
+								'min' => '0',
+								'max' => '100',
+								'step' => '1',
+								'unit' => 'px',
+							),
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle:--mfn-toggle-gap_mobile',
+							'type' => 'sliderbar',
+							'title' => __('Gap', 'mfn-opts'),
+							'responsive' => 'mobile',
+							'class' => 'mfn_field_mobile mfn-toggled',
+							'param' => array(
+								'min' => '0',
+								'max' => '100',
+								'step' => '1',
+								'unit' => 'px',
+							),
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle-item:border-style',
+							'attr_id' => 'toggle-border-style',
+							'type' => 'select',
+							'class' => 'mfn-toggled',
+							'title' => __('Border style', 'mfn-opts'),
+							'options' => [
+								'none' => __('None', 'mfn-opts'),
+								'solid' => __('Solid', 'mfn-opts'),
+								'dashed' => __('Dashed', 'mfn-opts'),
+								'dotted' => __('Dotted', 'mfn-opts'),
+								'double' => __('Double', 'mfn-opts'),
+							],
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle-item:border-width',
+							'condition' => array( 'id' => 'toggle-border-style', 'opt' => 'isnt', 'val' => 'none' ),
+							'type' => 'dimensions',
+							'title' => __('Border width', 'mfn-opts'),
+							'class' => 'mfn-toggled',
+							'css_attr' => 'border-width',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle-item:border-radius',
+							'type' => 'dimensions',
+							'title' => __('Border radius', 'mfn-opts'),
+							'class' => 'mfn-toggled',
+							'css_attr' => 'border-radius',
+						),
+
+						array(
+							'type' => 'html',
+							'html' => '<div class="mfn-form-row mfn-sidebar-fields-tabs mfn-vb-formrow mfn-vb-mfnuidhere mfn-toggled"><ul class="mfn-sft-nav"><li class="active"><a href="#normal" data-tab="normal">Normal</a></li><li><a href="#hover" data-tab="hover">Hover</a></li><li><a href="#active" data-tab="active">Active</a></li></ul><div class="mfn-sft mfn-sft-normal mfn-tabs-fields-active">',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle-item:border-color',
+							'condition' => array( 'id' => 'toggle-border-style', 'opt' => 'isnt', 'val' => 'none' ),
+							'type' => 'color',
+							'class' => 'mfn-toggled',
+							'title' => __('Border color', 'mfn-opts'),
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle .mfn-toggle-item:background-color',
+							'type' => 'color',
+							'title' => __('Background color', 'mfn-opts'),
+							'class' => 'mfn-toggled',
+						),
+
+						array(
+		  				'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle .mfn-toggle-item:box-shadow',
+		  				'type' => 'box_shadow',
+		  				'title' => __('Box shadow', 'mfn-opts'),
+							'class' => 'mfn-toggled',
+							'css_attr' => 'box-shadow'
+		  			),
+
+						array(
+							'type' => 'html',
+							'html' => '</div><div class="mfn-sft mfn-sft-hover">',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle-item|hover:border-color',
+							'condition' => array( 'id' => 'toggle-border-style', 'opt' => 'isnt', 'val' => 'none' ),
+							'type' => 'color',
+							'class' => 'mfn-toggled',
+							'title' => __('Border color', 'mfn-opts'),
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle .mfn-toggle-item|hover:background-color',
+							'type' => 'color',
+							'title' => __('Background color', 'mfn-opts'),
+							'class' => 'mfn-toggled',
+						),
+
+						array(
+		  				'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle .mfn-toggle-item|hover:box-shadow',
+		  				'type' => 'box_shadow',
+		  				'title' => __('Box shadow', 'mfn-opts'),
+							'class' => 'mfn-toggled',
+							'css_attr' => 'box-shadow'
+		  			),
+
+						array(
+							'type' => 'html',
+							'html' => '</div><div class="mfn-sft mfn-sft-active">',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle-item.active:border-color',
+							'condition' => array( 'id' => 'toggle-border-style', 'opt' => 'isnt', 'val' => 'none' ),
+							'type' => 'color',
+							'class' => 'mfn-toggled',
+							'title' => __('Border color', 'mfn-opts'),
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle .mfn-toggle-item.active:background-color',
+							'type' => 'color',
+							'title' => __('Background color', 'mfn-opts'),
+							'class' => 'mfn-toggled',
+						),
+
+						array(
+		  				'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle .mfn-toggle-item.active:box-shadow',
+		  				'type' => 'box_shadow',
+		  				'title' => __('Box shadow', 'mfn-opts'),
+							'class' => 'mfn-toggled',
+							'css_attr' => 'box-shadow'
+		  			),
+
+						array(
+							'type' => 'html',
+							'html' => '</div></div>',
+						),
+
+						// divider
+
+						array(
+							'class' => 'toggled_header',
+   						'title' => __('Divider', 'mfn-opts'),
+							'condition' => array( 'id' => 'toggle-divider', 'opt' => 'is', 'val' => 'enable' ),
+   					),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle .toggle-divider:height',
+							'condition' => array( 'id' => 'toggle-divider', 'opt' => 'is', 'val' => 'enable' ),
+							'type' => 'sliderbar',
+							'title' => __('Border width', 'mfn-opts'),
+							'class' => 'mfn-toggled',
+							'param' => array(
+								'min' => '0',
+								'max' => '20',
+								'step' => '1',
+								'unit' => 'px',
+							),
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle:--mfn-toggle-divider-color',
+							'condition' => array( 'id' => 'toggle-divider', 'opt' => 'is', 'val' => 'enable' ),
+							'type' => 'color',
+							'class' => 'mfn-toggled',
+							'title' => __('Color', 'mfn-opts'),
+						),
+
+						// title bar
+
+						array(
+							'class' => 'toggled_header',
+   						'title' => __('Title bar', 'mfn-opts'),
+   					),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle .toggle-bar:padding',
+							'type' => 'dimensions',
+							'version' => 'separated-fields',
+							'title' => __('Padding', 'mfn-opts'),
+							'responsive' => 'desktop',
+							'class' => 'mfn_field_desktop mfn-toggled',
+							'css_attr' => 'padding',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle .toggle-bar:padding_tablet',
+							'type' => 'dimensions',
+							'version' => 'separated-fields',
+							'title' => __('Padding', 'mfn-opts'),
+							'responsive' => 'tablet',
+							'class' => 'mfn_field_tablet mfn-toggled',
+							'css_attr' => 'padding',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle .toggle-bar:padding_mobile',
+							'type' => 'dimensions',
+							'version' => 'separated-fields',
+							'title' => __('Padding', 'mfn-opts'),
+							'responsive' => 'mobile',
+							'class' => 'mfn_field_mobile mfn-toggled',
+							'css_attr' => 'padding',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle .toggle-heading:typography',
+							'type' => 'typography_vb',
+							'label_after' => '<a href="#" title="Edit" class="mfn-option-btn mfn-option-blank btn-medium mfn-vb-label-button"><span class="mfn-icon mfn-icon-edit"></span></a>',
+							'class' => 'mfn-toggled toggle_fields',
+							'title' => __('Typography', 'mfn-opts'),
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .toggle-bar:border-style',
+							'attr_id' => 'toggle-title-border-style',
+							'type' => 'select',
+							'class' => 'mfn-toggled',
+							'title' => __('Border style', 'mfn-opts'),
+							'options' => [
+								'none' => __('None', 'mfn-opts'),
+								'solid' => __('Solid', 'mfn-opts'),
+								'dashed' => __('Dashed', 'mfn-opts'),
+								'dotted' => __('Dotted', 'mfn-opts'),
+								'double' => __('Double', 'mfn-opts'),
+							],
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .toggle-bar:border-width',
+							'condition' => array( 'id' => 'toggle-title-border-style', 'opt' => 'isnt', 'val' => 'none' ),
+							'type' => 'dimensions',
+							'title' => __('Border width', 'mfn-opts'),
+							'class' => 'mfn-toggled',
+							'css_attr' => 'border-width',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .toggle-bar:border-radius',
+							'type' => 'dimensions',
+							'title' => __('Border radius', 'mfn-opts'),
+							'class' => 'mfn-toggled',
+							'css_attr' => 'border-radius',
+						),
+
+						array(
+							'type' => 'html',
+							'html' => '<div class="mfn-form-row mfn-sidebar-fields-tabs mfn-vb-formrow mfn-vb-mfnuidhere mfn-toggled"><ul class="mfn-sft-nav"><li class="active"><a href="#normal" data-tab="normal">Normal</a></li><li><a href="#hover" data-tab="hover">Hover</a></li><li><a href="#active" data-tab="active">Active</a></li></ul><div class="mfn-sft mfn-sft-normal mfn-tabs-fields-active">',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .toggle-bar:border-color',
+							'condition' => array( 'id' => 'toggle-title-border-style', 'opt' => 'isnt', 'val' => 'none' ),
+							'type' => 'color',
+							'class' => 'mfn-toggled',
+							'title' => __('Border color', 'mfn-opts'),
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle .toggle-heading:color',
+							'type' => 'color',
+							'title' => __('Color', 'mfn-opts'),
+							'class' => 'mfn-toggled',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle .toggle-bar:background-color',
+							'type' => 'color',
+							'title' => __('Background color', 'mfn-opts'),
+							'class' => 'mfn-toggled',
+						),
+
+						array(
+		  				'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle .toggle-bar:box-shadow',
+		  				'type' => 'box_shadow',
+		  				'title' => __('Box shadow', 'mfn-opts'),
+							'class' => 'mfn-toggled',
+							'css_attr' => 'box-shadow'
+		  			),
+
+						array(
+							'type' => 'html',
+							'html' => '</div><div class="mfn-sft mfn-sft-hover">',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle-item|hover .toggle-bar:border-color',
+							'condition' => array( 'id' => 'toggle-title-border-style', 'opt' => 'isnt', 'val' => 'none' ),
+							'type' => 'color',
+							'class' => 'mfn-toggled',
+							'title' => __('Border color', 'mfn-opts'),
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle .mfn-toggle-item|hover .toggle-heading:color',
+							'type' => 'color',
+							'title' => __('Color', 'mfn-opts'),
+							'class' => 'mfn-toggled',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle .mfn-toggle-item|hover .toggle-bar:background-color',
+							'type' => 'color',
+							'title' => __('Background color', 'mfn-opts'),
+							'class' => 'mfn-toggled',
+						),
+
+						array(
+		  				'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle .mfn-toggle-item|hover .toggle-bar:box-shadow',
+		  				'type' => 'box_shadow',
+		  				'title' => __('Box shadow', 'mfn-opts'),
+							'class' => 'mfn-toggled',
+							'css_attr' => 'box-shadow'
+		  			),
+
+						array(
+							'type' => 'html',
+							'html' => '</div><div class="mfn-sft mfn-sft-active">',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle-item.active .toggle-bar:border-color',
+							'condition' => array( 'id' => 'toggle-title-border-style', 'opt' => 'isnt', 'val' => 'none' ),
+							'type' => 'color',
+							'class' => 'mfn-toggled',
+							'title' => __('Border color', 'mfn-opts'),
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle .mfn-toggle-item.active .toggle-heading:color',
+							'type' => 'color',
+							'title' => __('Color', 'mfn-opts'),
+							'class' => 'mfn-toggled',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle .mfn-toggle-item.active .toggle-bar:background-color',
+							'type' => 'color',
+							'title' => __('Background color', 'mfn-opts'),
+							'class' => 'mfn-toggled',
+						),
+
+						array(
+		  				'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle .mfn-toggle-item.active .toggle-bar:box-shadow',
+		  				'type' => 'box_shadow',
+		  				'title' => __('Box shadow', 'mfn-opts'),
+							'class' => 'mfn-toggled',
+							'css_attr' => 'box-shadow'
+		  			),
+
+						array(
+							'type' => 'html',
+							'html' => '</div></div>',
+						),
+
+						// content
+
+						array(
+							'class' => 'toggled_header',
+   						'title' => __('Content', 'mfn-opts'),
+   					),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle .toggle-content:padding',
+							'type' => 'dimensions',
+							'version' => 'separated-fields',
+							'title' => __('Padding', 'mfn-opts'),
+							'responsive' => 'desktop',
+							'class' => 'mfn_field_desktop mfn-toggled',
+							'css_attr' => 'padding',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle .toggle-content:padding_tablet',
+							'type' => 'dimensions',
+							'version' => 'separated-fields',
+							'title' => __('Padding', 'mfn-opts'),
+							'responsive' => 'tablet',
+							'class' => 'mfn_field_tablet mfn-toggled',
+							'css_attr' => 'padding',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle .toggle-content:padding_mobile',
+							'type' => 'dimensions',
+							'version' => 'separated-fields',
+							'title' => __('Padding', 'mfn-opts'),
+							'responsive' => 'mobile',
+							'class' => 'mfn_field_mobile mfn-toggled',
+							'css_attr' => 'padding',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle .toggle-content:typography',
+							'type' => 'typography_vb',
+							'label_after' => '<a href="#" title="Edit" class="mfn-option-btn mfn-option-blank btn-medium mfn-vb-label-button"><span class="mfn-icon mfn-icon-edit"></span></a>',
+							'class' => 'mfn-toggled toggle_fields',
+							'title' => __('Typography', 'mfn-opts'),
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle .toggle-content:color',
+							'type' => 'color',
+							'class' => 'mfn-toggled',
+							'title' => __('Color', 'mfn-opts'),
+						),
+
+						array(
+							'type' => 'html',
+							'html' => '<div class="mfn-form-row mfn-sidebar-fields-tabs mfn-vb-formrow mfn-vb-mfnuidhere mfn-toggled"><ul class="mfn-sft-nav"><li class="active"><a href="#normal" data-tab="normal">Normal</a></li><li><a href="#hover" data-tab="hover">Hover</a></li></ul><div class="mfn-sft mfn-sft-normal mfn-tabs-fields-active">',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle .toggle-content a:color',
+							'type' => 'color',
+							'class' => 'mfn-toggled',
+							'title' => __('Link color', 'mfn-opts'),
+						),
+
+						array(
+							'type' => 'html',
+							'html' => '</div><div class="mfn-sft mfn-sft-hover">',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle .toggle-content a|hover:color',
+							'type' => 'color',
+							'class' => 'mfn-toggled',
+							'title' => __('Link color', 'mfn-opts'),
+						),
+
+						array(
+							'type' => 'html',
+							'html' => '</div></div>',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle .toggle-content:background-color',
+							'type' => 'color',
+							'class' => 'mfn-toggled',
+							'title' => __('Background color', 'mfn-opts'),
+						),
+
+						// title icon
+
+						array(
+							'class' => 'toggled_header',
+   						'title' => __('Title icon', 'mfn-opts'),
+   					),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .toggle-bar-icon:width',
+							'type' => 'text',
+							'default_unit' => 'px',
+							'title' => __('Width', 'mfn-opts'),
+							'responsive' => 'desktop',
+							'class' => 'mfn_field_desktop mfn-toggled mfn-slider-input',
+							'css_attr' => 'width',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .toggle-bar-icon:width_tablet',
+							'type' => 'text',
+							'default_unit' => 'px',
+							'title' => __('Width', 'mfn-opts'),
+							'responsive' => 'tablet',
+							'class' => 'mfn_field_tablet mfn-toggled mfn-slider-input',
+							'css_attr' => 'width',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .toggle-bar-icon:width_mobile',
+							'type' => 'text',
+							'default_unit' => 'px',
+							'title' => __('Width', 'mfn-opts'),
+							'responsive' => 'mobile',
+							'class' => 'mfn_field_mobile mfn-toggled mfn-slider-input',
+							'css_attr' => 'width',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .toggle-bar-icon:height',
+							'type' => 'text',
+							'default_unit' => 'px',
+							'title' => __('Height', 'mfn-opts'),
+							'responsive' => 'desktop',
+							'class' => 'mfn_field_desktop mfn-toggled mfn-slider-input',
+							'css_attr' => 'height',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .toggle-bar-icon:height_tablet',
+							'type' => 'text',
+							'default_unit' => 'px',
+							'title' => __('Height', 'mfn-opts'),
+							'responsive' => 'tablet',
+							'class' => 'mfn_field_tablet mfn-toggled mfn-slider-input',
+							'css_attr' => 'height',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .toggle-bar-icon:height_mobile',
+							'type' => 'text',
+							'default_unit' => 'px',
+							'title' => __('Height', 'mfn-opts'),
+							'responsive' => 'mobile',
+							'class' => 'mfn_field_mobile mfn-toggled mfn-slider-input',
+							'css_attr' => 'height',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle:--mfn-toggle-bar-icon-spacing',
+							'type' => 'sliderbar',
+							'default_unit' => 'px',
+							'title' => __('Spacing', 'mfn-opts'),
+							'responsive' => 'desktop',
+							'class' => 'mfn_field_desktop mfn-toggled',
+							'param' => array(
+								'unit' => 'px',
+								'min' => '0',
+								'max' => '200',
+								'step' => '1',
+							),
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle:--mfn-toggle-bar-icon-spacing_tablet',
+							'type' => 'sliderbar',
+							'default_unit' => 'px',
+							'title' => __('Spacing', 'mfn-opts'),
+							'responsive' => 'tablet',
+							'class' => 'mfn_field_tablet mfn-toggled',
+							'param' => array(
+								'unit' => 'px',
+								'min' => '0',
+								'max' => '200',
+								'step' => '1',
+							),
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle:--mfn-toggle-bar-icon-spacing_mobile',
+							'type' => 'sliderbar',
+							'default_unit' => 'px',
+							'title' => __('Spacing', 'mfn-opts'),
+							'responsive' => 'mobile',
+							'class' => 'mfn_field_mobile mfn-toggled',
+							'param' => array(
+								'unit' => 'px',
+								'min' => '0',
+								'max' => '200',
+								'step' => '1',
+							),
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle:--mfn-toggle-bar-icon-size',
+							'condition' => array( 'id' => 'toggle-type', 'opt' => 'isnt', 'val' => 'ordered' ),
+							'type' => 'sliderbar',
+							'default_unit' => 'px',
+							'responsive' => 'desktop',
+							'class' => 'mfn_field_desktop mfn-toggled narrow',
+							'title' => __('Icon size', 'mfn-opts'),
+							'units' => array(
+								'px' 	=> array('min' => 1, 		'max' => 100, 'step' => 1),
+								'em' 	=> array('min' => 0.1, 	'max' => 10, 	'step' => 0.1),
+								'rem' => array('min' => 0.1, 	'max' => 10, 	'step' => 0.1),
+								'vw' 	=> array('min' => 1, 		'max' => 100, 'step' => 1),
+							)
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle:--mfn-toggle-bar-icon-size_tablet',
+							'condition' => array( 'id' => 'toggle-type', 'opt' => 'isnt', 'val' => 'ordered' ),
+							'type' => 'sliderbar',
+							'default_unit' => 'px',
+							'responsive' => 'tablet',
+							'class' => 'mfn_field_tablet mfn-toggled narrow',
+							'title' => __('Icon size', 'mfn-opts'),
+							'units' => array(
+								'px' 	=> array('min' => 1, 		'max' => 100, 'step' => 1),
+								'em' 	=> array('min' => 0.1, 	'max' => 10, 	'step' => 0.1),
+								'rem' => array('min' => 0.1, 	'max' => 10, 	'step' => 0.1),
+								'vw' 	=> array('min' => 1, 		'max' => 100, 'step' => 1),
+							)
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle:--mfn-toggle-bar-icon-size_mobile',
+							'condition' => array( 'id' => 'toggle-type', 'opt' => 'isnt', 'val' => 'ordered' ),
+							'type' => 'sliderbar',
+							'default_unit' => 'px',
+							'responsive' => 'mobile',
+							'class' => 'mfn_field_mobile mfn-toggled narrow',
+							'title' => __('Icon size', 'mfn-opts'),
+							'units' => array(
+								'px' 	=> array('min' => 1, 		'max' => 100, 'step' => 1),
+								'em' 	=> array('min' => 0.1, 	'max' => 10, 	'step' => 0.1),
+								'rem' => array('min' => 0.1, 	'max' => 10, 	'step' => 0.1),
+								'vw' 	=> array('min' => 1, 		'max' => 100, 'step' => 1),
+							)
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .toggle-bar-icon|after:typography',
+							'condition' => array( 'id' => 'toggle-type', 'opt' => 'is', 'val' => 'ordered' ),
+							'type' => 'typography_vb',
+							'label_after' => '<a href="#" title="Edit" class="mfn-option-btn mfn-option-blank btn-medium mfn-vb-label-button"><span class="mfn-icon mfn-icon-edit"></span></a>',
+							'class' => 'mfn-toggled toggle_fields',
+							'title' => __('Typography', 'mfn-opts'),
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .toggle-bar-icon:border-style',
+							'attr_id' => 'toggle-ti-border-style',
+							'type' => 'select',
+							'class' => 'mfn-toggled',
+							'title' => __('Border style', 'mfn-opts'),
+							'options' => [
+								'none' => __('None', 'mfn-opts'),
+								'solid' => __('Solid', 'mfn-opts'),
+								'dashed' => __('Dashed', 'mfn-opts'),
+								'dotted' => __('Dotted', 'mfn-opts'),
+								'double' => __('Double', 'mfn-opts'),
+							],
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .toggle-bar-icon:border-width',
+							'condition' => array( 'id' => 'toggle-ti-border-style', 'opt' => 'isnt', 'val' => 'none' ),
+							'type' => 'dimensions',
+							'title' => __('Border width', 'mfn-opts'),
+							'class' => 'mfn-toggled',
+							'css_attr' => 'border-width',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .toggle-bar-icon:border-radius',
+							'type' => 'dimensions',
+							'title' => __('Border radius', 'mfn-opts'),
+							'class' => 'mfn-toggled',
+							'css_attr' => 'border-radius',
+						),
+
+						array(
+							'type' => 'html',
+							'html' => '<div class="mfn-form-row mfn-sidebar-fields-tabs mfn-vb-formrow mfn-vb-mfnuidhere mfn-toggled"><ul class="mfn-sft-nav"><li class="active"><a href="#normal" data-tab="normal">Normal</a></li><li><a href="#hover" data-tab="hover">Hover</a></li><li><a href="#active" data-tab="active">Active</a></li></ul><div class="mfn-sft mfn-sft-normal mfn-tabs-fields-active">',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .toggle-bar-icon:border-color',
+							'condition' => array( 'id' => 'toggle-ti-border-style', 'opt' => 'isnt', 'val' => 'none' ),
+							'type' => 'color',
+							'class' => 'mfn-toggled',
+							'title' => __('Border color', 'mfn-opts'),
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle:--mfn-toggle-bar-icon-color',
+							'type' => 'color',
+							'title' => __('Color', 'mfn-opts'),
+							'class' => 'mfn-toggled',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .toggle-bar-icon:background-color',
+							'type' => 'color',
+							'class' => 'mfn-toggled',
+							'title' => __('Background color', 'mfn-opts'),
+						),
+
+						array(
+							'type' => 'html',
+							'html' => '</div><div class="mfn-sft mfn-sft-hover">',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle-item|hover .toggle-bar-icon:border-color',
+							'condition' => array( 'id' => 'toggle-ti-border-style', 'opt' => 'isnt', 'val' => 'none' ),
+							'type' => 'color',
+							'class' => 'mfn-toggled',
+							'title' => __('Border color', 'mfn-opts'),
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle-item|hover:--mfn-toggle-bar-icon-color',
+							'type' => 'color',
+							'title' => __('Color', 'mfn-opts'),
+							'class' => 'mfn-toggled',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle-item|hover .toggle-bar-icon:background-color',
+							'type' => 'color',
+							'class' => 'mfn-toggled',
+							'title' => __('Background color', 'mfn-opts'),
+						),
+
+						array(
+							'type' => 'html',
+							'html' => '</div><div class="mfn-sft mfn-sft-active">',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle-item.active .toggle-bar-icon:border-color',
+							'condition' => array( 'id' => 'toggle-ti-border-style', 'opt' => 'isnt', 'val' => 'none' ),
+							'type' => 'color',
+							'class' => 'mfn-toggled',
+							'title' => __('Border color', 'mfn-opts'),
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle-item.active:--mfn-toggle-bar-icon-color',
+							'type' => 'color',
+							'title' => __('Color', 'mfn-opts'),
+							'class' => 'mfn-toggled',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle-item.active .toggle-bar-icon:background-color',
+							'type' => 'color',
+							'class' => 'mfn-toggled',
+							'title' => __('Background color', 'mfn-opts'),
+						),
+
+						array(
+							'type' => 'html',
+							'html' => '</div></div>',
+						),
+
+						// toggle icon
+
+						array(
+							'class' => 'toggled_header',
+   						'title' => __('Toggle icon', 'mfn-opts'),
+   					),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .toggle-icon:width',
+							'type' => 'text',
+							'default_unit' => 'px',
+							'title' => __('Width', 'mfn-opts'),
+							'responsive' => 'desktop',
+							'class' => 'mfn_field_desktop mfn-toggled mfn-slider-input',
+							'css_attr' => 'width',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .toggle-icon:width_tablet',
+							'type' => 'text',
+							'default_unit' => 'px',
+							'title' => __('Width', 'mfn-opts'),
+							'responsive' => 'tablet',
+							'class' => 'mfn_field_tablet mfn-toggled mfn-slider-input',
+							'css_attr' => 'width',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .toggle-icon:width_mobile',
+							'type' => 'text',
+							'default_unit' => 'px',
+							'title' => __('Width', 'mfn-opts'),
+							'responsive' => 'mobile',
+							'class' => 'mfn_field_mobile mfn-toggled mfn-slider-input',
+							'css_attr' => 'width',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .toggle-icon:height',
+							'type' => 'text',
+							'default_unit' => 'px',
+							'title' => __('Height', 'mfn-opts'),
+							'responsive' => 'desktop',
+							'class' => 'mfn_field_desktop mfn-toggled mfn-slider-input',
+							'css_attr' => 'height',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .toggle-icon:height_tablet',
+							'type' => 'text',
+							'default_unit' => 'px',
+							'title' => __('Height', 'mfn-opts'),
+							'responsive' => 'tablet',
+							'class' => 'mfn_field_tablet mfn-toggled mfn-slider-input',
+							'css_attr' => 'height',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .toggle-icon:height_mobile',
+							'type' => 'text',
+							'default_unit' => 'px',
+							'title' => __('Height', 'mfn-opts'),
+							'responsive' => 'mobile',
+							'class' => 'mfn_field_mobile mfn-toggled mfn-slider-input',
+							'css_attr' => 'height',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle:--mfn-toggle-icon-spacing',
+							'type' => 'sliderbar',
+							'default_unit' => 'px',
+							'title' => __('Spacing', 'mfn-opts'),
+							'responsive' => 'desktop',
+							'class' => 'mfn_field_desktop mfn-toggled',
+							'param' => array(
+								'unit' => 'px',
+								'min' => '0',
+								'max' => '200',
+								'step' => '1',
+							),
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle:--mfn-toggle-icon-spacing_tablet',
+							'type' => 'sliderbar',
+							'default_unit' => 'px',
+							'title' => __('Spacing', 'mfn-opts'),
+							'responsive' => 'tablet',
+							'class' => 'mfn_field_tablet mfn-toggled',
+							'param' => array(
+								'unit' => 'px',
+								'min' => '0',
+								'max' => '200',
+								'step' => '1',
+							),
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle:--mfn-toggle-icon-spacing_mobile',
+							'type' => 'sliderbar',
+							'default_unit' => 'px',
+							'title' => __('Spacing', 'mfn-opts'),
+							'responsive' => 'mobile',
+							'class' => 'mfn_field_mobile mfn-toggled',
+							'param' => array(
+								'unit' => 'px',
+								'min' => '0',
+								'max' => '200',
+								'step' => '1',
+							),
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle:--mfn-toggle-icon-size',
+							'condition' => array( 'id' => 'toggle-type', 'opt' => 'isnt', 'val' => 'ordered' ),
+							'type' => 'sliderbar',
+							'default_unit' => 'px',
+							'responsive' => 'desktop',
+							'class' => 'mfn_field_desktop mfn-toggled narrow',
+							'title' => __('Icon size', 'mfn-opts'),
+							'units' => array(
+								'px' 	=> array('min' => 1, 		'max' => 100, 'step' => 1),
+								'em' 	=> array('min' => 0.1, 	'max' => 10, 	'step' => 0.1),
+								'rem' => array('min' => 0.1, 	'max' => 10, 	'step' => 0.1),
+								'vw' 	=> array('min' => 1, 		'max' => 100, 'step' => 1),
+							)
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle:--mfn-toggle-icon-size_tablet',
+							'condition' => array( 'id' => 'toggle-type', 'opt' => 'isnt', 'val' => 'ordered' ),
+							'type' => 'sliderbar',
+							'default_unit' => 'px',
+							'responsive' => 'tablet',
+							'class' => 'mfn_field_tablet mfn-toggled narrow',
+							'title' => __('Icon size', 'mfn-opts'),
+							'units' => array(
+								'px' 	=> array('min' => 1, 		'max' => 100, 'step' => 1),
+								'em' 	=> array('min' => 0.1, 	'max' => 10, 	'step' => 0.1),
+								'rem' => array('min' => 0.1, 	'max' => 10, 	'step' => 0.1),
+								'vw' 	=> array('min' => 1, 		'max' => 100, 'step' => 1),
+							)
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle:--mfn-toggle-icon-size_mobile',
+							'condition' => array( 'id' => 'toggle-type', 'opt' => 'isnt', 'val' => 'ordered' ),
+							'type' => 'sliderbar',
+							'default_unit' => 'px',
+							'responsive' => 'mobile',
+							'class' => 'mfn_field_mobile mfn-toggled narrow',
+							'title' => __('Icon size', 'mfn-opts'),
+							'units' => array(
+								'px' 	=> array('min' => 1, 		'max' => 100, 'step' => 1),
+								'em' 	=> array('min' => 0.1, 	'max' => 10, 	'step' => 0.1),
+								'rem' => array('min' => 0.1, 	'max' => 10, 	'step' => 0.1),
+								'vw' 	=> array('min' => 1, 		'max' => 100, 'step' => 1),
+							)
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .toggle-icon|after:typography',
+							'condition' => array( 'id' => 'toggle-type', 'opt' => 'is', 'val' => 'ordered' ),
+							'type' => 'typography_vb',
+							'label_after' => '<a href="#" title="Edit" class="mfn-option-btn mfn-option-blank btn-medium mfn-vb-label-button"><span class="mfn-icon mfn-icon-edit"></span></a>',
+							'class' => 'mfn-toggled toggle_fields',
+							'title' => __('Typography', 'mfn-opts'),
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .toggle-icon:border-style',
+							'attr_id' => 'toggle-ti-border-style',
+							'type' => 'select',
+							'class' => 'mfn-toggled',
+							'title' => __('Border style', 'mfn-opts'),
+							'options' => [
+								'none' => __('None', 'mfn-opts'),
+								'solid' => __('Solid', 'mfn-opts'),
+								'dashed' => __('Dashed', 'mfn-opts'),
+								'dotted' => __('Dotted', 'mfn-opts'),
+								'double' => __('Double', 'mfn-opts'),
+							],
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .toggle-icon:border-width',
+							'condition' => array( 'id' => 'toggle-ti-border-style', 'opt' => 'isnt', 'val' => 'none' ),
+							'type' => 'dimensions',
+							'title' => __('Border width', 'mfn-opts'),
+							'class' => 'mfn-toggled',
+							'css_attr' => 'border-width',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .toggle-icon:border-radius',
+							'type' => 'dimensions',
+							'title' => __('Border radius', 'mfn-opts'),
+							'class' => 'mfn-toggled',
+							'css_attr' => 'border-radius',
+						),
+
+						array(
+							'type' => 'html',
+							'html' => '<div class="mfn-form-row mfn-sidebar-fields-tabs mfn-vb-formrow mfn-vb-mfnuidhere mfn-toggled"><ul class="mfn-sft-nav"><li class="active"><a href="#normal" data-tab="normal">Normal</a></li><li><a href="#hover" data-tab="hover">Hover</a></li><li><a href="#active" data-tab="active">Active</a></li></ul><div class="mfn-sft mfn-sft-normal mfn-tabs-fields-active">',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .toggle-icon:border-color',
+							'condition' => array( 'id' => 'toggle-ti-border-style', 'opt' => 'isnt', 'val' => 'none' ),
+							'type' => 'color',
+							'class' => 'mfn-toggled',
+							'title' => __('Border color', 'mfn-opts'),
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle:--mfn-toggle-icon-color',
+							'type' => 'color',
+							'title' => __('Color', 'mfn-opts'),
+							'class' => 'mfn-toggled',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .toggle-icon:background-color',
+							'type' => 'color',
+							'class' => 'mfn-toggled',
+							'title' => __('Background color', 'mfn-opts'),
+						),
+
+						array(
+							'type' => 'html',
+							'html' => '</div><div class="mfn-sft mfn-sft-hover">',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle-item|hover .toggle-icon:border-color',
+							'condition' => array( 'id' => 'toggle-ti-border-style', 'opt' => 'isnt', 'val' => 'none' ),
+							'type' => 'color',
+							'class' => 'mfn-toggled',
+							'title' => __('Border color', 'mfn-opts'),
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle-item|hover:--mfn-toggle-icon-color',
+							'type' => 'color',
+							'title' => __('Color', 'mfn-opts'),
+							'class' => 'mfn-toggled',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle-item|hover .toggle-icon:background-color',
+							'type' => 'color',
+							'class' => 'mfn-toggled',
+							'title' => __('Background color', 'mfn-opts'),
+						),
+
+						array(
+							'type' => 'html',
+							'html' => '</div><div class="mfn-sft mfn-sft-active">',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle-item.active .toggle-icon:border-color',
+							'condition' => array( 'id' => 'toggle-ti-border-style', 'opt' => 'isnt', 'val' => 'none' ),
+							'type' => 'color',
+							'class' => 'mfn-toggled',
+							'title' => __('Border color', 'mfn-opts'),
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle-item.active:--mfn-toggle-icon-color',
+							'type' => 'color',
+							'title' => __('Color', 'mfn-opts'),
+							'class' => 'mfn-toggled',
+						),
+
+						array(
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mfn-toggle-item.active .toggle-icon:background-color',
+							'type' => 'color',
+							'class' => 'mfn-toggled',
+							'title' => __('Background color', 'mfn-opts'),
+						),
+
+						array(
+							'type' => 'html',
+							'html' => '</div></div>',
+						),
+
+   				),
+   			),
+*/
    			// Trailer Box ----------------------------------------------------
 
    			'trailer_box' => array(
@@ -45479,7 +51762,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
    						'id' => 'orientation',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Image orientation', 'mfn-opts'),
    						'options' => array(
    							'' => __('Vertical', 'mfn-opts'),
@@ -45540,7 +51823,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    					array(
    						'id' => 'style',
    						'type' => 'switch',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'title' => __('Style', 'mfn-opts'),
    						'options' => array(
    							'' => __('Default', 'mfn-opts'),
@@ -45734,7 +52017,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'video',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'text',
    						'title' => __('Video ID', 'mfn-opts'),
    						'desc' => __('<b>YouTube:</b> http://www.youtube.com/watch?v=<u>WoJhnRczeNg</u><br /><b>Vimeo:</b> http://vimeo.com/<u>62954028</u>', 'mfn-opts'),
@@ -45744,7 +52027,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'parameters',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'text',
    						'title' => __('Parameters', 'mfn-opts'),
    						'desc' => __('Multiple parameters should be connected with "&"<br />Example: <b>autoplay=1&loop=1</b><br />Notice: Vimeo authors may disable some parameters for their videos', 'mfn-opts'),
@@ -45758,7 +52041,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'mp4',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'upload',
    						'title' => __('MP4 video', 'mfn-opts'),
    						'desc' => __('Please add both mp4 and ogv for cross-browser compatibility', 'mfn-opts'),
@@ -45767,7 +52050,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'ogv',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'upload',
    						'title' => __('OGV video', 'mfn-opts'),
    						'data' => 'video',
@@ -45775,7 +52058,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'placeholder',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'upload',
    						'title' => __('Placeholder image', 'mfn-opts'),
    						'desc' => __('Placeholder Image will be used as video placeholder before video loads and on mobile devices', 'mfn-opts'),
@@ -45783,7 +52066,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'html5_parameters',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'select',
    						'title' => __('Parameters', 'mfn-opts'),
    						'desc' => __('WebKit browsers and iOS do not support autoplay', 'mfn-opts'),
@@ -45811,7 +52094,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'width',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'text',
    						'title' => __('Width', 'mfn-opts'),
    						'param' => 'number',
@@ -45822,7 +52105,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
    					array(
    						'id' => 'height',
-   						're_render' => 'standard',
+   						're_render' => true,
    						'type' => 'text',
    						'title' => __('Height', 'mfn-opts'),
 							'param' => 'number',
@@ -46006,6 +52289,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
    						'type' => 'visual',
    						'title' => __('Editor', 'mfn-opts'),
 							'class' => 'form-content-full-width',
+							'dynamic_data' => 'content',
 							'preview' => 'content',
 							'vbstd' => '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>',
    					),
@@ -46638,6 +52922,13 @@ if( ! class_exists('Mfn_Builder_Fields') )
 							'type' => 'pills',
 							'title' => __('Class', 'mfn-opts'),
 							'desc' => __('CSS Classes', 'mfn-opts')
+						),
+
+						array(
+							'id' => 'button_id',
+							'type' => 'text',
+							'title' => __('ID', 'mfn-opts'),
+							'desc' => __('This option is useful when you want to use <b>GTM</b>', 'mfn-opts'),
 						),
 
 						array(
@@ -47626,8 +53917,20 @@ if( ! class_exists('Mfn_Builder_Fields') )
 						array(
 							'id' => 'background',
 							'type' => 'color',
-							'title' => __('Background', 'mfn-opts'),
+							'title' => __('Color', 'mfn-opts'),
 							'alpha' => true
+						),
+
+						array(
+							'id' => 'transparent',
+							'type' => 'switch',
+							'title' => __('Transparent background', 'mfn-opts'),
+							'alpha' => true,
+							'options' => [
+								'0' => __('Disable', 'mfn-opts'),
+								'1' => __('Enable', 'mfn-opts'),
+							],
+							'std' => '0',
 						),
 
 					),
@@ -47962,7 +54265,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 
 						array(
 							'form' => 'advanced',
-		  				'class' => 'toggled_header',
+		  				'class' => 'toggled_header hide_if_ql',
    						'title' => __('Positioning', 'mfn-opts'),
    					),
 
@@ -47972,7 +54275,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 							'attr_id' => 'item_position',
 							'type' => 'select',
 							'responsive' => 'desktop',
-							'class' => 'mfn-toggled absolute-pos-watcher mfn_field_desktop',
+							'class' => 'mfn-toggled absolute-pos-watcher mfn_field_desktop custom-element-position',
 							'title' => __('Position', 'mfn-opts'),
 							'options' => [
 								'' => __('Default', 'mfn-opts'),
@@ -47987,7 +54290,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 							'attr_id' => 'item_position_tablet',
 							'type' => 'select',
 							'responsive' => 'tablet',
-							'class' => 'mfn-toggled absolute-pos-watcher mfn_field_tablet',
+							'class' => 'mfn-toggled absolute-pos-watcher mfn_field_tablet custom-element-position',
 							'title' => __('Position', 'mfn-opts'),
 							'options' => [
 								'' => __('Default', 'mfn-opts'),
@@ -48003,7 +54306,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 							'attr_id' => 'item_position_mobile',
 							'type' => 'select',
 							'responsive' => 'mobile',
-							'class' => 'mfn-toggled absolute-pos-watcher mfn_field_mobile',
+							'class' => 'mfn-toggled absolute-pos-watcher mfn_field_mobile custom-element-position',
 							'title' => __('Position', 'mfn-opts'),
 							'options' => [
 								'' => __('Default', 'mfn-opts'),
@@ -48021,7 +54324,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 							'responsive' => 'desktop',
 							'condition' => array( 'id' => 'item_position', 'opt' => 'is', 'val' => 'relative,absolute' ),
 							'title' => __('Top', 'mfn-opts'),
-   						'class' => 'mfn-toggled mfn_field_desktop',
+   						'class' => 'mfn-toggled mfn_field_desktop custom-abs-offset-values',
 						),
 
 						array(
@@ -48032,7 +54335,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 							'responsive' => 'desktop',
 							'condition' => array( 'id' => 'item_position', 'opt' => 'is', 'val' => 'relative,absolute' ),
 							'title' => __('Bottom', 'mfn-opts'),
-   						'class' => 'mfn-toggled mfn_field_desktop',
+   						'class' => 'mfn-toggled mfn_field_desktop custom-abs-offset-values',
 						),
 
 						array(
@@ -48043,7 +54346,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 							'responsive' => 'desktop',
 							'condition' => array( 'id' => 'item_position', 'opt' => 'is', 'val' => 'relative,absolute' ),
 							'title' => __('Left', 'mfn-opts'),
-   						'class' => 'mfn-toggled mfn_field_desktop',
+   						'class' => 'mfn-toggled mfn_field_desktop custom-abs-offset-values',
 						),
 
 						array(
@@ -48054,7 +54357,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 							'responsive' => 'desktop',
 							'condition' => array( 'id' => 'item_position', 'opt' => 'is', 'val' => 'relative,absolute' ),
 							'title' => __('Right', 'mfn-opts'),
-   						'class' => 'mfn-toggled mfn_field_desktop',
+   						'class' => 'mfn-toggled mfn_field_desktop custom-abs-offset-values',
 						),
 
 						array(
@@ -48065,7 +54368,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 							'responsive' => 'tablet',
 							'condition' => array( 'id' => 'item_position_tablet', 'opt' => 'is', 'val' => 'relative,absolute' ),
 							'title' => __('Top', 'mfn-opts'),
-   						'class' => 'mfn-toggled mfn_field_tablet',
+   						'class' => 'mfn-toggled mfn_field_tablet custom-abs-offset-values',
 						),
 
 						array(
@@ -48076,7 +54379,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 							'responsive' => 'tablet',
 							'condition' => array( 'id' => 'item_position_tablet', 'opt' => 'is', 'val' => 'relative,absolute' ),
 							'title' => __('Bottom', 'mfn-opts'),
-   						'class' => 'mfn-toggled mfn_field_tablet',
+   						'class' => 'mfn-toggled mfn_field_tablet custom-abs-offset-values',
 						),
 
 						array(
@@ -48087,7 +54390,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 							'responsive' => 'tablet',
 							'condition' => array( 'id' => 'item_position_tablet', 'opt' => 'is', 'val' => 'relative,absolute' ),
 							'title' => __('Left', 'mfn-opts'),
-   						'class' => 'mfn-toggled mfn_field_tablet',
+   						'class' => 'mfn-toggled mfn_field_tablet custom-abs-offset-values',
 						),
 
 						array(
@@ -48098,7 +54401,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 							'responsive' => 'tablet',
 							'condition' => array( 'id' => 'item_position_tablet', 'opt' => 'is', 'val' => 'relative,absolute' ),
 							'title' => __('Right', 'mfn-opts'),
-   						'class' => 'mfn-toggled mfn_field_tablet',
+   						'class' => 'mfn-toggled mfn_field_tablet custom-abs-offset-values',
 						),
 
 						array(
@@ -48109,7 +54412,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 							'responsive' => 'mobile',
 							'condition' => array( 'id' => 'item_position_mobile', 'opt' => 'is', 'val' => 'relative,absolute' ),
 							'title' => __('Top', 'mfn-opts'),
-   						'class' => 'mfn-toggled mfn_field_mobile',
+   						'class' => 'mfn-toggled mfn_field_mobile custom-abs-offset-values',
 						),
 
 						array(
@@ -48120,7 +54423,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 							'responsive' => 'mobile',
 							'condition' => array( 'id' => 'item_position_mobile', 'opt' => 'is', 'val' => 'relative,absolute' ),
 							'title' => __('Bottom', 'mfn-opts'),
-   						'class' => 'mfn-toggled mfn_field_mobile',
+   						'class' => 'mfn-toggled mfn_field_mobile custom-abs-offset-values',
 						),
 
 						array(
@@ -48131,7 +54434,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 							'responsive' => 'mobile',
 							'condition' => array( 'id' => 'item_position_mobile', 'opt' => 'is', 'val' => 'relative,absolute' ),
 							'title' => __('Left', 'mfn-opts'),
-   						'class' => 'mfn-toggled mfn_field_mobile',
+   						'class' => 'mfn-toggled mfn_field_mobile custom-abs-offset-values',
 						),
 
 						array(
@@ -48142,7 +54445,7 @@ if( ! class_exists('Mfn_Builder_Fields') )
 							'responsive' => 'mobile',
 							'condition' => array( 'id' => 'item_position_mobile', 'opt' => 'is', 'val' => 'relative,absolute' ),
 							'title' => __('Right', 'mfn-opts'),
-   						'class' => 'mfn-toggled mfn_field_mobile',
+   						'class' => 'mfn-toggled mfn_field_mobile custom-abs-offset-values',
 						),
 
 						array(
@@ -48681,6 +54984,19 @@ if( ! class_exists('Mfn_Builder_Fields') )
 							'css_attr' => 'box-shadow',
 		  			),
 
+		  			array(
+							'form' => 'advanced',
+							'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .mcb-column-inner:overflow',
+							'type' => 'select',
+							'class' => 'mfn-toggled',
+							'title' => __('Overflow', 'mfn-opts'),
+							'options' => [
+								'' => __('Default', 'mfn-opts'),
+								'hidden' => __('Hidden', 'mfn-opts'),
+								'auto' => __('Auto', 'mfn-opts'),
+							],
+						),
+
 						array(
 							'form' => 'advanced',
 							'class' => 'toggled_header',
@@ -48776,12 +55092,29 @@ if( ! class_exists('Mfn_Builder_Fields') )
 		  			array(
 		  				'form' => 'advanced',
    						'id' => 'animate',
+   						'attr_id' => 'animate',
    						'type' => 'select',
    						'title' => __('Animation', 'mfn-opts'),
    						'desc' => __('Entrance animation', 'mfn-opts'),
    						'class' => 'mfn-toggled',
    						'options' => $this->get_animations(),
    					),
+
+   					array(
+		  				'form' => 'advanced',
+		  				'id' => 'style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement:animation-delay',
+		  				'condition' => array( 'id' => 'animate', 'opt' => 'isnt', 'val' => '' ),
+		  				'type' => 'sliderbar',
+		  				'class' => 'mfn-toggled',
+							'title' => __('Animation delay', 'mfn-opts'),
+							'after' => 'ms',
+							'param' => array(
+								'min' => '0',
+								'max' => '3000',
+								'step' => '1',
+								'unit' => 'ms'
+							),
+		  			),
 
 						array(
 							'form' => 'advanced',

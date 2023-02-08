@@ -198,7 +198,8 @@
         $slider.slick({
           arrows: false,
           dots: true,
-          // fade: true,
+          autoplay: true,
+          autoplaySpeed: 5000,
         });
 
       },
@@ -238,8 +239,17 @@
 
         }).done(function(response){
 
-          $el.removeClass('loading mfn-btn-blue').addClass('disabled')
-            .children('span').text('Active');
+          if( response.indexOf('contains no files') > 0 ){
+
+            $el.removeClass('loading');
+            alert('Invalid license code. Please make sure that your purchase code is used only on this domain. You can check it at: api.muffingroup.com/licenses');
+
+          } else {
+
+            $el.removeClass('loading mfn-btn-blue').addClass('disabled')
+              .children('span').text('Active');
+
+          }
 
         });
 
@@ -272,8 +282,22 @@
 
         }).done(function(response){
 
-          $el.removeClass('loading mfn-btn-blue').addClass('disabled')
-            .children('span').text('Active');
+          if( response.indexOf('wp-content') > 0 ){
+
+            $el.removeClass('loading');
+            alert('Plugin folder already exists. Please remove wp-content/plugins/'+ plugin +' folder.' );
+
+          } else if( response.indexOf('plugins.php?action=activate') > 0 ){
+
+            $el.removeClass('loading mfn-btn-blue').addClass('disabled')
+              .children('span').text('Active');
+
+          } else {
+
+            $el.removeClass('loading');
+            alert('Invalid license code. Please make sure that your purchase code is used only on this domain. You can check it at: api.muffingroup.com/licenses');
+
+          }
 
         });
 

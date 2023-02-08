@@ -88,6 +88,7 @@ class MfnVisualBuilder {
 	  		'jquery-core',
 	  		'jquery-migrate',
 	  		'jquery-ui-core',
+	  		'jquery-ui-tabs',
 	  		'mediaelement',
 	  		'mediaelement-core',
 	  		'mediaelement-migrate',
@@ -131,6 +132,7 @@ class MfnVisualBuilder {
 			'site-health',
 			'wp-admin',
 			'login',
+			'tabs',
 			'install',
 			'wp-color-picker',
 			'customize-controls',
@@ -164,11 +166,19 @@ class MfnVisualBuilder {
 		$create_bebuilder_fields = true;
 
 	    foreach( $wp_scripts->registered as $script ) {
-	        if( $this->scripts && !in_array($script->handle, $this->scripts) ) wp_dequeue_script( $script->handle );
+        if( $this->scripts && !in_array($script->handle, $this->scripts) ) {
+        	wp_dequeue_script( $script->handle );
+        	// wp_deregister_script( $script->handle );
+        }
 	    }
 
 	    foreach( $wp_styles->registered as $style ) {
-	        if( !in_array($style->handle, $this->styles) ) wp_dequeue_style( $style->handle );
+        if( !in_array($style->handle, $this->styles) ) {
+        	wp_dequeue_style( $style->handle );
+					if( 'mfn-dynamic' == $style->handle ){
+						wp_deregister_style( $style->handle );
+					}
+        }
 	    }
 
 	    wp_enqueue_style('mfn-vbstyle', get_theme_file_uri('/visual-builder/assets/css/style.css'), false, time(), false);
@@ -191,7 +201,7 @@ class MfnVisualBuilder {
 	    	echo '<script id="mfn-bebuilder-fields-live">'.$this->fieldsToJS().'</script>';
 	    }
 
-		wp_enqueue_script( 'mfn-opts-plugins',get_template_directory_uri() .'/muffin-options/js/plugins.js', array('jquery'), MFN_THEME_VERSION, true );
+		//wp_enqueue_script( 'mfn-opts-plugins',get_template_directory_uri() .'/muffin-options/js/plugins.js', array('jquery'), MFN_THEME_VERSION, true );
 		wp_enqueue_script('mfn-plugins', get_theme_file_uri('/js/plugins.js'), array('jquery'), MFN_THEME_VERSION, true);
 
 		wp_enqueue_style('mfn-vbreset', get_theme_file_uri('/visual-builder/assets/css/reset.css'), false, MFN_THEME_VERSION, 'all');
@@ -207,9 +217,10 @@ class MfnVisualBuilder {
 		wp_enqueue_script( 'jquery-ui-tabs' );
 		wp_enqueue_script( 'jquery-ui-slider' );
 
-	    // Add the color picker
-	    wp_enqueue_style( 'wp-color-picker' );
-	    wp_enqueue_script( 'iris', admin_url( 'js/iris.min.js' ), array( 'jquery-ui-draggable', 'jquery-ui-slider', 'jquery-touch-punch' ), false, 1 );
+	  // Add the color picker
+
+	  wp_enqueue_style( 'wp-color-picker' );
+	  wp_enqueue_script( 'iris', admin_url( 'js/iris.min.js' ), array( 'jquery-ui-draggable', 'jquery-ui-slider', 'jquery-touch-punch' ), false, 1 );
 		wp_enqueue_script( 'wp-color-picker', admin_url( 'js/color-picker.min.js' ), array( 'iris' ), false, 1 );
 
 		// webfont
@@ -256,6 +267,9 @@ class MfnVisualBuilder {
 			}else{
 				$permalink .= '?visual=iframe';
 			}
+			if( ! is_admin() ){
+				$permalink .= '&demo';
+			}
 		}
 
 		// override if template shop archive
@@ -280,8 +294,6 @@ class MfnVisualBuilder {
 				        'mainimgmargin' => $main_margin
 			      	)
 	    		);
-
-	 			wp_enqueue_script('mfn-swiper', get_theme_file_uri('/js/swiper.js'), array('jquery'), MFN_THEME_VERSION, true);
 	 		}
 		}
 
@@ -297,9 +309,11 @@ class MfnVisualBuilder {
 	        'rev_slider_id' => get_post_meta($this->post_id, 'mfn-post-slider', true),
 	        'adminurl' => admin_url(),
 	        'themepath' => get_template_directory_uri('/'),
+	        'autosave' => mfn_opts_get('builder-autosave'),
 	        'rooturl' => get_site_url(),
 	        'view' => is_admin() ? 'admin' : 'demo',
 	        'permalink' => $permalink,
+	        'post_type' => get_post_type($this->post_id),
 	        'pagedata' => $this->loadElementsArr($this->post_id),
 	        'elements' => $this->loadElementsObjects($this->post_id),
 	        'mfn_google_fonts' => $google_fonts,
@@ -410,18 +424,19 @@ class MfnVisualBuilder {
 
 		$sidebars = mfn_opts_get('sidebars') ? mfn_opts_get('sidebars') : array();
 
-		$output = 'var mfnDbLists = {';
-			$output .= 'blog_categories:'.json_encode( mfn_get_categories('category') ).",\n";
-			$output .= 'offer_types:'.json_encode( mfn_get_categories('offer-types') ).",";
-			$output .= 'portfolio_types:'.json_encode( mfn_get_categories('portfolio-types') ).",\n";
+		$output = 'var mfnDbLists = {'."\n";;
+			$output .= 'blog_tags:'.json_encode( mfn_hierarchical_taxonomy('post_tag') ).",\n";
+			$output .= 'blog_categories:'.json_encode( mfn_hierarchical_taxonomy('category') ).",\n";
+			$output .= 'offer_types:'.json_encode( mfn_hierarchical_taxonomy('offer-types') ).",\n";
+			$output .= 'portfolio_types:'.json_encode( mfn_hierarchical_taxonomy('portfolio-types') ).",\n";
 			if( function_exists('is_woocommerce') ){
 				$output .= 'product_cat:'.json_encode( mfn_hierarchical_taxonomy('product_cat') ).",\n";
 			}else{
 				$output .= 'product_cat:'.json_encode( array() ).",\n";
 			}
-			$output .= 'slide_types:'.json_encode( mfn_get_categories('slide-types') ).",\n";
-			$output .= 'testimonial_types:'.json_encode( mfn_get_categories('testimonial-types') ).",\n";
-			$output .= 'client_types:'.json_encode( mfn_get_categories('client-types') ).",\n";
+			$output .= 'slide_types:'.json_encode( mfn_hierarchical_taxonomy('slide-types') ).",\n";
+			$output .= 'testimonial_types:'.json_encode( mfn_hierarchical_taxonomy('testimonial-types') ).",\n";
+			$output .= 'client_types:'.json_encode( mfn_hierarchical_taxonomy('client-types') ).",\n";
 			$output .= 'rev_slider:'.json_encode( Mfn_Builder_Helper::get_sliders('rev') ).",\n";
 			$output .= 'layer_slider:'.json_encode( Mfn_Builder_Helper::get_sliders('layer') ).",\n";
 			$output .= 'sidebars:'.json_encode( $sidebars ).",\n";
@@ -430,12 +445,22 @@ class MfnVisualBuilder {
 			$output .= 'headers:'.json_encode( mfna_templates('header') ).",\n";
 			$output .= 'footers:'.json_encode( mfna_templates('footer') ).",\n";
 			$output .= 'singleproducts:'.json_encode( mfna_templates('single-product') ).",\n";
-			$output .= 'themeoptions:'.json_encode( get_option('betheme') ).",\n";
+			$output .= 'themeoptions:'.$this->getThomeOptionsObject().",\n";
 			$output .= 'pageoptions:'.$this->getPageOptionsForm();
 			$output .= 'global_sections:'.json_encode( mfna_templates('section') ).',';
 			$output .= 'global_wraps:'.json_encode( mfna_templates('wrap') ).',';
 		$output .= '}';
 		return $output;
+	}
+
+	public function getThomeOptionsObject() {
+		$themeoptions = get_option('betheme');
+
+		if( !empty($themeoptions['gdpr-content']) ){
+			$themeoptions['gdpr-content'] = htmlspecialchars($themeoptions['gdpr-content']);
+		}
+
+		return json_encode( $themeoptions );
 	}
 
 	public function getPageOptionsForm(){
@@ -468,14 +493,14 @@ class MfnVisualBuilder {
 			if( $vb_o == 'translate' ) continue;
 
 			$output .='<div class="vb-to vb-to-'.$vb_o.'">';
-				$output .='<div class="vb-to-header"><ul class="vb-to-ul"><li><a class="vb-themeoptions-link-expander" href="#themeoptions-'.$vb_o.'"><span class="mfn-icon"></span>'.$vb_opt['title'].'</a><ul class="vb-to-ul vb-to-subul">';
+				$output .='<div class="vb-to-header"><ul class="vb-to-ul"><li><a class="vb-themeoptions-link-expander" href="#themeoptions-'.htmlspecialchars($vb_o, ENT_QUOTES ).'"><span class="mfn-icon"></span>'.htmlspecialchars($vb_opt['title'], ENT_QUOTES ).'</a><ul class="vb-to-ul vb-to-subul">';
 				foreach( $vb_opt['sections'] as $vb_submenu ) {
-					$output .='<li class="vb-to-subli vb-to-subli-'.$vb_submenu.'"><a class="vb-themeoptions-form-link" href="#themeoptions-'.$vb_submenu.'"><span class="mfn-icon"></span>'.$MFN_Options->sections[$vb_submenu]['title'].'</a></li>';
+					$output .='<li class="vb-to-subli vb-to-subli-'.htmlspecialchars($vb_submenu, ENT_QUOTES ).'"><a class="vb-themeoptions-form-link" href="#themeoptions-'.htmlspecialchars($vb_submenu, ENT_QUOTES ).'"><span class="mfn-icon"></span>'.htmlspecialchars($MFN_Options->sections[$vb_submenu]['title'], ENT_QUOTES ).'</a></li>';
 				}
 				$output .='</ul></li></ul></div>';
 
 				foreach ($vb_opt['sections'] as $vb_sec) {
-					$output .='<div class="vb-to-content" id="themeoptions-'.$vb_sec.'">';
+					$output .='<div class="vb-to-content" id="themeoptions-'.htmlspecialchars($vb_sec, ENT_QUOTES ).'">';
 
 					foreach ($MFN_Options->sections[$vb_sec]['fields'] as $vb_sec_field) {
 						ob_start();
@@ -494,7 +519,7 @@ class MfnVisualBuilder {
 		// GDPR cookies
 		if( !mfn_opts_get('gdpr') ){
 			$output .= 'gdpr: function() { return \'';
-			$output .= $gdpr->render(true);
+			// $output .= $gdpr->render(true);
 			$output .= '\';}';
 		}
 		return $output;
@@ -503,14 +528,14 @@ class MfnVisualBuilder {
 	public function getSectionForm(){
 		$mfn_fields = new Mfn_Builder_Fields();
 		$output = 'section: function() { return \'';
-		$output .= '<div class="mfn-element-fields-wrapper" data-element="mcb-section-\'+edited_item.uid+\'"><ul class="mfn-vb-formrow sidebar-panel-content-tabs"><li data-tab="content" class="spct-li-content active">Settings</li><li data-tab="advanced" class="spct-li-advanced">Advanced</li></ul>';
+		$output .= '<div class="mfn-element-fields-wrapper" data-element="mcb-section-\'+edited_item.uid+\'"><ul class="mfn-vb-formrow sidebar-panel-content-tabs"><li data-tab="content" class="spct-li-content active">Settings</li><li data-tab="style" class="spct-li-style">Style</li><li data-tab="advanced" class="spct-li-advanced">Advanced</li></ul>';
 		$items = $mfn_fields->get_section();
 
 		ob_start();
 		foreach( $items as $f=>$field ) $this->mfn_JsformElement($field, 'section', 'attr');
 		$output .= ob_get_contents();
 		ob_end_clean();
-		$output .= '</div>\';},';
+		$output .= '</div>\';},'."\r\n";
 
 		return $output;
 	}
@@ -518,14 +543,14 @@ class MfnVisualBuilder {
 	public function getWrapForm(){
 		$mfn_fields = new Mfn_Builder_Fields();
 		$output = 'wrap: function() { return \'';
-		$output .= '<div class="mfn-element-fields-wrapper" data-element="mcb-wrap-\'+edited_item.uid+\'"><ul class="mfn-vb-formrow sidebar-panel-content-tabs"><li data-tab="content" class="spct-li-content active">Settings</li><li data-tab="advanced" class="spct-li-advanced">Advanced</li></ul>';
+		$output .= '<div class="mfn-element-fields-wrapper" data-element="mcb-wrap-\'+edited_item.uid+\'"><ul class="mfn-vb-formrow sidebar-panel-content-tabs"><li data-tab="content" class="spct-li-content active">Settings</li><li data-tab="style" class="spct-li-style">Style</li><li data-tab="advanced" class="spct-li-advanced">Advanced</li></ul>';
 		$items = $mfn_fields->get_wrap();
 
 		ob_start();
 		foreach($items as $i=>$j) $this->mfn_JsformElement($j, 'wrap', 'attr');
 		$output .= ob_get_contents();
 		ob_end_clean();
-		$output .= '</div>\';},';
+		$output .= '</div>\';},'."\r\n";
 
 		return $output;
 	}
@@ -539,7 +564,7 @@ class MfnVisualBuilder {
 		foreach( $items as $f=>$field ) $this->mfn_JsformElement($field, '\'+edited_item.jsclass+\'', 'fields');
 		$output .= ob_get_contents();
 		ob_end_clean();
-		$output .= '\';},';
+		$output .= '\';},'."\r\n";
 
 		return $output;
 	}
@@ -564,7 +589,7 @@ class MfnVisualBuilder {
 			$output .= ob_get_contents();
 			ob_end_clean();
 
-			$output .= '</div>\';},';
+			$output .= '</div>\';},'."\r\n";
 		}
 
 		return $output;
@@ -644,16 +669,16 @@ class MfnVisualBuilder {
 			$return[$e]['title'] = $element['title'];
 			$return[$e]['icon'] = str_replace('_', '-', $element['type']);
 
-			if( $element['type'] == 'map' || $element['type'] == 'lottie' ){
+			//if( $element['type'] == 'map' || $element['type'] == 'lottie' ){
 				$params['vb'] = true;
-			}
+			//}
 
 			if( isset($element['fields']) ){
 				foreach ($element['fields'] as $field) {
 
 					if( !empty($field['std']) ){
 						$return[$e]['fields'][$field['id']] = $field['std'];
-						if($field['id'] == 'content'){
+						if($field['id'] == 'content' || $field['id'] == 'plain_text'){
 							$params_content = $field['std'];
 						}else{
 							$params[$field['id']] = $field['std'];
@@ -720,6 +745,8 @@ class MfnVisualBuilder {
 				$return[$e]['html'] .= '<img src="'.get_theme_file_uri( '/muffin-options/svg/placeholders/sidebar_widget.svg' ).'" alt="">';
 			}elseif($element['type'] == 'column'){
 				$return[$e]['html'] .= '<div class="column_attr mfn-inline-editor clearfix">'.$params_content.'</div>';
+			}elseif($element['type'] == 'plain_text'){
+				$return[$e]['html'] .= '<div class="desc">'.$params_content.'</div>';
 			}elseif($element['type'] == 'image_gallery'){
 				$params['id'] = null;
 				$return[$e]['html'] .= sc_gallery($params);
@@ -748,6 +775,7 @@ class MfnVisualBuilder {
 	public function loadElementsArr($mfn_page_items){
 		$return = array();
 		$p_id = false;
+		$detect_old_builder = false;
 
 		// load page objects
 
@@ -763,22 +791,68 @@ class MfnVisualBuilder {
 		}
 
 		if( $mfn_items && count($mfn_items) > 0 ){
-			foreach ($mfn_items as $section) {
+			foreach ($mfn_items as $s=>$section) {
 
-				if( empty($section['uid']) ) continue;
+				if( empty($section['uid']) ) {
+					$sec_uid = Mfn_Builder_Helper::unique_ID();
+					$section['uid'] = $sec_uid;
+					$mfn_items[$s]['uid'] = $sec_uid;
+					$detect_old_builder = true;
+				}
+
+
+				// Builder without wraps | Old version
+				if( ! isset( $section['wraps'] ) && ! empty( $section['items'] ) ){
+
+					$fix_wrap = array(
+						'size' => '1/1',
+						'uid' => Mfn_Builder_Helper::unique_ID(),
+						'items'	=> $section['items'],
+						'jsclass' => 'wrap',
+						'title' => 'Wrap',
+						'icon' => 'wrap',
+					);
+
+					$section['wraps'] = array( $fix_wrap );
+
+					$mfn_items[$s]['wraps'] = array( $fix_wrap );
+					unset( $mfn_items[$s]['items'] );
+
+					$detect_old_builder = true;
+
+				}
 
 				if( isset($section['wraps']) && is_iterable( $section['wraps'] ) ){
-					foreach ( $section['wraps'] as $wrap ) {
+					foreach ( $section['wraps'] as $w=>$wrap ) {
+
+						if( is_array($wrap) && empty($wrap['uid']) ) {
+							$wra_uid = Mfn_Builder_Helper::unique_ID();
+							$wrap['uid'] = $wra_uid;
+							$mfn_items[$s]['wraps'][$w]['uid'] = $wra_uid;
+							$detect_old_builder = true;
+						}
+
 						if( isset($wrap['items']) && is_iterable( $wrap['items'] ) ){
-							foreach ( $wrap['items'] as $item ) {
+							foreach ( $wrap['items'] as $i=>$item ) {
+
+								if( is_array($item) && empty($item['uid']) ) {
+
+									$ite_uid = Mfn_Builder_Helper::unique_ID();
+									$mfn_items[$s]['wraps'][$w]['items'][$i]['uid'] = $ite_uid;
+									$item['uid'] = $ite_uid;
+									$detect_old_builder = true;
+
+								}
 
 								if( isset($item['tabs']) && is_iterable( $item['tabs'] ) ){
 									$item['tabs'] = $item['tabs'];
 								}
 
-								$item['jsclass'] = $item['type'];
-								$item['title'] = isset( $item['title'] ) ? $item['title'] : ucfirst(str_replace('_', ' ', $item['type']));
-								$item['icon'] = str_replace('_', '-', $item['type']);
+								if( is_array($item) ){
+									$item['jsclass'] = $item['type'];
+									$item['title'] = isset( $item['title'] ) ? $item['title'] : ucfirst(str_replace('_', ' ', $item['type']));
+									$item['icon'] = str_replace('_', '-', $item['type']);
+								}
 								$return[] = $item;
 							}
 						}
@@ -788,13 +862,15 @@ class MfnVisualBuilder {
 							unset( $wrap['items'] );
 						}
 
-						$wrap['jsclass'] = 'wrap';
-						$wrap['title'] = 'Wrap';
-						$wrap['icon'] = 'wrap';
-						if( empty($wrap['attr']['sticky']) ){
-							$wrap['attr']['sticky'] = '0';
-							$wrap['attr']['sticky_tablet'] = '0';
-							$wrap['attr']['sticky_mobile'] = '0';
+						if( is_array($wrap) ){
+							$wrap['jsclass'] = 'wrap';
+							$wrap['title'] = 'Wrap';
+							$wrap['icon'] = 'wrap';
+							if( empty($wrap['attr']['sticky']) ){
+								$wrap['attr']['sticky'] = '0';
+								$wrap['attr']['sticky_tablet'] = '0';
+								$wrap['attr']['sticky_mobile'] = '0';
+							}
 						}
 						$return[] = $wrap;
 					}
@@ -806,6 +882,21 @@ class MfnVisualBuilder {
 				$section['icon'] = 'section';
 				$return[] = $section;
 			}
+		}
+
+
+		// add uids for iframe
+
+		if( $detect_old_builder ){
+
+			if ( 'encode' == mfn_opts_get('builder-storage') ) {
+				$new = call_user_func('base'.'64_encode', serialize($mfn_items));
+			}else{
+				$new = $mfn_items;
+			}
+
+			update_post_meta($p_id, 'mfn-page-items', $new);
+
 		}
 
 		// options
@@ -855,6 +946,10 @@ class MfnVisualBuilder {
 	}
 
 	public function mfn_load_sidebar(){
+
+		if( !empty( get_post_meta($this->post_id, '_elementor_edit_mode', true) ) ){
+			delete_post_meta($this->post_id, '_elementor_edit_mode');
+		}
 
 		$this->mfn_required_scripts();
 		$this->mfn_required_styles();
@@ -911,6 +1006,10 @@ class MfnVisualBuilder {
 		}
 
 		$builder_class[] = 'mfn-bebuilder-'.( is_admin() ? 'admin' : 'demo' );
+
+		if( function_exists('is_woocommerce') ){
+			$builder_class[] = 'woocommerce-active';
+		}
 
 		$builder_class = implode( ' ', $builder_class );
 
@@ -1037,6 +1136,9 @@ class MfnVisualBuilder {
 		// modal shortcodes
 		require_once(get_theme_file_path('/visual-builder/partials/modal-shortcodes.php'));
 
+		// modal dynamic data
+		require_once(get_theme_file_path('/visual-builder/partials/modal-dynamic-data.php'));
+
 		if( $this->post_type == 'template' ) require_once(get_theme_file_path('/visual-builder/partials/modal-conditions.php'));
 
 	    echo '</div>';
@@ -1084,6 +1186,7 @@ class MfnVisualBuilder {
 		$conditions = false;
 		$rerenderif = false;
 		$dataAttrs = false;
+		$dynamicData = false;
 		$id = false;
 
 		if(isset($field['edit_tag'])){
@@ -1104,6 +1207,11 @@ class MfnVisualBuilder {
 
 		if(isset($field['type']) && $field['type'] == 'sliderbar' && isset($field['units'])) {
 			$classes .= ' sliderbar-units';
+		}
+
+		if( isset($field['dynamic_data']) ){
+			$classes .= ' is_dynamic_data';
+			$dynamicData = 'data-dynamic="'.$field['dynamic_data'].'"';
 		}
 
 		if(isset($field['id'])){
@@ -1154,9 +1262,7 @@ class MfnVisualBuilder {
 			$classes .= ' row-header';
 		}
 
-		if(isset($field['re_render']) && $field['re_render'] == 'tabs'){
-			$classes .= ' re_render_tabs';
-		}else if(isset($field['re_render']) && $field['re_render'] == 'standard'){
+		if(isset($field['re_render']) && $field['re_render']){
 			$classes .= ' re_render';
 		}
 
@@ -1208,7 +1314,7 @@ class MfnVisualBuilder {
 				$classes .= ' re_render_if';
 			}
 
-			echo '<div '.$id.' class="mfn-form-row mfn-vb-formrow'.$classes.'" '.$rerenderif.' '.$dataname.' '.$csspath.' '.$conditions.' '.(isset($field['edit_tagchild']) ? 'data-edittagchild="'.$field['edit_tagchild'].'"' : null).' '.(isset($field['edit_tag']) ? 'data-edittag="'.$field['edit_tag'].'"' : null).' '.(isset($field['edit_position']) ? 'data-tagposition="'.$field['edit_position'].'"' : null ).' '.(isset($field['edit_tag_var']) ? 'data-edittagvar="'.$field['edit_tag_var'].'"' : null ).' '.$style_prefix.' '.$dataAttrs.'>';
+			echo '<div '.$id.' class="mfn-form-row mfn-vb-formrow'.$classes.'" '.$rerenderif.' '.$dataname.' '.$csspath.' '.$conditions.' '.(isset($field['edit_tagchild']) ? 'data-edittagchild="'.$field['edit_tagchild'].'"' : null).' '.(isset($field['edit_tag']) ? 'data-edittag="'.$field['edit_tag'].'"' : null).' '.(isset($field['edit_position']) ? 'data-tagposition="'.$field['edit_position'].'"' : null ).' '.(isset($field['edit_tag_var']) ? 'data-edittagvar="'.$field['edit_tag_var'].'"' : null ).' '.$style_prefix.' '.$dataAttrs.' '.$dynamicData.'>';
 
 			if(!empty($field['type'])){
 				$field['preview'] = $field_name.'input';
@@ -1220,7 +1326,7 @@ class MfnVisualBuilder {
 						$label_class .= ' form-label-wrapper';
 					}
 
-					echo '<label class="'.$label_class.'">'.$field['title'];
+					echo '<label class="'.$label_class.'">'.htmlspecialchars( $field['title'], ENT_QUOTES );
 					if(isset($field['label_after'])){
 						echo $field['label_after'];
 					}
@@ -1238,7 +1344,11 @@ class MfnVisualBuilder {
 					}
 				}
 
-				if($field['type'] != 'typography_vb') echo '<div class="form-content">';
+				$form_content_class = 'form-content';
+
+				if( isset($field['dynamic_data']) && ( empty($field['editor']) && (empty($field['type']) || $field['type'] != 'visual' ) ) ) $form_content_class .= ' has-icon has-icon-right';
+
+				if($field['type'] != 'typography_vb') echo '<div class="'.$form_content_class.'">';
 
 
 	      $field_class = 'MFN_Options_'. $field['type'];
@@ -1326,7 +1436,7 @@ class MfnVisualBuilder {
 				// Global Section
 				$is_global = '';
 
-				$is_global = isset($section['mfn_global_section_id']);
+				$is_global = isset($section['mfn_global_section_id']) && !empty($section['mfn_global_section_id']);
 				$classess = 'nav-'.$section["uid"].'';
 				$is_global ? $classess .= ' toggle-disabled' : '';
 

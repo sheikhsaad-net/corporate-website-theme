@@ -28,20 +28,23 @@
 			<div class="template-type-form">
 				<h4>Choose Type Of Template</h4>
 
+				<?php
+					$type = $this->getReferer();
+				?>
+
 				<!-- input 1 -->
 				<label class="form-label">Select the type of template you would like to create</label>
 				<select class="mfn-form-control select-template-type df-input">
-					<option value="header" selected>Header</option>
-					<option value="footer">Footer</option>
-					<option value="megamenu">Mega menu</option>
+					<option value="header" <?php selected( $type, 'header' ); ?> >Header</option>
+					<option value="footer" <?php selected( $type, 'footer' ); ?> >Footer</option>
+					<option value="megamenu" <?php selected( $type, 'megamenu' ); ?> >Mega menu</option>
 					<?php if(function_exists('is_woocommerce')){ ?>
-						<option value="single-product">Single product</option>
-						<option value="shop-archive">Shop archive</option>
+						<option value="single-product" <?php selected( $type, 'single-product' ); ?> >Single product</option>
+						<option value="shop-archive" <?php selected( $type, 'shop-archive' ); ?> >Shop archive</option>
 					<?php } ?>
-					<option value="default">Page template</option>
-					<option value="section">Global Section</option>
-					<option value="wrap">Global Wrap</option>
-
+					<option value="default" <?php selected( $type, 'default' ); ?> >Page template</option>
+					<option value="section" <?php selected( $type, 'section' ); ?> >Global Section</option>
+					<option value="wrap" <?php selected( $type, 'wrap' ); ?> >Global Wrap</option>
 				</select>
 
 				<!-- input 2 -->

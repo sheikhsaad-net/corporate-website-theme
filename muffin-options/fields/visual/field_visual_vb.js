@@ -44,6 +44,28 @@
      * https://developer.wordpress.org/reference/functions/wp_editor/
      */
 
+    $(document).on('click', '.modal-dynamic-data .modalbox-content ul li a', function(e) {
+          e.preventDefault();
+
+          if( !$('.mfn-element-fields-wrapper .modalbox-card-content .visual-editor').length ) return;
+
+          let dd_code = $(this).find('.mfn-dd-code').text();
+          let type = $(this).attr('data-type');
+
+          //console.log(dd_code);
+          tinyMCE.activeEditor.insertContent(dd_code);
+
+          $('.modal-dynamic-data').removeClass('show');
+
+          let val = tinyMCE.activeEditor.getContent();
+          edited_item.fields.content = val;
+          updateContent(val, 'mcb-item-'+edited_item.uid);
+
+          tinyMCE.activeEditor.focus();
+
+      });
+
+
     function create() {
 
       if( $('.panel-edit-item .mfn-form .mfn-element-fields-wrapper .visual-editor').length ){
@@ -69,9 +91,15 @@
           //$editorWrapper.find('.wp-editor-tabs .wp-switch-editor').attr('data-wp-editor-id', visuid);
           //$editor.attr('id', visuid);
 
+          var toolbar1widgets = "formatselect,bold,italic,underline,bullist,numlist,blockquote,alignleft,aligncenter,alignright,alignjustify,link,wp_more,spellchecker,dfw,wp_adv,mfnsc";
+
+          if( edited_item.type == 'column' || edited_item.type == 'visual' ){
+            toolbar1widgets += ",mfnddbutton";
+          }
+
           var vis_settings = {
             tinymce: {
-                toolbar1: "formatselect,bold,italic,underline,bullist,numlist,blockquote,alignleft,aligncenter,alignright,alignjustify,link,wp_more,spellchecker,dfw,wp_adv,mfnsc",
+                toolbar1: toolbar1widgets,
                 toolbar2: "strikethrough,hr,forecolor,pastetext,removeformat,charmap,outdent,indent,undo,redo,wp_help",
                 menubar: false,
                 statusbar: true,
@@ -79,6 +107,19 @@
                 height : editorHeight,
                 external_plugins: {
                     'mfnsc': fieldVisualJS_vb.mfnsc,
+                },
+                setup: function(editor) {
+
+                if( edited_item.type !== 'column' && edited_item.type !== 'visual' ) return;
+
+                editor.addButton('mfnddbutton', {
+                    icon: 'mfn-icon mfn-icon-dynamic-data',
+                    tooltip: "Dynamic Data",
+                    onclick: function () {
+                      MfnVbApp.dynamicData.open(this.$el);
+                    }
+                });
+
                 },
                 init_instance_callback: function(editor){
                   var keyFired = _.debounce(function(e){
@@ -92,37 +133,42 @@
                     __scEditor.methods.tooltip.hide()
                   }
 
+
                   editor.on('click', keyFired);
 
                   //tooltip have to be hidden when typing!
                   editor.on('keydown', removeTooltip);
 
-                  if( !$iframeCont.hasClass('mfn-focused') ){
+                  /*if( !$iframeCont.hasClass('mfn-focused') ){
                     $iframeCont.addClass('mfn-focused');
                     inlineEditors[inlineIndex].setContent( edited_item.fields.content );
-                  }
+                  }*/
 
-                  $iframeCont.on('click', function() {
+                  /*$iframeCont.on('click', function() {
                     if( !$iframeCont.hasClass('mfn-focused') ){
                       $iframeCont.addClass('mfn-focused');
                       inlineEditors[inlineIndex].setContent( edited_item.fields.content );
                     }
-                  });
+                  });*/
 
                   editor.on('blur', function(e) {
-                    blurTiny( editor.getContent() );
+                    // blurTiny( editor.getContent() );
+                    updateContent(editor.getContent(), itemEl);
+                    //inlineEditors[inlineIndex].setContent( editor.getContent() );
                   });
 
                   editor.on('keyup change paste', function(e) {
                     let val = this.getContent();
                     edited_item.fields.content = val;
                     updateContent(val, itemEl);
+                    //inlineEditors[inlineIndex].setContent( editor.getContent() );
                   });
 
                   $editorWrapper.find('textarea.preview-contentinput').on('keyup change paste', function(e) {
                     let val = $(this).val();
                     edited_item.fields.content = val;
                     updateContent(val, itemEl);
+                    //inlineEditors[inlineIndex].setContent( editor.getContent() );
                   });
 
                 }
@@ -138,7 +184,7 @@
           });
           
           inlineEditors[inlineIndex].subscribe('editableInput', function(e, t){
-            if( tinymce.get( 'mfn-editor' ) ){
+            if( tinymce.get( 'mfn-editor' ) ) {
               edited_item.fields.content = $(t).html().replaceAll('&quot;', '');
               tinymce.get( 'mfn-editor' ).setContent( $(t).html().replaceAll('&quot;', '') );
             }
@@ -148,40 +194,48 @@
 
       }
 
-      function blurTiny(val){
+      /*function blurTiny(val){
         
             //let val = this.getContent();
-            $content.find('.'+itemEl).addClass('loading disabled');
 
-            $.ajax({
-                url: MfnVbApp.ajaxurl,
-                data: {
-                    action: 'rendercontent',
-                    'mfn-builder-nonce': wpnonce,
-                    val: val,
-                    uid: edited_item.uid
-                },
-                type: 'POST',
-                success: function(response){
-                  updateContent(response['html'], itemEl);
+            if( $content.find('.'+itemEl).closest('.mfn-queryloop-item-wrapper').length ){
+                MfnVbApp.re_render2( $content.find('.'+itemEl).closest('.mcb-section.vb-item').attr('data-uid') );
+            }else{
 
-                  $iframeCont.removeClass('mfn-focused');
+              $content.find('.'+itemEl).addClass('loading disabled');
 
-                  $content.find('.'+itemEl).removeClass('loading disabled');
-                  $('.sidebar-wrapper').removeClass('mfn-vb-sidebar-overlay');
+              $.ajax({
+                  url: MfnVbApp.ajaxurl,
+                  data: {
+                      action: 'rendercontent',
+                      'mfn-builder-nonce': wpnonce,
+                      val: val,
+                      'vb_postid': mfnvbvars.pageid,
+                      uid: edited_item.uid
+                  },
+                  type: 'POST',
+                  success: function(response){
+                    updateContent(response['html'], itemEl);
 
-                  $(document).unbind('click', hideSidebarOverlay);
+                    $iframeCont.removeClass('mfn-focused');
 
-                  setTimeout(function() {
-                    MfnVbApp.addHistory();
-                  }, 50);
+                    $content.find('.'+itemEl).removeClass('loading disabled');
+                    $('.sidebar-wrapper').removeClass('mfn-vb-sidebar-overlay');
 
-                }
-            });
+                    $(document).unbind('click', hideSidebarOverlay);
+
+                    setTimeout(function() {
+                      MfnVbApp.addHistory();
+                    }, 50);
+
+                  }
+              });
+
+            }
 
             MfnVbApp.enableBeforeUnload();
       
-      }
+      }*/
 
     }
 
@@ -826,6 +880,8 @@
         }else{
             $content.find('.'+it+' .mfn-visualeditor-content').html(val);
         }
+
+        MfnVbApp.enableBeforeUnload();
       }
 
     /**

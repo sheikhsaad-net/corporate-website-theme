@@ -586,6 +586,14 @@
         $('.modal-confirm-reset', $setup).removeClass('show');
       },
 
+      // modal.media()
+
+      media: function($el){
+
+        $el.toggleClass('active');
+
+      },
+
       // modal.confirm()
 
       confirm: function($el){
@@ -606,6 +614,8 @@
 
       reset: function(dfd){
 
+        var media = $('.modal-confirm-reset .remove-media span', $setup).hasClass('active') ? 1 : 0;
+
         modal.close();
 
         // show reset step
@@ -617,6 +627,7 @@
           url: ajaxurl,
           data: {
             'action': 'mfn_setup_database_reset',
+            'media': media,
             'mfn-setup-nonce': $('input[name="mfn-setup-nonce"]', $setup).val()
           },
           type: 'POST',
@@ -655,7 +666,7 @@
 
         // check for slider
 
-        if( undefined !== typeof(demo.plugins) ){
+        if( 'undefined' !== typeof(demo.plugins) ){
 
           if( demo.plugins.indexOf('rev') >= 0 ){
             $('.card-data .select-inner span[data-type="sliders"]', $setup).removeClass('hidden');
@@ -663,9 +674,9 @@
             $('.card-data .select-inner span[data-type="sliders"]', $setup).addClass('hidden');
           }
 
-          $('.card-data .import-options li[data-type="complete"]', $setup).trigger('click');
-
         }
+
+        $('.card-data .import-options li[data-type="complete"]', $setup).trigger('click');
 
       }
 
@@ -713,7 +724,7 @@
 
         // check which plugins are required
 
-        if( undefined !== typeof(demo.plugins) ){
+        if( 'undefined' !== typeof(demo.plugins) ){
 
           demo.plugins.forEach(function(plugin){
 
@@ -750,7 +761,7 @@
 
         // check which plugins are required
 
-        if( undefined !== typeof(fromScratch.plugins) ){
+        if( 'undefined' !== typeof(fromScratch.plugins) ){
           fromScratch.plugins.forEach(function(plugin){
             complete.$steps.children('li.'+ plugin).removeClass('disabled');
           });
@@ -2322,7 +2333,12 @@
 
       // modal
 
-      $setup.on( 'click', '.modal-confirm-reset .select-inner span', function(e) {
+      $setup.on( 'click', '.modal-confirm-reset .remove-media span', function(e) {
+        e.preventDefault();
+        modal.media($(this));
+      });
+
+      $setup.on( 'click', '.modal-confirm-reset .reset-confirm span', function(e) {
         e.preventDefault();
         modal.confirm($(this));
       });

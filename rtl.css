@@ -613,11 +613,12 @@ form.wpcf7-form .column,form.wpcf7-form .columns{float:right}
 .woocommerce table.woocommerce-product-attributes td { text-align: left; padding-right: 10%; padding-left: 0%; }
 .woocommerce table.woocommerce-product-attributes td span:before { left: calc(100% + 20px); right: auto; }
 
+.fake-tabs > ul li a .number { margin-left: unset; margin-right: 5px; }
 
 .woocommerce #reviews #comments ol.commentlist li .comment-text { margin-right: 0; }
 .woocommerce #reviews #comments ol.commentlist li img.avatar { left: auto; right: 25px; }
 .woocommerce #reviews #comments ol.commentlist li .comment-text .star-rating { left: 25px; right: auto; }
-.woocommerce #reviews #comments ol.commentlist li .comment-text p.meta { padding-right: 90px; padding-left: 25px; }
+.woocommerce #reviews #comments ol.commentlist li .comment-text p.meta { padding-right: 90px; padding-left: 115px; }
 
 .woocommerce #reviews #review_form_wrapper .comment-form label { margin-left: 10px; margin-right: 0; }
 

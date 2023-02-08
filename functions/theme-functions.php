@@ -344,7 +344,9 @@ if (! function_exists('mfn_exclude_category')) {
 			if ($exclude = mfn_get_excluded_categories()) {
 				foreach ($exclude as $slug) {
 					$category = get_category_by_slug($slug);
-					$exclude_ids[] = $category->term_id * -1;
+					if( ! empty($category->term_id) ){
+						$exclude_ids[] = $category->term_id * -1;
+					}
 				}
 			}
 
@@ -428,7 +430,7 @@ if (! function_exists('mfn_ID')) {
 
 		// force template
 
-		if( !empty($_GET['mfn-template-id']) && is_numeric( $_GET['mfn-template-id'] ) && get_post_type( $_GET['mfn-template-id'] ) == 'template' && ( get_post_status( $_GET['mfn-template-id'] ) == 'publish' || (!empty($_GET['visual'] && $_GET['visual'] == 'iframe') ) ) ){
+		if( !empty($_GET['mfn-template-id']) && is_numeric( $_GET['mfn-template-id'] ) && get_post_type( $_GET['mfn-template-id'] ) == 'template' && ( get_post_status( $_GET['mfn-template-id'] ) == 'publish' || (!empty($_GET['visual']) && $_GET['visual'] == 'iframe' ) ) ){
 			return $_GET['mfn-template-id'];
 		}
 
@@ -450,22 +452,48 @@ if (! function_exists('mfn_ID')) {
 					return get_post_meta( $post_id, 'mfn_single_product_template', true ); // single product template
 				}
 
-				if( !empty($default_lang) && !empty($current_lang) && $current_lang != $default_lang && get_post_meta($post_id, 'mfn_product_cat_template'.'_'.$current_lang) && get_post_status( get_post_meta( $post_id, 'mfn_product_cat_template'.'_'.$current_lang, true ) ) == 'publish' ){
-					return get_post_meta($post_id, 'mfn_product_cat_template'.'_'.$current_lang, true); // wpml all categories product template
-				}elseif( get_post_meta($post_id, 'mfn_product_cat_template') && get_post_status( get_post_meta( $post_id, 'mfn_product_cat_template', true ) ) == 'publish' ){
-					return get_post_meta($post_id, 'mfn_product_cat_template', true); // all categories product template
+				if( !empty($default_lang) && !empty($current_lang) && $current_lang != $default_lang && get_post_meta($post_id, 'mfn_product_cat_template'.'_'.$current_lang) ){
+					if( is_numeric(get_post_meta( $post_id, 'mfn_product_cat_template'.'_'.$current_lang, true )) && get_post_status( get_post_meta( $post_id, 'mfn_product_cat_template'.'_'.$current_lang, true ) ) == 'publish' ){
+						// wpml all categories product template
+						return get_post_meta($post_id, 'mfn_product_cat_template'.'_'.$current_lang, true);
+					}else{
+						return false;
+					}
+
+				}elseif( get_post_meta($post_id, 'mfn_product_cat_template') ){
+					if( is_numeric(get_post_meta( $post_id, 'mfn_product_cat_template', true )) && get_post_status( get_post_meta( $post_id, 'mfn_product_cat_template', true ) ) == 'publish' ){
+						return get_post_meta($post_id, 'mfn_product_cat_template', true); // all categories product template
+					}else{
+						return false;
+					}
 				}
 
-				if( !empty($default_lang) && !empty($current_lang) && $current_lang != $default_lang && get_post_meta($post_id, 'mfn_product_tag_template'.'_'.$current_lang) && get_post_status( get_post_meta( $post_id, 'mfn_product_tag_template'.'_'.$current_lang, true ) ) == 'publish' ) {
-					return get_post_meta($post_id, 'mfn_product_tag_template'.'_'.$current_lang, true); // wpml all tags product template
-				}elseif( get_post_meta($post_id, 'mfn_product_tag_template') && get_post_status( get_post_meta( $post_id, 'mfn_product_tag_template', true ) ) == 'publish' ) {
-					return get_post_meta($post_id, 'mfn_product_tag_template', true); // all tags product template
+				if( !empty($default_lang) && !empty($current_lang) && $current_lang != $default_lang && get_post_meta($post_id, 'mfn_product_tag_template'.'_'.$current_lang) ) {
+					if( is_numeric(get_post_meta( $post_id, 'mfn_product_tag_template'.'_'.$current_lang, true )) && get_post_status( get_post_meta( $post_id, 'mfn_product_tag_template'.'_'.$current_lang, true ) ) == 'publish' ){
+						return get_post_meta($post_id, 'mfn_product_tag_template'.'_'.$current_lang, true); // wpml all tags product template
+					}else{
+						return false;
+					}
+				}elseif( get_post_meta($post_id, 'mfn_product_tag_template') ) {
+					if( is_numeric(get_post_meta( $post_id, 'mfn_product_tag_template', true )) && get_post_status( get_post_meta( $post_id, 'mfn_product_tag_template', true ) ) == 'publish' ){
+						return get_post_meta($post_id, 'mfn_product_tag_template', true); // all tags product template
+					}else{
+						return false;
+					}
 				}
 
-				if( !empty($default_lang) && !empty($current_lang) && $current_lang != $default_lang && get_post_meta($post_id, 'mfn_product_template'.'_'.$current_lang) && get_post_status( get_post_meta( $post_id, 'mfn_product_template'.'_'.$current_lang, true ) ) == 'publish' ){
-					return get_post_meta($post_id, 'mfn_product_template'.'_'.$current_lang, true); // wpml shop product template
-				}else if( get_post_meta($post_id, 'mfn_product_template') && get_post_status( get_post_meta( $post_id, 'mfn_product_template', true ) ) == 'publish' ){
-					return get_post_meta($post_id, 'mfn_product_template', true); // shop product template
+				if( !empty($default_lang) && !empty($current_lang) && $current_lang != $default_lang && get_post_meta($post_id, 'mfn_product_template'.'_'.$current_lang) ){
+					if( is_numeric(get_post_meta( $post_id, 'mfn_product_template'.'_'.$current_lang, true )) && get_post_status( get_post_meta( $post_id, 'mfn_product_template'.'_'.$current_lang, true ) ) == 'publish' ){
+						return get_post_meta($post_id, 'mfn_product_template'.'_'.$current_lang, true); // wpml shop product template
+					}else{
+						return false;
+					}
+				}else if( get_post_meta($post_id, 'mfn_product_template') ){
+					if( is_numeric(get_post_meta( $post_id, 'mfn_product_template', true )) && get_post_status( get_post_meta( $post_id, 'mfn_product_template', true ) ) == 'publish' ){
+						return get_post_meta($post_id, 'mfn_product_template', true); // shop product template
+					}else{
+						return false;
+					}
 				}
 
 				// theme option product template
@@ -478,38 +506,39 @@ if (! function_exists('mfn_ID')) {
 					return $post_id;
 				}
 
+
 			}else{
 
 				$qo = get_queried_object();
 
 				if( !empty($default_lang) && !empty($current_lang) && $current_lang != $default_lang && (is_product_category() || is_product_tag()) && isset($qo->term_id) && !empty(get_term_meta($qo->term_id, 'mfn_shop_template'.'_'.$current_lang, true)) ){
-					if( get_term_meta($qo->term_id, 'mfn_shop_template'.'_'.$current_lang, true) != 'excluded' ){
-						return false;
-					}else if( is_numeric(get_term_meta($qo->term_id, 'mfn_shop_template'.'_'.$current_lang, true)) && get_post_status( get_term_meta($qo->term_id, 'mfn_shop_template'.'_'.$current_lang, true) ) == 'publish' ){
+					if( is_numeric(get_term_meta($qo->term_id, 'mfn_shop_template'.'_'.$current_lang, true)) && get_post_status( get_term_meta($qo->term_id, 'mfn_shop_template'.'_'.$current_lang, true) ) == 'publish' ){
 						return get_term_meta($qo->term_id, 'mfn_shop_template'.'_'.$current_lang, true);
+					}else{
+						return false;
 					}
 				}elseif( (is_product_category() || is_product_tag()) && isset($qo->term_id) && !empty(get_term_meta($qo->term_id, 'mfn_shop_template', true)) ){
-					if( get_term_meta($qo->term_id, 'mfn_shop_template', true) != 'excluded' ){
-						return false;
-					}else if( is_numeric(get_term_meta($qo->term_id, 'mfn_shop_template', true)) && get_post_status( get_term_meta($qo->term_id, 'mfn_shop_template', true) ) == 'publish'  ){
+					if( is_numeric(get_term_meta($qo->term_id, 'mfn_shop_template', true)) && get_post_status( get_term_meta($qo->term_id, 'mfn_shop_template', true) ) == 'publish'  ){
 						return get_term_meta($qo->term_id, 'mfn_shop_template', true);
+					}else{
+						// is excluded
+						return false;
 					}
 				}
 
 				$shop_id = wc_get_page_id('shop');
 
 				// wpml fix
-				if( !empty($default_lang) && !empty($current_lang) && $current_lang != $default_lang && !empty(apply_filters( 'wpml_object_id', wc_get_page_id('shop'), 'page', null, $default_lang )) ){
-					$shop_id = apply_filters( 'wpml_object_id', wc_get_page_id('shop'), 'page', null, $default_lang );
-				}
-
-				if( !empty(get_post_meta($shop_id, 'mfn_shop_template')) && get_post_status( get_post_meta($shop_id, 'mfn_shop_template', true) ) == 'publish' ){
+				if( !empty($default_lang) && !empty($current_lang) && $current_lang != $default_lang && !empty(apply_filters( 'wpml_object_id', wc_get_page_id('shop'), 'page', null, $current_lang )) && !empty( get_post_meta(apply_filters( 'wpml_object_id', wc_get_page_id('shop'), 'page', null, $current_lang ), 'mfn_shop_template'.'_'.$current_lang, true) ) ){
+					return get_post_meta( apply_filters( 'wpml_object_id', wc_get_page_id('shop'), 'page', null, $current_lang ), 'mfn_shop_template'.'_'.$current_lang, true);
+				}else if( !empty(get_post_meta($shop_id, 'mfn_shop_template')) && get_post_status( get_post_meta($shop_id, 'mfn_shop_template', true) ) == 'publish' ){
 					return get_post_meta($shop_id, 'mfn_shop_template', true);
 				}
 
 				if( !empty(mfn_opts_get('shop-template')) && get_post_status( mfn_opts_get('shop-template') ) == 'publish' ){
 					return mfn_opts_get('shop-template');
 				}
+
 			}
 
 			return wc_get_page_id('shop');
@@ -529,8 +558,8 @@ if (! function_exists('mfn_ID')) {
 
 		// archive
 
-		if( ! is_singular() ){
-			if( is_post_type_archive() || in_array(get_post_type(), array( 'post', 'tribe_events' )) ){
+		if( ! is_singular() ) {
+			if( is_post_type_archive() || in_array( get_post_type(), array( 'post', 'tribe_events' ) ) ) {
 				return mfn_get_blog_ID();
 			}
 		}
@@ -570,7 +599,9 @@ if (! function_exists('mfn_template_part_ID')) {
 			$post_id = $id ? $id : get_the_ID();
 			$post_type = get_post_type($post_id);
 
-			if( !empty($post_type) && !in_array($post_type, array('page', 'post', 'offer', 'portfolio', 'product', 'template')) ) $post_type = 'page';
+			if( empty($post_type) || (!empty($post_type) && !in_array($post_type, array('page', 'post', 'offer', 'portfolio', 'product', 'template'))) ) {
+				$post_type = 'page';
+			}
 
 			// single post header | set in single post/page edit
 
@@ -638,7 +669,7 @@ if (! function_exists('mfn_template_part_ID')) {
 
 			$posttype = false;
 
-			if( is_home() || is_category() ){
+			if( is_home() || is_category() || is_author() || is_date() ){
 				//echo 'blog';
 				$posttype = get_option( 'mfn_'.$type.'_post_arch' );
 				if( !empty($default_lang) && !empty($current_lang) && $current_lang != $default_lang && get_option( 'mfn_'.$type.'_'.$current_lang.'_post_arch' ) ){
@@ -1170,11 +1201,6 @@ if (! function_exists('mfn_page_title')) {
 			// blog
 			$title = get_the_title(mfn_ID());
 
-		} elseif (function_exists('tribe_is_month') && (tribe_is_event_query() || tribe_is_month() || tribe_is_event() || tribe_is_day() || tribe_is_venue())) {
-
-			// The Events Calendar
-			$title = tribe_get_events_title();
-
 		} elseif ( is_category() ) {
 
 			$title = single_cat_title( '', false );
@@ -1210,6 +1236,11 @@ if (! function_exists('mfn_page_title')) {
 		} elseif (get_post_taxonomies()) {
 
 			$title = single_cat_title('', false);
+
+		} elseif (function_exists('tribe_is_month') && (tribe_is_event_query() || tribe_is_month() || tribe_is_event() || tribe_is_day() || tribe_is_venue())) {
+
+			// The Events Calendar
+			$title = tribe_get_events_title();
 
 		} else {
 
@@ -1296,14 +1327,6 @@ if (! function_exists('mfn_breadcrumbs')) {
 		if ( is_front_page() || is_home() ) {
 
 			// do nothing
-
-		} elseif (function_exists('tribe_is_month') && (tribe_is_event_query() || tribe_is_month() || tribe_is_event() || tribe_is_day() || tribe_is_venue())) {
-
-			// plugin: Events Calendar
-
-			if (function_exists('tribe_get_events_link')) {
-				$breadcrumbs[] = '<a href="'. esc_url(tribe_get_events_link()) .'">'. esc_html(tribe_get_events_title()) .'</a>';
-			}
 
 		} elseif ( is_category() ) {
 
@@ -1410,6 +1433,14 @@ if (! function_exists('mfn_breadcrumbs')) {
 			$breadcrumbs = array_merge_recursive($breadcrumbs, $parents);
 
 			$breadcrumbs[] = '<a href="'. esc_url(get_permalink($post->ID)) .'">'. wp_kses(get_the_title(mfn_ID()), mfn_allowed_html()) .'</a>';
+
+		// } elseif (function_exists('tribe_is_month') && (tribe_is_event_query() || tribe_is_month() || tribe_is_event() || tribe_is_day() || tribe_is_venue())) {
+		//
+		// 	// plugin: Events Calendar
+		//
+		// 	if (function_exists('tribe_get_events_link')) {
+		// 		$breadcrumbs[] = '<a href="'. esc_url(tribe_get_events_link()) .'">'. esc_html(tribe_get_events_title()) .'</a>';
+		// 	}
 
 		} else {
 
@@ -1593,7 +1624,12 @@ if (! function_exists('mfn_jplayer')) {
 		$video_m4v	= get_post_meta( $postID, 'mfn-post-video-mp4', true );
 
 		$poster	= wp_get_attachment_image_src( get_post_thumbnail_id( $postID ), $sizeH );
-		$poster	= $poster[0];
+
+		if( ! empty($poster[0]) ){
+			$poster	= $poster[0];
+		} else {
+			$poster = '';
+		}
 
 		$theme_disable = mfn_opts_get( 'theme-disable' );
 
@@ -1653,28 +1689,57 @@ if (! function_exists('mfn_post_format')) {
 }
 
 /**
+ * Check if we use lazy load images
+ */
+
+if (! function_exists('mfn_is_lazy')) {
+	function mfn_is_lazy( $lazy_load = false ){
+
+		if ( ! empty($_GET['visual']) || wp_doing_ajax() ){
+			return false; // disable lazy load in Bebuilder
+		}
+
+		if( 'disable' == $lazy_load ){
+			$lazy = false;
+		} elseif( 'lazy' == $lazy_load ){
+			$lazy = true;
+		} elseif( 'lazy' == mfn_opts_get('lazy-load') ){
+			$lazy = true;
+		} else {
+			$lazy = false;
+		}
+
+		return $lazy;
+	}
+}
+
+/**
  * Attachment | GET attachment ID by URL
  */
 
 if (! function_exists('mfn_get_attachment_id_url')) {
-	function mfn_get_attachment_id_url($image_url)
-	{
-		global $wpdb;
+	function mfn_get_attachment_id_url($image_url){
 
-		$image_url = esc_url($image_url);
-		$attachment = $wpdb->get_col($wpdb->prepare( "SELECT `ID` FROM $wpdb->posts WHERE `guid` = %s", $image_url ));
+		// https://forum.muffingroup.com/betheme/discussion/65515/selecting-specific-image-size-fails-and-falls-back-to-full-when-large-image-is-scaled#latest
+		return attachment_url_to_postid($image_url);
 
-		if (isset($attachment[0])) {
-			return $attachment[0];
-		}
+		// global $wpdb;
+		//
+		// $image_url = esc_url($image_url);
+		// $attachment = $wpdb->get_col($wpdb->prepare( "SELECT `ID` FROM $wpdb->posts WHERE `guid` = %s", $image_url ));
+		//
+		// if (isset($attachment[0])) {
+		// 	return $attachment[0];
+		// }
+		//
+		// // QUICK FIX https
+		// $image_url = str_replace('https://', 'http://', $image_url);
+		// $attachment = $wpdb->get_col($wpdb->prepare( "SELECT `ID` FROM $wpdb->posts WHERE `guid` = %s", $image_url ));
+		//
+		// if (isset($attachment[0])) {
+		// 	return $attachment[0];
+		// }
 
-		// QUICK FIX https
-		$image_url = str_replace('https://', 'http://', $image_url);
-		$attachment = $wpdb->get_col($wpdb->prepare( "SELECT `ID` FROM $wpdb->posts WHERE `guid` = %s", $image_url ));
-
-		if (isset($attachment[0])) {
-			return $attachment[0];
-		}
 	}
 }
 
@@ -1711,7 +1776,7 @@ if ( ! function_exists( 'mfn_get_attachment_data' ) ) {
  		if ( ! $return ) {
  			$meta = get_post_meta( $image, '_wp_attachment_metadata', true );
 
- 			if ( ! empty( $meta[$data] ) ) {
+ 			if ( ! empty( $meta[$data] ) && $meta[$data] !== 1 ) {
  				$return = $meta[$data];
  			}
  		}
@@ -2127,6 +2192,29 @@ if (! function_exists('mfn_post_thumbnail')) {
 }
 
 /**
+ * FIX: WP sometimes returns 1 as image width & height
+ */
+
+function mfn_get_attachment_image_src( $image, $attachment_id, $size, $icon ){
+
+	// width
+
+	if( !empty($image[1]) && $image[1] === 1 ){
+		$image[1] = false;
+	}
+
+	// height
+
+	if( !empty($image[2]) && $image[2] === 1 ){
+		$image[2] = false;
+	}
+
+	return $image;
+
+}
+add_filter( 'wp_get_attachment_image_src', 'mfn_get_attachment_image_src', 10, 4 );
+
+/**
  * Single Post Navigation | SET query order
  */
 
@@ -2503,9 +2591,9 @@ if (! function_exists('mfn_option_posts_per_page')) {
 	function mfn_option_posts_per_page($value)
 	{
 		if (is_tax('portfolio-types')) {
-			$posts_per_page = mfn_opts_get('portfolio-posts', 6, true);
+			$posts_per_page = mfn_opts_get('portfolio-posts', 6, ['not_empty' => true]);
 		} else {
-			$posts_per_page = mfn_opts_get('blog-posts', 5, true);
+			$posts_per_page = mfn_opts_get('blog-posts', 5, ['not_empty' => true]);
 		}
 		return $posts_per_page;
 	}
@@ -2570,39 +2658,16 @@ if (! function_exists('mfn_get_menu_name')) {
 if (! function_exists('mfn_get_authors')) {
 	function mfn_get_authors()
 	{
-		$authors = get_users();
+		$authors = get_users( array( 'role__in' => array( 'contributor', 'author', 'editor', 'administrator' ) ) );
 
 		if (is_array($authors)) {
 			foreach ($authors as $ka => $author) {
-
-				$remove = true;
-
-				// remove users with roles different than specified
-
-				if (in_array('contributor', $author->roles)) {
-					$remove = false;
-				}
-				if (in_array('author', $author->roles)) {
-					$remove = false;
-				}
-				if (in_array('editor', $author->roles)) {
-					$remove = false;
-				}
-				if (in_array('administrator', $author->roles)) {
-					$remove = false;
-				}
 
 				// remove authors without posts
 
 				$posts_count = count_user_posts( $author->ID, 'post', true );
 
 				if( $posts_count < 1 ){
-					$remove = true;
-				}
-
-				// do remove
-
-				if ($remove) {
 					unset($authors[$ka]);
 				}
 
@@ -2681,9 +2746,42 @@ if (! function_exists('mfn_hierarchical_taxonomy')) {
 									foreach ($childs as $chi) {
 										if(is_object($chi) ) {
 											$array[] = (object) array('id' => $chi->term_id, 'slug' => $chi->slug, 'name' => '&nbsp;&nbsp;&nbsp;&nbsp;'.$chi->name);
+
+											// 4th level
+											$childs4 = get_terms( array(
+												'taxonomy' => $type,
+												'parent' => $chi->term_id
+											) );
+
+											if( count($childs4) > 0 ){
+												foreach ($childs4 as $ch4) {
+													if(is_object($ch4) ) {
+														$array[] = (object) array('id' => $ch4->term_id, 'slug' => $ch4->slug, 'name' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$ch4->name);
+
+														// 5th level
+														$childs5 = get_terms( array(
+															'taxonomy' => $type,
+															'parent' => $ch4->term_id
+														) );
+
+														if( count($childs5) > 0 ){
+															foreach ($childs5 as $ch5) {
+																if(is_object($ch5) ) {
+																	$array[] = (object) array('id' => $ch5->term_id, 'slug' => $ch5->slug, 'name' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$ch5->name);
+																}
+															}
+														}
+
+
+													}
+												}
+											}
+
 										}
 									}
 								}
+
+
 							}
 						}
 					}

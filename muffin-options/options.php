@@ -96,6 +96,10 @@ if ( ! class_exists( 'MFN_Options' ) ) {
 
 		public function _backward_compatibility(){
 
+			if( ! is_array($this->options) ){
+				$this->options = [];
+			}
+
 			// Minimalist header @since 21.9.1
 
 			if( isset( $this->options['minimalist-header'] ) ) {

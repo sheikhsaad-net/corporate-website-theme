@@ -46,7 +46,7 @@ body.style-simple {
 /* width */
 ::-webkit-scrollbar {
 	width: 10px;
-	}
+  }
   
   /* Track */
   ::-webkit-scrollbar-track {
@@ -2437,7 +2437,7 @@ body.mobile-side-slide{position:relative;overflow-x:visible;}
 .portfolio_group .portfolio-item:last-child .list_style_header .links_wrapper a.portfolio_next_js{display:none}
 .portfolio_group .portfolio-item .image_frame{width:100%;margin-bottom:0}
 
-.portfolio_group .portfolio-item .desc{padding: 5px 10px;background: #3e3e3e !important;overflow:hidden}
+.portfolio_group .portfolio-item .desc{padding: 5px 10px;background: #3e3e3e !important;overflow:hidden;height: 205px;}
 .portfolio_group .portfolio-item .desc h5.entry-title a {
     color: #90bb3c;
     font-size: 16px;
@@ -6480,22 +6480,6 @@ a.icon_bar{color:#444;}
     display: block;
 }.video-tab .e-tab-content video {
     background: #fff !important;
-}.tutor {
-    transition: 0.5s;
-    height: 567px;
-}.tutor .para {
-    height: 240px;
-    overflow-y: scroll;
-    padding-right: 10px;
-    visibility: hidden;
-}.tutor:hover .para {
-    visibility: initial;
-}.tutor:hover {
-    transform: scale(1.05);
-}.c-menu li {
-    display: inline-block;
-    list-style: none;
-padding-right: 20px;
 }
 
 /*New Letter Style*/
@@ -6512,7 +6496,35 @@ aside#block-46 {
 }.news span {
     width: 350px;
 }.news input.wpcf7-submit {background: #94c03d !important;padding: 10px 15px;}
-
+.tutor .para {
+    height: 240px;
+    overflow-y: scroll;
+    padding-right: 10px;
+}.tutor {
+    height: 580px;
+}.c-menu ul svg {
+    display: none;
+}.c-menu ul li {
+    display: inline-block;
+    padding-right:26px;
+}.portfolio-item-fw-bg .desc {
+    padding: 25px !important;
+    font-size: 14px;
+    color: #ccc;
+    line-height: 22px;
+}.portfolio-item-fw-bg .desc h5.entry-title a {
+    color: #fff !important;
+}.single article {
+    background: #333;
+}.single article .elementor-post__text {
+    padding: 0 25px 25px 25px;
+}.elementor-tabs-wrapper .elementor-tab-title {
+    border-right: 1px solid #222 !important;
+}.elementor-tabs-wrapper .elementor-tab-title:last-child {
+    border: 0 !important;
+}.forklift input.wpcf7-submit {
+    background: #f2c300;
+}
 
 
 @media only screen and (max-width: 767px) {
@@ -6526,7 +6538,6 @@ aside#block-46 {
     margin: 0;
     padding: 0;
 }.custom-acco a.elementor-accordion-title i.fas, .custom-acco a.elementor-accordion-title img {display: none;}
-
 .custom-acco h3 {
     padding: 20px !important;
     margin-left: 0px !important;
@@ -6540,7 +6551,5 @@ aside#block-46 {
 }.video-tab .e-tab-title.e-active h4.e-tab-title-text a span {
     font-size: 13px;
     margin-top: 3px;
-}.news {
-    display: none;
 }
 }

@@ -64,6 +64,13 @@ class Mfn_Setup extends Mfn_API{
 
 		parent::__construct();
 
+		// get demo page ID
+
+		$page = get_page_by_title( $this->demo_page_title, 'page' );
+		if( ! empty($page->ID) ){
+			$this->demo_page_id = $page->ID;
+		}
+
     // handle custom AJAX endpoint
 
 		add_action( 'wp_ajax_mfn_setup_register', array( $this, '_register' ) );
@@ -100,15 +107,7 @@ class Mfn_Setup extends Mfn_API{
 
 	function exclude_demo_page( $query ) {
 
-		if( ! is_admin() ){
-			return $query;
-		}
-
-		$page = get_page_by_title( $this->demo_page_title );
-
-		if( ! empty($page->ID) ){
-			$this->demo_page_id = $page->ID;
-		} else {
+		if( ! is_admin() || empty( $this->demo_page_id ) ){
 			return $query;
 		}
 
@@ -241,9 +240,7 @@ class Mfn_Setup extends Mfn_API{
 
 	public function set_demo_page(){
 
-		$page = get_page_by_title( $this->demo_page_title );
-		if( ! empty($page->ID) ){
-			$this->demo_page_id = $page->ID;
+		if( $this->demo_page_id ){
 			return;
 		}
 
@@ -589,7 +586,9 @@ class Mfn_Setup extends Mfn_API{
 
 		check_ajax_referer( 'mfn-setup', 'mfn-setup-nonce' );
 
-		$result = Mfn_Importer_Helper::database_reset();
+		$remove_media = !empty($_POST['media']) ? 1 : 0;
+
+		$result = Mfn_Importer_Helper::database_reset( $remove_media );
 
 		if( $result ){
 			echo 'Database has been reseted';

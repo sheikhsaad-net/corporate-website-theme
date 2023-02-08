@@ -144,10 +144,10 @@ defined( 'ABSPATH' ) || exit;
 
 	/* Menu style | Line Below  */
 
-	.menu-line-below #Top_bar .menu > li > a:after{top:auto;bottom:-4px}
-	.menu-line-below #Top_bar.is-sticky .menu > li > a:after{top:auto;bottom:-4px}
-	.menu-line-below-80 #Top_bar:not(.is-sticky) .menu > li > a:after{height:4px;left:10%;top:50%;margin-top:20px;width:80%}
-	.menu-line-below-80-1 #Top_bar:not(.is-sticky) .menu > li > a:after{height:1px;left:10%;top:50%;margin-top:20px;width:80%}
+	.menu-line-below #Top_bar .menu > li > a:not(.menu-toggle):after{top:auto;bottom:-4px}
+	.menu-line-below #Top_bar.is-sticky .menu > li > a:not(.menu-toggle):after{top:auto;bottom:-4px}
+	.menu-line-below-80 #Top_bar:not(.is-sticky) .menu > li > a:not(.menu-toggle):after{height:4px;left:10%;top:50%;margin-top:20px;width:80%}
+	.menu-line-below-80-1 #Top_bar:not(.is-sticky) .menu > li > a:not(.menu-toggle):after{height:1px;left:10%;top:50%;margin-top:20px;width:80%}
 
 	/* Menu style | Link color only  */
 
@@ -428,6 +428,8 @@ defined( 'ABSPATH' ) || exit;
 
 	#Top_bar #menu ul li ul li ul{border-left:0!important;padding:0;top:0}
 	#Top_bar #menu ul li ul li ul li a{padding:0 20px 0 45px}
+
+	#Header #menu > ul > li.current-menu-item > a,#Header #menu > ul > li.current_page_item > a,#Header #menu > ul > li.current-menu-parent > a,#Header #menu > ul > li.current-page-parent > a,#Header #menu > ul > li.current-menu-ancestor > a,#Header #menu > ul > li.current_page_ancestor > a{background:rgba(0,0,0,.02)}
 
 	/* Main Menu | RTL */
 

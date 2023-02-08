@@ -19,8 +19,8 @@ if (! class_exists('Mfn_Post_Type_Post')) {
 		 * Mfn_Post_Type_Post constructor
 		 */
 
-		public function __construct()
-		{
+		public function __construct() {
+
 			parent::__construct();
 
 			// admin only methods
@@ -30,15 +30,80 @@ if (! class_exists('Mfn_Post_Type_Post')) {
 				$this->builder = new Mfn_Builder_Admin();
 			}
 
+			add_action( 'admin_init', array($this, 'mfn_add_posts_cat_image') );
+
 		}
 
 		/**
 		 * Set post type fields
-		 */
+		*/
+
+		public function mfn_add_posts_cat_image(){
+
+			add_action( 'category_edit_form_fields', array( $this, 'mfn_edit_posts_cat_image_field' ) );
+			add_action( 'category_add_form_fields', array( $this, 'mfn_edit_posts_cat_image_field' ) );
+
+			add_action( 'saved_category', array( $this, 'mfn_posts_cat_save' ) );
+			add_action( 'create_category', array( $this, 'mfn_posts_cat_save' ) );
+		}
+
+		public function mfn_edit_posts_cat_image_field ($tag) {
+
+			$current_value = '';
+
+			wp_enqueue_media();
+
+			if(isset( $tag->taxonomy )) {
+				$current_value = !empty( get_term_meta($tag->term_id, 'thumbnail_id', true) ) ? get_term_meta($tag->term_id, 'thumbnail_id', true) : '';
+			}
+
+			$placeholder_url = get_theme_file_uri( '/muffin-options/svg/placeholders/image.svg' );
+
+		    $field_label = 'Choose image';
+		    $field_name = 'mfn_category_field_image';
+
+		    if(isset( $tag->taxonomy )) { ?>
+			<tr class="form-field mfn-tax-image">
+		        <th valign="top" scope="row"><label for="mfn_tax_field"><?php echo $field_label; ?></label></th>
+		        <?php $current_value = wp_get_attachment_url($current_value); ?>
+				<td><input type="hidden" id="mfn_tax_field" value="<?php echo $current_value; ?>" name="<?php echo $field_name; ?>" class="<?php echo $field_name; ?>">
+					<div class="mfn-custom-img-container">
+					    <img data-src="<?php echo $placeholder_url; ?>" src="<?php if ( !empty($current_value) ) : echo $current_value; else: echo $placeholder_url; endif; ?>" alt="" style="max-width:100%;" />
+						<a class="upload-custom-img button" href="#"><?php _e('Set category image') ?></a>
+						<a class="delete-custom-img button <?php if ( ! $current_value ) { echo 'hidden'; } ?>" href="#"><?php _e('Remove image') ?></a>
+					</div>
+		        </td>
+		    </tr>
+		    <?php }else{ ?>
+				<div class="form-field mfn-tax-image">
+			        <label for="mfn_tax_field"><?php echo $field_label; ?></label>
+			        <input type="hidden" id="mfn_tax_field" value="" name="<?php echo $field_name; ?>" class="<?php echo $field_name; ?>">
+					<div class="mfn-custom-img-container">
+					    <img data-src="<?php echo $placeholder_url; ?>" src="<?php if ( !empty($current_value) ) : echo $current_value; else: echo $placeholder_url; endif; ?>" alt="" style="max-width:100%;" />
+						<a class="upload-custom-img button <?php if ( $current_value  ) { echo 'hidden'; } ?>" href="#"><?php _e('Set custom image') ?></a>
+						<a class="delete-custom-img button <?php if ( ! $current_value ) { echo 'hidden'; } ?>" href="#"><?php _e('Remove image') ?></a>
+					</div>
+		    	</div>
+			<?php }
+		}
+
+		public function mfn_posts_cat_save($term_id) {
+
+			if( !empty( $_POST['mfn_category_field_image']) ){
+				update_term_meta( $term_id, 'thumbnail_id', $_POST['mfn_category_field_image'] );
+			}else if( !empty( get_term_meta($term_id, 'thumbnail_id', true) ) ){
+				delete_term_meta($term_id, 'thumbnail_id');
+			}
+
+		}
+
+		/**
+		 * Set post type fields
+		*/
 
 		public function set_fields(){
 
-			return array(
+		return array(
       	'id' => 'mfn-meta-post',
       	'title' => esc_html__('Post Options', 'mfn-opts'),
       	'page' => 'post',

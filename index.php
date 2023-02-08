@@ -61,11 +61,16 @@ if ($_GET && key_exists('mfn-iso', $_GET)) {
 
 if ($isotope || ($blog_layout == 'masonry')) {
 	$blog_classes[] = 'isotope';
+	wp_enqueue_script('mfn-isotope', get_theme_file_uri('/js/plugins/isotope.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+	wp_enqueue_script('mfn-imagesloaded', get_theme_file_uri('/js/plugins/imagesloaded.min.js'), ['jquery'], MFN_THEME_VERSION, true);
 }
 
 // load more
-
 $load_more = mfn_opts_get('blog-load-more');
+if( $load_more || mfn_opts_get('blog-infinite-scroll') ) {
+	wp_enqueue_script('mfn-waypoints', get_theme_file_uri('/js/plugins/waypoints.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+	wp_enqueue_script('mfn-imagesloaded', get_theme_file_uri('/js/plugins/imagesloaded.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+}
 
 // translate
 
@@ -111,7 +116,7 @@ $translate['item-all'] = mfn_opts_get('translate') ? mfn_opts_get('translate-ite
 						<?php
 							$filters_class = '';
 
-							if ($isotope) {
+							if ( is_home() && $isotope ) {
 								$filters_class .= ' isotope-filters';
 							}
 

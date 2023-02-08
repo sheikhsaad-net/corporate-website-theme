@@ -135,14 +135,14 @@ if (! function_exists('sc_header_logo')) {
 
 		if( $image && !empty($image) ){
 			$image = mfn_vc_image($image);
-		}elseif( empty($image) && mfn_opts_get('logo-img') ){
+		}elseif( empty($image) && !empty(mfn_opts_get('logo-img')) ){
 			$image = mfn_opts_get('logo-img');
 		}else{
 			$image = get_theme_file_uri( '/muffin-options/svg/placeholders/image.svg' );
 		}
 
 		$output = '<a class="logo-wrapper" href="'.( !empty($link) && $link != '/' ? $link : get_option("siteurl") ).'">';
-		$output .= '<img src="'.$image.'" alt="">';
+		$output .= '<img src="'.$image.'" alt="'. esc_attr( mfn_get_attachment_data( $image, 'alt' ) ) .'">';
 		$output .= '</a>';
 
 		return $output;
@@ -342,7 +342,7 @@ if (! function_exists('sc_header_icon')) {
 		}else if( $type == 'account' ){
 			//$desc = '';
 			if(function_exists('is_woocommerce')){
-				$additional_html .= '<div class="mfn-header-login woocommerce '. ( is_user_logged_in() ? "mfn-header-modal-nav" : "mfn-header-modal-login" ) .'">';
+				$additional_html .= '<div aria-disabled="true" class="mfn-header-login woocommerce '. ( is_user_logged_in() ? "mfn-header-modal-nav" : "mfn-header-modal-login" ) .'">';
 				$additional_html .= '<span class="mfn-close-icon toggle-login-modal close-login-modal"><span class="icon">&#10005;</span></span>';
 				if( ! is_user_logged_in()){
 					$additional_html .= '<h4>'.esc_html( 'Login', 'woocommerce' ).'</h4>';
@@ -689,6 +689,11 @@ if (! function_exists('sc_header_promo_bar')) {
 		}
 
 		$output .= '</div>';
+
+		if( ! isset( $attr['vb'] ) ){
+			wp_enqueue_script('mfn-slick', get_theme_file_uri('/js/plugins/slick.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+		}
+
 		return $output;
 	}
 }
@@ -908,24 +913,34 @@ if (! function_exists('sc_product_meta')) {
 if (! function_exists('sc_product_additional_information')) {
 	function sc_product_additional_information($attr, $product = false)
 	{
-		if( !function_exists('is_woocommerce') ) return;
-		if( !$product ){
+		if( ! function_exists('is_woocommerce') ){
+			return;
+		}
+
+		if( ! $product ){
 			$sample = Mfn_Builder_Woo_Helper::sample_item('product');
 			$product = wc_get_product($sample);
 		}
 
-		if( !$product ) return;
+		if( ! $product ){
+			return;
+		}
 
-		setup_postdata($product->get_id());
+		setup_postdata( $product->get_id() );
 
 		add_action( 'woocommerce_product_additional_information', 'wc_display_product_attributes', 10 );
 
 		ob_start();
-		if($attr['title'] == 1) echo '<h3>'. __( 'Additional information', 'woocommerce' ) .'</h3>';
+
+		if( ! empty( $attr['title'] ) ){
+			echo '<h3>'. __( 'Additional information', 'woocommerce' ) .'</h3>';
+		}
 		woocommerce_product_additional_information_tab();
-    	$output = ob_get_clean();
-    	wp_reset_postdata();
-    	return $output;
+
+  	$output = ob_get_clean();
+
+  	wp_reset_postdata();
+  	return $output;
 	}
 }
 
@@ -1109,7 +1124,6 @@ if (! function_exists('sc_product_cart_button')) {
 		echo '<div class="mfn-product-add-to-cart '.$classes.'">';
 
 			if( $is_sample ){
-				echo 'oxkkk';
 				$funname = 'woocommerce_'.$product->get_type().'_add_to_cart';
 				if( function_exists($funname) ){
 					$funname();
@@ -1296,7 +1310,7 @@ if (! function_exists('sc_shop_products')) {
 		do_action('woocommerce_before_shop_loop');
 		$output .= ob_get_clean();
 
-		$output .= '<div class="products_wrapper mfn-woo-products">';
+		$output .= '<div class="products_wrapper mfn-woo-products lm_wrapper">';
  		// start loop
 
 		$orderby = isset( $_GET['orderby'] ) ? wc_clean( $_GET['orderby'] ) : apply_filters( 'woocommerce_default_catalog_orderby', get_option( 'woocommerce_default_catalog_orderby' ) );
@@ -1318,6 +1332,10 @@ if (! function_exists('sc_shop_products')) {
 	        unset( $catalog_orderby_options['rating'] );
     	}
 
+    	if( !empty(mfn_opts_get('shop-infinite-load')) ){
+    		//$classes[] = 'lm_wrapper';
+    	}
+
 		if(function_exists('is_woocommerce') && !isset($attr['vb']) && have_posts()):
 
 		$output  .= '<ul class="products '.implode(' ', $classes).'">';
@@ -1325,14 +1343,20 @@ if (! function_exists('sc_shop_products')) {
 				the_post();
 				global $product;
 				if($layout == 'masonry') $classes = array( 'isotope-item' );
-				if ( empty( $product ) || ! $product->is_visible() ) return; // visibility
+				if ( empty( $product ) || ! $product->is_visible() ) continue; // visibility
 				do_action( 'woocommerce_shop_loop' );
 				$output .= Mfn_Builder_Woo_Helper::productslist($product, $attr, $classes);
 			}
 		$output .= '</ul>'; // end loop
 
 		ob_start();
-		woocommerce_pagination();
+		if( !empty(mfn_opts_get('shop-infinite-load')) ){
+			echo '<div class="mfn-infinite-load-button">';
+				echo mfn_pagination(false, true);
+			echo '</div>';
+		}else{
+			woocommerce_pagination();
+		}
 		$output .= ob_get_clean();
 
 		elseif( $sample ):
@@ -1345,7 +1369,7 @@ if (! function_exists('sc_shop_products')) {
 					$sample_loop->the_post();
 					global $product;
 					if($layout == 'masonry') $classes = array( 'isotope-item' );
-					if ( empty( $product ) || ! $product->is_visible() ) return; // visibility
+					if ( empty( $product ) || ! $product->is_visible() ) continue; // visibility
 					do_action( 'woocommerce_shop_loop' );
 					$output .= Mfn_Builder_Woo_Helper::productslist($product, $attr, $classes);
 				}
@@ -1362,6 +1386,8 @@ if (! function_exists('sc_shop_products')) {
 		endif;
 
 		$output .= '</div>';
+
+		wp_enqueue_script('mfn-isotope', get_theme_file_uri('/js/plugins/isotope.min.js'), ['jquery'], MFN_THEME_VERSION, true);
 		return $output;
 	}
 }
@@ -1705,6 +1731,10 @@ if (! function_exists('sc_article_box')) {
 
 		$image = mfn_vc_image($image);
 
+		// image class
+
+		$img_class = 'scale-with-grid';
+
 		// target
 
 		if ( 'lightbox' === $target ) {
@@ -1715,36 +1745,45 @@ if (! function_exists('sc_article_box')) {
 			$target_escaped = false;
 		}
 
+		// src output
+
+		$src = 'src="'. esc_url($image) .'"';
+
+		if( mfn_is_lazy() ){
+			$src = 'data-'. $src;
+			$img_class .= ' mfn-lazy';
+		}
+
 		// output -----
 
 		$output = '<div class="article_box mcb_column_wrapper">';
 
 
-				if ($link) {
-					// This variable has been safely escaped above in this function
-					$output .= '<a href="'. esc_url($link) .'" '. $target_escaped .'>';
+			if ($link) {
+				// This variable has been safely escaped above in this function
+				$output .= '<a href="'. esc_url($link) .'" '. $target_escaped .'>';
+			}
+
+			$output .= '<div class="photo_wrapper">';
+				$output .= '<img class="'. esc_attr($img_class) .'" '. $src .' alt="'. esc_attr(mfn_get_attachment_data($image, 'alt')) .'" width="'. mfn_get_attachment_data($image, 'width') .'" height="'. mfn_get_attachment_data($image, 'height') .'"/>';
+			$output .= '</div>';
+
+			$output .= '<div class="desc_wrapper">';
+
+				if ($slogan) {
+					$output .= '<p><span>'. wp_kses($slogan, mfn_allowed_html()) .'</span></p>';
+				}
+				if ($title) {
+					$output .= '<h4>'. wp_kses($title, mfn_allowed_html()) .'</h4>';
 				}
 
-					$output .= '<div class="photo_wrapper">';
-						$output .= '<img class="scale-with-grid" src="'. esc_url($image) .'" alt="'. esc_attr(mfn_get_attachment_data($image, 'alt')) .'" width="'. mfn_get_attachment_data($image, 'width') .'" height="'. mfn_get_attachment_data($image, 'height') .'"/>';
-					$output .= '</div>';
+				$output .= '<i class="icon-right-open themecolor" aria-hidden="true"></i>';
 
-					$output .= '<div class="desc_wrapper">';
+			$output .= '</div>';
 
-						if ($slogan) {
-							$output .= '<p><span>'. wp_kses($slogan, mfn_allowed_html()) .'</span></p>';
-						}
-						if ($title) {
-							$output .= '<h4>'. wp_kses($title, mfn_allowed_html()) .'</h4>';
-						}
-
-						$output .= '<i class="icon-right-open themecolor" aria-hidden="true"></i>';
-
-					$output .= '</div>';
-
-				if ($link) {
-					$output .= '</a>';
-				}
+			if ($link) {
+				$output .= '</a>';
+			}
 
 		$output .= '</div>'."\n";
 
@@ -1766,6 +1805,12 @@ if (! function_exists('sc_heading')) {
 			'target' => '',
 		), $attr));
 
+		// dynamic data: make {title:id:term} from {title} if term
+
+		/*if( empty(Mfn_Builder_Front::$item_id) && !empty($attr['vb_postid']) && get_post_type($attr['vb_postid']) != 'template' && strpos($title, '{') !== false ){
+			$title = str_replace('}', ':'.$attr['vb_postid'].'}', $title);
+		}*/
+
 		// class
 
 		$class = '';
@@ -1784,13 +1829,16 @@ if (! function_exists('sc_heading')) {
 			$target_escaped = false;
 		}
 
+		$title = be_dynamic_data($title);
+		$link = be_dynamic_data($link);
+
 		// output -----
 
 		$output = '';
 
 		$output .= '<'.$header_tag.' class="title'. $class.'">';
 			if( ! empty($link) ) $output .= '<a class="title_link" href="'. $link .'" '. $target_escaped .'>';
-				$output .= $title;
+				$output .= do_shortcode( $title );
 			if( ! empty($link) ) $output .= '</a>';
 		$output .= '</'.$header_tag.'>';
 
@@ -1928,6 +1976,12 @@ if (! function_exists('sc_before_after')) {
 
 		$output .= '</div>'."\n";
 
+		if( ! isset( $attr['vb'] ) ){
+			wp_enqueue_script('mfn-imagesloaded', get_theme_file_uri('/js/plugins/imagesloaded.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+			wp_enqueue_script('mfn-eventmove', get_theme_file_uri('/js/plugins/eventmove.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+			wp_enqueue_script('mfn-beforeafter', get_theme_file_uri('/js/plugins/beforeafter.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+		}
+
 		return $output;
 	}
 }
@@ -1954,6 +2008,10 @@ if (! function_exists('sc_flat_box')) {
 		$image = mfn_vc_image($image);
 		$icon_image = mfn_vc_image($icon_image);
 
+		// image class
+
+		$img_class = 'photo scale-with-grid';
+
 		// target
 
 		if ( 'lightbox' === $target ) {
@@ -1972,50 +2030,63 @@ if (! function_exists('sc_flat_box')) {
 			$background_escaped = false;
 		}
 
+		// src output
+
+		$src = 'src="'. esc_url($image) .'"';
+
+		if( mfn_is_lazy() ){
+			$src = 'data-'. $src;
+			$img_class .= ' mfn-lazy';
+		}
+
 		// output -----
 
 		$output = '<div class="flat_box">';
 
-				if ($link) {
+			if ($link) {
+				// This variable has been safely escaped above in this function
+				$output .= '<a href="'. esc_url($link) .'" '. $target_escaped .'>';
+			}
+
+				$output .= '<div class="photo_wrapper">';
+
 					// This variable has been safely escaped above in this function
-					$output .= '<a href="'. esc_url($link) .'" '. $target_escaped .'>';
-				}
+					$output .= '<div class="icon themebg" '. $background_escaped .'>';
 
-					$output .= '<div class="photo_wrapper">';
-
-						// This variable has been safely escaped above in this function
-						$output .= '<div class="icon themebg" '. $background_escaped .'>';
-
-							if ($icon_image) {
-								$output .= '<img class="scale-with-grid" src="'. esc_url($icon_image) .'" alt="'. esc_attr(mfn_get_attachment_data($icon_image, 'alt')) .'" width="'. esc_attr(mfn_get_attachment_data($icon_image, 'width')) .'" height="'. esc_attr(mfn_get_attachment_data($icon_image, 'height')) .'"/>';
-							} else {
-								$output .= '<i class="'. esc_attr($icon) .'" aria-hidden="true"></i>';
-							}
-
-						$output .= '</div>';
-
-						$output .= '<img class="photo scale-with-grid" src="'. esc_url($image) .'" alt="'. esc_attr(mfn_get_attachment_data($image, 'alt')) .'" width="'. esc_attr(mfn_get_attachment_data($image, 'width')) .'" height="'. esc_attr(mfn_get_attachment_data($image, 'height')) .'"/>';
-
-					$output .= '</div>';
-
-					$output .= '<div class="desc_wrapper">';
-
-						if ($title) {
-							$output .= '<h4>'. wp_kses($title, mfn_allowed_html()) .'</h4>';
-						}
-
-						if ($content) {
-							$output .= '<div class="desc">'. do_shortcode($content) .'</div>';
+						if ($icon_image) {
+							$output .= '<img class="scale-with-grid" src="'. esc_url($icon_image) .'" alt="'. esc_attr(mfn_get_attachment_data($icon_image, 'alt')) .'" width="'. esc_attr(mfn_get_attachment_data($icon_image, 'width')) .'" height="'. esc_attr(mfn_get_attachment_data($icon_image, 'height')) .'"/>';
+						} else {
+							$output .= '<i class="'. esc_attr($icon) .'" aria-hidden="true"></i>';
 						}
 
 					$output .= '</div>';
 
-				if ($link) {
-					$output .= '</a>';
-				}
+					$output .= '<img class="'. esc_attr($img_class) .'" '. $src .' alt="'. esc_attr(mfn_get_attachment_data($image, 'alt')) .'" width="'. esc_attr(mfn_get_attachment_data($image, 'width')) .'" height="'. esc_attr(mfn_get_attachment_data($image, 'height')) .'"/>';
+
+				$output .= '</div>';
+
+				$output .= '<div class="desc_wrapper">';
+
+					if ($title) {
+						$output .= '<h4>'. wp_kses($title, mfn_allowed_html()) .'</h4>';
+					}
+
+					if ($content) {
+						$output .= '<div class="desc">'. do_shortcode($content) .'</div>';
+					}
+
+				$output .= '</div>';
+
+			if ($link) {
+				$output .= '</a>';
+			}
 
 
 		$output .= '</div>'."\n";
+
+		if( !isset( $attr['vb'] ) ){
+			wp_enqueue_script('mfn-imagesloaded', get_theme_file_uri('/js/plugins/imagesloaded.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+		}
 
 		return $output;
 	}
@@ -2040,6 +2111,10 @@ if (! function_exists('sc_feature_box')) {
 
 		$image = mfn_vc_image($image);
 
+		// image class
+
+		$img_class = 'scale-with-grid';
+
 		// target
 
 		if ( 'lightbox' === $target ) {
@@ -2058,42 +2133,51 @@ if (! function_exists('sc_feature_box')) {
 			$background_escaped = false;
 		}
 
+		// src output
+
+		$src = 'src="'. esc_url($image) .'"';
+
+		if( mfn_is_lazy() ){
+			$src = 'data-'. $src;
+			$img_class .= ' mfn-lazy';
+		}
+
 		// output -----
 
 		$output = '<div class="feature_box">';
 
 
-				// This variable has been safely escaped above in this function
-				$output .= '<div class="feature_box_wrapper" '. $background_escaped .'>';
+			// This variable has been safely escaped above in this function
+			$output .= '<div class="feature_box_wrapper" '. $background_escaped .'>';
 
-					$output .= '<div class="photo_wrapper">';
+				$output .= '<div class="photo_wrapper">';
 
-						if ($link) {
-							// This variable has been safely escaped above in this function
-							$output .= '<a href="'. esc_url($link) .'" '. $target_escaped .'>';
-						}
+					if ($link) {
+						// This variable has been safely escaped above in this function
+						$output .= '<a href="'. esc_url($link) .'" '. $target_escaped .'>';
+					}
 
-						$output .= '<img class="scale-with-grid" src="'. esc_url($image) .'" alt="'. esc_attr(mfn_get_attachment_data($image, 'alt')) .'" width="'. esc_attr(mfn_get_attachment_data($image, 'width')) .'" height="'. esc_attr(mfn_get_attachment_data($image, 'height')) .'" />';
+					$output .= '<img class="'. esc_attr($img_class) .'" '. $src .' alt="'. esc_attr(mfn_get_attachment_data($image, 'alt')) .'" width="'. esc_attr(mfn_get_attachment_data($image, 'width')) .'" height="'. esc_attr(mfn_get_attachment_data($image, 'height')) .'" />';
 
-						if ($link) {
-							$output .= '</a>';
-						}
-
-					$output .= '</div>';
-
-					$output .= '<div class="desc_wrapper">';
-
-						if ($title) {
-							$output .= '<h4>'. wp_kses($title, mfn_allowed_html()) .'</h4>';
-						}
-
-						if ($content) {
-							$output .= '<div class="desc">'. do_shortcode($content) .'</div>';
-						}
-
-					$output .= '</div>';
+					if ($link) {
+						$output .= '</a>';
+					}
 
 				$output .= '</div>';
+
+				$output .= '<div class="desc_wrapper">';
+
+					if ($title) {
+						$output .= '<h4>'. wp_kses($title, mfn_allowed_html()) .'</h4>';
+					}
+
+					if ($content) {
+						$output .= '<div class="desc">'. do_shortcode($content) .'</div>';
+					}
+
+				$output .= '</div>';
+
+			$output .= '</div>';
 
 		$output .= '</div>'."\n";
 
@@ -2170,6 +2254,10 @@ if (! function_exists('sc_photo_box')) {
 
 		$image = mfn_vc_image($image);
 
+		// image class
+
+		$img_class = 'scale-with-grid';
+
 		// target
 
 		if ( 'lightbox' === $target ) {
@@ -2194,6 +2282,15 @@ if (! function_exists('sc_photo_box')) {
 			$class .= ' without-desc';
 		}
 
+		// src output
+
+		$src = 'src="'. esc_url($image) .'"';
+
+		if( mfn_is_lazy() ){
+			$src = 'data-'. $src;
+			$img_class .= ' mfn-lazy';
+		}
+
 		// output -----
 
 		$output = '<div class="photo_box element_classes '. esc_attr($class) .'">';
@@ -2213,7 +2310,7 @@ if (! function_exists('sc_photo_box')) {
 					}
 
 					$output .= '<div class="mask"></div>';
-					$output .= '<img class="scale-with-grid" src="'. esc_url($image) .'" alt="'. esc_attr(mfn_get_attachment_data($image, 'alt')) .'" width="'. esc_attr(mfn_get_attachment_data($image, 'width')) .'" height="'. esc_attr(mfn_get_attachment_data($image, 'height')) .'"/>';
+					$output .= '<img class="'. esc_attr($img_class) .'" '. $src .' alt="'. esc_attr(mfn_get_attachment_data($image, 'alt')) .'" width="'. esc_attr(mfn_get_attachment_data($image, 'width')) .'" height="'. esc_attr(mfn_get_attachment_data($image, 'height')) .'"/>';
 
 					if ($link) {
 						$output .= '</a>';
@@ -2230,6 +2327,38 @@ if (! function_exists('sc_photo_box')) {
 		$output .= '</div>'."\n";
 
 		return $output;
+	}
+}
+
+/**
+ * Plain text [plain_text] [/plain_text]
+ */
+
+if (! function_exists('sc_plain_text')) {
+	function sc_plain_text($attr, $content = null) {
+
+		extract(shortcode_atts(array(
+			'content' => '',
+		), $attr));
+
+		/*if( empty(Mfn_Builder_Front::$item_id) && !empty($attr['vb_postid']) && get_post_type($attr['vb_postid']) != 'template' && strpos($content, '{') !== false ){
+			$content = str_replace('}', ':'.$attr['vb_postid'].'}', $content);
+		}*/
+
+		$content = be_dynamic_data($content);
+
+		$output = '<div class="desc">';
+
+			if( !empty( $attr['shortcodes_parser'] ) ){
+				$output .= do_shortcode( $content );
+			}else{
+				$output .= $content;
+			}
+
+		$output .= '</div>';
+
+		return $output;
+
 	}
 }
 
@@ -2253,6 +2382,10 @@ if (! function_exists('sc_zoom_box')) {
 		$image = mfn_vc_image($image);
 		$content_image = mfn_vc_image($content_image);
 
+		// image class
+
+		$img_class = 'scale-with-grid';
+
 		// target
 
 		if ( 'lightbox' === $target ) {
@@ -2269,6 +2402,15 @@ if (! function_exists('sc_zoom_box')) {
 			$color = 'style="background-color:'. esc_attr(mfn_hex2rgba($bg_color, 0.8)) .';"';
 		}
 
+		// src output
+
+		$src = 'src="'. esc_url($image) .'"';
+
+		if( mfn_is_lazy() ){
+			$src = 'data-'. $src;
+			$img_class .= ' mfn-lazy';
+		}
+
 		// output -----
 
 		$output = '<div class="zoom_box">';
@@ -2279,7 +2421,7 @@ if (! function_exists('sc_zoom_box')) {
 			}
 
 				$output .= '<div class="photo">';
-					$output .= '<img class="scale-with-grid" src="'. esc_url($image) .'" alt="'. esc_attr(mfn_get_attachment_data($image, 'alt')) .'" width="'. esc_attr(mfn_get_attachment_data($image, 'width')) .'" height="'. esc_attr(mfn_get_attachment_data($image, 'height')) .'"/>';
+					$output .= '<img class="'. esc_attr($img_class) .'" '. $src .' alt="'. esc_attr(mfn_get_attachment_data($image, 'alt')) .'" width="'. esc_attr(mfn_get_attachment_data($image, 'width')) .'" height="'. esc_attr(mfn_get_attachment_data($image, 'height')) .'"/>';
 				$output .= '</div>';
 
 				$output .= '<div class="desc" '.$color.'>';
@@ -2338,6 +2480,19 @@ if (! function_exists('sc_sliding_box')) {
 			$target_escaped = false;
 		}
 
+		// image class
+
+		$img_class = 'scale-with-grid';
+
+		// src output
+
+		$src = 'src="'. esc_url($image) .'"';
+
+		if( mfn_is_lazy() ){
+			$src = 'data-'. $src;
+			$img_class .= ' mfn-lazy';
+		}
+
 		// output -----
 
 		$output = '<div class="sliding_box">';
@@ -2348,7 +2503,7 @@ if (! function_exists('sc_sliding_box')) {
 				}
 
 					$output .= '<div class="photo_wrapper">';
-						$output .= '<img class="scale-with-grid" src="'. esc_url($image) .'" alt="'. esc_attr(mfn_get_attachment_data($image, 'alt')) .'" width="'. esc_attr(mfn_get_attachment_data($image, 'width')) .'" height="'. esc_attr(mfn_get_attachment_data($image, 'height')) .'"/>';
+						$output .= '<img class="'. esc_attr($img_class) .'" '. $src .' alt="'. esc_attr(mfn_get_attachment_data($image, 'alt')) .'" width="'. esc_attr(mfn_get_attachment_data($image, 'width')) .'" height="'. esc_attr(mfn_get_attachment_data($image, 'height')) .'"/>';
 					$output .= '</div>';
 
 					$output .= '<div class="desc_wrapper">';
@@ -2396,6 +2551,19 @@ if (! function_exists('sc_story_box')) {
 			$target_escaped = false;
 		}
 
+		// image class
+
+		$img_class = 'scale-with-grid';
+
+		// src output
+
+		$src = 'src="'. esc_url($image) .'"';
+
+		if( mfn_is_lazy() ){
+			$src = 'data-'. $src;
+			$img_class .= ' mfn-lazy';
+		}
+
 		// output -----
 
 		$output = '<div class="story_box '. esc_attr($style) .'">';
@@ -2407,7 +2575,7 @@ if (! function_exists('sc_story_box')) {
 
 					if ( $image ) {
 					$output .= '<div class="photo_wrapper">';
-						$output .= '<img class="scale-with-grid" src="'. esc_url($image) .'" alt="'. esc_attr(mfn_get_attachment_data($image, 'alt')) .'" width="'. esc_attr(mfn_get_attachment_data($image, 'width')) .'" height="'. esc_attr(mfn_get_attachment_data($image, 'height')) .'"/>';
+						$output .= '<img class="'. esc_attr($img_class) .'" '. $src .' alt="'. esc_attr(mfn_get_attachment_data($image, 'alt')) .'" width="'. esc_attr(mfn_get_attachment_data($image, 'width')) .'" height="'. esc_attr(mfn_get_attachment_data($image, 'height')) .'"/>';
 					$output .= '</div>';
 					}
 
@@ -2476,6 +2644,19 @@ if (! function_exists('sc_trailer_box')) {
 			$target_escaped = false;
 		}
 
+		// image class
+
+		$img_class = 'scale-with-grid';
+
+		// src output
+
+		$src = 'src="'. esc_url($image) .'"';
+
+		if( mfn_is_lazy() ){
+			$src = 'data-'. $src;
+			$img_class .= ' mfn-lazy';
+		}
+
 		// output -----
 
 		$output = '<div class="trailer_box '. esc_attr(trim($class)) .'">';
@@ -2485,7 +2666,7 @@ if (! function_exists('sc_trailer_box')) {
 					$output .= '<a href="'. esc_url($link) .'" '. $target_escaped .'>';
 				}
 
-					$output .= '<img class="scale-with-grid" src="'. esc_url($image) .'" alt="'. esc_attr(mfn_get_attachment_data($image, 'alt')) .'" width="'. esc_attr(mfn_get_attachment_data($image, 'width')) .'" height="'. esc_attr(mfn_get_attachment_data($image, 'height')) .'"/>';
+					$output .= '<img class="'. esc_attr($img_class) .'" '. $src .' alt="'. esc_attr(mfn_get_attachment_data($image, 'alt')) .'" width="'. esc_attr(mfn_get_attachment_data($image, 'width')) .'" height="'. esc_attr(mfn_get_attachment_data($image, 'height')) .'"/>';
 
 					$output .= '<div class="desc">';
 
@@ -2549,6 +2730,19 @@ if (! function_exists('sc_promo_box')) {
 			$target_escaped = false;
 		}
 
+		// image class
+
+		$img_class = 'scale-with-grid';
+
+		// src output
+
+		$src = 'src="'. esc_url($image) .'"';
+
+		if( mfn_is_lazy() ){
+			$src = 'data-'. $src;
+			$img_class .= ' mfn-lazy';
+		}
+
 		// output -----
 
 		$output = '<div class="promo_box '. esc_attr($border) .'">';
@@ -2557,7 +2751,7 @@ if (! function_exists('sc_promo_box')) {
 
 					$output .= '<div class="photo_wrapper">';
 						if ($image) {
-							$output .= '<img class="scale-with-grid" src="'. esc_url($image) .'" alt="'. esc_attr(mfn_get_attachment_data($image, 'alt')) .'" width="'. esc_attr(mfn_get_attachment_data($image, 'width')) .'" height="'. esc_attr(mfn_get_attachment_data($image, 'height')) .'"/>';
+							$output .= '<img class="'. esc_attr($img_class) .'" '. $src .' alt="'. esc_attr(mfn_get_attachment_data($image, 'alt')) .'" width="'. esc_attr(mfn_get_attachment_data($image, 'width')) .'" height="'. esc_attr(mfn_get_attachment_data($image, 'height')) .'"/>';
 						}
 					$output .= '</div>';
 
@@ -2661,6 +2855,19 @@ if (! function_exists('sc_how_it_works')) {
 			$class .= ' no-img';
 		}
 
+		// image class
+
+		$img_class = 'scale-with-grid';
+
+		// src output
+
+		$src = 'src="'. esc_url($image) .'"';
+
+		if( mfn_is_lazy() ){
+			$src = 'data-'. $src;
+			$img_class .= ' mfn-lazy';
+		}
+
 		// output -----
 
 		$output = '<div class="how_it_works '. esc_attr($class) .'">';
@@ -2672,7 +2879,7 @@ if (! function_exists('sc_how_it_works')) {
 
 					$output .= '<div class="image_wrapper"><div class="image">';
 						if ($image) {
-							$output .= '<img src="'. esc_url($image) .'" class="scale-with-grid" alt="'. esc_attr(mfn_get_attachment_data($image, 'alt')) .'" width="'. esc_attr(mfn_get_attachment_data($image, 'width')) .'" height="'. esc_attr(mfn_get_attachment_data($image, 'height')) .'">';
+							$output .= '<img class="'. esc_attr($img_class) .'" '. $src .' alt="'. esc_attr(mfn_get_attachment_data($image, 'alt')) .'" width="'. esc_attr(mfn_get_attachment_data($image, 'width')) .'" height="'. esc_attr(mfn_get_attachment_data($image, 'height')) .'">';
 						}
 
 					$output .= '</div>';
@@ -2719,6 +2926,7 @@ if (! function_exists('sc_blog')) {
 			'order'					=> 'DESC',
 
 			'exclude_id'		=> '',
+			'related'				=> '',
 			'filters'				=> '',
 			'excerpt'				=> true,
 			'more'					=> '',
@@ -2779,6 +2987,19 @@ if (! function_exists('sc_blog')) {
 			$args['post__not_in'] = explode(',', $exclude_id);
 		}
 
+		// related posts
+
+		if ( ! empty($related) ) {
+
+			if( isset($attr['pageid']) ) {
+				$id = $attr['pageid'];
+			} else {
+				$id = mfn_ID() ? mfn_ID() : $_POST['pageid'];
+			}
+
+			$args['post__not_in'] = [ $id ];
+		}
+
 		$query_blog = new WP_Query($args);
 
 		// classes
@@ -2797,6 +3018,10 @@ if (! function_exists('sc_blog')) {
 
 		if ($filters || in_array($style, array( 'masonry', 'masonry tiles' ))) {
 			$classes .= ' isotope';
+
+			if( ! isset( $attr['vb'] ) ){
+				wp_enqueue_script('mfn-isotope', get_theme_file_uri('/js/plugins/isotope.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+			}
 		}
 
 		// title tag
@@ -2938,6 +3163,7 @@ if (! function_exists('sc_blog_slider')) {
 
 			'category'		=> '',
 			'category_multi'	=> '',
+			'excerpt'		=> '',
 			'orderby'			=> 'date',
 			'order'				=> 'DESC',
 
@@ -3036,6 +3262,11 @@ if (! function_exists('sc_blog_slider')) {
 									$output .= '<h4><a href="'. esc_url(get_permalink()) .'">'. wp_kses(get_the_title(), mfn_allowed_html()) .'</a></h4>';
 								}
 								$output .= '<hr class="hr_color" />';
+
+								if( !empty($excerpt) ){
+									$output .= '<p class="post_excerpt">'.get_the_excerpt().'</p>';
+								}
+
 								$output .= '<a href="'. esc_url(get_permalink()) .'" class="button button_left has-icon"><span class="button_icon"><i class="icon-layout" aria-hidden="true"></i></span><span class="button_label">'. esc_html($translate['readmore']) .'</span></a>';
 							$output .= '</div>';
 
@@ -3050,6 +3281,10 @@ if (! function_exists('sc_blog_slider')) {
 		$output .= '</div>'."\n";
 
 		wp_reset_postdata();
+
+		if( ! isset( $attr['vb'] ) ){
+			wp_enqueue_script('mfn-slick', get_theme_file_uri('/js/plugins/slick.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+		}
 
 		return $output;
 	}
@@ -3469,6 +3704,10 @@ if (! function_exists('sc_shop_slider')) {
 
 		wp_reset_postdata();
 
+		if( ! isset( $attr['vb'] ) ){
+			wp_enqueue_script('mfn-slick', get_theme_file_uri('/js/plugins/slick.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+		}
+
 		return $output;
 	}
 }
@@ -3603,9 +3842,9 @@ if (! function_exists('sc_popup')) {
 		$output = '';
 
 		if ($button) {
-			$output .= '<a href="#'. esc_attr($uid) .'" rel="lightbox" data-type="inline" class="popup-link button"><span class="button_label">'. wp_kses($title, mfn_allowed_html()) .'</span></a>';
+			$output .= '<a href="#'. esc_attr($uid) .'" rel="lightbox" data-lightbox-type="inline" class="popup-link button"><span class="button_label">'. wp_kses($title, mfn_allowed_html()) .'</span></a>';
 		} else {
-			$output .= '<a href="#'. esc_attr($uid) .'" rel="lightbox" data-type="inline" class="popup-link">'. wp_kses($title, mfn_allowed_html()) .'</a>';
+			$output .= '<a href="#'. esc_attr($uid) .'" rel="lightbox" data-lightbox-type="inline" class="popup-link">'. wp_kses($title, mfn_allowed_html()) .'</a>';
 		}
 
 		$output .= '<div id="'. esc_attr($uid) .'" class="popup-content">';
@@ -3732,6 +3971,329 @@ if (! function_exists('sc_opening_hours')) {
 				$output .= '</div>';
 
 			$output .= '</div>'."\n";
+
+		return $output;
+	}
+}
+
+/**
+ * List [list_2]
+ */
+
+if (! function_exists('sc_list_2')) {
+	function sc_list_2($attr, $content = null)
+	{
+		extract(shortcode_atts(array(
+			'tabs' => '',
+			'type' => '',
+
+			'align' => '',
+			'align_tablet' => '',
+			'align_mobile' => '',
+
+			'valign' => '',
+			'valign_tablet' => '',
+			'valign_mobile' => '',
+
+			'icon' => '',
+			'image' => '',
+			'divider' => '',
+
+		), $attr));
+
+		// classes
+
+ 		$classes = ['mfn-list'];
+
+		// type
+
+ 		if( ! empty( $type ) ){
+ 			$classes[] = 'mfn-list-'. $type;
+ 		}
+
+		// divider
+
+ 		if( ! empty( $divider ) ){
+ 			$classes[] = 'mfn-list-divider';
+ 		}
+
+		// align
+
+		if( ! empty( $align ) ){
+ 			$classes[] = 'mfn-list-'. $align;
+ 		}
+		if( ! empty( $align_tablet ) ){
+ 			$classes[] = 'mfn-list-tablet-'. $align_tablet;
+ 		}
+		if( ! empty( $align_mobile ) ){
+ 			$classes[] = 'mfn-list-mobile-'. $align_mobile;
+ 		}
+
+		// vertical align
+
+		if( ! empty( $valign ) ){
+ 			$classes[] = 'mfn-list-'. $valign;
+ 		}
+		if( ! empty( $valign_tablet ) ){
+ 			$classes[] = 'mfn-list-tablet-'. $valign_tablet;
+ 		}
+		if( ! empty( $valign_mobile ) ){
+ 			$classes[] = 'mfn-list-mobile-'. $valign_mobile;
+ 		}
+
+		$classes = implode(' ', $classes);
+
+		// output -----
+
+		$output = '<ul class="'. esc_attr($classes).'">';
+
+			if( ! empty($tabs) && is_array($tabs) ){
+
+				foreach( $tabs as $tab ){
+
+					// custom background
+
+					$style_background = '';
+					if( !empty($tab['background']) ){
+						$style_background = 'style="background-color:'. $tab['background'] .'"';
+					}
+
+					// custom color
+
+					$style_color = '';
+					if( !empty($tab['color']) ){
+						$style_color = 'style="color:'. $tab['color'] .'"';
+					}
+
+					$output .= '<li class="mfn-list-item">';
+
+						if( !empty($image) || !empty($icon) ){
+							$output .= '<span class="mfn-list-icon" '. $style_background .'>';
+
+								if( 'ordered' == $type ){
+
+									// do nothing
+
+								} elseif( !empty($tab['image']) ){
+
+									$output .= '<img src="'. esc_attr($tab['image']) .'" alt="" />';
+
+								} elseif( !empty($tab['icon']) ){
+
+									$output .= '<i class="'. esc_attr($tab['icon']) .'" aria-hidden="true" '. $style_color .'></i>';
+
+								} elseif( !empty($image) ){
+
+									$output .= '<img src="'. esc_attr($image) .'" alt="" />';
+
+								} elseif( !empty($icon) ){
+
+									$output .= '<i class="'. esc_attr($icon) .'" aria-hidden="true" '. $style_color .'></i>';
+
+								}
+
+							$output .= '</span>';
+						}
+
+						$output .= '<span class="mfn-list-desc">';
+							if( ! empty($tab['content']) ){
+
+								if( ! empty($tab['link']) ){
+									$target = '';
+									if( ! empty($tab['target']) ){
+										$target = 'target="_blank"';
+									}
+									$output .= '<a href="'. esc_attr($tab['link']) .'" '. $target .'>'. do_shortcode($tab['content']) .'</a>';
+								} else {
+									$output .= do_shortcode($tab['content']);
+								}
+
+							}
+						$output .= '</span>';
+
+					$output .= '</li>';
+				}
+
+			} else {
+
+				$output .= '<p>Please add list items.</p>';
+
+			}
+
+		$output .= '</ul>'."\n";
+
+		// style
+
+		wp_enqueue_style('mfn-element-list-2', get_theme_file_uri('/css/elements/list-2.css'), null, MFN_THEME_VERSION);
+
+		return $output;
+	}
+}
+
+/**
+ * Toggle [toggle]
+ */
+
+if (! function_exists('sc_toggle')) {
+	function sc_toggle($attr, $content = null)
+	{
+		extract(shortcode_atts(array(
+			'tabs' => '',
+			'tag' => 'h5',
+
+			'type' => '',
+			'divider' => '',
+			'open_first' => '',
+			'open_all' => '',
+			'open_more' => '',
+
+			'align' => '',
+			'align_tablet' => '',
+			'align_mobile' => '',
+
+			'icon' => '',
+			'active_icon' => '',
+			'icon_animation' => '',
+
+		), $attr));
+
+		// classes
+
+ 		$classes = ['mfn-toggle'];
+
+		// type
+
+ 		if( ! empty( $type ) ){
+ 			$classes[] = 'mfn-toggle-'. $type;
+ 		}
+
+		// open
+
+ 		if( 'enable' == $open_first ){
+ 			$classes[] = 'mfn-toggle-open-first';
+ 		}
+ 		if( 'enable' == $open_all ){
+ 			$classes[] = 'mfn-toggle-open-all';
+ 		}
+ 		if( 'enable' == $open_more ){
+ 			$classes[] = 'mfn-toggle-open-more';
+ 		}
+
+		// divider
+
+ 		if( 'enable' == $divider ){
+ 			$classes[] = 'mfn-toggle-divider';
+ 		}
+
+		// align
+
+		if( ! empty( $align ) ){
+ 			$classes[] = 'mfn-toggle-'. $align;
+ 		}
+		if( ! empty( $align_tablet ) ){
+ 			$classes[] = 'mfn-toggle-tablet-'. $align_tablet;
+ 		}
+		if( ! empty( $align_mobile ) ){
+ 			$classes[] = 'mfn-toggle-mobile-'. $align_mobile;
+ 		}
+
+		// icon animation
+
+		if( ! empty( $icon_animation ) ){
+ 			$classes[] = 'mfn-toggle-icon-'. $icon_animation;
+ 		}
+
+		$classes = implode(' ', $classes);
+
+		// output -----
+
+		$output = '<div class="'. esc_attr($classes).'">';
+
+			if( ! empty($tabs) && is_array($tabs) ){
+
+				$i = 1;
+				$count = count($tabs);
+
+				// class
+
+				$active = '';
+				$style = 'display:none';
+
+				if( 'enable' == $open_first || 'enable' == $open_all ){
+					$active = 'active';
+					$style = '';
+				}
+
+				foreach( $tabs as $tab ){
+
+					// output
+
+					$output .= '<div class="mfn-toggle-item '. esc_attr($active) .'">';
+
+		        $output .= '<div class="toggle-bar">';
+
+							if( !empty($tab['image']) || !empty($tab['icon']) || 'ordered' == $type ){
+								$output .= '<span class="toggle-bar-icon">';
+
+									if( 'ordered' == $type ){
+
+										// do nothing
+
+									} elseif( !empty($tab['image']) ){
+
+										$output .= '<img src="'. esc_attr($tab['image']) .'" alt="" />';
+
+									} elseif( !empty($tab['icon']) ){
+
+										$output .= '<i class="'. esc_attr($tab['icon']) .'" aria-hidden="true"></i>';
+
+									}
+
+								$output .= '</span>';
+							}
+
+		          $output .= '<'. esc_attr($tag) .' class="toggle-heading">'. $tab['title'] .'</'. esc_attr($tag) .'>';
+
+		          $output .= '<a class="toggle-icon" tabindex="0">';
+								if( !empty($icon) ){
+									$output .= '<i aria-hidden="true" class="'. esc_attr($icon) .' plus"></i>';
+								}
+								if( !empty($active_icon) ){
+									$output .= '<i aria-hidden="true" class="'. esc_attr($active_icon) .' minus"></i>';
+								}
+		          $output .= '</a>';
+
+						$output .= '</div>';
+
+		        $output .= '<div class="toggle-content" aria-expanded="false" style="'. esc_attr($style) .'">';
+		          $output .= '<p>'. $tab['content'] .'</p>';
+		        $output .= '</div>';
+
+		      $output .= '</div>';
+
+					// divider
+
+					if( (! empty( $divider ) && 'enable' == $divider) && $i < $count ){
+						$output .= '<hr class="toggle-divider">';
+					}
+
+					// end: output
+
+					if( 'enable' == $open_first && 'enable' != $open_all ){
+						$active = '';
+						$style = 'display:none';
+					}
+
+					$i++;
+
+				}
+			}
+
+		$output .= '</div>'."\n";
+
+		// style
+
+		wp_enqueue_style('mfn-element-toggle', get_theme_file_uri('/css/elements/toggle.css'), null, MFN_THEME_VERSION);
 
 		return $output;
 	}
@@ -4135,6 +4697,19 @@ if (! function_exists('sc_pricing_item')) {
 			$classes .= ' pricing-box-'. $style;
 		}
 
+		// image class
+
+		$img_class = 'scale-with-grid';
+
+		// src output
+
+		$src = 'src="'. esc_url($image) .'"';
+
+		if( mfn_is_lazy() ){
+			$src = 'data-'. $src;
+			$img_class .= ' mfn-lazy';
+		}
+
 		// output -----
 
 		$output = '<div class="pricing-box '. esc_attr($classes) .'">';
@@ -4145,7 +4720,7 @@ if (! function_exists('sc_pricing_item')) {
 
 					if ($image) {
 						$output .= '<div class="image">';
-							$output .= '<img src="'. esc_url($image) .'" alt="'. esc_attr(mfn_get_attachment_data($image, 'alt')) .'" width="'. esc_attr(mfn_get_attachment_data($image, 'width')) .'" height="'. esc_attr(mfn_get_attachment_data($image, 'height')) .'"/>';
+							$output .= '<img class="'. esc_attr($img_class) .'" '. $src .' alt="'. esc_attr(mfn_get_attachment_data($image, 'alt')) .'" width="'. esc_attr(mfn_get_attachment_data($image, 'width')) .'" height="'. esc_attr(mfn_get_attachment_data($image, 'height')) .'"/>';
 						$output .= '</div>';
 					}
 
@@ -4396,6 +4971,11 @@ if (! function_exists('sc_chart')) {
 
 		$output .= '</div>'."\n";
 
+		if( ! isset( $attr['vb'] ) ){
+			wp_enqueue_script('mfn-waypoints', get_theme_file_uri('/js/plugins/waypoints.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+			wp_enqueue_script('mfn-chart', get_theme_file_uri('/js/plugins/chart.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+		}
+
 		return $output;
 	}
 }
@@ -4520,6 +5100,11 @@ if (! function_exists('sc_countdown')) {
 
 		$output .= '</div>'."\n";
 
+		if( ! isset( $attr['vb'] ) ){
+			wp_enqueue_script('mfn-waypoints', get_theme_file_uri('/js/plugins/waypoints.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+			wp_enqueue_script('mfn-countdown', get_theme_file_uri('/js/plugins/countdown.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+		}
+
 		return $output;
 	}
 }
@@ -4559,6 +5144,11 @@ if (! function_exists('sc_countdown_inline')) {
 			$output .= '<span class="label label-seconds">'. esc_html($translate['seconds']) .'</span>';
 		$output .= '</span>';
 
+		if( ! isset( $attr['vb'] ) ){
+			wp_enqueue_script('mfn-waypoints', get_theme_file_uri('/js/plugins/waypoints.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+			wp_enqueue_script('mfn-countdown', get_theme_file_uri('/js/plugins/countdown.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+		}
+
 		return $output;
 	}
 }
@@ -4597,6 +5187,19 @@ if (! function_exists('sc_counter')) {
 
 		$animate_math = mfn_opts_get('math-animations-disable') ? false : 'animate-math';
 
+		// image class
+
+		$img_class = 'scale-with-grid';
+
+		// src output
+
+		$src = 'src="'. esc_url($image) .'"';
+
+		if( mfn_is_lazy() ){
+			$src = 'data-'. $src;
+			$img_class .= ' mfn-lazy';
+		}
+
 		// output -----
 
 		$output = '<div class="counter counter_'. esc_attr($type) .' '. esc_attr($animate_math) .'">';
@@ -4604,7 +5207,7 @@ if (! function_exists('sc_counter')) {
 			if( $image || $icon ){
 				$output .= '<div class="icon_wrapper">';
 					if ($image) {
-						$output .= '<img src="'. esc_url($image) .'" alt="'. esc_attr(mfn_get_attachment_data($image, 'alt')) .'" width="'. esc_attr(mfn_get_attachment_data($image, 'width')) .'" height="'. esc_attr(mfn_get_attachment_data($image, 'height')) .'"/>';
+						$output .= '<img class="'. esc_attr($img_class) .'" '. $src .' alt="'. esc_attr(mfn_get_attachment_data($image, 'alt')) .'" width="'. esc_attr(mfn_get_attachment_data($image, 'width')) .'" height="'. esc_attr(mfn_get_attachment_data($image, 'height')) .'"/>';
 					} elseif ($icon) {
 						// This variable has been safely escaped above in this function
 						$output .= '<i class="'. esc_attr($icon) .'" '. $style_escaped .' aria-hidden="true"></i>';
@@ -4638,6 +5241,12 @@ if (! function_exists('sc_counter')) {
 
 		$output .= '</div>'."\n";
 
+		if( ! isset( $attr['vb'] ) ){
+			wp_enqueue_script('mfn-waypoints', get_theme_file_uri('/js/plugins/waypoints.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+			wp_enqueue_script('mfn-chart', get_theme_file_uri('/js/plugins/chart.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+			wp_enqueue_script('mfn-countdown', get_theme_file_uri('/js/plugins/countdown.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+		}
+
 		return $output;
 	}
 }
@@ -4658,6 +5267,11 @@ if (! function_exists('sc_counter_inline')) {
 		}
 
 		$output = '<span class="counter-inline animate-math"><span class="number" data-to="'. intval($value, 10) .'">'. intval($value, 10) .'</span></span>';
+
+		if( ! isset( $attr['vb'] ) ){
+			wp_enqueue_script('mfn-waypoints', get_theme_file_uri('/js/plugins/waypoints.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+			wp_enqueue_script('mfn-countdown', get_theme_file_uri('/js/plugins/countdown.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+		}
 
 		return $output;
 	}
@@ -4733,14 +5347,15 @@ if (! function_exists('sc_icon_block')) {
  */
 
 if (! function_exists('sc_image')) {
-	function sc_image($attr, $content = null)
-	{
+	function sc_image($attr, $content = null) {
+
 		extract(shortcode_atts(array(
 
 			'src'      => '',
 			'size'     => '',
 			'width'    => '',
 			'height'   => '',
+			'lazy_load' => '',
 
 			// options
 			'align'    => 'none',
@@ -4770,6 +5385,17 @@ if (! function_exists('sc_image')) {
 			'mask_shape_position' => '',
 
 		), $attr));
+
+		// dynamic data: make {title:id:term} from {title} if term
+
+		/*if( empty(Mfn_Builder_Front::$item_id) && !empty($attr['vb_postid']) && get_post_type($attr['vb_postid']) != 'template' && has_post_thumbnail($attr['vb_postid']) && strpos($src, '{') !== false && strpos($src, ':') === false ){
+			// page, post featured image
+			$src = str_replace('}', ':'.$attr['vb_postid'].'}', $src);
+		}*/
+
+		// class
+
+		$class = 'scale-with-grid';
 
 		// margin
 
@@ -4847,12 +5473,6 @@ if (! function_exists('sc_image')) {
 			$class_div .= ' hover-disable';
 		}
 
-		// svg
-
-		if( strpos( $src, '.svg' ) !== false && empty($attr['style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .image_frame:width']) ){
-			$class_div .= ' svg';
-		}
-
 		// width x height, alt
 
 		if (! $alt) {
@@ -4887,6 +5507,14 @@ if (! function_exists('sc_image')) {
 				}
 
 			}
+		}
+
+		$src = be_dynamic_data($src);
+
+		// svg
+
+		if( strpos( $src, '.svg' ) !== false && empty($attr['style:.mcb-section .mcb-wrap .mcb-item-mfnuidelement .image_frame:width']) ) {
+			$class_div .= ' svg';
 		}
 
 		if (! $width) {
@@ -4953,68 +5581,74 @@ if (! function_exists('sc_image')) {
 
 		$srcset = mfn_srcset( mfn_get_attachment_id_url( $src ), true );
 
-		// image output -----
-
-		// This variable has been safely escaped above in this function
-
 		if( strpos( $src, '.gif' ) !== false ){
-			$image_output_escapes = '<img class="scale-with-grid" '. $img_style .' src="'. esc_url($src) .'" alt="'. esc_attr($alt) .'" title="'. esc_attr($title) .'" '. $width_escaped .' '. $height_escaped .'/>';
-		}else{
-			$image_output_escapes = '<img class="scale-with-grid" '. $img_style .' src="'. esc_url($src) .'" alt="'. esc_attr($alt) .'" title="'. esc_attr($title) .'" '. $width_escaped .' '. $height_escaped .' '. $srcset .'/>';
+			$srcset = ''; // skip srcset for gif images
 		}
 
+		// src output
+
+		$src = 'src="'. esc_url($src) .'"';
+
+		if( !isset($attr['vb']) && mfn_is_lazy( $lazy_load ) ){
+			$src = 'data-'. $src;
+			$class .= ' mfn-lazy';
+		}
+
+		// image output -----
+
+		$image_output_escapes = '<img class="'. esc_attr($class) .'" '. $src .' alt="'. esc_attr($alt) .'" title="'. esc_attr($title) .'" '. $img_style .' '. $width_escaped .' '. $height_escaped .' '. $srcset .'/>';
 
 		// output -----
 
 		$output = '';
 
-			if ($link || $link_image) {
+		if ($link || $link_image) {
 
-				// This variable has been safely escaped above in this function
-				$output .= '<div class="image_frame element_classes image_item scale-with-grid'. esc_attr($class_div) .'" '. $style_escaped .' role="link" tabindex="0">';
+			// This variable has been safely escaped above in this function
+			$output .= '<div class="image_frame element_classes image_item scale-with-grid'. esc_attr($class_div) .'" '. $style_escaped .' role="link" tabindex="0">';
 
-					$output .= '<div class="image_wrapper">';
+				$output .= '<div class="image_wrapper">';
 
-						// This variable has been safely escaped above in this function
-						$output .= '<a href="'. esc_url($link_all) .'" '. $rel_escaped .' '. $target_escaped .' tabindex="-1">';
-							$output .= '<div class="mask"></div>';
-							// This variable has been safely escaped above in this function
-							$output .= $image_output_escapes;
-						$output .= '</a>';
-
-						$output .= '<div class="image_links '. esc_attr($double_link) .'">';
-							if ($link_image) {
-								$output .= '<a href="'. esc_url($link_image) .'" class="zoom" rel="prettyphoto" tabindex="-1"><svg viewBox="0 0 26 26" aria-label="'. __('zoom image', 'betheme') .'"><defs><style>.path{fill:none;stroke:#333;stroke-miterlimit:10;stroke-width:1.5px;}</style></defs><circle cx="11.35" cy="11.35" r="6" class="path"/><line x1="15.59" y1="15.59" x2="20.65" y2="20.65" class="path"/></svg></a>';
-							}
-							if ($link) {
-								// This variable has been safely escaped above in this function
-								$output .= '<a href="'. esc_url($link) .'" class="link" '. $target_escaped .' tabindex="-1"><svg viewBox="0 0 26 26" aria-label="'. __('go to link', 'betheme') .'"><defs><style>.path{fill:none;stroke:#333;stroke-miterlimit:10;stroke-width:1.5px;}</style></defs><g><path d="M10.17,8.76l2.12-2.12a5,5,0,0,1,7.07,0h0a5,5,0,0,1,0,7.07l-2.12,2.12" class="path"></path><path d="M15.83,17.24l-2.12,2.12a5,5,0,0,1-7.07,0h0a5,5,0,0,1,0-7.07l2.12-2.12" class="path"></path><line x1="10.17" y1="15.83" x2="15.83" y2="10.17" class="path"></line></g></svg></a>';
-							}
-						$output .= '</div>';
-
-					$output .= '</div>';
-
-					if ($caption) {
-						$output .= '<p class="wp-caption-text">'. wp_kses($caption, mfn_allowed_html('caption')) .'</p>';
-					}
-
-				$output .= '</div>'."\n";
-			} else {
-
-				// This variable has been safely escaped above in this function
-				$output .= '<div class="image_frame element_classes image_item no_link scale-with-grid'. esc_attr($class_div) .'" '. $style_escaped .'>';
-
-					$output .= '<div class="image_wrapper">';
+					// This variable has been safely escaped above in this function
+					$output .= '<a href="'. esc_url(be_dynamic_data($link_all)) .'" '. $rel_escaped .' '. $target_escaped .' tabindex="-1">';
+						$output .= '<div class="mask"></div>';
 						// This variable has been safely escaped above in this function
 						$output .= $image_output_escapes;
+					$output .= '</a>';
+
+					$output .= '<div class="image_links '. esc_attr($double_link) .'">';
+						if ($link_image) {
+							$output .= '<a href="'. esc_url(be_dynamic_data($link_image)) .'" class="zoom" rel="prettyphoto" tabindex="-1"><svg viewBox="0 0 26 26" aria-label="'. __('zoom image', 'betheme') .'"><defs><style>.path{fill:none;stroke:#333;stroke-miterlimit:10;stroke-width:1.5px;}</style></defs><circle cx="11.35" cy="11.35" r="6" class="path"/><line x1="15.59" y1="15.59" x2="20.65" y2="20.65" class="path"/></svg></a>';
+						}
+						if ($link) {
+							// This variable has been safely escaped above in this function
+							$output .= '<a href="'. esc_url($link) .'" class="link" '. $target_escaped .' tabindex="-1"><svg viewBox="0 0 26 26" aria-label="'. __('go to link', 'betheme') .'"><defs><style>.path{fill:none;stroke:#333;stroke-miterlimit:10;stroke-width:1.5px;}</style></defs><g><path d="M10.17,8.76l2.12-2.12a5,5,0,0,1,7.07,0h0a5,5,0,0,1,0,7.07l-2.12,2.12" class="path"></path><path d="M15.83,17.24l-2.12,2.12a5,5,0,0,1-7.07,0h0a5,5,0,0,1,0-7.07l2.12-2.12" class="path"></path><line x1="10.17" y1="15.83" x2="15.83" y2="10.17" class="path"></line></g></svg></a>';
+						}
 					$output .= '</div>';
 
-					if ($caption) {
-						$output .= '<p class="wp-caption-text">'. wp_kses($caption, mfn_allowed_html('caption')) .'</p>';
-					}
+				$output .= '</div>';
 
-				$output .= '</div>'."\n";
-			}
+				if ($caption) {
+					$output .= '<p class="wp-caption-text">'. wp_kses($caption, mfn_allowed_html('caption')) .'</p>';
+				}
+
+			$output .= '</div>'."\n";
+		} else {
+
+			// This variable has been safely escaped above in this function
+			$output .= '<div class="image_frame element_classes image_item no_link scale-with-grid'. esc_attr($class_div) .'" '. $style_escaped .'>';
+
+				$output .= '<div class="image_wrapper">';
+					// This variable has been safely escaped above in this function
+					$output .= $image_output_escapes;
+				$output .= '</div>';
+
+				if ($caption) {
+					$output .= '<p class="wp-caption-text">'. wp_kses($caption, mfn_allowed_html('caption')) .'</p>';
+				}
+
+			$output .= '</div>'."\n";
+		}
 
 		return $output;
 	}
@@ -5049,6 +5683,23 @@ if (! function_exists('sc_hover_box')) {
 			$target_escaped = false;
 		}
 
+		// image class
+
+		$img_class = 'scale-with-grid visible_photo';
+		$img_class2 = 'scale-with-grid hidden_photo';
+
+		// src output
+
+		$src = 'src="'. esc_url($image) .'"';
+		$src2 = 'src="'. esc_url($image_hover) .'"';
+
+		if( mfn_is_lazy() ){
+			$src = 'data-'. $src;
+			$src2 = 'data-'. $src2;
+			$img_class .= ' mfn-lazy';
+			$img_class2 .= ' mfn-lazy';
+		}
+
 		// output -----
 
 		$output = '<div class="hover_box">';
@@ -5059,8 +5710,8 @@ if (! function_exists('sc_hover_box')) {
 			}
 
 				$output .= '<div class="hover_box_wrapper">';
-					$output .= '<img class="visible_photo scale-with-grid" src="'. esc_url($image) .'" alt="'. esc_attr(mfn_get_attachment_data($image, 'alt')) .'" width="'. esc_attr(mfn_get_attachment_data($image, 'width')) .'" height="'. esc_attr(mfn_get_attachment_data($image, 'height')) .'"/>';
-					$output .= '<img class="hidden_photo scale-with-grid" src="'. esc_url($image_hover) .'" alt="'. esc_attr(mfn_get_attachment_data($image_hover, 'alt')) .'" width="'. esc_attr(mfn_get_attachment_data($image_hover, 'width')) .'" height="'. esc_attr(mfn_get_attachment_data($image_hover, 'height')) .'"/>';
+					$output .= '<img class="'. esc_attr($img_class) .'" '. $src .' alt="'. esc_attr(mfn_get_attachment_data($image, 'alt')) .'" width="'. esc_attr(mfn_get_attachment_data($image, 'width')) .'" height="'. esc_attr(mfn_get_attachment_data($image, 'height')) .'"/>';
+					$output .= '<img class="'. esc_attr($img_class2) .'" '. $src2 .' alt="'. esc_attr(mfn_get_attachment_data($image_hover, 'alt')) .'" width="'. esc_attr(mfn_get_attachment_data($image_hover, 'width')) .'" height="'. esc_attr(mfn_get_attachment_data($image_hover, 'height')) .'"/>';
 				$output .= '</div>';
 
 			if ($link) {
@@ -5212,6 +5863,10 @@ if (! function_exists('sc_quick_fact')) {
 
 		$output .= '</div>'."\n";
 
+		if( ! isset( $attr['vb'] ) ){
+			wp_enqueue_script('mfn-waypoints', get_theme_file_uri('/js/plugins/waypoints.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+		}
+
 		return $output;
 	}
 }
@@ -5241,11 +5896,21 @@ if (! function_exists('sc_button')) {
 			'button_style' => '',
 
 			'class' => '',
+			'button_id' => '',
 			'rel' => '',
 			'download' => '',
 			'onclick' => '',
 
 		), $attr));
+
+		// dynamic data: make {title:id:term} from {title} if term
+
+		/*if( empty(Mfn_Builder_Front::$item_id) && !empty($attr['vb_postid']) && get_post_type($attr['vb_postid']) != 'template' && strpos($title, '{') !== false && strpos($title, ':') === false ){
+			$title = str_replace('}', ':'.$attr['vb_postid'].'}', $title);
+		}*/
+
+		$title = be_dynamic_data($title);
+		$link = be_dynamic_data($link);
 
 		// target
 
@@ -5285,6 +5950,14 @@ if (! function_exists('sc_button')) {
 		if ( strpos( $class, 'prettyphoto' ) !== false ) {
 			$class = str_replace( 'prettyphoto', '', $class );
 			$rel = 'prettyphoto '. $rel; // do not change order
+		}
+
+		// id
+
+		if( ! empty($button_id) ){
+			$button_id = 'id="'. esc_attr($button_id) .'"';
+		} else {
+			$button_id = '';
 		}
 
 		// class
@@ -5373,7 +6046,7 @@ if (! function_exists('sc_button')) {
 		}
 
 			// This variable has been safely escaped above in this function
-			$output .= '<a class="button '. esc_attr( $class ) .'" href="'. esc_url( $link ) .'"'. $attributes_escaped .'>';
+			$output .= '<a class="button '. esc_attr( $class ) .'" '. $button_id .' href="'. esc_url( $link ) .'"'. $attributes_escaped .'>';
 
 				if ($icon) {
 					// This variable has been safely escaped above in this function
@@ -5976,9 +6649,16 @@ if (! function_exists('sc_clients')) {
 						$output .= '<div class="client_wrapper">';
 
 							$link = get_post_meta(get_the_ID(), 'mfn-post-link', true);
+							$target = get_post_meta(get_the_ID(), 'mfn-post-target', true);
+
+							if( '_self' != $target ){
+								$target = 'target="_blank"';
+							} else {
+								$target = '';
+							}
 
 							if ($link) {
-								$output .= '<a target="_blank" href="'. esc_url($link) .'" title="'. the_title(false, false, false) .'">';
+								$output .= '<a '. $target .' href="'. esc_url($link) .'" title="'. the_title(false, false, false) .'">';
 							}
 
 								$output .= '<div class="gs-wrapper">';
@@ -6017,6 +6697,7 @@ if (! function_exists('sc_clients_slider')) {
 			'orderby'  		=> 'menu_order',
 			'order'				=> 'ASC',
 			'per_slide'		=> '3',
+			'scroll'			=> '',
 			'navigation'	=> '', // '' (header), 'content'
 		), $attr));
 
@@ -6036,12 +6717,18 @@ if (! function_exists('sc_clients_slider')) {
 		$clients_query = new WP_Query();
 		$clients_query->query($args);
 
+		// slider to scroll
+
+		if( empty( $scroll ) ){
+			$scroll = '';
+		}
+
 		// output -----
 
 		$output = '';
 
 		if ($clients_query->have_posts()) {
-			$output  = '<div class="clients_slider" data-client-per-slide="'. intval($per_slide) .'" data-navigation-position="'. esc_attr($navigation) .'">';
+			$output  = '<div class="clients_slider" data-client-per-slide="'. intval($per_slide) .'" data-navigation-position="'. esc_attr($navigation) .'" data-slides-to-scroll="'. esc_attr($scroll) .'" >';
 
 				$output .= '<div class="blog_slider_header clearfix">';
 					if ($title) {
@@ -6058,9 +6745,16 @@ if (! function_exists('sc_clients_slider')) {
 							$output .= '<div class="client_wrapper">';
 
 								$link = get_post_meta(get_the_ID(), 'mfn-post-link', true);
+								$target = get_post_meta(get_the_ID(), 'mfn-post-target', true);
+
+								if( '_self' != $target ){
+									$target = 'target="_blank"';
+								} else {
+									$target = '';
+								}
 
 								if ($link) {
-									$output .= '<a target="_blank" href="'. esc_url($link) .'" title="'. the_title(false, false, false) .'">';
+									$output .= '<a '. $target .' href="'. esc_url($link) .'" title="'. the_title(false, false, false) .'">';
 								} else {
 									$output .= '<a title="'. the_title(false, false, false) .'">';
 								}
@@ -6078,6 +6772,10 @@ if (! function_exists('sc_clients_slider')) {
 		}
 
 		wp_reset_query();
+
+		if( ! isset( $attr['vb'] ) ){
+			wp_enqueue_script('mfn-slick', get_theme_file_uri('/js/plugins/slick.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+		}
 
 		return $output;
 	}
@@ -6099,6 +6797,10 @@ if (! function_exists('sc_fancy_heading')) {
 		), $attr));
 
 		// output -----
+
+		//if( empty($attr['vb']) ){
+			$title = be_dynamic_data($title);
+		//}
 
 		$output = '<div class="fancy_heading fancy_heading_'. esc_attr($style) .'">';
 
@@ -6265,6 +6967,20 @@ if (! function_exists('sc_icon_box')) {
 			$rel_escaped 	= false;
 		}
 
+		// image class
+
+		$img_class = 'scale-with-grid';
+
+		// src output
+
+		$src = 'src="'. esc_url($image) .'"';
+
+		if( mfn_is_lazy() ){
+			$src = 'data-'. $src;
+			$img_class .= ' mfn-lazy';
+		}
+
+
 		// output -----
 
 		$output = '';
@@ -6278,7 +6994,7 @@ if (! function_exists('sc_icon_box')) {
 
 					if ($image) {
 						$output .= '<div class="image_wrapper">';
-							$output .= '<img src="'. esc_url($image) .'" class="scale-with-grid" alt="'. esc_attr(mfn_get_attachment_data($image, 'alt')) .'" width="'. esc_attr(mfn_get_attachment_data($image, 'width')) .'" height="'. esc_attr(mfn_get_attachment_data($image, 'height')) .'"/>';
+							$output .= '<img class="'. esc_attr($img_class) .'" '. $src .' alt="'. esc_attr(mfn_get_attachment_data($image, 'alt')) .'" width="'. esc_attr(mfn_get_attachment_data($image, 'width')) .'" height="'. esc_attr(mfn_get_attachment_data($image, 'height')) .'"/>';
 						$output .= '</div>';
 					} else if( !empty($icon) ) {
 						$output .= '<div class="icon_wrapper">';
@@ -6314,8 +7030,7 @@ if (! function_exists('sc_icon_box')) {
  */
 
  if (! function_exists('sc_icon_box_2')) {
- 	function sc_icon_box_2($attr, $content = null)
- 	{
+ 	function sc_icon_box_2($attr, $content = null) {
  		extract(shortcode_atts(array(
 
  			'title' => '',
@@ -6338,6 +7053,20 @@ if (! function_exists('sc_icon_box')) {
  			'hover' => '',
 
  		), $attr));
+ 		
+ 		/*if( empty(Mfn_Builder_Front::$item_id) && !empty($attr['vb_postid']) && get_post_type($attr['vb_postid']) != 'template' ){
+			// page, post featured image
+			if( has_post_thumbnail($attr['vb_postid']) && strpos($image, '{') !== false && strpos($image, ':') === false ) $image = str_replace('}', ':'.$attr['vb_postid'].'}', $image);
+			if( !empty($title) && strpos($title, '{') !== false ) $title = str_replace('}', ':'.$attr['vb_postid'].'}', $title);
+ 			if( !empty($content) && strpos($content, '{') !== false ) {
+ 				$content = str_replace('}', ':'.$attr['vb_postid'].'}', $content);
+ 			}
+
+		}else if( empty(Mfn_Builder_Front::$item_id) && strpos($image, '{') !== false && strpos($image, ':') === false ) {
+			// tamplate placeholder
+			$image = get_template_directory_uri('/').'/muffin-options/svg/placeholders/image.svg';
+		}*/
+
 
  		// image | visual composer fix
 
@@ -6383,6 +7112,26 @@ if (! function_exists('sc_icon_box')) {
 
  		$classes = implode(' ', $classes);
 
+		// dynamic data
+
+		$title = be_dynamic_data($title);
+		$link = be_dynamic_data($link);
+		$content = be_dynamic_data($content);
+		$image = be_dynamic_data($image);
+
+		// image class
+
+		$img_class = 'scale-with-grid';
+
+		// src output
+
+		$src = 'src="'. esc_url($image) .'"';
+
+		if( mfn_is_lazy() ){
+			$src = 'data-'. $src;
+			$img_class .= ' mfn-lazy';
+		}
+
  		// output -----
 
  		$output = '';
@@ -6396,7 +7145,7 @@ if (! function_exists('sc_icon_box')) {
  				$output .= '<div class="icon-wrapper">';
 
  					if( $image ){
- 						$output .= '<img class="scale-with-grid" src="'. esc_url($image) .'" alt="'. esc_attr(mfn_get_attachment_data($image, 'alt')) .'" width="'. esc_attr(mfn_get_attachment_data($image, 'width')) .'" height="'. esc_attr(mfn_get_attachment_data($image, 'height')) .'"/>';
+ 						$output .= '<img class="'. esc_attr($img_class) .'" '. $src .' alt="'. esc_attr(mfn_get_attachment_data($image, 'alt')) .'" width="'. esc_attr(mfn_get_attachment_data($image, 'width')) .'" height="'. esc_attr(mfn_get_attachment_data($image, 'height')) .'"/>';
  					} elseif( $icon ){
  						$output .= '<i class="'. esc_attr($icon) .'" aria-hidden="true"></i>';
  					} elseif( $label ){
@@ -6469,91 +7218,103 @@ if (! function_exists('sc_our_team')) {
 			$target_escaped = false;
 		}
 
+		// image class
+
+		$img_class = 'scale-with-grid';
+
+		// src output
+
+		$src = 'src="'. esc_url($image) .'"';
+
+		if( mfn_is_lazy() ){
+			$src = 'data-'. $src;
+			$img_class .= ' mfn-lazy';
+		}
+
 		// output -----
 
 		$output = '<div class="team team_'. esc_attr($style) .'">';
 
-				if ($heading) {
-					$output .= '<h4 class="title">'. wp_kses($heading, mfn_allowed_html()) .'</h4>';
-				}
+			if ($heading) {
+				$output .= '<h4 class="title">'. wp_kses($heading, mfn_allowed_html()) .'</h4>';
+			}
 
+			if ( $image ) {
 
-				if ( $image ) {
+				$output .= '<div class="image_frame photo no_link scale-with-grid">';
+					$output .= '<div class="image_wrapper">';
 
-					$output .= '<div class="image_frame photo no_link scale-with-grid">';
-						$output .= '<div class="image_wrapper">';
+						if ( $link ) {
+							// This variable has been safely escaped above in this function
+							$output .= '<a href="'. esc_url($link) .'" '. $target_escaped .'>';
+						}
 
-							if ( $link ) {
-								// This variable has been safely escaped above in this function
-								$output .= '<a href="'. esc_url($link) .'" '. $target_escaped .'>';
-							}
+						$output .= '<img class="'. esc_attr($img_class) .'" '. $src .' alt="'. esc_attr(mfn_get_attachment_data($image, 'alt')) .'" width="'. esc_attr(mfn_get_attachment_data($image, 'width')) .'" height="'. esc_attr(mfn_get_attachment_data($image, 'height')) .'"/>';
 
-							$output .= '<img class="scale-with-grid" src="'. esc_url($image) .'" alt="'. esc_attr(mfn_get_attachment_data($image, 'alt')) .'" width="'. esc_attr(mfn_get_attachment_data($image, 'width')) .'" height="'. esc_attr(mfn_get_attachment_data($image, 'height')) .'"/>';
+						if ( $link ) {
+							$output .= '</a>';
+						}
 
-							if ( $link ) {
-								$output .= '</a>';
-							}
-
-						$output .= '</div>';
 					$output .= '</div>';
+				$output .= '</div>';
 
+			}
+
+			$output .= '<div class="desc_wrapper clearfix">';
+
+				if ($title) {
+					$output .= '<h4>';
+
+						if ($link) {
+							// This variable has been safely escaped above in this function
+							$output .= '<a href="'. esc_url($link) .'" '. $target_escaped .'>';
+						}
+
+						$output .= wp_kses( $title, mfn_allowed_html() );
+
+						if ($link) {
+							$output .= '</a>';
+						}
+
+					$output .= '</h4>';
 				}
 
-				$output .= '<div class="desc_wrapper clearfix">';
+				if ($subtitle) {
+					$output .= '<p class="subtitle">'. wp_kses($subtitle, mfn_allowed_html()) .'</p>';
+				}
+				if ($phone) {
+					$output .= '<p class="phone"><i class="icon-phone" aria-label="'. __('phone', 'betheme') .'"></i> <a href="tel:'. esc_attr($phone) .'">'. esc_html($phone) .'</a></p>';
+				}
+				$output .= '<hr class="hr_color" />';
 
-					if ($title) {
-						$output .= '<h4>';
+				$output .= '<div class="desc">'. do_shortcode($content) .'</div>';
 
-							if ($link) {
-								// This variable has been safely escaped above in this function
-								$output .= '<a href="'. esc_url($link) .'" '. $target_escaped .'>';
-							}
+				if ($email || $phone || $facebook || $twitter || $linkedin) {
+					$output .= '<div class="links">';
+						if ($email) {
+							$output .= '<a href="mailto:'. esc_attr($email) .'" class="icon_bar icon_bar_small mail"><span class="t"><i class="icon-mail" aria-label="'. __('mail', 'betheme') .'"></i></span><span class="b"><i class="icon-mail" aria-hidden="true"></i></span></a>';
+						}
+						if ($facebook) {
+							$output .= '<a target="_blank" href="'. esc_url($facebook) .'" class="icon_bar icon_bar_small facebook"><span class="t"><i class="icon-facebook" aria-label="facebook"></i></span><span class="b"><i class="icon-facebook" aria-hidden="true"></i></span></a>';
+						}
+						if ($twitter) {
+							$output .= '<a target="_blank" href="'. esc_url($twitter) .'" class="icon_bar icon_bar_small twitter"><span class="t"><i class="icon-twitter" aria-label="twitter"></i></span><span class="b"><i class="icon-twitter" aria-hidden="true"></i></span></a>';
+						}
+						if ($linkedin) {
+							$output .= '<a target="_blank" href="'. esc_url($linkedin) .'" class="icon_bar icon_bar_small linkedin"><span class="t"><i class="icon-linkedin" aria-label="linkedin"></i></span><span class="b"><i class="icon-linkedin" aria-hidden="true"></i></span></a>';
+						}
+						if ($vcard) {
+							$output .= '<a href="'. esc_url($vcard) .'" class="icon_bar icon_bar_small vcard"><span class="t"><i class="icon-vcard" aria-label="vcard"></i></span><span class="b"><i class="icon-vcard" aria-hidden="true"></i></span></a>';
+						}
+					$output .= '</div>';
+				}
 
-							$output .= wp_kses( $title, mfn_allowed_html() );
+				if ($blockquote) {
+					$output .= '<div class="blockquote"><span class="mfn-blockquote-icon"><i class="icon-quote" aria-hidden="true"></i></span><blockquote class="mfn-inline-editor">'. wp_kses($blockquote, mfn_allowed_html('desc')) .'</blockquote></div>';
+					//$output .= '<blockquote>'. wp_kses($blockquote, mfn_allowed_html('desc')) .'</blockquote>';
+				}
 
-							if ($link) {
-								$output .= '</a>';
-							}
-
-						$output .= '</h4>';
-					}
-
-					if ($subtitle) {
-						$output .= '<p class="subtitle">'. wp_kses($subtitle, mfn_allowed_html()) .'</p>';
-					}
-					if ($phone) {
-						$output .= '<p class="phone"><i class="icon-phone" aria-label="'. __('phone', 'betheme') .'"></i> <a href="tel:'. esc_attr($phone) .'">'. esc_html($phone) .'</a></p>';
-					}
-					$output .= '<hr class="hr_color" />';
-
-					$output .= '<div class="desc">'. do_shortcode($content) .'</div>';
-
-					if ($email || $phone || $facebook || $twitter || $linkedin) {
-						$output .= '<div class="links">';
-							if ($email) {
-								$output .= '<a href="mailto:'. esc_attr($email) .'" class="icon_bar icon_bar_small mail"><span class="t"><i class="icon-mail" aria-label="'. __('mail', 'betheme') .'"></i></span><span class="b"><i class="icon-mail" aria-hidden="true"></i></span></a>';
-							}
-							if ($facebook) {
-								$output .= '<a target="_blank" href="'. esc_url($facebook) .'" class="icon_bar icon_bar_small facebook"><span class="t"><i class="icon-facebook" aria-label="facebook"></i></span><span class="b"><i class="icon-facebook" aria-hidden="true"></i></span></a>';
-							}
-							if ($twitter) {
-								$output .= '<a target="_blank" href="'. esc_url($twitter) .'" class="icon_bar icon_bar_small twitter"><span class="t"><i class="icon-twitter" aria-label="twitter"></i></span><span class="b"><i class="icon-twitter" aria-hidden="true"></i></span></a>';
-							}
-							if ($linkedin) {
-								$output .= '<a target="_blank" href="'. esc_url($linkedin) .'" class="icon_bar icon_bar_small linkedin"><span class="t"><i class="icon-linkedin" aria-label="linkedin"></i></span><span class="b"><i class="icon-linkedin" aria-hidden="true"></i></span></a>';
-							}
-							if ($vcard) {
-								$output .= '<a href="'. esc_url($vcard) .'" class="icon_bar icon_bar_small vcard"><span class="t"><i class="icon-vcard" aria-label="vcard"></i></span><span class="b"><i class="icon-vcard" aria-hidden="true"></i></span></a>';
-							}
-						$output .= '</div>';
-					}
-
-					if ($blockquote) {
-						$output .= '<div class="blockquote"><span class="mfn-blockquote-icon"><i class="icon-quote" aria-hidden="true"></i></span><blockquote class="mfn-inline-editor">'. wp_kses($blockquote, mfn_allowed_html('desc')) .'</blockquote></div>';
-						//$output .= '<blockquote>'. wp_kses($blockquote, mfn_allowed_html('desc')) .'</blockquote>';
-					}
-
-				$output .= '</div>';
+			$output .= '</div>';
 
 		$output .= '</div>'."\n";
 
@@ -6597,6 +7358,19 @@ if (! function_exists('sc_our_team_list')) {
 			$target_escaped = false;
 		}
 
+		// image class
+
+		$img_class = 'scale-with-grid';
+
+		// src output
+
+		$src = 'src="'. esc_url($image) .'"';
+
+		if( mfn_is_lazy() ){
+			$src = 'data-'. $src;
+			$img_class .= ' mfn-lazy';
+		}
+
 		// output -----
 
 		$output = '<div class="team team_list clearfix">';
@@ -6611,7 +7385,7 @@ if (! function_exists('sc_our_team_list')) {
 							$output .= '<a href="'. esc_url($link) .'" '. $target_escaped .'>';
 						}
 
-						$output .= '<img class="scale-with-grid" src="'. esc_url($image) .'" alt="'. esc_attr(mfn_get_attachment_data($image, 'alt')) .'" width="'. esc_attr(mfn_get_attachment_data($image, 'width')) .'" height="'. esc_attr(mfn_get_attachment_data($image, 'height')) .'"/>';
+						$output .= '<img class="'. esc_attr($img_class) .'" '. $src .' alt="'. esc_attr(mfn_get_attachment_data($image, 'alt')) .'" width="'. esc_attr(mfn_get_attachment_data($image, 'width')) .'" height="'. esc_attr(mfn_get_attachment_data($image, 'height')) .'"/>';
 
 						if ($link) {
 							$output .= '</a>';
@@ -6834,6 +7608,7 @@ if (! function_exists('sc_lottie')) {
 
 		}else{
 			// front
+			wp_enqueue_script('mfn-imagesloaded', get_theme_file_uri('/js/plugins/imagesloaded.min.js'), ['jquery'], MFN_THEME_VERSION, true);
 			wp_enqueue_script('mfn-lottie-player', get_theme_file_uri('/assets/lottie/lottie-player.js'), false, null, true);
 			wp_add_inline_script('mfn-lottie-player', $script);
 
@@ -6971,6 +7746,10 @@ if (! function_exists('sc_portfolio')) {
 		$output .= '</div>'."\n";
 
 		wp_reset_postdata();
+
+		if( ! isset( $attr['vb'] ) ){
+			wp_enqueue_script('mfn-isotope', get_theme_file_uri('/js/plugins/isotope.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+		}
 
 		return $output;
 	}
@@ -7277,6 +8056,10 @@ if (! function_exists('sc_portfolio_slider')) {
 		}
 		wp_reset_query();
 
+		if( ! isset( $attr['vb'] ) ){
+			wp_enqueue_script('mfn-slick', get_theme_file_uri('/js/plugins/slick.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+		}
+
 		return $output;
 	}
 }
@@ -7400,6 +8183,10 @@ if (! function_exists('sc_slider')) {
 		}
 		wp_reset_query();
 
+		if( ! isset( $attr['vb'] ) ){
+			wp_enqueue_script('mfn-slick', get_theme_file_uri('/js/plugins/slick.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+		}
+
 		return $output;
 	}
 }
@@ -7464,6 +8251,8 @@ if (! function_exists('sc_offer')) {
 		if ($category) {
 			$args['offer-types'] = $category;
 		}
+
+		$args = apply_filters('mfn_element_offer', $args, $attr);
 
 		$offer_query = new WP_Query();
 		$offer_query->query($args);
@@ -7533,6 +8322,10 @@ if (! function_exists('sc_offer')) {
 		}
 		wp_reset_query();
 
+		if( ! isset( $attr['vb'] ) ){
+			wp_enqueue_script('mfn-slick', get_theme_file_uri('/js/plugins/slick.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+		}
+
 		return $output;
 	}
 }
@@ -7563,6 +8356,8 @@ if (! function_exists('sc_offer_thumb')) {
 		if ($category) {
 			$args['offer-types'] = $category;
 		}
+
+		$args = apply_filters('mfn_element_offer_thumb', $args, $attr);
 
 		$offer_query = new WP_Query();
 		$offer_query->query($args);
@@ -7646,6 +8441,10 @@ if (! function_exists('sc_offer_thumb')) {
 			$output .= '</div>'."\n";
 		}
 		wp_reset_query();
+
+		if( ! isset( $attr['vb'] ) ){
+			wp_enqueue_script('mfn-slick', get_theme_file_uri('/js/plugins/slick.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+		}
 
 		return $output;
 	}
@@ -7737,11 +8536,11 @@ if (! function_exists('sc_map')) {
 			'uid' 		=> uniqid(),
 		), $attr));
 
-		// image | visual composer fix
-
-		if (!$api_key = trim(mfn_opts_get('google-maps-api-key'))) {
+		if ( isset($attr['vb']) && empty(mfn_opts_get('google-maps-api-key')) ) {
 			return '<div class="mfn-widget-placeholder mfn-wp-product-reviews"><img class="item-preview-image" src="'.get_theme_file_uri('/visual-builder/assets/_dark/svg/items/map.svg').'" alt="product rating"></div>';
 		}
+
+		// image | visual composer fix
 
 		$icon = mfn_vc_image($icon);
 
@@ -8376,20 +9175,59 @@ if (! function_exists('sc_progress_icons')) {
 			'image' 			=> '',
 			'count' 			=> 5,
 			'active' 			=> 0,
-			'background' 	=> '',
+			'background' 	=> '', // or color for transparent
+
+			'transparent' => false,
 		), $attr));
+
+		// class
+
+		$class = '';
+
+		// transparent
+
+		if( ! empty($transparent) ){
+			$class .= ' transparent';
+		}
+
+		// icon
+
+		$icon_class = false;
+		$icon_style = false;
+
+		// bebuilder element update
+
+		if( wp_doing_ajax() ){
+			$icon_class = 'themebg';
+			if( empty($transparent) ){
+				$icon_style = 'background-color:'. esc_attr($background);
+			} else {
+				$icon_style = 'color:'. esc_attr($background);
+			}
+		}
 
 		// output -----
 
-		$output = '<div class="progress_icons" data-active="'. esc_attr($active) .'" data-color="'. esc_attr($background) .'">';
+		$output = '<div class="progress_icons '. esc_attr($class) .'" data-active="'. esc_attr($active) .'" data-color="'. esc_attr($background) .'">';
 			for ($i = 1; $i <= $count; $i++) {
-				if ($image) {
-					$output .= '<span class="progress_icon progress_image"><img src="'. esc_url($image) .'" alt="progress image"/></span>';
-				} else {
-					$output .= '<span class="progress_icon"><i class="'. esc_attr($icon) .'" aria-label="'. __('progress icon', 'betheme') .'"></i></span>';
+
+				if( $i > $active ){
+					$icon_class = false;
+					$icon_style = false;
 				}
+
+				if ($image) {
+					$output .= '<span class="progress_icon progress_image '. esc_attr($icon_class) .'" style="'. $icon_style .'"><img src="'. esc_url($image) .'" alt="progress image"/></span>';
+				} else {
+					$output .= '<span class="progress_icon '. esc_attr($icon_class) .'" style="'. $icon_style .'"><i class="'. esc_attr($icon) .'" aria-label="'. __('progress icon', 'betheme') .'"></i></span>';
+				}
+
 			}
 		$output .= '</div>'."\n";
+
+		if( ! isset( $attr['vb'] ) ){
+			wp_enqueue_script('mfn-waypoints', get_theme_file_uri('/js/plugins/waypoints.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+		}
 
 		return $output;
 	}
@@ -8434,6 +9272,10 @@ if (! function_exists('sc_progress_bars')) {
 			$output .= '</ul>';
 
 		$output .= '</div>'."\n";
+
+    if( ! isset( $attr['vb'] ) ){
+			wp_enqueue_script('mfn-waypoints', get_theme_file_uri('/js/plugins/waypoints.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+		}
 
 		return $output;
 	}
@@ -8647,6 +9489,10 @@ if (! function_exists('sc_testimonials')) {
 				}
 
 			$output .= '</div>'."\n";
+		}
+
+		if( ! isset( $attr['vb'] ) ){
+			wp_enqueue_script('mfn-slick', get_theme_file_uri('/js/plugins/slick.min.js'), ['jquery'], MFN_THEME_VERSION, true);
 		}
 
 		return $output;
@@ -9266,6 +10112,10 @@ if (! function_exists('sc_gallery')) {
 		$output .= "
 			</div>\n";
 
+		if( ! isset( $attr['vb'] ) ){
+			wp_enqueue_script('mfn-isotope', get_theme_file_uri('/js/plugins/isotope.min.js'), ['jquery'], MFN_THEME_VERSION, true);
+		}
+
 		return $output;
 	}
 }
@@ -9302,6 +10152,17 @@ if (! function_exists('mfn_widget_text_content')) {
 }
 
 /**
+ * Year [year]
+ */
+
+if (! function_exists('sc_year')) {
+	function sc_year()
+	{
+		return date_i18n ('Y');
+	}
+}
+
+/**
  * Livesearch [livesearch]
  */
 
@@ -9309,10 +10170,10 @@ if (! function_exists('sc_livesearch')) {
 	function sc_livesearch($attr, $content = null)
 	{
 		$atts = shortcode_atts(array(
-			'min_characters' => '',
-			'load_posts' => '',
-			'container_height' => '',
-			'featured_image' => ''
+			'min_characters' => '3',
+			'load_posts' => '10',
+			'container_height' => '300',
+			'featured_image' => '1'
 		), $attr);
 
 		$translate['search-placeholder'] = mfn_opts_get('translate') ? mfn_opts_get('translate-search-placeholder','Enter your search') : __('Enter your search','betheme');
@@ -9326,7 +10187,14 @@ if (! function_exists('sc_livesearch')) {
 
 		// output -----
 
-		$output = '<div class="mfn-live-search-wrapper" data-char="'.$atts['min_characters'].'" data-posts="'.$atts['load_posts'].'" data-featured="'.$atts['featured_image'].'">';
+		$output = '';
+
+		// is elementor
+		if( !empty( $attr['elementor'] ) ){
+			$output .= '<div class="column_livesearch">';
+		}
+
+		$output .= '<div class="mfn-live-search-wrapper" data-char="'.$atts['min_characters'].'" data-posts="'.$atts['load_posts'].'" data-featured="'.$atts['featured_image'].'">';
 
 			// searchfield
 
@@ -9357,6 +10225,11 @@ if (! function_exists('sc_livesearch')) {
 			</div>';
 
 		$output .= '</div>';
+
+		// is elementor
+		if( !empty( $attr['elementor'] ) ){
+			$output .= '</div>';
+		}
 
 		return $output;
 	}
@@ -9418,12 +10291,16 @@ if (! function_exists('sc_table_of_contents')) {
 
 			// items
 
-			foreach($mfn_wraps as $key => $value){
-				foreach($value as $in_key => $in_val){
-					if( isset($in_val['items']) ) {
-						$mfn_items[] = $in_val['items'];
+			if( is_array($mfn_wraps) ){
+				foreach($mfn_wraps as $key => $value){
+					if( is_array($value) ){
+						foreach($value as $in_key => $in_val){
+							if( isset($in_val['items']) ) {
+								$mfn_items[] = $in_val['items'];
+							}
+						};
 					}
-				};
+				}
 			}
 
 			// columns & heading content only
@@ -9673,6 +10550,7 @@ if (! function_exists('mfn_shortcodes')) {
 		add_shortcode('tooltip', 'sc_tooltip');
 		add_shortcode('tooltip_image', 'sc_tooltip_image');
 		add_shortcode('video_embed', 'sc_video'); // WordPress has default [video] shortcode
+		add_shortcode('year', 'sc_year');
 
 		// builder
 

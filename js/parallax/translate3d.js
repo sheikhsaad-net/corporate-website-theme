@@ -191,6 +191,9 @@ var mfnSetup = {
       };
 
       parentPos = initParent();
+
+      // hide section background image
+      parent.css('background-image','unset');
     };
 
     // reload
