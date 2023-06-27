@@ -189,6 +189,8 @@ function remove_menu(){
 	//remove_menu_page('options-general.php');//Setting Options
 	remove_menu_page('edit.php?post_type=template');			//template Options
 	remove_menu_page('scrollsequence-dashboard');	//Moving Animation
+	remove_menu_page('edit.php');
+
 	
 }
 add_action('admin_menu', 'remove_menu');
@@ -213,33 +215,34 @@ array(
 )
 );
 
+/* Add PostType for Events*/
+register_post_type( 'events',
+array(
 
-/*
+'labels' => array(
+'name' => __( 'Events' ),
+'singular_name' => __( 'Event' ),
+'add_new' => __( 'Add New Event' ),
+'add_new_item' => __( 'Add New Event' ),
+'new_item' => __( 'New Event' ),
+'view_item' => __( 'View Event' ),
+'search_items' => __( 'Search Events' ),
+'not_found_in_trash' => __( 'No Event Found in Trash' ),
+),
+'public' => true,
+'menu_icon' => 'dashicons-calendar',
+'supports' => array( 'title', 'editor', 'excerpt', 'author', 'thumbnail', 'comments', 'revisions', ),
+)
+);
 
-add_action( 'init', 'cp_change_post_object' );
-// Change dashboard Posts to News
-function cp_change_post_object() {
-    $get_post_type = get_post_type_object('portfolio');
-	$get_post_type->menu_icon = 'dashicons-book';
-    $labels = $get_post_type->labels;
-        $labels->name = 'Corsi';
-        $labels->singular_name = 'corsa';
-        $labels->add_new = 'Add corsa';
-        $labels->add_new_item = 'Add corsa';
-        $labels->edit_item = 'Edit corsa';
-        $labels->new_item = 'corsa';
-        $labels->view_item = 'View corsa';
-        $labels->search_items = 'Search corsa';
-        $labels->not_found = 'No corsa found';
-        $labels->not_found_in_trash = 'No corsafound in Trash';
-        $labels->all_items = 'All corsa';
-        $labels->menu_name = 'Corsi';
-		$labels->category = 'Corsi categories';
-        $labels->name_admin_bar = 'Corsi';
-		
-}
 
-*/
+/*Contact Form 7 Get URL*/
+
+add_filter( 'wpcf7_form_elements', function($form) { 
+$val = esc_url("https://www.immensive.it".$_SERVER['REQUEST_URI']); 
+$form = str_replace( 'pageurl', $val, $form ); 
+return $form; 
+} );
 
 /**
  * @deprecated 21.0.5
