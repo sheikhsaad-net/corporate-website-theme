@@ -178,10 +178,6 @@ get_header();
 						</div>
 						<div class="ih-reality-card__bottom">
 							<p class="ih-reality-card__desc"><?php echo wp_kses( $card['desc'], array( 'br' => array() ) ); ?></p>
-							<a class="ih-reality-card__scopri" href="#ih-contact">
-								<?php esc_html_e( 'Scopri', 'immensive' ); ?>
-								<svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-							</a>
 						</div>
 					</article>
 					<?php

@@ -25,6 +25,7 @@ function immensive_setup() {
 			'primary'          => __( 'Primary Menu', 'immensive' ),
 			'primary-services' => __( 'Primary Menu (No Products)', 'immensive' ),
 			'primary-extra'    => __( 'Primary Menu (Extra)', 'immensive' ),
+			'primary-contact'  => __( 'Primary Menu (Contatti)', 'immensive' ),
 			'academy'          => __( 'Academy Menu', 'immensive' ),
 			'footer'           => __( 'Footer Menu', 'immensive' ),
 		)
@@ -438,6 +439,7 @@ function immensive_nav_choices() {
 		'primary'  => __( 'Menu principale (con prodotti)', 'immensive' ),
 		'services' => __( 'Menu servizi (senza prodotti)', 'immensive' ),
 		'extra'    => __( 'Menu extra', 'immensive' ),
+		'contact'  => __( 'Menu Contatti (Prodotti + Altri Servizi)', 'immensive' ),
 		'academy'  => __( 'Menu Academy (sezioni di pagina)', 'immensive' ),
 		'none'     => __( 'Nessun menu', 'immensive' ),
 	);
@@ -486,6 +488,7 @@ function immensive_get_nav_theme_location() {
 	$immensive_map = array(
 		'services' => 'primary-services',
 		'extra'    => 'primary-extra',
+		'contact'  => 'primary-contact',
 		'academy'  => 'academy',
 	);
 

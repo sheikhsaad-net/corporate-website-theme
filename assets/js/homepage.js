@@ -1149,6 +1149,18 @@
 		}
 	}
 
+	// "Torna indietro" links: go back to the previous page when there is one
+	// (same-site referrer), otherwise the link's own href (home) applies.
+	Array.prototype.forEach.call(document.querySelectorAll('[data-history-back]'), function (link) {
+		link.addEventListener('click', function (e) {
+			var sameSite = document.referrer && document.referrer.indexOf(window.location.origin) === 0;
+			if (sameSite && window.history.length > 1) {
+				e.preventDefault();
+				window.history.back();
+			}
+		});
+	});
+
 	// Contact form (Contatti page) — AJAX submit to admin-ajax.php instead of
 	// a native POST, so the page doesn't reload and can show inline status.
 	// window.immensiveContact is localized in functions.php's immensive_scripts().

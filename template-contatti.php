@@ -22,7 +22,13 @@ get_header();
 		<div class="ih-phero__bg" aria-hidden="true"></div>
 
 		<div class="ih-container ih-cont-hero" id="ih-hero">
-			<h1 class="ih-phero__title">GET IN<br>TOUCH</h1>
+			<div class="ih-cont-hero__main">
+				<a class="ih-backlink" href="<?php echo esc_url( home_url( '/' ) ); ?>" data-history-back>
+					<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 12H5M11 6l-6 6 6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+					<?php esc_html_e( 'Torna indietro', 'immensive' ); ?>
+				</a>
+				<h1 class="ih-phero__title">GET IN<br>TOUCH</h1>
+			</div>
 
 			<div class="ih-cont-actions">
 				<a class="ih-cont-btn" href="mailto:info@immensive.it">

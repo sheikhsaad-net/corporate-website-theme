@@ -238,7 +238,7 @@ get_header();
 								<option value="saldatura"><?php esc_html_e( 'Simulatore VR Saldatura', 'immensive' ); ?></option>
 								<option value="carrello-elevatore"><?php esc_html_e( 'Simulatore VR Carrello Elevatore', 'immensive' ); ?></option>
 								<option value="antincendio"><?php esc_html_e( 'Simulatore VR Antincendio', 'immensive' ); ?></option>
-								<option value="elettrico"><?php esc_html_e( 'Simulatore VR Elettrico', 'immensive' ); ?></option>
+								<option value="elettrico"><?php esc_html_e( 'Simulatore Impianti Elettrici', 'immensive' ); ?></option>
 							</select>
 						</div>
 					</div>

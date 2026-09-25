@@ -29,11 +29,11 @@ get_header();
 
 		<div class="ih-phero__inner">
 			<h1 class="ih-phero__title">
-				BECOME AN<br>IMMERSIVE AUTHORIZED<br>RESELLER IN EUROPE
+				DIVENTA RIVENDITORE<br>AUTORIZZATO IMMENSIVE<br>IN EUROPA
 			</h1>
 			<div class="ih-phero__actions">
-				<a class="ih-btn ih-btn--solid" href="<?php echo esc_url( $immensive_contatti_url ); ?>"><?php esc_html_e( 'Request Information', 'immensive' ); ?></a>
-				<a class="ih-btn ih-btn--ghost" href="<?php echo esc_url( $immensive_contatti_url ); ?>"><?php esc_html_e( 'Book a 30-min Call', 'immensive' ); ?></a>
+				<a class="ih-btn ih-btn--solid" href="<?php echo esc_url( $immensive_contatti_url ); ?>"><?php esc_html_e( 'Richiedi informazioni', 'immensive' ); ?></a>
+				<a class="ih-btn ih-btn--ghost" href="<?php echo esc_url( $immensive_contatti_url ); ?>"><?php esc_html_e( 'Prenota una call di 30 minuti', 'immensive' ); ?></a>
 			</div>
 			<div class="ih-phero__scroll" aria-hidden="true">
 				<span class="ih-phero__scroll-dot"></span>
@@ -46,7 +46,7 @@ get_header();
 	<section class="ih-wr" id="ih-wr">
 		<div class="ih-wr__sticky">
 			<div class="ih-wr__headwrap">
-				<h2 class="ih-wr__heading">WHY RESELL<br>WITH IMMENSIVE</h2>
+				<h2 class="ih-wr__heading">PERCHÉ RIVENDERE<br>CON IMMENSIVE</h2>
 				<span class="ih-wr__badge" aria-hidden="true"></span>
 			</div>
 		</div>
@@ -65,7 +65,7 @@ get_header();
 					'slug'  => 'why-02',
 					'fall'  => 'rivenditori/partners_professional_simulators.webp',
 					'num'   => '02',
-					'title' => 'Highly professional simulators',
+					'title' => 'Simulatori altamente professionali',
 					'desc'  => 'Simulatori VR verticali costruiti specificamente per la formazione tecnica industriale: saldatura, sollevamento, antincendio, impianti elettrici. Non una piattaforma VR generalista, ma strumenti professionali che combinano software proprietario e kit hardware fisici — torce, estintori, controller dedicati — che riproducono il gesto vero. Prodotti Made in Italy con base installata comprovata (circa 300 licenze già attive), Unreal Authorized Training Center, Premio TOPofthePID 2024 e procedure allineate agli standard ISO.',
 				),
 				array(
@@ -129,23 +129,23 @@ get_header();
 
 	<section class="ih-stats">
 		<div class="ih-container">
-			<h2 class="ih-stats__title ih-reveal">WE LET OUR<br>NUMBERS SPEAK</h2>
-			<p class="ih-stats__sub ih-reveal"><?php esc_html_e( 'Immensive simulators are the benchmark for professional training in Italian education. Bring our products to your country.', 'immensive' ); ?></p>
+			<h2 class="ih-stats__title ih-reveal">LASCIAMO PARLARE<br>I NUMERI</h2>
+			<p class="ih-stats__sub ih-reveal"><?php esc_html_e( 'I simulatori Immensive sono il riferimento per la formazione professionale nella scuola italiana. Porta i nostri prodotti nel tuo paese.', 'immensive' ); ?></p>
 			<div class="ih-stats__cta ih-reveal">
-				<a class="ih-btn ih-btn--solid" href="<?php echo esc_url( $immensive_contatti_url ); ?>"><?php esc_html_e( 'Become a Reseller', 'immensive' ); ?></a>
+				<a class="ih-btn ih-btn--solid" href="<?php echo esc_url( $immensive_contatti_url ); ?>"><?php esc_html_e( 'Diventa rivenditore', 'immensive' ); ?></a>
 			</div>
 			<div class="ih-stats__grid">
 				<div class="ih-stat ih-stat--dark ih-reveal">
 					<span class="ih-stat__number" data-count="350">0</span><span class="ih-stat__plus">+</span>
-					<p><?php esc_html_e( 'Licenses Sold', 'immensive' ); ?></p>
+					<p><?php esc_html_e( 'Licenze vendute', 'immensive' ); ?></p>
 				</div>
 				<div class="ih-stat ih-stat--green ih-reveal">
 					<span class="ih-stat__number" data-count="200">0</span><span class="ih-stat__plus">+</span>
-					<p><?php esc_html_e( 'Clients in Italy', 'immensive' ); ?></p>
+					<p><?php esc_html_e( 'Clienti in Italia', 'immensive' ); ?></p>
 				</div>
 				<div class="ih-stat ih-stat--muted ih-reveal">
 					<span class="ih-stat__number" data-count="10">0</span><span class="ih-stat__plus">+</span>
-					<p><?php esc_html_e( 'Products Awards', 'immensive' ); ?></p>
+					<p><?php esc_html_e( 'Premi ai prodotti', 'immensive' ); ?></p>
 				</div>
 			</div>
 		</div>
@@ -156,8 +156,8 @@ get_header();
 		'template-parts/contact-cta',
 		null,
 		array(
-			'eyebrow' => __( 'Want to collaborate ?', 'immensive' ),
-			'heading' => "LET'S TALK",
+			'eyebrow' => __( 'Vuoi collaborare?', 'immensive' ),
+			'heading' => "PARLIAMONE",
 			'label'   => 'partners@immensive.it',
 			'href'    => 'mailto:partners@immensive.it',
 		)
