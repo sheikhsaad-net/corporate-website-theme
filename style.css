@@ -1,14 +1,432 @@
 /*
 Theme Name: Immensive
-Theme URI: https://www.immensive.it/
-Author: Sheikh Saad 
-Author URI: https://github.com/sheikhsid
-Description: Immensive VR apps integrate the visualization experience by an active interaction with the VR environment and a real-virtual hybrid system implementation
-License: Themeforest Split Licence
-License URI: https://themeforest.net/licenses/standard
+Theme URI: https://immensive.local
+Author: Immensive
+Author URI: https://immensive.local
+Description: A simple, blank starting theme with no default styling. Menus and widgets connect to the standard WordPress Appearance screens.
+Version: 1.0.0
+Requires at least: 6.0
+Requires PHP: 7.4
 Text Domain: immensive
-Requires PHP: 7.0
-Version: 26.7.2
-
-All css files are placed in /css/ folder
+License: GNU General Public License v2 or later
+License URI: LICENSE
 */
+
+/* ==========================================================================
+   Generic fallback shell — header.php / footer.php / page.php / single.php /
+   index.php / 404.php's is_404() branch aside (that one loads homepage.css
+   instead, see immensive_is_ih_page() in functions.php). This is what shows
+   for any page NOT assigned one of the "ih" templates: a plain page (About,
+   Privacy Policy, …), the blog index, a single post. Deliberately lighter
+   than the ih design system — brand colours for legibility and trust, but no
+   custom fonts, animation, or page-specific art direction.
+   ========================================================================== */
+
+:root {
+	--im-green: #8eb826;
+	--im-green-dark: #6d9420;
+	--im-ink: #101010;
+	--im-gray-700: #5b5b5b;
+	--im-gray-400: #9a9a9a;
+	--im-gray-200: #e4e4e2;
+	--im-gray-100: #f4f4f2;
+}
+
+/* Minimal reset */
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	background: #fff;
+	color: var(--im-ink);
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+	font-size: 16px;
+	line-height: 1.65;
+}
+
+img,
+embed,
+iframe,
+object,
+video {
+	max-width: 100%;
+	height: auto;
+}
+
+/* Scoped to body:not(.ih-page) — see immensive_body_class() in functions.php.
+   A bare `a` selector would otherwise out-specificity any ih link left to
+   inherit its color from a parent instead of setting its own, tinting it
+   green in random spots across the ih pages. */
+body:not(.ih-page) a {
+	color: var(--im-green-dark);
+}
+
+body:not(.ih-page) a:hover {
+	color: var(--im-ink);
+}
+
+/* Layout */
+#site-header,
+.site-content,
+#site-footer {
+	max-width: 1040px;
+	margin: 0 auto;
+	padding-left: 1.5rem;
+	padding-right: 1.5rem;
+}
+
+/* ---------- Header ---------- */
+#site-header {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1.25rem 2rem;
+	padding-top: 1.5rem;
+	padding-bottom: 1.5rem;
+	border-bottom: 1px solid var(--im-gray-200);
+}
+
+.site-branding {
+	display: flex;
+	align-items: center;
+}
+
+/* The only logo asset on file is the white wordmark meant for a dark hero —
+   on this shell's plain white background it would be nearly invisible (just
+   the green "n" and two accent dots surviving). Inverting it approximates a
+   dark version; same trick homepage.css uses for the ih light-hero pages.
+
+   Scoped to #site-header (not bare .custom-logo): the_custom_logo() always
+   prints that class, ih pages included, and this stylesheet loads site-wide —
+   an unscoped rule here would invert the logo on the dark ih heroes too,
+   where it needs to stay white. #site-header only exists in header.php's
+   generic-fallback branch (see immensive_is_ih_page()), so this can't leak. */
+#site-header .custom-logo-link {
+	display: block;
+}
+
+#site-header .custom-logo {
+	display: block;
+	height: 34px;
+	width: auto;
+	filter: invert(1) hue-rotate(180deg);
+}
+
+.site-title {
+	margin: 0;
+	font-size: 1.3rem;
+	line-height: 1;
+}
+
+.site-title a {
+	color: var(--im-ink);
+	text-decoration: none;
+}
+
+.site-description {
+	margin: 0.3rem 0 0;
+	font-size: 0.85rem;
+	color: var(--im-gray-700);
+}
+
+#site-navigation {
+	flex: 1 1 auto;
+	display: flex;
+	justify-content: flex-end;
+}
+
+#primary-menu,
+#footer-menu {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem 1.75rem;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+#primary-menu a,
+#footer-menu a {
+	position: relative;
+	display: inline-block;
+	padding: 0.3rem 0;
+	text-decoration: none;
+	color: var(--im-ink);
+	font-weight: 500;
+	font-size: 0.92rem;
+	transition: color 0.2s ease;
+}
+
+/* Underline-on-hover, matching the ih nav's own hover treatment. */
+#primary-menu a::after,
+#footer-menu a::after {
+	content: '';
+	position: absolute;
+	left: 0;
+	right: 100%;
+	bottom: 0;
+	height: 1px;
+	background: var(--im-green);
+	transition: right 0.2s ease;
+}
+
+#primary-menu a:hover,
+#footer-menu a:hover {
+	color: var(--im-green-dark);
+}
+
+#primary-menu a:hover::after,
+#footer-menu a:hover::after {
+	right: 0;
+}
+
+#primary-menu .current-menu-item > a {
+	color: var(--im-green-dark);
+}
+
+/* ---------- Main content ---------- */
+.site-content {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 3rem;
+	padding-top: 3rem;
+	padding-bottom: 4rem;
+	align-items: flex-start;
+}
+
+#primary {
+	flex: 1 1 60%;
+	min-width: 0;
+}
+
+.entry-title {
+	margin: 0 0 1.25rem;
+	font-size: clamp(1.7rem, 3.5vw, 2.4rem);
+	line-height: 1.15;
+	color: var(--im-ink);
+}
+
+.entry-content {
+	color: #2b2b2b;
+}
+
+.entry-content > * + * {
+	margin-top: 1.15em;
+}
+
+.entry-content h2 {
+	margin-top: 2em;
+	font-size: 1.4rem;
+	color: var(--im-ink);
+}
+
+.entry-content h3 {
+	margin-top: 1.75em;
+	font-size: 1.15rem;
+	color: var(--im-ink);
+}
+
+.entry-content a {
+	text-decoration: underline;
+	text-decoration-color: var(--im-gray-200);
+	text-underline-offset: 2px;
+}
+
+.entry-content a:hover {
+	text-decoration-color: currentColor;
+}
+
+/* Separates consecutive posts on the blog index/archive. Bare `article` is
+   a plain tag selector with no scoping of its own, and every ih template
+   builds its card grids out of sibling <article> elements (hero slides,
+   reality cards, showcase items, sistema cards, award cards…) — an unscoped
+   rule here knocked 56px of unwanted top margin/padding/border onto every
+   one of those but the first in each row. body:not(.ih-page) keeps it to
+   the blog context it was meant for. */
+body:not(.ih-page) article + article {
+	margin-top: 3.5rem;
+	padding-top: 3.5rem;
+	border-top: 1px solid var(--im-gray-200);
+}
+
+/* ---------- Sidebar ---------- */
+.widget-area {
+	flex: 1 1 280px;
+	min-width: 240px;
+	max-width: 340px;
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+}
+
+.widget {
+	padding: 1.5rem 1.6rem;
+	background: var(--im-gray-100);
+	border-radius: 12px;
+	font-size: 0.9rem;
+	color: var(--im-gray-700);
+}
+
+/* Block widgets nest their content in wrapper divs (wp-block-group, etc.)
+   rather than the plain <p> a classic widget would use — inherit down
+   through those instead of only targeting <p> directly. */
+.widget :where(div, p) {
+	font-size: inherit;
+	color: inherit;
+}
+
+/* .widget-title is what register_sidebar()'s before_title/after_title
+   produce for a classic widget. In the block-based widgets editor — what
+   this site actually uses — each "widget" is really a self-contained block:
+   Search renders its own label, and Recent Posts/Comments/Archives/Categories
+   (all core/legacy-widget-group blocks) print a plain "wp-block-heading" h2
+   instead. Both need the same treatment or only the classic path gets styled. */
+.widget-title,
+.widget .wp-block-heading {
+	margin: 0 0 1rem;
+	padding-bottom: 0.75rem;
+	border-bottom: 2px solid var(--im-green);
+	font-size: 0.85rem;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: var(--im-ink);
+}
+
+.widget .wp-block-search__label {
+	display: block;
+	margin-bottom: 0.6rem;
+	font-size: 0.85rem;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: var(--im-ink);
+}
+
+.widget .wp-block-search__inside-wrapper {
+	display: flex;
+	gap: 0.5rem;
+}
+
+.widget .wp-block-search__input {
+	flex: 1 1 auto;
+	margin: 0;
+}
+
+.widget .wp-block-search__button {
+	margin: 0;
+	flex: none;
+}
+
+.widget ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.widget li + li {
+	margin-top: 0.6rem;
+	padding-top: 0.6rem;
+	border-top: 1px solid var(--im-gray-200);
+}
+
+.widget a {
+	text-decoration: none;
+	font-size: 0.9rem;
+}
+
+.widget a:hover {
+	color: var(--im-green-dark);
+}
+
+.widget p {
+	margin: 0 0 0.75rem;
+	font-size: 0.9rem;
+	color: var(--im-gray-700);
+}
+
+.widget input[type="search"],
+.widget input[type="text"] {
+	width: 100%;
+	padding: 0.65rem 0.85rem;
+	border: 1px solid var(--im-gray-200);
+	border-radius: 8px;
+	font-size: 0.9rem;
+	background: #fff;
+}
+
+.widget button,
+.widget input[type="submit"] {
+	margin-top: 0.6rem;
+	padding: 0.6rem 1.1rem;
+	border: 0;
+	border-radius: 8px;
+	background: var(--im-ink);
+	color: #fff;
+	font-size: 0.85rem;
+	font-weight: 600;
+	cursor: pointer;
+	transition: background 0.2s ease;
+}
+
+.widget button:hover,
+.widget input[type="submit"]:hover {
+	background: var(--im-green-dark);
+}
+
+/* ---------- Footer ---------- */
+#site-footer {
+	padding-top: 3rem;
+	padding-bottom: 2.5rem;
+	border-top: 1px solid var(--im-gray-200);
+	color: var(--im-gray-700);
+}
+
+.footer-widgets {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 2rem;
+	margin-bottom: 2rem;
+}
+
+.footer-widgets .widget {
+	flex: 1 1 220px;
+	background: transparent;
+	padding: 0;
+}
+
+#footer-navigation {
+	margin-bottom: 1.5rem;
+}
+
+.site-info {
+	margin: 0;
+	font-size: 0.82rem;
+	color: var(--im-gray-400);
+}
+
+/* Small screens: stack everything */
+@media (max-width: 700px) {
+	#site-header {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	#site-navigation {
+		justify-content: flex-start;
+		width: 100%;
+	}
+
+	.site-content {
+		flex-direction: column;
+	}
+
+	.widget-area {
+		max-width: none;
+	}
+}

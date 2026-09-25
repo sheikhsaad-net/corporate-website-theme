@@ -1,76 +1,40 @@
 <?php
 /**
- * The Template for displaying all single posts.
- *
- * @package Betheme
- * @author Muffin group
- * @link https://muffingroup.com
+ * The template for displaying single posts in the Immensive theme.
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 get_header();
 ?>
 
-<div id="Content">
-	<div class="content_wrapper clearfix">
+<main id="primary" class="site-main">
+	<?php
+	while ( have_posts() ) :
+		the_post();
+		?>
+		<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+			<header class="entry-header">
+				<?php the_title( '<h1 class="entry-title">', '</h1>' ); ?>
+			</header>
 
-		<div class="sections_group">
-			<?php
+			<div class="entry-content">
+				<?php the_content(); ?>
+			</div>
+		</article>
 
-				$is_toolset = get_post_meta( get_the_ID(), '_views_template', true );
+		<?php the_post_navigation(); ?>
 
-				if ( $is_toolset || 'builder' == get_post_meta( get_the_ID(), 'mfn-post-template', true ) ) {
+		<?php
+		if ( comments_open() || get_comments_number() ) {
+			comments_template();
+		}
+	endwhile;
+	?>
+</main>
 
-					// template: builder
-
-					$single_post_nav = array(
-						'hide-sticky'	=> false,
-						'in-same-term' => false,
-					);
-
-					$opts_single_post_nav = mfn_opts_get('prev-next-nav');
-					if (isset($opts_single_post_nav['hide-sticky'])) {
-						$single_post_nav['hide-sticky'] = true;
-					}
-
-					// single post navigation | sticky
-
-					if (! $single_post_nav['hide-sticky']) {
-						if (isset($opts_single_post_nav['in-same-term'])) {
-							$single_post_nav['in-same-term'] = true;
-						}
-
-						$post_prev = get_adjacent_post($single_post_nav['in-same-term'], '', true);
-						$post_next = get_adjacent_post($single_post_nav['in-same-term'], '', false);
-
-						echo mfn_post_navigation_sticky($post_prev, 'prev', 'icon-left-open-big');
-						echo mfn_post_navigation_sticky($post_next, 'next', 'icon-right-open-big');
-					}
-
-					while (have_posts()) {
-
-						the_post();
-
-						$mfn_builder = new Mfn_Builder_Front(get_the_ID());
-						$mfn_builder->show();
-
-					}
-
-				} else {
-
-					// template: default
-
-					while (have_posts()) {
-						the_post();
-						get_template_part('includes/content', 'single');
-					}
-				}
-
-			?>
-		</div>
-
-		<?php get_sidebar(); ?>
-
-	</div>
-</div>
-
-<?php get_footer();
+<?php
+get_sidebar();
+get_footer();

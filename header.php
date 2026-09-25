@@ -1,89 +1,61 @@
 <?php
 /**
- * The Header for our theme.
- *
- * @package Betheme
- * @author Muffin group
- * @link https://muffingroup.com
+ * The header for the Immensive theme.
  */
-?><!DOCTYPE html>
-<?php
-	if ($_GET && key_exists('mfn-rtl', $_GET)):
-		echo '<html class="no-js" lang="ar" dir="rtl">';
-	else:
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 ?>
-<html <?php language_attributes(); ?> class="no-js <?php echo esc_attr(mfn_html_classes()); ?>"<?php mfn_tag_schema(); ?> >
-<?php endif; ?>
-
+<!DOCTYPE html>
+<html <?php language_attributes(); ?>>
 <head>
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-PFLKZBX');</script>
-<!-- End Google Tag Manager -->
-<meta name="google-site-verification" content="dT9REyuETruNCFJBNBJQUIryrZavfTmU6ZDK0wEP2cg" />
-<meta charset="<?php bloginfo('charset'); ?>" />
-<?php wp_head(); ?>
-
-	<!--Start of Tawk.to Script-->
-    <script type="text/javascript">
-    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-    (function(){
-    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-    s1.async=true;
-    s1.src='https://embed.tawk.to/640af0fd4247f20fefe51543/1gr5chkk2';
-    s1.charset='UTF-8';
-    s1.setAttribute('crossorigin','*');
-    s0.parentNode.insertBefore(s1,s0);
-    })();
-    </script>
-    <!--End of Tawk.to Script-->
+	<meta charset="<?php bloginfo( 'charset' ); ?>">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<?php wp_head(); ?>
 </head>
-
 <body <?php body_class(); ?>>
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PFLKZBX"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
-	<?php if( !empty(get_post_meta(get_the_ID(), 'mfn-post-one-page', true)) && get_post_meta(get_the_ID(), 'mfn-post-one-page', true) == '1' ) echo '<div id="home"></div>'; ?>
+<?php wp_body_open(); ?>
 
-	<?php do_action('mfn_hook_top'); ?>
+<?php if ( ! immensive_is_ih_page() ) : ?>
+	<header id="site-header">
+		<div class="site-branding">
+			<?php
+			if ( has_custom_logo() ) {
+				the_custom_logo();
+			} else {
+				?>
+				<h1 class="site-title">
+					<a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a>
+				</h1>
+				<?php
+				$immensive_description = get_bloginfo( 'description', 'display' );
+				if ( $immensive_description ) {
+					?>
+					<p class="site-description"><?php echo esc_html( $immensive_description ); ?></p>
+					<?php
+				}
+			}
+			?>
+		</div>
 
-	<?php get_template_part('includes/header', 'sliding-area'); ?>
+		<nav id="site-navigation" aria-label="<?php esc_attr_e( 'Primary menu', 'immensive' ); ?>">
+			<?php
+			wp_nav_menu(
+				array(
+					'theme_location' => immensive_get_nav_theme_location(),
+					'menu_id'        => 'primary-menu',
+					'fallback_cb'    => false,
+					// This fallback header has no dropdown/mega-menu styling (that
+					// lives in homepage.css, scoped to the ih templates) — cap at
+					// top-level links so a "product" item's children don't dump
+					// out as a second, unstyled flat list underneath it.
+					'depth'          => 1,
+				)
+			);
+			?>
+		</nav>
+	</header>
 
-	<?php
-		if (mfn_header_style(true) == 'header-creative') {
-			get_template_part('includes/header', 'creative');
-		}
-	?>
-
-	<div id="Wrapper">
-
-	<?php
-		if (mfn_header_style(true) == 'header-below') {
-			echo mfn_slider();
-		}
-
-		$header_tmp_id = mfn_template_part_ID('header');
-
-		// be setup wizard
-		if( isset( $_GET['mfn-setup-preview'] ) ){
-			$header_tmp_id = false;
-		}
-
-		if( $header_tmp_id ){
-			$is_visual = false;
-			if( !empty($_GET['visual']) ) $is_visual = true;
-			get_template_part( 'includes/header', 'template', array( 'id' => $header_tmp_id, 'visual' => $is_visual ) );
-		}else{
-			get_template_part( 'includes/header', 'classic' );
-		}
-
-		if ( 'intro' == get_post_meta( mfn_ID(), 'mfn-post-template', true ) ) {
-			get_template_part( 'includes/header', 'single-intro' );
-		}
-	?>
-
-	<?php do_action( 'mfn_hook_content_before' );
+	<div id="content" class="site-content">
+<?php endif; ?>
