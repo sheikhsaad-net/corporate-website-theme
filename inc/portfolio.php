@@ -458,6 +458,21 @@ function immensive_portfolio_settore_slugs( $post_id ) {
 }
 
 /**
+ * The Tecnologia slugs on a project, space-separated, for the client-side
+ * filter's data-tecnologie attribute.
+ *
+ * @param int $post_id Project ID.
+ * @return string
+ */
+function immensive_portfolio_tecnologia_slugs( $post_id ) {
+	$immensive_terms = get_the_terms( $post_id, IMMENSIVE_TAX_TECNOLOGIA );
+	if ( ! $immensive_terms || is_wp_error( $immensive_terms ) ) {
+		return '';
+	}
+	return implode( ' ', wp_list_pluck( $immensive_terms, 'slug' ) );
+}
+
+/**
  * Inline icon for a Tecnologia, keyed on term slug.
  *
  * Inline SVG rather than icon files: these are a handful of flat glyphs that
@@ -485,6 +500,12 @@ function immensive_portfolio_tech_icon( $slug ) {
 
 		// Handset.
 		'app-mobile' => '<path d="M7.5 1.5h9A2.5 2.5 0 0 1 19 4v16a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 5 20V4a2.5 2.5 0 0 1 2.5-2.5Zm2 2.7a.9.9 0 0 0 0 1.8h5a.9.9 0 1 0 0-1.8h-5ZM12 18a1.4 1.4 0 1 0 0 2.8A1.4 1.4 0 0 0 12 18Z"/>',
+
+		// Mortarboard: the "Prodotti per la formazione" group on the main portfolio page.
+		'formazione' => '<path d="M12 3 1 9l11 6 9-4.9V17h2V9L12 3Z"/><path d="M5 13.2v3.6c0 1.6 3.1 3.2 7 3.2s7-1.6 7-3.2v-3.6l-7 3.8-7-3.8Z"/>',
+
+		// Stacked layers: the "Altri servizi" group.
+		'altri-servizi' => '<path d="m12 2 10 5.2-10 5.2L2 7.2 12 2Z"/><path opacity=".7" d="m3.6 11.3 8.4 4.4 8.4-4.4L22 12.2l-10 5.2-10-5.2 1.6-.9Z"/><path opacity=".45" d="m3.6 15.8 8.4 4.4 8.4-4.4 1.6.9-10 5.2-10-5.2 1.6-.9Z"/>',
 
 		// Browser window.
 		'sviluppo-web' => '<path fill-rule="evenodd" clip-rule="evenodd" d="M3 3.5h18a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-13a2 2 0 0 1 2-2Zm0 5.2v9.8h18V8.7H3ZM4.6 5.2a.9.9 0 1 0 0 1.8.9.9 0 0 0 0-1.8Zm2.8 0a.9.9 0 1 0 0 1.8.9.9 0 0 0 0-1.8Z"/>',

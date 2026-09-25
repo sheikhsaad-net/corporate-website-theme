@@ -1074,9 +1074,6 @@
 			var anyVisible = false;
 
 			pfPanels.forEach(function (panel) {
-				var techOk = !tecnologie.length ||
-					tecnologie.indexOf(panel.getAttribute('data-tecnologia')) !== -1;
-
 				var cards = [].slice.call(panel.querySelectorAll('.ih-pfc'));
 				var shown = 0;
 
@@ -1085,6 +1082,12 @@
 					var settoreOk = !settori.length || settori.some(function (s) {
 						return slugs.indexOf(s) !== -1;
 					});
+					// Technologies live on each card (the panels are hand-made
+					// groups, not one panel per technology).
+					var techSlugs = (card.getAttribute('data-tecnologie') || '').split(' ');
+					var techOk = !tecnologie.length || tecnologie.some(function (t) {
+						return techSlugs.indexOf(t) !== -1;
+					});
 					var visible = techOk && settoreOk;
 					card.classList.toggle('is-filtered', !visible);
 					if (visible) {
@@ -1092,7 +1095,7 @@
 					}
 				});
 
-				var panelVisible = techOk && shown > 0;
+				var panelVisible = shown > 0;
 				panel.classList.toggle('is-filtered', !panelVisible);
 				if (panelVisible) {
 					anyVisible = true;
