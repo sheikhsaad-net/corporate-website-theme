@@ -34,7 +34,7 @@ get_header();
 
 	<?php get_template_part( 'template-parts/site-header' ); ?>
 
-	<section class="ih-pprod-hero" id="ih-hero" style="background-image: url( '<?php echo esc_url( $immensive_img . 'product-firefighter-vr.webp' ); ?>' );">
+	<section class="ih-pprod-hero" id="ih-hero" style="background-image: url( '<?php echo esc_url( $immensive_img . 'hero-firefighter-vr.webp' ); ?>' );">
 		<div class="ih-pprod-hero__scrim" aria-hidden="true"></div>
 		<div class="ih-pprod-hero__inner">
 			<h1 class="ih-pprod-hero__logo">
@@ -72,7 +72,7 @@ get_header();
 				<a class="ih-btn ih-btn--cyan" href="#ih-come-funziona"><?php esc_html_e( 'Come Funziona', 'immensive' ); ?></a>
 			</div>
 			<div class="ih-psys__media ih-reveal">
-				<img src="<?php echo esc_url( $immensive_img . 'firefighter-vr-hero-cover.webp' ); ?>" alt="Kit Firefighter VR Simulator" loading="lazy" width="748" height="695">
+				<img src="<?php echo esc_url( $immensive_img . 'hero-firefighter-vr.webp' ); ?>" alt="Kit Firefighter VR Simulator" loading="lazy" width="748" height="695">
 			</div>
 		</div>
 	</section>

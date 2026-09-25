@@ -46,7 +46,7 @@ get_header();
 
 	<?php get_template_part( 'template-parts/site-header' ); ?>
 
-	<section class="ih-pprod-hero" id="ih-hero" style="background-image: url( '<?php echo esc_url( $immensive_img . 'electro-vr-hero-cover.webp' ); ?>' );">
+	<section class="ih-pprod-hero" id="ih-hero" style="background-image: url( '<?php echo esc_url( $immensive_img . 'hero-electro-vr.webp' ); ?>' );">
 		<div class="ih-pprod-hero__scrim" aria-hidden="true"></div>
 		<div class="ih-pprod-hero__inner">
 			<h1 class="ih-pprod-hero__logo">

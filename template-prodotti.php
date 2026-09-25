@@ -42,25 +42,25 @@ get_header();
 				<?php
 				$immensive_slides = array(
 					array(
-						'img'   => 'hero-weld-kit.webp',
+						'img'   => 'hero-weld-vr.webp',
 						'name'  => 'Weld VR',
 						'tag'   => 'Formazione professionale alla saldatura in VR',
 						'color' => '#69ceeb',
 					),
 					array(
-						'img'   => 'product-forklift-vr.webp',
+						'img'   => 'hero-forklift-vr.webp',
 						'name'  => 'Forklift VR',
 						'tag'   => 'Addestramento immersivo per carrellisti',
 						'color' => '#f2b90d',
 					),
 					array(
-						'img'   => 'product-firefighter-vr.webp',
+						'img'   => 'hero-firefighter-vr.webp',
 						'name'  => 'Firefighter VR',
 						'tag'   => 'Simulazione avanzata per emergenze antincendio',
 						'color' => '#e8503a',
 					),
 					array(
-						'img'   => 'product-electro-vr.webp',
+						'img'   => 'hero-electro-vr.webp',
 						'name'  => 'Electro VR',
 						'tag'   => 'Training VR per operatori su impianti elettrici',
 						'color' => '#f7971e',

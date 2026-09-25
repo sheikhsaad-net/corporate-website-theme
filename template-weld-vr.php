@@ -20,7 +20,7 @@ get_header();
 
 	<?php get_template_part( 'template-parts/site-header' ); ?>
 
-	<section class="ih-pprod-hero" id="ih-hero" style="background-image: url( '<?php echo esc_url( $immensive_img . 'hero-weld-kit.webp' ); ?>' );">
+	<section class="ih-pprod-hero" id="ih-hero" style="background-image: url( '<?php echo esc_url( $immensive_img . 'hero-weld-vr.webp' ); ?>' );">
 		<div class="ih-pprod-hero__scrim" aria-hidden="true"></div>
 		<div class="ih-pprod-hero__inner">
 			<h1 class="ih-pprod-hero__logo">
@@ -64,7 +64,7 @@ get_header();
 		</div>
 	</section>
 
-	<section class="ih-pteach" style="background-image: url( '<?php echo esc_url( $immensive_img . 'hero-weld-kit.webp' ); ?>' );">
+	<section class="ih-pteach" style="background-image: url( '<?php echo esc_url( $immensive_img . 'hero-weld-vr.webp' ); ?>' );">
 		<div class="ih-pteach__scrim" aria-hidden="true"></div>
 		<div class="ih-container ih-pteach__inner ih-reveal">
 			<p class="ih-pteach__eyebrow">Weld VR Simulator</p>
@@ -83,7 +83,7 @@ get_header();
 
 		<div class="ih-container ih-pfunziona__media-wrap">
 			<div class="ih-pfunziona__media ih-reveal">
-				<img src="<?php echo esc_url( $immensive_img . 'hero-weld-kit.webp' ); ?>" alt="Kit Weld VR Simulator" loading="lazy" width="1672" height="941">
+				<img src="<?php echo esc_url( $immensive_img . 'hero-weld-vr.webp' ); ?>" alt="Kit Weld VR Simulator" loading="lazy" width="1672" height="941">
 			</div>
 		</div>
 	</section>

@@ -1791,7 +1791,7 @@
 /* ---------- Product page teach banner (Weld VR, etc.) ----------
    Compact dark photo band between "Il sistema" and "Come Funziona" â€” eyebrow,
    bold headline, short sub, all centred over a scrimmed background image.
-   Placeholder photo (hero-weld-kit.webp) until a real action shot exists. */
+   Product photo: hero-weld-vr.webp. */
 .ih-pteach {
 	position: relative;
 	padding: clamp(9rem, 9vh, 5.5rem) 1.5rem;
@@ -4480,8 +4480,7 @@
 }
 
 @media (max-width: 620px) {
-	.ih-sccwhat__grid,
-	.ih-sccprog__grid {
+	.ih-sccwhat__grid {
 		grid-template-columns: 1fr;
 	}
 
@@ -4489,15 +4488,48 @@
 		grid-template-columns: repeat(2, 1fr);
 	}
 
-	.ih-sccp,
+	/* Projects keep the design's wide-opener + two-up rhythm on phones (the
+	   grid stays at 2 columns from the base rule) instead of collapsing to one
+	   tall card per row: squarer small cards, a 2:1 wide card, and a compact
+	   one-line bar (title left, technology pill right). */
+	.ih-sccprog__grid {
+		gap: 0.6rem;
+	}
+
+	.ih-sccp {
+		aspect-ratio: 1 / 1;
+		border-radius: 16px;
+	}
+
 	.ih-sccp--wide {
-		aspect-ratio: 4 / 3;
+		aspect-ratio: 2 / 1;
 	}
 
 	.ih-sccp__bar {
-		flex-direction: column;
-		align-items: flex-start;
-		gap: 0.6rem;
+		gap: 0.4rem;
+		padding: 0.6rem 0.7rem;
+	}
+
+	.ih-sccp__title {
+		min-width: 0;
+		font-size: 0.6rem;
+		letter-spacing: 0.03em;
+		line-height: 1.25;
+	}
+
+	.ih-sccp--wide .ih-sccp__title {
+		font-size: 0.78rem;
+	}
+
+	.ih-sccp__pill {
+		padding: 0.3rem 0.55rem;
+		font-size: 0.5rem;
+		white-space: nowrap;
+	}
+
+	.ih-sccp--wide .ih-sccp__pill {
+		padding: 0.4rem 0.8rem;
+		font-size: 0.62rem;
 	}
 }
 
