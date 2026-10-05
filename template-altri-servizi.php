@@ -48,6 +48,8 @@ get_header();
 			'title' => "Luoghi e Percorsi Immersivi d'Italia",
 			'tags'  => array( 'Heritage' ),
 			'img'   => $immensive_img . 'portfolio/shero/shero-archeoclub.webp',
+			'width' => 1960,
+			'height' => 1102,
 			'alt'   => "Luoghi e Percorsi Immersivi d'Italia — valorizzazione digitale del patrimonio archeologico",
 			'href'  => $immensive_shero_href( 'luoghi-e-percorsi-immersivi-ditalia' ),
 		),
@@ -55,6 +57,8 @@ get_header();
 			'title' => 'Museo Digitale Palazzo Serra di Cassano',
 			'tags'  => array( 'Esperienza Museale Interattiva' ),
 			'img'   => $immensive_img . 'portfolio/shero/shero-museo-digitale.webp',
+			'width' => 1920,
+			'height' => 980,
 			'alt'   => 'Museo Digitale Palazzo Serra di Cassano',
 			'href'  => $immensive_shero_href( 'museo-digitale-palazzo-serra-di-cassano' ),
 		),
@@ -62,6 +66,8 @@ get_header();
 			'title' => 'Oceania',
 			'tags'  => array( 'Esperienza VR/ Tablet Gamificata', 'Supporto medico pediatrico' ),
 			'img'   => $immensive_img . 'portfolio/shero/shero-oceania.webp',
+			'width' => 1960,
+			'height' => 1102,
 			'alt'   => 'Oceania — ambiente sottomarino esplorabile in realtà virtuale',
 			'href'  => $immensive_shero_href( 'medipass' ),
 		),
@@ -69,6 +75,8 @@ get_header();
 			'title' => 'POY',
 			'tags'  => array( 'App-Gioco VR/AR', 'Turismo Culturale Slow' ),
 			'img'   => $immensive_img . 'portfolio/shero/shero-poy.webp',
+			'width' => 1920,
+			'height' => 1081,
 			'alt'   => 'POY — Points of You, narrazione territoriale in realtà aumentata',
 			'href'  => $immensive_shero_href( 'points-of-you' ),
 		),
@@ -76,6 +84,8 @@ get_header();
 			'title' => 'Veins Catheter Simulator',
 			'tags'  => array( 'Software Desktop' ),
 			'img'   => $immensive_img . 'portfolio/shero/shero-veins-catheter.webp',
+			'width' => 1920,
+			'height' => 1081,
 			'alt'   => 'Veins Catheter Simulator — simulazione desktop di cateterismo venoso',
 			'href'  => $immensive_shero_href( 'veins-catheter-simulator' ),
 		),
@@ -88,12 +98,13 @@ get_header();
 
 		<div class="ih-shero__stage">
 			<?php foreach ( $immensive_shero_slides as $immensive_i => $immensive_slide ) : ?>
+				<?php $immensive_shero_base = pathinfo( basename( $immensive_slide['img'] ), PATHINFO_FILENAME ); ?>
 				<div class="ih-shero__slide<?php echo 0 === $immensive_i ? ' is-current' : ''; ?>" data-index="<?php echo (int) $immensive_i; ?>" aria-hidden="<?php echo 0 === $immensive_i ? 'false' : 'true'; ?>">
 					<span class="ih-shero__half ih-shero__half--sx">
-						<img src="<?php echo esc_url( $immensive_slide['img'] ); ?>" alt="<?php echo esc_attr( $immensive_slide['alt'] ); ?>"<?php echo $immensive_i < 2 ? ( 0 === $immensive_i ? ' fetchpriority="high"' : '' ) : ' loading="lazy"'; ?> decoding="async">
+						<img src="<?php echo esc_url( $immensive_img . 'optimized/' . $immensive_shero_base . '-1920.webp' ); ?>" srcset="<?php echo esc_attr( esc_url( $immensive_img . 'optimized/' . $immensive_shero_base . '-768.webp' ) . ' 768w, ' . esc_url( $immensive_img . 'optimized/' . $immensive_shero_base . '-1920.webp' ) . ' 1920w' ); ?>" sizes="100vw" alt="<?php echo esc_attr( $immensive_slide['alt'] ); ?>"<?php echo 0 === $immensive_i ? ' fetchpriority="high"' : ( 1 === $immensive_i ? ' fetchpriority="low"' : ' loading="lazy"' ); ?> decoding="async" width="<?php echo (int) $immensive_slide['width']; ?>" height="<?php echo (int) $immensive_slide['height']; ?>">
 					</span>
 					<span class="ih-shero__half ih-shero__half--dx">
-						<img src="<?php echo esc_url( $immensive_slide['img'] ); ?>" alt=""<?php echo $immensive_i < 2 ? ( 0 === $immensive_i ? ' fetchpriority="high"' : '' ) : ' loading="lazy"'; ?> decoding="async">
+						<img src="<?php echo esc_url( $immensive_img . 'optimized/' . $immensive_shero_base . '-1920.webp' ); ?>" srcset="<?php echo esc_attr( esc_url( $immensive_img . 'optimized/' . $immensive_shero_base . '-768.webp' ) . ' 768w, ' . esc_url( $immensive_img . 'optimized/' . $immensive_shero_base . '-1920.webp' ) . ' 1920w' ); ?>" sizes="100vw" alt=""<?php echo 0 === $immensive_i ? ' fetchpriority="low"' : ' loading="lazy"'; ?> decoding="async" width="<?php echo (int) $immensive_slide['width']; ?>" height="<?php echo (int) $immensive_slide['height']; ?>">
 					</span>
 				</div>
 			<?php endforeach; ?>
@@ -226,7 +237,7 @@ get_header();
 			<div class="ih-esplora-grid">
 				<div class="ih-esplora-col">
 					<article class="ih-esplora-card ih-esplora-card--tall ih-reveal" id="ih-servizi-xr">
-						<img src="<?php echo esc_url( $immensive_img . 'servizi/immensive_altri_servizi_xr.webp' ); ?>" alt="" loading="lazy">
+						<img src="<?php echo esc_url( $immensive_img . 'servizi/immensive_altri_servizi_xr.webp' ); ?>" alt="" loading="lazy" decoding="async" width="471" height="471">
 						<span class="ih-esplora-card__label">Servizi XR</span>
 						<span class="ih-esplora-card__num">01</span>
 						<div class="ih-esplora-card__subs">
@@ -246,14 +257,14 @@ get_header();
 					</article>
 
 					<article class="ih-esplora-card ih-reveal" id="ih-sviluppo-web">
-						<img src="<?php echo esc_url( $immensive_img . 'servizi/immensive_altri-servizi_sviluppo_web.webp' ); ?>" alt="" loading="lazy">
+						<img src="<?php echo esc_url( $immensive_img . 'servizi/immensive_altri-servizi_sviluppo_web.webp' ); ?>" alt="" loading="lazy" decoding="async" width="826" height="814">
 						<span class="ih-esplora-card__label">Sviluppo Web</span>
 						<span class="ih-esplora-card__num">04</span>
 						<p class="ih-esplora-card__desc">Piattaforme web e portali gestionali: dashboard di monitoraggio, configuratori online, automazione di processi e collegamento con i sistemi del cliente.</p>
 					</article>
 
 					<article class="ih-esplora-card ih-reveal" id="ih-prototipazione">
-						<img src="<?php echo esc_url( $immensive_img . 'servizi/immensive_altri-servizi_prototipazione.webp' ); ?>" alt="" loading="lazy">
+						<img src="<?php echo esc_url( $immensive_img . 'servizi/immensive_altri-servizi_prototipazione.webp' ); ?>" alt="" loading="lazy" decoding="async" width="1254" height="1254">
 						<span class="ih-esplora-card__label">Prototipazione</span>
 						<span class="ih-esplora-card__num">05</span>
 						<p class="ih-esplora-card__desc">Realizziamo prototipi industriali completi di meccanica, elettronica, sensoristica e PLC: dalla piccola serie per ricerca e sviluppo fino alla produzione su larga scala.</p>
@@ -262,21 +273,21 @@ get_header();
 
 				<div class="ih-esplora-col">
 					<article class="ih-esplora-card ih-reveal" id="ih-software-desktop">
-						<img src="<?php echo esc_url( $immensive_img . 'servizi/immensive_altri_servizi_software_desktop.webp' ); ?>" alt="" loading="lazy">
+						<img src="<?php echo esc_url( $immensive_img . 'servizi/immensive_altri_servizi_software_desktop.webp' ); ?>" alt="" loading="lazy" decoding="async" width="706" height="706">
 						<span class="ih-esplora-card__label">Software Desktop</span>
 						<span class="ih-esplora-card__num">02</span>
 						<p class="ih-esplora-card__desc">Visualizzazione grafica 3D e simulazione per desktop, con integrazioni su misura: sensoristica, PLC, automazioni e CRM.</p>
 					</article>
 
 					<article class="ih-esplora-card ih-reveal" id="ih-app-mobile">
-						<img src="<?php echo esc_url( $immensive_img . 'servizi/immensive_altri-servizi_app_mobile.webp' ); ?>" alt="" loading="lazy">
+						<img src="<?php echo esc_url( $immensive_img . 'servizi/immensive_altri-servizi_app_mobile.webp' ); ?>" alt="" loading="lazy" decoding="async" width="897" height="897">
 						<span class="ih-esplora-card__label">App Mobile</span>
 						<span class="ih-esplora-card__num">03</span>
 						<p class="ih-esplora-card__desc">App mobile native iOS e Android: esperienze AR, configuratori prodotto, dashboard aziendali e funzioni gestionali collegate ai sistemi esistenti.</p>
 					</article>
 
 					<article class="ih-esplora-card ih-esplora-card--tall ih-reveal" id="ih-integrazione-ai">
-						<img src="<?php echo esc_url( $immensive_img . 'servizi/immensive_altri_servizi_integrazioneai.webp' ); ?>" alt="" loading="lazy">
+						<img src="<?php echo esc_url( $immensive_img . 'servizi/immensive_altri_servizi_integrazioneai.webp' ); ?>" alt="" loading="lazy" decoding="async" width="826" height="814">
 						<span class="ih-esplora-card__label">Integrazione AI</span>
 						<span class="ih-esplora-card__num">06</span>
 						<p class="ih-esplora-card__desc">Integriamo modelli AI nei tuoi applicativi e processi: assistenti vocali, computer vision, generazione di contenuti, analisi predittive e automazioni personalizzate.</p>

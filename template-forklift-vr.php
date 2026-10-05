@@ -18,10 +18,8 @@
  * --pdota-opts custom property on the switch below and the matching generic
  * width/transform math in homepage.css / homepage.js (Weld/Firefighter's
  * 2-option switches need no change, they just don't set the property).
- * Each tier's content is a checklist built from the source page's FAQ (its
- * real per-tier detail lives in separate Elementor library templates the
- * page's own content feed doesn't expose), same approach as Firefighter's
- * Versione Vive/Meta.
+ * Lite and Pro content/images are aligned with archived Elementor templates
+ * 7934 and 7946. The Pro VR tier remains based on the source page's FAQ.
  *
  * No hero-photo exists on the source page either (a plain product cutout,
  * not a moody banner shot), so the hero uses a color gradient instead of a
@@ -79,7 +77,7 @@ get_header();
 				<a class="ih-btn ih-btn--cyan" href="#ih-come-funziona"><?php esc_html_e( 'Come Funziona', 'immensive' ); ?></a>
 			</div>
 			<div class="ih-psys__media ih-reveal">
-				<img src="<?php echo esc_url( $immensive_img . 'forklift-vr-kit.webp' ); ?>" alt="Postazione Forklift VR Simulator" loading="lazy" width="1024" height="575">
+				<img src="<?php echo esc_url( $immensive_img . 'forklift-vr-kit-provr.webp' ); ?>" alt="Postazione Forklift VR Simulator" loading="lazy" width="1024" height="575">
 			</div>
 		</div>
 	</section>
@@ -103,7 +101,8 @@ get_header();
 
 		<div class="ih-container ih-pfunziona__media-wrap">
 			<div class="ih-pfunziona__media ih-reveal">
-				<img src="<?php echo esc_url( $immensive_img . 'forklift-vr-kit.webp' ); ?>" alt="Postazione Forklift VR Simulator" loading="lazy" width="1024" height="575">
+				<img src="<?php echo esc_url( $immensive_img . 'forklift-vr-video-cover.jpg' ); ?>" alt="Forklift VR Simulator — guarda il video dimostrativo" loading="lazy" width="1912" height="1076">
+				<button type="button" class="ih-pfunziona__video" data-video-src="https://youtu.be/FMmfW44ZEL8" aria-label="<?php esc_attr_e( 'Riproduci il video Forklift VR', 'immensive' ); ?>"><span class="ih-pfunziona__play-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="m9 6 10 6-10 6V6Z" fill="currentColor"/></svg></span></button>
 			</div>
 		</div>
 	</section>
@@ -259,11 +258,9 @@ get_header();
 			</div>
 
 			<?php
-			// Three tiers exist on the source page (Lite / Pro / Pro VR) but
-			// each one's real detail lives in a separate Elementor library
-			// template the page's own content feed doesn't expose — these
-			// checklists are built from what its FAQ states each tier
-			// includes, same approach as Firefighter VR's version toggle.
+			// Lite and Pro are aligned with archived Elementor templates
+			// 7934 and 7946. Pro Plus has no matching template in the backup,
+			// so its existing copy still follows the source page's FAQ.
 			// No per-tier Funzionalità breakdown, per the dropped sections
 			// noted at the top of this file (Requisiti/Opzioni Disponibili
 			// below are separate, generic-hardware sections, not per-tier).
@@ -271,6 +268,8 @@ get_header();
 			$immensive_kit_versions = array(
 				'provr' => array(
 					'image' => 'forklift-vr-kit-provr.webp',
+					'width' => 842,
+					'height' => 631,
 					'alt'   => 'Kit Forklift VR Simulator versione Pro Plus',
 					'title' => 'Dotazione Kit Pro Plus',
 					'desc'  => 'La versione Forklift Pro Plus è caratterizzata da un kart che, oltre a riprodurre la plancia comandi di un carrello elevatore in scala 1:1, viene fornito di serie con 3 monitor frontali, per garantire un\'esperienza di guida ancora più immersiva e un campo visivo ampliato, fedele a quello reale di un carrello elevatore. Il sistema è dotato di ruote che, unitamente alle dimensioni ridotte dell\'ingombro (125×75 cm), lo rendono un prodotto facilmente trasportabile: può infatti essere caricato in ascensori e facilmente introdotto all\'interno dei propri uffici.',
@@ -282,22 +281,30 @@ get_header();
 				),
 				'pro'   => array(
 					'image' => 'forklift-vr-kit-pro.webp',
+					'width' => 2560,
+					'height' => 1834,
 					'alt'   => 'Kit Forklift VR Simulator versione Pro',
 					'title' => 'Dotazione Kit Pro',
 					'desc'  => 'La versione Forklift Pro è caratterizzata da un kart dotato di comandi che permettono all\'utente di simulare la guida completa del carrello elevatore. Il kart riproduce la plancia comandi di un carrello elevatore in scala 1:1, in modo da restituire una sensazione di guida reale. Il sistema è dotato di ruote che, unitamente alle dimensioni ridotte dell\'ingombro (125×75 cm), ne fanno un prodotto facilmente trasportabile: può infatti essere caricato in ascensori e facilmente introdotto all\'interno dei propri uffici.',
 					'items' => array(
-						'Licenza software Forklift VR',
-						'Kit Pro',
+						'1 Kart',
+						'2 Monitor da 40”',
+						'2 Supporti per monitor',
 					),
 				),
 				'lite'  => array(
 					'image' => 'forklift-vr-kit.webp',
+					'width' => 2560,
+					'height' => 1525,
 					'alt'   => 'Kit Forklift VR Simulator versione Lite',
-					'title' => 'Kit Lite',
-					'desc'  => 'Il sistema Lite comprende la licenza di utilizzo del software Forklift VR e il Kit Lite. Se disponi già di un PC VR Ready, puoi acquistare solo il software e il Kit Lite.',
+					'title' => 'Dotazione Kit Lite',
+					'desc'  => 'La versione Forklift Lite prevede un kit di controllo base con i componenti essenziali per simulare la guida di un carrello elevatore. I componenti sono leggeri e facilmente trasportabili.',
 					'items' => array(
-						'Licenza software Forklift VR',
-						'Kit Lite',
+						'1 Volante',
+						'2 Monitor 24”',
+						'1 Supporto Modulo Leve',
+						'1 Pedaliera',
+						'1 Modulo Leve Lite',
 					),
 				),
 			);
@@ -308,7 +315,7 @@ get_header();
 
 					<div class="ih-pdota__row">
 						<div class="ih-pdota__media ih-reveal">
-							<img src="<?php echo esc_url( $immensive_img . $immensive_kit['image'] ); ?>" alt="<?php echo esc_attr( $immensive_kit['alt'] ); ?>" loading="lazy" width="1024" height="575">
+							<img src="<?php echo esc_url( $immensive_img . $immensive_kit['image'] ); ?>" alt="<?php echo esc_attr( $immensive_kit['alt'] ); ?>" loading="lazy" width="<?php echo esc_attr( $immensive_kit['width'] ); ?>" height="<?php echo esc_attr( $immensive_kit['height'] ); ?>">
 						</div>
 						<div class="ih-pdota__content ih-reveal">
 							<h3 class="ih-pdota__title"><?php echo esc_html( $immensive_kit['title'] ); ?></h3>
@@ -335,34 +342,46 @@ get_header();
 		<div class="ih-container">
 			<div class="ih-pdota__block ih-pdota__block--req">
 				<h3 class="ih-pdota__section-heading"><?php esc_html_e( 'Requisiti', 'immensive' ); ?></h3>
-				<div class="ih-pdota__cards ih-pdota__cards--req">
-					<?php
-					// PC workstation + dual-monitor driving-sim setup this
-					// product needs, alongside the generic hardware in
-					// Opzioni Disponibili below — workstation image reused
-					// from Weld VR's; monitor shot is the Pro tier's own
-					// (forklift-vr-requisiti-monitor.webp).
-					$immensive_requisiti = array(
+				<?php
+				$immensive_requisiti_standard = array(
+					array(
+						'title' => 'Workstation',
+						'image' => 'weld-vr-workstation.webp',
+						'desc'  => 'PC VR Ready ad elevate prestazioni grafiche necessario per offrire un\'esperienza fluida e di qualità.',
+						'items' => array( '1 Notebook' ),
+					),
+					array(
+						'title' => 'Monitor da 40”',
+						'image' => 'forklift-vr-opzione-monitor.webp',
+						'desc'  => 'Doppio monitor da 40” con supporto flessionale per una simulazione di guida elevata e più coinvolgente.',
+						'items' => array( '2 Monitor da 40”', '2 Supporti per Monitor' ),
+					),
+				);
+				$immensive_requisiti_by_version = array(
+					'provr' => array(
 						array(
-							'title' => 'Workstation',
-							'image' => 'weld-vr-workstation.webp',
-							'desc'  => 'PC VR Ready ad elevate prestazioni grafiche necessario per offrire un\'esperienza fluida e di qualità.',
-							'items' => array( '1 Notebook' ),
+							'title' => 'Versione Desktop con 3 monitor',
+							'image' => 'forklift-vr-pro-plus-monitors.webp',
+							'desc'  => 'Configurazione desktop con tre monitor per una visione panoramica dell\'ambiente di simulazione.',
+							'items' => array( '3 Monitor da 40”', 'Supporto Monitor' ),
 						),
 						array(
-							'title' => 'Monitor da 40”',
-							'image' => 'forklift-vr-opzione-monitor.webp',
-							'desc'  => 'Doppio monitor da 40” con supporto flessionale per una simulazione di guida elevata e più coinvolgente.',
-							'items' => array(
-								'2 Monitor da 40”',
-								'2 Supporti per Monitor',
-							),
+							'title' => 'Kit HTC Vive Pro Room-Scale VR',
+							'image' => 'vive-pro-2-full-kit-buy.webp',
+							'desc'  => 'Vive Pro – Full Kit è il sistema progettato da HTC per vivere un\'esperienza di realtà virtuale professionale. Si compone di:',
+							'items' => array( 'Visore HTC Vive Pro', '2 Stazioni di Base', '2 Supporti per camere', '2 Tracker Vive' ),
 						),
-					);
-					?>
-					<?php foreach ( $immensive_requisiti as $immensive_req ) : ?>
-						<article class="ih-pdota__card ih-reveal">
-							<div class="ih-pdota__card-media" aria-hidden="true" <?php if ( ! empty( $immensive_req['image'] ) ) : ?>style="background-image:url('<?php echo esc_url( $immensive_img . $immensive_req['image'] ); ?>')"<?php endif; ?>></div>
+					),
+					'pro'  => $immensive_requisiti_standard,
+					'lite' => $immensive_requisiti_standard,
+				);
+				?>
+				<?php foreach ( $immensive_requisiti_by_version as $immensive_requisiti_key => $immensive_requisiti ) : ?>
+					<div class="ih-pdota__panel ih-pdota__panel--req" data-version-panel="<?php echo esc_attr( $immensive_requisiti_key ); ?>" <?php echo 'provr' === $immensive_requisiti_key ? '' : 'hidden'; ?>>
+						<div class="ih-pdota__cards ih-pdota__cards--req">
+							<?php foreach ( $immensive_requisiti as $immensive_req ) : ?>
+							<article class="ih-pdota__card ih-reveal">
+							<div class="ih-pdota__card-media<?php echo 'forklift-vr-pro-plus-monitors.webp' === $immensive_req['image'] ? ' ih-pdota__card-media--contain' : ''; ?>" aria-hidden="true" <?php if ( ! empty( $immensive_req['image'] ) ) : ?>style="background-image:url('<?php echo esc_url( $immensive_img . $immensive_req['image'] ); ?>')"<?php endif; ?>></div>
 							<div class="ih-pdota__card-body">
 								<h4 class="ih-pdota__card-title"><?php echo esc_html( $immensive_req['title'] ); ?></h4>
 								<p class="ih-pdota__card-desc"><?php echo esc_html( $immensive_req['desc'] ); ?></p>
@@ -375,9 +394,11 @@ get_header();
 									<?php endforeach; ?>
 								</div>
 							</div>
-						</article>
-					<?php endforeach; ?>
-				</div>
+							</article>
+							<?php endforeach; ?>
+						</div>
+					</div>
+				<?php endforeach; ?>
 			</div>
 		</div>
 	</section>
@@ -566,6 +587,11 @@ get_header();
 	</div><!-- .ih-flow -->
 
 	<?php get_template_part( 'template-parts/demo-modal', null, array( 'product' => 'Forklift VR Simulator' ) ); ?>
+	<div class="ih-video-modal" id="ih-video-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="<?php esc_attr_e( 'Video Forklift VR', 'immensive' ); ?>">
+		<div class="ih-video-modal__overlay" data-video-modal-close></div>
+		<button type="button" class="ih-video-modal__close" data-video-modal-close aria-label="<?php esc_attr_e( 'Chiudi il video', 'immensive' ); ?>"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+		<div class="ih-video-modal__box"><video controls playsinline></video><iframe hidden title="<?php esc_attr_e( 'Video Forklift VR su YouTube', 'immensive' ); ?>" src="" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+	</div>
 
 </div>
 

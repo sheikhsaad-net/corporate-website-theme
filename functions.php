@@ -148,7 +148,9 @@ function immensive_scripts() {
 
 	if ( immensive_is_ih_page() ) {
 		$immensive_css = get_template_directory() . '/assets/css/homepage.css';
-		$immensive_js  = get_template_directory() . '/assets/js/homepage.js';
+		$immensive_portfolio_listing = is_page_template( 'template-portfolio.php' ) || is_post_type_archive( IMMENSIVE_PORTFOLIO_POST_TYPE );
+		$immensive_js_relative       = $immensive_portfolio_listing ? '/assets/js/portfolio.js' : '/assets/js/homepage.js';
+		$immensive_js                = get_template_directory() . $immensive_js_relative;
 
 		wp_enqueue_style(
 			'immensive-homepage',
@@ -157,27 +159,147 @@ function immensive_scripts() {
 			file_exists( $immensive_css ) ? filemtime( $immensive_css ) : wp_get_theme()->get( 'Version' )
 		);
 		wp_enqueue_script(
-			'immensive-homepage',
-			get_template_directory_uri() . '/assets/js/homepage.js',
+			$immensive_portfolio_listing ? 'immensive-portfolio' : 'immensive-homepage',
+			get_template_directory_uri() . $immensive_js_relative,
 			array(),
 			file_exists( $immensive_js ) ? filemtime( $immensive_js ) : wp_get_theme()->get( 'Version' ),
 			true
 		);
 
-		// Front-end data for the Contatti page's AJAX form submit (see
-		// immensive_handle_contact_form() and homepage.js's contact-form block).
-		wp_localize_script(
-			'immensive-homepage',
-			'immensiveContact',
-			array(
-				'ajaxUrl'   => admin_url( 'admin-ajax.php' ),
-				'nonce'     => wp_create_nonce( 'immensive_contact_form' ),
-				'demoNonce' => wp_create_nonce( 'immensive_demo_form' ),
-			)
-		);
+		if ( ! $immensive_portfolio_listing ) {
+			// Front-end data for Contatti's AJAX forms; the portfolio listing
+			// does not use either form or their associated JavaScript.
+			wp_localize_script(
+				'immensive-homepage',
+				'immensiveContact',
+				array(
+					'ajaxUrl'   => admin_url( 'admin-ajax.php' ),
+					'nonce'     => wp_create_nonce( 'immensive_contact_form' ),
+					'demoNonce' => wp_create_nonce( 'immensive_demo_form' ),
+				)
+			);
+		}
 	}
 }
 add_action( 'wp_enqueue_scripts', 'immensive_scripts' );
+
+/** Prioritize the responsive LCP image on the product landing page. */
+function immensive_preload_product_hero_image() {
+	if ( ! is_page_template( 'template-prodotti.php' ) ) {
+		return;
+	}
+	$immensive_images = get_template_directory_uri() . '/assets/images/optimized/';
+	$immensive_srcset = $immensive_images . 'hero-weld-vr-768.webp 768w, ' . $immensive_images . 'hero-weld-vr-1536.webp 1536w';
+	echo '<link rel="preload" as="image" fetchpriority="high" imagesrcset="' . esc_attr( $immensive_srcset ) . '" imagesizes="(max-width: 720px) 100vw, 52vw">' . "\n";
+}
+add_action( 'wp_head', 'immensive_preload_product_hero_image', 1 );
+
+/** Preload the first slide image on the services landing page. */
+function immensive_preload_services_hero_image() {
+	if ( ! is_page_template( 'template-altri-servizi.php' ) ) {
+		return;
+	}
+	$immensive_images = get_template_directory_uri() . '/assets/images/optimized/';
+	$immensive_srcset = $immensive_images . 'shero-archeoclub-768.webp 768w, ' . $immensive_images . 'shero-archeoclub-1920.webp 1920w';
+	echo '<link rel="preload" as="image" fetchpriority="high" imagesrcset="' . esc_attr( $immensive_srcset ) . '" imagesizes="100vw">' . "\n";
+}
+add_action( 'wp_head', 'immensive_preload_services_hero_image', 1 );
+
+/** Return responsive image data for a portfolio card attachment. */
+function immensive_portfolio_thumbnail_data( $attachment_id ) {
+	$immensive_file = get_attached_file( $attachment_id );
+	$immensive_original_url = wp_get_attachment_url( $attachment_id );
+	$immensive_size = $immensive_file ? @getimagesize( $immensive_file ) : false;
+	if ( ! $immensive_file || ! $immensive_original_url || ! $immensive_size ) {
+		return false;
+	}
+
+	$immensive_width  = (int) $immensive_size[0];
+	$immensive_height = (int) $immensive_size[1];
+	$immensive_base   = pathinfo( $immensive_file, PATHINFO_FILENAME );
+	$immensive_id     = (int) $attachment_id;
+	$immensive_dir    = get_template_directory() . '/assets/images/portfolio-optimized/';
+	$immensive_url    = get_template_directory_uri() . '/assets/images/portfolio-optimized/';
+	$immensive_widths = array_unique( array( min( 480, $immensive_width ), min( 960, $immensive_width ) ) );
+	$immensive_srcset = array();
+	$immensive_src    = '';
+
+	foreach ( $immensive_widths as $immensive_variant_width ) {
+		$immensive_filename = $immensive_id . '-' . $immensive_base . '-' . $immensive_variant_width . '.webp';
+		if ( ! file_exists( $immensive_dir . $immensive_filename ) ) {
+			continue;
+		}
+		$immensive_variant_url = $immensive_url . rawurlencode( $immensive_filename );
+		$immensive_srcset[]    = esc_url( $immensive_variant_url ) . ' ' . $immensive_variant_width . 'w';
+		$immensive_src         = $immensive_variant_url;
+	}
+
+	if ( ! $immensive_srcset ) {
+		$immensive_src = $immensive_original_url;
+	}
+
+	return array(
+		'src'    => $immensive_src,
+		'srcset' => implode( ', ', $immensive_srcset ),
+		'width'  => $immensive_width,
+		'height' => $immensive_height,
+		'sizes'  => '(max-width: 900px) 100vw, (max-width: 1400px) 60vw, 40vw',
+	);
+}
+
+/** Render a portfolio thumbnail with real dimensions and responsive sources. */
+function immensive_portfolio_card_image_html( $post_id, $is_priority = false ) {
+	$immensive_attachment_id = get_post_thumbnail_id( $post_id );
+	$immensive_image         = $immensive_attachment_id ? immensive_portfolio_thumbnail_data( $immensive_attachment_id ) : false;
+	if ( ! $immensive_image ) {
+		return get_the_post_thumbnail( $post_id, 'large', array( 'loading' => $is_priority ? 'eager' : 'lazy', 'decoding' => 'async' ) );
+	}
+
+	$immensive_html  = '<img class="attachment-large size-large wp-post-image" src="' . esc_url( $immensive_image['src'] ) . '"';
+	$immensive_html .= $immensive_image['srcset'] ? ' srcset="' . esc_attr( $immensive_image['srcset'] ) . '"' : '';
+	$immensive_html .= ' sizes="' . esc_attr( $immensive_image['sizes'] ) . '" alt=""';
+	$immensive_html .= $is_priority ? ' loading="eager" fetchpriority="high"' : ' loading="lazy"';
+	$immensive_html .= ' decoding="async" width="' . (int) $immensive_image['width'] . '" height="' . (int) $immensive_image['height'] . '">';
+	return $immensive_html;
+}
+
+/** Preload the first portfolio card image to remove its discovery delay. */
+function immensive_preload_portfolio_lcp_image() {
+	if ( ! is_page_template( 'template-portfolio.php' ) ) {
+		return;
+	}
+	$immensive_attachment_id = get_post_thumbnail_id( 156 );
+	$immensive_image         = $immensive_attachment_id ? immensive_portfolio_thumbnail_data( $immensive_attachment_id ) : false;
+	if ( ! $immensive_image || ! $immensive_image['srcset'] ) {
+		return;
+	}
+	echo '<link rel="preload" as="image" href="' . esc_url( $immensive_image['src'] ) . '" fetchpriority="high" imagesrcset="' . esc_attr( $immensive_image['srcset'] ) . '" imagesizes="' . esc_attr( $immensive_image['sizes'] ) . '">' . "\n";
+}
+add_action( 'wp_head', 'immensive_preload_portfolio_lcp_image', 1 );
+
+/** Preload fonts used by the portfolio title, groups, navigation, and copy. */
+function immensive_preload_portfolio_fonts() {
+	if ( ! is_page_template( 'template-portfolio.php' ) ) {
+		return;
+	}
+	$immensive_font_uri = get_template_directory_uri() . '/assets/fonts/';
+	foreach ( array( 'bebas-neue-400.woff2', 'montserrat-variable.woff2', 'inter-300.woff2' ) as $immensive_font ) {
+		echo '<link rel="preload" as="font" href="' . esc_url( $immensive_font_uri . $immensive_font ) . '" type="font/woff2" crossorigin>' . "\n";
+	}
+}
+add_action( 'wp_head', 'immensive_preload_portfolio_fonts', 1 );
+
+/** Supply a useful description when the editable Portfolio page has no excerpt. */
+function immensive_portfolio_meta_description() {
+	if ( ! is_page_template( 'template-portfolio.php' ) ) {
+		return;
+	}
+	$immensive_description = has_excerpt()
+		? get_the_excerpt()
+		: __( 'Scopri i progetti Immensive: simulatori VR e soluzioni digitali immersive per imprese, cultura e sanità.', 'immensive' );
+	echo '<meta name="description" content="' . esc_attr( wp_strip_all_tags( $immensive_description ) ) . '">' . "\n";
+}
+add_action( 'wp_head', 'immensive_portfolio_meta_description', 2 );
 
 /**
  * Contact form handler for template-contatti.php's #ih-cont-form.
@@ -561,9 +683,9 @@ add_action( 'save_post_page', 'immensive_save_services_menu_meta' );
  * item's "Description" field (enable it via Screen Options) — instead of a
  * plain list. Every other parent item falls back to a simple dropdown.
  *
- * Card logos are looked up by page slug in
- * /assets/images/prodotti/{slug}.webp — drop a file there named after the
- * product page's slug and it replaces the placeholder automatically.
+ * Card logos are looked up by page slug in /assets/images/prodotti/{slug}.png,
+ * falling back to .webp — drop a file there named after the product page's
+ * slug and it replaces the placeholder automatically.
  */
 class Immensive_Nav_Walker extends Walker_Nav_Menu {
 
@@ -631,8 +753,12 @@ class Immensive_Nav_Walker extends Walker_Nav_Menu {
 		if ( 4 === $mega_cols ) {
 			// Prodotti: small desaturating logo on a white card (unchanged).
 			$slug      = ( 'page' === $item->object ) ? get_post_field( 'post_name', $item->object_id ) : sanitize_title( $item->title );
-			$logo_file = get_template_directory() . '/assets/images/prodotti/' . $slug . '.webp';
-			$logo_uri  = get_template_directory_uri() . '/assets/images/prodotti/' . $slug . '.webp';
+			$logo_file = get_template_directory() . '/assets/images/prodotti/' . $slug . '.png';
+			$logo_uri  = get_template_directory_uri() . '/assets/images/prodotti/' . $slug . '.png';
+			if ( ! file_exists( $logo_file ) ) {
+				$logo_file = get_template_directory() . '/assets/images/prodotti/' . $slug . '.webp';
+				$logo_uri  = get_template_directory_uri() . '/assets/images/prodotti/' . $slug . '.webp';
+			}
 
 			$output .= '<li class="ih-mega__item"><a class="ih-mega__card" href="' . esc_url( $item->url ) . '">';
 			$output .= '<span class="ih-mega__logo">';
@@ -660,12 +786,28 @@ class Immensive_Nav_Walker extends Walker_Nav_Menu {
 				}
 			}
 
-			$output .= '<li class="ih-mega__item"><a class="ih-mega__card ih-mega__card--photo" href="' . esc_url( $item->url ) . '"';
+			$photo_descriptions = array(
+				'ricerca'     => 'Progetti, sperimentazione e tecnologie emergenti',
+				'innovazione' => 'Soluzioni digitali e nuovi prodotti',
+			);
+			$photo_card_class = isset( $photo_descriptions[ $slug ] ) ? ' ih-mega__card--' . sanitize_html_class( $slug ) : '';
+			$output .= '<li class="ih-mega__item"><a class="ih-mega__card ih-mega__card--photo' . esc_attr( $photo_card_class ) . '" href="' . esc_url( $item->url ) . '"';
 			if ( $bg_uri ) {
 				$output .= ' style="background-image:url(' . esc_url( $bg_uri ) . ')"';
 			}
 			$output .= '>';
+			$photo_numbers = array(
+				'ricerca'     => array( '01', '1' ),
+				'innovazione' => array( '02', '2' ),
+			);
+			if ( isset( $photo_numbers[ $slug ] ) ) {
+				$output .= '<span class="ih-mega__number" aria-hidden="true"><span>0</span><span>' . esc_html( $photo_numbers[ $slug ][1] ) . '</span></span>';
+			}
 			$output .= '<span class="ih-mega__title">' . esc_html( $item->title ) . '</span>';
+			if ( isset( $photo_descriptions[ $slug ] ) ) {
+				$output .= '<span class="ih-mega__photo-desc">' . esc_html( $photo_descriptions[ $slug ] ) . '</span>';
+				$output .= '<span class="ih-mega__arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>';
+			}
 			$output .= '</a></li>';
 		} else {
 			$output .= '<li class="ih-dropdown__item"><a href="' . esc_url( $item->url ) . '">' . esc_html( $item->title ) . '</a></li>';

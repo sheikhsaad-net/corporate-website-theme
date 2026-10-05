@@ -92,7 +92,7 @@ $immensive_pf_title = isset( $args['title'] ) ? $args['title'] : __( 'Portfolio'
 $immensive_pf_sub   = isset( $args['sub'] ) ? $args['sub'] : __( 'Scopri i nostri ultimi lavori', 'immensive' );
 ?>
 
-	<section class="ih-pf" id="ih-portfolio">
+	<main class="ih-pf" id="ih-portfolio">
 		<div class="ih-container">
 
 			<header class="ih-pf__head">
@@ -140,6 +140,7 @@ $immensive_pf_sub   = isset( $args['sub'] ) ? $args['sub'] : __( 'Scopri i nostr
 
 				<div class="ih-pf__main">
 					<?php
+					$immensive_pf_priority_set = false;
 					if ( ! $immensive_all ) :
 						?>
 						<p class="ih-pf__empty"><?php esc_html_e( 'Nessun progetto pubblicato.', 'immensive' ); ?></p>
@@ -167,7 +168,9 @@ $immensive_pf_sub   = isset( $args['sub'] ) ? $args['sub'] : __( 'Scopri i nostr
 												<span class="ih-pfc__media" aria-hidden="true">
 													<?php
 													if ( has_post_thumbnail( $immensive_project ) ) {
-														echo get_the_post_thumbnail( $immensive_project, 'large', array( 'loading' => 'lazy', 'decoding' => 'async' ) );
+														$immensive_image_priority = ! $immensive_pf_priority_set;
+														echo immensive_portfolio_card_image_html( $immensive_project->ID, $immensive_image_priority );
+														$immensive_pf_priority_set = true;
 													}
 													?>
 												</span>
@@ -190,4 +193,4 @@ $immensive_pf_sub   = isset( $args['sub'] ) ? $args['sub'] : __( 'Scopri i nostr
 
 			</div>
 		</div>
-	</section>
+	</main>

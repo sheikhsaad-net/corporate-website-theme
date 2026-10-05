@@ -1884,7 +1884,7 @@
 }
 
 .ih-pfunziona__head {
-	max-width: 820px;
+	max-width: 1120px;
 	padding: 0 1.5rem;
 	text-align: center;
 }
@@ -1902,7 +1902,7 @@
 }
 
 .ih-pfunziona__desc {
-	max-width: 560px;
+	max-width: 960px;
 	margin: 0 auto;
 	font-size: 1.1rem;
 	line-height: 1.7;
@@ -1917,6 +1917,7 @@
 }
 
 .ih-pfunziona__media {
+	position: relative;
 	max-width: 820px;
 	margin: 0 auto;
 	border-radius: 20px;
@@ -1929,6 +1930,54 @@
 	display: block;
 	width: 100%;
 	height: auto;
+}
+
+.ih-pfunziona__video {
+	position: absolute;
+	inset: 0;
+	display: grid;
+	place-items: center;
+	width: 100%;
+	padding: 0;
+	border: 0;
+	background: rgba(8, 12, 16, 0.08);
+	color: #fff;
+	cursor: pointer;
+	transition: background 0.25s ease;
+}
+
+.ih-pfunziona__video:hover,
+.ih-pfunziona__video:focus-visible {
+	background: rgba(8, 12, 16, 0.28);
+}
+
+.ih-pfunziona__video:focus-visible {
+	outline: 3px solid #fff;
+	outline-offset: -8px;
+}
+
+.ih-pfunziona__play-icon {
+	display: grid;
+	place-items: center;
+	width: clamp(4rem, 8vw, 6rem);
+	height: clamp(4rem, 8vw, 6rem);
+	padding-left: 0.35rem;
+	border: 2px solid rgba(255, 255, 255, 0.9);
+	border-radius: 50%;
+	background: rgba(12, 16, 20, 0.3);
+	box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+	transition: transform 0.25s ease, background 0.25s ease;
+}
+
+.ih-pfunziona__play-icon svg {
+	width: 1.5rem;
+	height: 1.5rem;
+}
+
+.ih-pfunziona__video:hover .ih-pfunziona__play-icon,
+.ih-pfunziona__video:focus-visible .ih-pfunziona__play-icon {
+	transform: scale(1.08);
+	background: rgba(255, 255, 255, 0.16);
 }
 
 /* Same breakpoint as .ih-sistema__sticky: un-pin and stack normally. */
@@ -2554,11 +2603,34 @@
 	display: contents;
 }
 
+/* Flatten versioned requirement groups so their cards keep the shared grid. */
+.ih-pdota__block--req > .ih-pdota__panel--req {
+	display: contents;
+}
+
+.ih-pdota__block--req > .ih-pdota__panel--req[hidden] {
+	display: none;
+}
+
 /* .ih-pdota__block--req's align-items: start (needed so the heading doesn't
    stretch) would otherwise also stop these two cards stretching to match
    each other — pull them back to equal height within their row. */
 .ih-pdota__block--req .ih-pdota__cards--req > .ih-pdota__card {
 	align-self: stretch;
+}
+
+/* Firefighter options: heading above a full-width row of four cards. */
+.ih-pdota__block--ff-options {
+	display: block;
+}
+
+.ih-pdota__block--ff-options .ih-pdota__cards--req {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.ih-pdota__block--ff-options .ih-pdota__section-heading {
+	margin: 0;
 }
 
 .ih-pdota__card {
@@ -2580,6 +2652,12 @@
 	   these stay so the photo is framed the same way as the placeholder. */
 	background-size: cover;
 	background-position: center;
+}
+
+.ih-pdota__card-media--contain {
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-color: var(--ih-white);
 }
 
 .ih-pdota__card-body {
@@ -2682,11 +2760,19 @@
 	.ih-pdota__block--req {
 		grid-template-columns: 1fr;
 	}
+
+	.ih-pdota__block--ff-options .ih-pdota__cards--req {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
 }
 
 @media (max-width: 560px) {
 	.ih-pdota__cards--req,
 	.ih-pdota__cards--opz {
+		grid-template-columns: 1fr;
+	}
+
+	.ih-pdota__block--ff-options .ih-pdota__cards--req {
 		grid-template-columns: 1fr;
 	}
 }
@@ -6190,29 +6276,106 @@
 }
 
 /* Services-style mega cards (Ricerca e Innovazione, Altri Servizi): a full
-   background photo with the title centered over it, no icon — see
+   background photo with title and supporting text — see
    Immensive_Nav_Walker's $mega_cols branch in functions.php. */
 .ih-mega__card--photo {
 	position: relative;
-	justify-content: center;
+	align-items: flex-start;
+	justify-content: flex-end;
+	gap: 0.6rem;
+	text-align: left;
+	min-height: 370px;
+	padding: 2.25rem clamp(2rem, 4.5vw, 4rem);
 	background-color: var(--ih-bg);
 	background-size: cover;
 	background-position: center;
 	color: var(--ih-white);
-}
-
-.ih-mega__card--photo::before {
-	content: '';
-	position: absolute;
-	inset: 0;
-	background: linear-gradient(180deg, rgba(16, 16, 16, 0.15), rgba(16, 16, 16, 0.6));
-	z-index: 0;
+	border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
 .ih-mega__card--photo .ih-mega__title {
 	position: relative;
 	z-index: 1;
+	max-width: calc(100% - 5rem);
 	color: var(--ih-white);
+	font-size: clamp(1.5rem, 2vw, 2rem);
+	letter-spacing: 0.015em;
+}
+
+.ih-mega__number {
+	position: absolute;
+	top: 16%;
+	left: clamp(2rem, 4.5vw, 4rem);
+	display: flex;
+	align-items: baseline;
+	z-index: 1;
+	font-family: var(--ih-display);
+	font-size: clamp(6rem, 10vw, 9rem);
+	font-weight: 300;
+	line-height: 0.9;
+	letter-spacing: -0.045em;
+	color: rgba(255, 255, 255, 0.88);
+	text-shadow: 0 2px 22px rgba(0, 0, 0, 0.16);
+}
+
+.ih-mega__number span:last-child {
+	color: var(--ih-mega-accent, #48ad79);
+}
+
+.ih-mega__card--ricerca {
+	--ih-mega-accent: #50b27a;
+	border-color: rgba(120, 183, 139, 0.72);
+}
+
+.ih-mega__card--innovazione {
+	--ih-mega-accent: #50c7ec;
+	border-color: rgba(78, 183, 224, 0.72);
+}
+
+/* These source banners are wider than the mega cards; fit their full width
+   so the decorative object at the right edge is not cropped by `cover`. */
+.ih-mega__card--ricerca,
+.ih-mega__card--innovazione {
+	background-size: cover;
+	background-position: right top;
+	background-repeat: no-repeat;
+}
+
+.ih-mega__photo-desc {
+	position: relative;
+	z-index: 1;
+	max-width: min(34rem, calc(100% - 5rem));
+	font-family: var(--ih-body);
+	font-size: clamp(1.05rem, 1.35vw, 1.3rem);
+	line-height: 1.4;
+	color: rgba(255, 255, 255, 0.72);
+}
+
+.ih-mega__arrow {
+	position: absolute;
+	right: clamp(2rem, 4.5vw, 4rem);
+	bottom: 2rem;
+	z-index: 1;
+	display: grid;
+	place-items: center;
+	width: 4rem;
+	height: 4rem;
+	border: 1.5px solid var(--ih-mega-accent, rgba(255, 255, 255, 0.7));
+	border-radius: 50%;
+	color: var(--ih-mega-accent, #fff);
+	transition: color 0.25s ease, background-color 0.25s ease, transform 0.25s ease;
+}
+
+.ih-mega__arrow svg {
+	width: 1.65rem;
+	height: 1.65rem;
+}
+
+.ih-mega__card--photo:hover .ih-mega__arrow,
+.ih-mega__card--photo:focus-visible .ih-mega__arrow {
+	transform: translateX(3px);
+	background: var(--ih-mega-accent, #fff);
+	color: var(--ih-bg);
 }
 
 .ih-mega__desc {
@@ -7835,7 +7998,6 @@
 	font-size: clamp(0.6rem, 0.68vw, 0.8rem);
 	line-height: 1.3;
 	color: var(--ih-white);
-	transition: color 0.3s ease;
 }
 
 .ih-pfc.is-light .ih-pfc__title {
@@ -10494,8 +10656,10 @@ body.page-template-template-electro-vr-php .ih {
 		background-image: none !important;
 	}
 
-	.ih-mega__card--photo::before {
-		content: none;
+	.ih-mega__card--photo .ih-mega__number,
+	.ih-mega__card--photo .ih-mega__photo-desc,
+	.ih-mega__card--photo .ih-mega__arrow {
+		display: none;
 	}
 
 	.ih-why-grid,

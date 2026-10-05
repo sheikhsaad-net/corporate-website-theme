@@ -227,8 +227,9 @@
 					var bar = slides[i].querySelector('.ih-slide__progress');
 					if (bar) {
 						bar.style.animation = 'none';
-						void bar.offsetWidth;
-						bar.style.animation = '';
+						window.requestAnimationFrame(function () {
+							bar.style.animation = '';
+						});
 					}
 					heroEl.style.setProperty('--ih-theme', slides[i].getAttribute('data-color'));
 				}
@@ -876,31 +877,31 @@
 			var leaving = sSlides[sIndex];
 			var entering = sSlides[target];
 
-			// Force a reflow between setting the direction and moving the
-			// slides, so the incoming halves are parked on the correct side
-			// before their transition starts. Without it a direction change
-			// makes them animate from wherever the previous direction left
-			// them.
-			void sHero.offsetHeight;
+			// Give the new direction a paint before toggling slide classes so
+			// the incoming halves start from their parked positions without a
+			// synchronous layout read.
+			window.requestAnimationFrame(function () {
+				window.requestAnimationFrame(function () {
+					leaving.classList.remove('is-current');
+					leaving.classList.add('is-leaving');
+					leaving.setAttribute('aria-hidden', 'true');
+					entering.classList.add('is-current');
+					entering.setAttribute('aria-hidden', 'false');
 
-			leaving.classList.remove('is-current');
-			leaving.classList.add('is-leaving');
-			leaving.setAttribute('aria-hidden', 'true');
-			entering.classList.add('is-current');
-			entering.setAttribute('aria-hidden', 'false');
+					sCopies[sIndex].classList.remove('is-current');
+					sCopies[target].classList.add('is-current');
 
-			sCopies[sIndex].classList.remove('is-current');
-			sCopies[target].classList.add('is-current');
+					if (sCount) {
+						sCount.textContent = (target + 1 < 10 ? '0' : '') + (target + 1);
+					}
 
-			if (sCount) {
-				sCount.textContent = (target + 1 < 10 ? '0' : '') + (target + 1);
-			}
-
-			sIndex = target;
-			window.setTimeout(function () {
-				leaving.classList.remove('is-leaving');
-				sBusy = false;
-			}, S_DURATION);
+					sIndex = target;
+					window.setTimeout(function () {
+						leaving.classList.remove('is-leaving');
+						sBusy = false;
+					}, S_DURATION);
+				});
+			});
 		};
 
 		var sStop = function () {
@@ -1014,8 +1015,7 @@
 		// text stands.
 		var pfTintCard = function (card) {
 			var img = card.querySelector('.ih-pfc__media img');
-			var bar = card.querySelector('.ih-pfc__title');
-			if (!img || !bar) {
+			if (!img) {
 				return;
 			}
 
@@ -1031,8 +1031,10 @@
 					canvas.height = h;
 					var ctx = canvas.getContext('2d');
 
-					// Same share of the image that the bar covers on screen.
-					var frac = (bar.offsetHeight / card.offsetHeight) || 0.22;
+					// Keep sampling layout-free. The prior measured ratio varied
+					// little from this fallback and forced a synchronous layout for
+					// every thumbnail as it loaded.
+					var frac = 0.22;
 					var sh = Math.max(1, Math.round(img.naturalHeight * frac));
 					var sy = img.naturalHeight - sh;
 
@@ -1509,6 +1511,10 @@
 			videoModal.classList.add('is-open');
 			videoModal.setAttribute('aria-hidden', 'false');
 			document.body.classList.add('ih-video-modal-open');
+			var vmCloseButton = videoModal.querySelector('.ih-video-modal__close');
+			if (vmCloseButton) {
+				vmCloseButton.focus();
+			}
 		};
 
 		vmCloseEls.forEach(function (el) {
@@ -1521,7 +1527,7 @@
 			}
 		});
 
-		document.querySelectorAll('.ih-pj__video[data-video-src]').forEach(function (tile) {
+		document.querySelectorAll('.ih-pj__video[data-video-src], .ih-pfunziona__video[data-video-src]').forEach(function (tile) {
 			tile.addEventListener('click', function () {
 				vmOpen(tile.getAttribute('data-video-src'));
 			});

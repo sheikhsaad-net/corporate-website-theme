@@ -67,7 +67,7 @@ get_header();
 
 			<a class="ih-splithero__side ih-splithero__side--<?php echo esc_attr( $immensive_side['tone'] ); ?>" href="<?php echo esc_url( $immensive_side['href'] ); ?>">
 				<span class="ih-splithero__media" aria-hidden="true">
-					<img src="<?php echo esc_url( $immensive_side['img'] ); ?>" alt="<?php echo esc_attr( $immensive_side['alt'] ); ?>" decoding="async" fetchpriority="high">
+					<img src="<?php echo esc_url( $immensive_side['img'] ); ?>" alt="<?php echo esc_attr( $immensive_side['alt'] ); ?>" width="<?php echo 1 === $immensive_i ? '1024' : '1086'; ?>" height="<?php echo 1 === $immensive_i ? '1536' : '1448'; ?>" decoding="async" fetchpriority="<?php echo 0 === $immensive_i ? 'high' : 'low'; ?>">
 				</span>
 				<span class="ih-splithero__shade" aria-hidden="true"></span>
 

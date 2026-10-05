@@ -83,7 +83,8 @@ get_header();
 
 		<div class="ih-container ih-pfunziona__media-wrap">
 			<div class="ih-pfunziona__media ih-reveal">
-				<img src="<?php echo esc_url( $immensive_img . 'hero-weld-vr.webp' ); ?>" alt="Kit Weld VR Simulator" loading="lazy" width="1672" height="941">
+				<img src="<?php echo esc_url( $immensive_img . 'weld-vr-video-cover.jpg' ); ?>" alt="Weld VR Simulator — guarda il video dimostrativo" loading="lazy" width="1080" height="608">
+				<button type="button" class="ih-pfunziona__video" data-video-src="https://youtu.be/Prhx4C9FEuY" aria-label="<?php esc_attr_e( 'Riproduci il video Weld VR', 'immensive' ); ?>"><span class="ih-pfunziona__play-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="m9 6 10 6-10 6V6Z" fill="currentColor"/></svg></span></button>
 			</div>
 		</div>
 	</section>
@@ -233,13 +234,13 @@ get_header();
 			</div>
 
 			<?php
-			// Placeholder copy/images throughout this array — swap in the
-			// real kit photos, requisiti/opzioni product shots and finalized
-			// copy once available. Requisiti/opzioni cards use the site's
-			// existing "no shot yet" gradient placeholder in the meantime.
+			// Product kit data. Pro/Lite copy and images are aligned with the
+			// archived Elementor templates (IDs 27254, 27235, and 27036).
 			$immensive_kit_versions = array(
 				'pro'  => array(
 					'image'      => 'weld-vr-kit-pro.webp',
+					'width'      => 1006,
+					'height'     => 755,
 					'alt'        => 'Dotazione Kit Pro Weld VR Simulator',
 					'title'      => 'Dotazione Kit Pro',
 					'desc'       => 'Il kit in dotazione include lo stand con i giunti reali e torce azionabili a comando, come nella realtà. La pinza porta elettrodo ritrae l\'elettrodo in automatico garantendo un feedback estremamente realistico in fase di innesco. Lo stand si adatta a ogni tipo di supporto ed è facile da calibrare, trasformando qualsiasi scrivania in un banco di saldatura completo.',
@@ -250,13 +251,15 @@ get_header();
 						'Torcia MIG con tasto di innesco',
 						'Pinza Portaelettrodo con simulazione consumo',
 					),
-					'func_desc'  => 'La versione Weld VR Pro offre l\'esperienza di saldatura completa e senza limitazioni. È possibile saldare un giunto in tutte le posizioni previste dalla norma UNI EN ISO 9606-1, scegliendo liberamente materiale, elettrodo e spessore del giunto da saldare, con parametri macchina completamente configurabili.',
+					'func_desc'  => 'La versione Weld VR Pro offre funzionalità software avanzate. È possibile personalizzare gli esercizi scegliendo materiale e spessore del giunto; questa scelta determina i parametri della macchina, completamente controllabili e con effetti reali sulla saldatura. Il lavoro viene salvato nel report dell\'utente, consultabile in qualsiasi momento. Oltre ai grafici delle performance, la versione Pro consente l\'analisi qualitativa del cordone.',
 					'func_specs' => array(
-						'Tipologie di Materiale: Acciaio al Carbonio, Acciaio Inox, Alluminio',
-						'Tipologie di Elettrodo: E6013, E7018, E308L',
+						'3 Tipologie di Materiale: Acciaio al Carbonio, Alluminio, Acciaio Inox',
+						'6 Tipologie di Elettrodi: E6010, E6011, E6012, E6013, E7016, E7018',
 						'SMAW: Controllo Amperaggio',
-						'MIG/MAG: Controllo Tensione, Velocità Filo, Flusso Gas',
+						'MIG: Controllo Tensione, Velocità Filo, Flusso Gas',
 						'TIG: Controllo Amperaggio, Flusso Gas, Materiale d\'apporto',
+						'Weaving Patterns: guide visive alle trame di saldatura',
+						'Analisi qualitativa del cordone',
 					),
 					'requisiti'  => array(
 						array(
@@ -308,21 +311,23 @@ get_header();
 				),
 				'lite' => array(
 					'image'      => 'weld-vr-kit-base.webp',
+					'width'      => 944,
+					'height'     => 576,
 					'alt'        => 'Dotazione Kit Base Weld VR Simulator',
 					'title'      => 'Dotazione Kit Base',
-					'desc'       => 'La versione del kit base di Weld VR Simulator include le torce realmente utilizzate nel mondo professionale dotate di supporti compatibili con sistema di tracciamento HTC Vive, soluzione che consente l\'esercitazione manuale con pesi e ingombri reali mediante l\'utilizzo di visore di realtà virtuale, riproducendo in maniera realistica le diverse tecniche di saldatura in tutta sicurezza.',
+					'desc'       => 'La versione Weld VR Lite include torce realmente utilizzate nel mondo professionale e compatibili con il sistema di tracciamento HTC Vive. Consentono esercitazioni manuali con pesi e ingombri reali e di riprodurre in sicurezza le diverse tecniche di saldatura. L\'unica limitazione è la fase di innesco, che avviene sempre per contatto.',
 					'items'      => array(
 						'1 Torcia Smaw',
 						'1 Torcia Mig/Mag',
 						'1 Torcia Tig',
 						'1 Porta Filler',
 					),
-					'func_desc'  => 'La versione Weld VR Lite offre un\'esperienza di saldatura completa anche se con delle limitazioni. In particolare offre la possibilità di saldare un giunto in un\'unica posizione secondo la norma UNI EN ISO 9606-1. I parametri della macchina sono comunque controllabili e producono un effetto reale sulla qualità del cordone eseguito, mettendo a disposizione un unico materiale e un unico spessore del giunto da saldare.',
+					'func_desc'  => 'La versione Weld VR Lite offre un\'esperienza di saldatura completa, seppure con alcune limitazioni. Consente di saldare un giunto nelle posizioni previste dalla norma UNI EN ISO 9606-1. I parametri della macchina sono controllabili e incidono sulla qualità del cordone, con un solo materiale e un solo spessore del giunto. La saldatura viene conservata nel report dell\'utente, consultabile in qualsiasi momento, che mostra i grafici delle performance e della manualità.',
 					'func_specs' => array(
 						'1 Tipologia di Materiale: Acciaio al Carbonio',
-						'1 Tipologia di Elettrodo: E6013',
+						'1 Tipologia di Elettrodi: E6013',
 						'SMAW: Controllo Amperaggio',
-						'MIG/MAG: Controllo Tensione, Velocità Filo, Flusso Gas',
+						'MIG: Controllo Tensione, Velocità Filo, Flusso Gas',
 						'TIG: Controllo Amperaggio, Flusso Gas, Materiale d\'apporto',
 					),
 					'requisiti'  => array(
@@ -381,7 +386,7 @@ get_header();
 
 					<div class="ih-pdota__row">
 						<div class="ih-pdota__media ih-reveal">
-							<img src="<?php echo esc_url( $immensive_img . $immensive_kit['image'] ); ?>" alt="<?php echo esc_attr( $immensive_kit['alt'] ); ?>" loading="lazy" width="1672" height="941">
+							<img src="<?php echo esc_url( $immensive_img . $immensive_kit['image'] ); ?>" alt="<?php echo esc_attr( $immensive_kit['alt'] ); ?>" loading="lazy" width="<?php echo esc_attr( $immensive_kit['width'] ); ?>" height="<?php echo esc_attr( $immensive_kit['height'] ); ?>">
 						</div>
 						<div class="ih-pdota__content ih-reveal">
 							<h3 class="ih-pdota__title"><?php echo esc_html( $immensive_kit['title'] ); ?></h3>
@@ -537,25 +542,26 @@ get_header();
 
 			<?php
 			// `true` renders a check badge; a string renders as the cell text.
-			// Hardware rows are placeholder copy — confirm against the real
-			// spec sheet before launch.
+			// Lite's contact-only ignition and Pro's trigger torches/clamp are
+			// verified against the archived kit templates. Other hardware rows
+			// still need the current product spec sheet for full verification.
 			$immensive_comp = array(
 				'funzionalita' => array(
 					'title' => 'Funzionalità',
 					'rows'  => array(
 						array( 'label' => 'Gestione utenti', 'lite' => true, 'pro' => true ),
 						array( 'label' => 'Report esercizi per utente', 'lite' => true, 'pro' => true ),
-						array( 'label' => 'N. esercizi', 'lite' => '34', 'pro' => '34 x Spessore x Materiale' ),
+						array( 'label' => 'N. esercizi', 'lite' => '34', 'pro' => 'Personalizzabili per materiale e spessore' ),
 						array( 'label' => 'Posizioni', 'lite' => 'UNI EN ISO 9606-1', 'pro' => 'UNI EN ISO 9606-1' ),
 						array( 'label' => 'Materiale da saldare', 'lite' => 'Acciaio al Carbonio', 'pro' => 'Acciaio al Carbonio, Alluminio, Acciaio Inox' ),
 						array( 'label' => 'Spessori giunti', 'lite' => '10mm', 'pro' => '1,5mm, 3mm, 6mm, 10mm, 15mm, 20mm, 25mm' ),
-						array( 'label' => 'Tipo elettrodo', 'lite' => 'E6013', 'pro' => 'E6013, E7018, E8010, E9018, E308L, E316L' ),
+						array( 'label' => 'Tipo elettrodo', 'lite' => 'E6013', 'pro' => 'E6010, E6011, E6012, E6013, E7016, E7018' ),
 						array( 'label' => 'Spessore elettrodi', 'lite' => '2,4 - 3,2 - 4mm', 'pro' => '2,4 - 3,2 - 4mm' ),
 						array( 'label' => 'Spessore filo continuo', 'lite' => '0,8 - 1,0 - 1,2mm', 'pro' => '0,8 - 1,0 - 1,2mm' ),
 						array( 'label' => 'Parametri saldatrice', 'lite' => 'Limitati', 'pro' => 'Completi' ),
 						array( 'label' => 'Grafici performance (angoli, velocità, distanza)', 'lite' => true, 'pro' => true ),
 						array( 'label' => 'CTWD', 'lite' => true, 'pro' => true ),
-						array( 'label' => 'Analisi saldatura', 'lite' => true, 'pro' => 'Heatmap, Penetrazione, Porosità, Splatter' ),
+						array( 'label' => 'Analisi saldatura', 'lite' => true, 'pro' => 'Analisi qualitativa del cordone' ),
 					),
 				),
 				'hardware'     => array(
@@ -564,9 +570,9 @@ get_header();
 						array( 'label' => 'Stand supporto', 'lite' => 'Posizione fissa', 'pro' => 'Tutte le posizioni' ),
 						array( 'label' => 'Sistema rotante', 'lite' => false, 'pro' => true ),
 						array( 'label' => 'Giunti fisici', 'lite' => 'Tipologie base', 'pro' => 'Tutte le tipologie' ),
-						array( 'label' => 'Torcia MIG con tasto di innesco', 'lite' => true, 'pro' => true ),
-						array( 'label' => 'Torcia TIG con tasto di innesco', 'lite' => true, 'pro' => true ),
-						array( 'label' => 'Pinza portaelettrodo', 'lite' => true, 'pro' => 'Con simulazione consumo' ),
+						array( 'label' => 'Torcia MIG con tasto di innesco', 'lite' => false, 'pro' => true ),
+						array( 'label' => 'Torcia TIG con tasto di innesco', 'lite' => false, 'pro' => true ),
+						array( 'label' => 'Pinza portaelettrodo', 'lite' => false, 'pro' => 'Con simulazione consumo' ),
 						array( 'label' => 'Visore VR', 'lite' => 'HTC Vive Pro', 'pro' => 'HTC Vive Pro Room-Scale' ),
 						array( 'label' => 'Workstation', 'lite' => 'Requisiti minimi', 'pro' => 'Requisiti consigliati' ),
 						array( 'label' => 'Postazione docente', 'lite' => 'Opzionale', 'pro' => 'Opzionale' ),
@@ -818,6 +824,11 @@ get_header();
 	</div><!-- .ih-flow -->
 
 	<?php get_template_part( 'template-parts/demo-modal', null, array( 'product' => 'Weld VR Simulator' ) ); ?>
+	<div class="ih-video-modal" id="ih-video-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="<?php esc_attr_e( 'Video Weld VR', 'immensive' ); ?>">
+		<div class="ih-video-modal__overlay" data-video-modal-close></div>
+		<button type="button" class="ih-video-modal__close" data-video-modal-close aria-label="<?php esc_attr_e( 'Chiudi il video', 'immensive' ); ?>"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+		<div class="ih-video-modal__box"><video controls playsinline></video><iframe hidden title="<?php esc_attr_e( 'Video Weld VR su YouTube', 'immensive' ); ?>" src="" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+	</div>
 
 </div>
 

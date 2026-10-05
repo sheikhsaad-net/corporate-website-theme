@@ -43,24 +43,32 @@ get_header();
 				$immensive_slides = array(
 					array(
 						'img'   => 'hero-weld-vr.webp',
+						'width' => 3344,
+						'height' => 1882,
 						'name'  => 'Weld VR',
 						'tag'   => 'Formazione professionale alla saldatura in VR',
 						'color' => '#69ceeb',
 					),
 					array(
 						'img'   => 'hero-forklift-vr.webp',
+						'width' => 3840,
+						'height' => 2160,
 						'name'  => 'Forklift VR',
 						'tag'   => 'Addestramento immersivo per carrellisti',
 						'color' => '#f2b90d',
 					),
 					array(
 						'img'   => 'hero-firefighter-vr.webp',
+						'width' => 4716,
+						'height' => 2652,
 						'name'  => 'Firefighter VR',
 						'tag'   => 'Simulazione avanzata per emergenze antincendio',
 						'color' => '#e8503a',
 					),
 					array(
 						'img'   => 'hero-electro-vr.webp',
+						'width' => 1930,
+						'height' => 1086,
 						'name'  => 'Electro VR',
 						'tag'   => 'Training VR per operatori su impianti elettrici',
 						'color' => '#f7971e',
@@ -77,7 +85,8 @@ get_header();
 						role="button"
 						aria-label="<?php echo esc_attr( $slide['name'] ); ?>"
 					>
-						<img class="ih-slide__bg" src="<?php echo esc_url( $immensive_img . $slide['img'] ); ?>" alt="<?php echo esc_attr( $slide['name'] ); ?>" <?php echo 0 === $i ? '' : 'loading="lazy"'; ?> width="700" height="500">
+						<?php $immensive_slide_base = pathinfo( $slide['img'], PATHINFO_FILENAME ); ?>
+						<img class="ih-slide__bg" src="<?php echo esc_url( $immensive_img . 'optimized/' . $immensive_slide_base . '-1536.webp' ); ?>" srcset="<?php echo esc_attr( esc_url( $immensive_img . 'optimized/' . $immensive_slide_base . '-768.webp' ) . ' 768w, ' . esc_url( $immensive_img . 'optimized/' . $immensive_slide_base . '-1536.webp' ) . ' 1536w' ); ?>" sizes="(max-width: 720px) 100vw, 52vw" alt="<?php echo esc_attr( $slide['name'] ); ?>" <?php echo 0 === $i ? 'fetchpriority="high" decoding="async"' : 'loading="lazy" decoding="async"'; ?> width="<?php echo (int) $slide['width']; ?>" height="<?php echo (int) $slide['height']; ?>">
 						<div class="ih-slide__shade" aria-hidden="true"></div>
 						<div class="ih-slide__body">
 							<h3 class="ih-slide__name"><?php echo esc_html( $slide['name'] ); ?></h3>
@@ -170,7 +179,8 @@ get_header();
 				foreach ( $immensive_realities as $i => $card ) :
 					?>
 					<article class="ih-reality-card ih-reveal" style="--ih-card-i:<?php echo (int) $i; ?>">
-						<img src="<?php echo esc_url( $immensive_img . $card['img'] ); ?>" alt="<?php echo esc_attr( $card['alt'] ); ?>" loading="lazy" width="900" height="1280">
+						<?php $immensive_card_base = pathinfo( $card['img'], PATHINFO_FILENAME ); ?>
+						<img src="<?php echo esc_url( $immensive_img . 'optimized/' . $immensive_card_base . '-900.webp' ); ?>" srcset="<?php echo esc_attr( esc_url( $immensive_img . 'optimized/' . $immensive_card_base . '-480.webp' ) . ' 480w, ' . esc_url( $immensive_img . 'optimized/' . $immensive_card_base . '-900.webp' ) . ' 900w' ); ?>" sizes="(max-width: 720px) 100vw, 33vw" alt="<?php echo esc_attr( $card['alt'] ); ?>" loading="lazy" decoding="async" width="900" height="1599">
 						<div class="ih-reality-card__grad" aria-hidden="true"></div>
 						<div class="ih-reality-card__top">
 							<h3><?php echo wp_kses( $card['title'], array( 'br' => array() ) ); ?></h3>

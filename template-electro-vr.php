@@ -108,7 +108,10 @@ get_header();
 
 		<div class="ih-container ih-pfunziona__media-wrap">
 			<div class="ih-pfunziona__media ih-reveal">
-				<img src="<?php echo esc_url( $immensive_img . 'electro-vr-kit.webp' ); ?>" alt="Controller Electro VR Simulator" loading="lazy" width="1024" height="749">
+				<img src="<?php echo esc_url( $immensive_img . 'electro-vr-video-cover.jpg' ); ?>" alt="Electro VR Simulator — guarda il video dimostrativo" loading="lazy" width="1671" height="940">
+				<button type="button" class="ih-pfunziona__video" data-video-src="https://youtu.be/QxBAtNBAwQY" aria-label="<?php esc_attr_e( 'Riproduci il video Electro VR', 'immensive' ); ?>">
+					<span class="ih-pfunziona__play-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="m9 6 10 6-10 6V6Z" fill="currentColor"/></svg></span>
+				</button>
 			</div>
 		</div>
 	</section>
@@ -365,6 +368,17 @@ get_header();
 	</div><!-- .ih-flow -->
 
 	<?php get_template_part( 'template-parts/demo-modal', null, array( 'product' => 'Electro VR Simulator' ) ); ?>
+
+	<div class="ih-video-modal" id="ih-video-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="<?php esc_attr_e( 'Video Electro VR', 'immensive' ); ?>">
+		<div class="ih-video-modal__overlay" data-video-modal-close></div>
+		<button type="button" class="ih-video-modal__close" data-video-modal-close aria-label="<?php esc_attr_e( 'Chiudi il video', 'immensive' ); ?>">
+			<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+		</button>
+		<div class="ih-video-modal__box">
+			<video controls playsinline></video>
+			<iframe hidden title="<?php esc_attr_e( 'Video Electro VR su YouTube', 'immensive' ); ?>" src="" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+		</div>
+	</div>
 
 </div>
 

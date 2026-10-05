@@ -6,14 +6,11 @@
  * (same section classes/markup, single-accent color trick — see the
  * body.page-template-template-firefighter-vr rule in homepage.css).
  *
- * Content is adapted from https://www.immensive.it/firefighter-vr/. That
- * page has no Lite/Pro tiers, no Confronta i Modelli comparison table, no
- * Soluzioni di Acquisto pricing, and no Requisiti/Opzioni cards — those
- * sections are dropped here rather than filled with invented copy. Its
- * "Dotazione" equivalent is a Versione Vive / Versione Meta split instead of
- * Lite/Pro; the Versione Meta content is a "coming soon" placeholder because
- * that is literally what the source page shows (FF_Standalone_comingsoon
- * label asset, and the FAQ there states the system is HTC Vive-only today).
+ * Content is adapted from https://www.immensive.it/firefighter-vr/ and the
+ * archived Elementor pages (IDs 27524 and 27525). The product uses Versione
+ * Vive / Versione Meta tabs, with the matching kit details and options shown
+ * under each version. It has no Confronta i Modelli table or Soluzioni di
+ * Acquisto pricing section.
  *
  * No hero/section photography exists on the source page (its images are all
  * small icons/logos), so the two banner sections below use a color gradient
@@ -96,7 +93,8 @@ get_header();
 
 		<div class="ih-container ih-pfunziona__media-wrap">
 			<div class="ih-pfunziona__media ih-reveal">
-				<img src="<?php echo esc_url( $immensive_img . 'firefighter-vr-kit-case.webp' ); ?>" alt="Kit Firefighter VR Simulator" loading="lazy" width="748" height="695">
+				<img src="<?php echo esc_url( $immensive_img . 'firefighter-vr-video-cover.jpg' ); ?>" alt="Firefighter VR Simulator — guarda il video dimostrativo" loading="lazy" width="2507" height="1410">
+				<button type="button" class="ih-pfunziona__video" data-video-src="https://youtu.be/QcfsWtZk5KM" aria-label="<?php esc_attr_e( 'Riproduci il video Firefighter VR', 'immensive' ); ?>"><span class="ih-pfunziona__play-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="m9 6 10 6-10 6V6Z" fill="currentColor"/></svg></span></button>
 			</div>
 		</div>
 	</section>
@@ -257,33 +255,73 @@ get_header();
 			</div>
 
 			<?php
-			// Only two versions exist on the source page (Versione Vive /
-			// Versione Meta) and neither has the Funzionalità/Requisiti/
-			// Opzioni breakdown Weld VR's kit versions carry — those sections
-			// are dropped here rather than invented. Versione Meta's content
-			// is a "coming soon" placeholder because that's what the source
-			// page itself shows (FF_Standalone_comingsoon label asset), and
-			// its FAQ states the system is HTC Vive-only today.
+			// The old Elementor page (ID 27524) contains the Vive kit; its
+			// February 2026 revision (ID 27525) contains the Meta Quest kit.
+			$immensive_ff_common_options = array(
+				array(
+					'title' => 'Workstation Docente',
+					'image' => 'firefighter-vr-workstation-docente.webp',
+					'desc'  => 'Permette al docente di monitorare le postazioni del laboratorio Firefighter VR durante le esercitazioni di estinzione incendio.',
+					'items' => array( '1 Notebook' ),
+				),
+				array(
+					'title' => 'Workstation',
+					'image' => 'weld-vr-workstation.webp',
+					'desc'  => 'PC VR Ready ad elevate prestazioni grafiche necessario per offrire un\'esperienza fluida e di qualità.',
+					'items' => array( '1 Notebook' ),
+				),
+				array(
+					'title' => 'Trolley',
+					'image' => 'weld-vr-trolley.webp',
+					'desc'  => 'Comodo borsone con ruote e manico per l\'alloggiamento e il trasporto del kit Firefighter VR.',
+					'items' => array( '1 Borsone con ruote' ),
+				),
+			);
 			$immensive_kit_versions = array(
 				'pro'  => array(
 					'image' => 'firefighter-vr-kit-case.webp',
+					'width' => 1024,
+					'height' => 768,
 					'alt'   => 'Kit Firefighter VR Simulator versione Vive',
-					'title' => 'Versione Vive',
-					'desc'  => 'Il sistema è compatibile con HTC Vive e HTC Vive Pro. Il kit include l\'estintore reale con tracker, la licenza software Firefighter VR e il Kit Base pronto per l\'installazione.',
+					'title' => 'Kit Versione Vive',
+					'desc'  => 'La versione di Firefighter VR base include un estintore professionale dotato di supporti compatibili con il sistema di tracciamento HTC Vive, per simulare lo spegnimento del fuoco con pesi e ingombri reali in ambienti virtuali. Il kit include un protector travel case per alloggiare e trasportare l\'estintore.',
 					'items' => array(
-						'PC VR Ready (Notebook)',
-						'Visore HTC Vive / HTC Vive Pro',
-						'Estintore reale con tracker (Kit Base)',
-						'Licenza software Firefighter VR',
+						'1 Travel case',
+						'1 Estintore con adattatori per HTC Vive Tracker',
+					),
+					'opzioni' => array_merge(
+						$immensive_ff_common_options,
+						array(
+							array(
+								'title' => 'Kit HTC Vive Pro Room-Scale VR',
+								'image' => 'weld-vr-vive-pro.webp',
+								'desc'  => 'Vive Pro – Full Kit è il sistema progettato da HTC per un\'esperienza di realtà virtuale professionale. Si compone di:',
+								'items' => array( 'Visore HTC Vive Pro', '2 Stazioni di Base', '2 Supporti per camere', '2 Tracker Vive' ),
+							),
+						)
 					),
 				),
 				'lite' => array(
-					'image' => 'firefighter-vr-meta-comingsoon.webp',
-					'alt'   => 'Versione Meta Firefighter VR Simulator — coming soon',
-					'title' => 'Versione Meta',
-					'desc'  => 'La versione standalone per visori Meta Quest è in arrivo.',
+					'image' => 'firefighter-vr-meta-kit.webp',
+					'width' => 1024,
+					'height' => 768,
+					'alt'   => 'Kit Firefighter VR Simulator versione Meta Quest',
+					'title' => 'Kit Versione Meta',
+					'desc'  => 'La versione Meta Quest di Firefighter VR include un estintore professionale con supporti compatibili con i controller Meta, per simulare lo spegnimento del fuoco con pesi e ingombri reali in ambienti virtuali. Il kit include un protector travel case per alloggiare e trasportare l\'estintore.',
 					'items' => array(
-						'Coming Soon',
+						'1 Travel case',
+						'1 Estintore con adattatori per controller Meta Quest 3',
+					),
+					'opzioni' => array_merge(
+						$immensive_ff_common_options,
+						array(
+							array(
+								'title' => 'Kit Meta Quest',
+								'image' => 'metaQ2.webp',
+								'desc'  => 'Meta Quest 3 / 3S – Full Kit è un visore standalone di nuova generazione per un\'esperienza avanzata di realtà mista e virtuale. Si compone di:',
+								'items' => array( 'Visore Meta Quest 3 / 3S', '2 Controller Touch Plus' ),
+							),
+						)
 					),
 				),
 			);
@@ -294,7 +332,7 @@ get_header();
 
 					<div class="ih-pdota__row">
 						<div class="ih-pdota__media ih-reveal">
-							<img src="<?php echo esc_url( $immensive_img . $immensive_kit['image'] ); ?>" alt="<?php echo esc_attr( $immensive_kit['alt'] ); ?>" loading="lazy" width="748" height="695">
+							<img src="<?php echo esc_url( $immensive_img . $immensive_kit['image'] ); ?>" alt="<?php echo esc_attr( $immensive_kit['alt'] ); ?>" loading="lazy" width="<?php echo esc_attr( $immensive_kit['width'] ); ?>" height="<?php echo esc_attr( $immensive_kit['height'] ); ?>">
 						</div>
 						<div class="ih-pdota__content ih-reveal">
 							<h3 class="ih-pdota__title"><?php echo esc_html( $immensive_kit['title'] ); ?></h3>
@@ -309,6 +347,29 @@ get_header();
 									</div>
 								<?php endforeach; ?>
 							</div>
+						</div>
+					</div>
+
+					<div class="ih-pdota__block ih-pdota__block--req ih-pdota__block--ff-options">
+						<h3 class="ih-pdota__section-heading"><?php esc_html_e( 'Opzioni Disponibili', 'immensive' ); ?></h3>
+						<div class="ih-pdota__cards ih-pdota__cards--req">
+							<?php foreach ( $immensive_kit['opzioni'] as $immensive_opzione ) : ?>
+								<article class="ih-pdota__card ih-reveal">
+									<div class="ih-pdota__card-media" aria-hidden="true" style="background-image:url('<?php echo esc_url( $immensive_img . $immensive_opzione['image'] ); ?>')"></div>
+									<div class="ih-pdota__card-body">
+										<h4 class="ih-pdota__card-title"><?php echo esc_html( $immensive_opzione['title'] ); ?></h4>
+										<p class="ih-pdota__card-desc"><?php echo esc_html( $immensive_opzione['desc'] ); ?></p>
+										<div class="ih-pdota__card-list">
+											<?php foreach ( $immensive_opzione['items'] as $immensive_opzione_item ) : ?>
+												<div class="ih-pdota__card-item">
+													<svg class="ih-pdota__card-check" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+													<span><?php echo esc_html( $immensive_opzione_item ); ?></span>
+												</div>
+											<?php endforeach; ?>
+										</div>
+									</div>
+								</article>
+							<?php endforeach; ?>
 						</div>
 					</div>
 
@@ -372,6 +433,11 @@ get_header();
 	</div><!-- .ih-flow -->
 
 	<?php get_template_part( 'template-parts/demo-modal', null, array( 'product' => 'Firefighter VR Simulator' ) ); ?>
+	<div class="ih-video-modal" id="ih-video-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="<?php esc_attr_e( 'Video Firefighter VR', 'immensive' ); ?>">
+		<div class="ih-video-modal__overlay" data-video-modal-close></div>
+		<button type="button" class="ih-video-modal__close" data-video-modal-close aria-label="<?php esc_attr_e( 'Chiudi il video', 'immensive' ); ?>"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+		<div class="ih-video-modal__box"><video controls playsinline></video><iframe hidden title="<?php esc_attr_e( 'Video Firefighter VR su YouTube', 'immensive' ); ?>" src="" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+	</div>
 
 </div>
 

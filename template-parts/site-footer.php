@@ -66,7 +66,7 @@ $immensive_img = get_template_directory_uri() . '/assets/images/';
 		</div>
 
 		<div class="ih-footer__watermark" aria-hidden="true">
-			<img src="<?php echo esc_url( $immensive_img . 'logo-immensive-white.webp' ); ?>" alt="" loading="lazy">
+			<img src="<?php echo esc_url( $immensive_img . 'logo-immensive-white.webp' ); ?>" alt="" loading="lazy" decoding="async" width="140" height="43">
 		</div>
 
 		<div class="ih-container">

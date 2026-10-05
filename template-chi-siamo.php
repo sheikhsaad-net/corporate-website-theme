@@ -214,6 +214,16 @@ get_header();
 			// the year opposite the award detail (see .ih-awards in the CSS).
 			$immensive_awards = array(
 				array(
+					'year'  => '2025',
+					'title' => 'Premio Nazionale Adriano Olivetti – Concorso per le Imprese, I edizione',
+					'desc'  => 'Premio conferito al prodotto Forklift-VR Simulator, simulatore di realtà virtuale per la movimentazione del carrello elevatore',
+				),
+				array(
+					'year'  => '2025',
+					'title' => 'X Premio Eccellenza Formazione',
+					'desc'  => 'Menzione Area Digitale e nuovi strumenti "Training aumentato" per la soluzione Electro-VR Simulator, premio promosso dall\'AIF Associazione Italiana Formatori',
+				),
+				array(
 					'year'  => '2024',
 					'title' => 'Premio Top of the PID nella categoria Education',
 					'desc'  => '',
