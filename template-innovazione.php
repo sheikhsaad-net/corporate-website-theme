@@ -28,13 +28,18 @@ $immensive_contatti_url = $immensive_contatti ? get_permalink( $immensive_contat
 $immensive_in_cards = array(
 	array(
 		'label' => "Soluzioni per l'AEC",
-		'desc'  => '',
+		'desc'  => 'Simulazioni ingegneristiche e visualizzazioni architettoniche avanzate a supporto della progettazione.',
 		'img'   => 'innovazione/immensive_innovazione_aec.webp',
 	),
 	array(
 		'label' => 'Configuratori 3D',
-		'desc'  => '',
+		'desc'  => 'Strumenti interattivi per personalizzare prodotti e ambienti in tempo reale, esplorabili in VR o da desktop.',
 		'img'   => 'innovazione/immensive_innovazione_configuratori-3d.webp',
+	),
+	array(
+		'label' => 'Soluzioni per il medicale',
+		'desc'  => 'Esperienze immersive per formazione clinica, simulazione di procedure e visualizzazione medica avanzata.',
+		'img'   => 'innovazione/immensive_innovazione_dallidea-bg.webp',
 	),
 	array(
 		'label' => 'Applicazioni AR',
@@ -83,7 +88,7 @@ get_header();
 				<span class="ih-sccwhat__mark-stem"></span>
 			</span>
 
-			<div class="ih-showcase__stack ih-inwhat__stack" id="ih-showcase-stack">
+			<div class="ih-showcase__stack ih-inwhat__stack" id="ih-cosa-stack">
 				<?php foreach ( $immensive_in_cards as $immensive_in_card ) : ?>
 					<article class="ih-acc ih-acc--innov" style="--acc-img:url('<?php echo esc_url( $immensive_img . $immensive_in_card['img'] ); ?>')">
 						<span class="ih-mcard__label"><?php echo esc_html( $immensive_in_card['label'] ); ?></span>

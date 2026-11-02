@@ -1704,6 +1704,133 @@
 	}
 }
 
+/* ---- Side variant: a fixed vertical dark pill on the LEFT edge holding one
+   small dot per section. The dot for the section in view (scroll-spy in
+   homepage.js) is white and larger; the label slides out on hover/focus. ---- */
+.ih-pnav--side {
+	position: fixed;
+	top: 50%;
+	left: clamp(0.6rem, 1.6vw, 1.5rem);
+	right: auto;
+	z-index: 90;
+	transform: translateY(-50%);
+	background: none;
+	backdrop-filter: none;
+}
+
+.ih-pnav--side .ih-pnav__links {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	flex-wrap: nowrap;
+	gap: 0.2rem;
+	padding: 0.7rem 0.45rem;
+	border: 1px solid rgba(255, 255, 255, 0.28);
+	border-radius: 999px;
+	background: linear-gradient(160deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.06) 45%, rgba(255, 255, 255, 0.12) 100%);
+	backdrop-filter: blur(16px) saturate(160%);
+	-webkit-backdrop-filter: blur(16px) saturate(160%);
+	box-shadow: 0 8px 28px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.45), inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.ih-pnav--side .ih-pnav__links li {
+	display: flex;
+}
+
+.ih-pnav--side .ih-pnav__links a {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 1.5rem;
+	height: 1.5rem;
+	padding: 0;
+	opacity: 1;
+}
+
+.ih-pnav--side .ih-pnav__links a::after {
+	content: '';
+	position: static;
+	flex: none;
+	width: 7px;
+	height: 7px;
+	right: auto;
+	border-radius: 50%;
+	background: rgba(255, 255, 255, 0.5);
+	transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ih-pnav--side .ih-pnav__links a:hover::after,
+.ih-pnav--side .ih-pnav__links a:focus-visible::after {
+	right: auto;
+	background: rgba(255, 255, 255, 0.8);
+}
+
+.ih-pnav--side .ih-pnav__links a.is-active::after {
+	background: var(--ih-white);
+	transform: scale(1.9);
+	box-shadow: 0 0 8px rgba(255, 255, 255, 0.55);
+}
+
+.ih-pnav--side .ih-pnav__label {
+	position: absolute;
+	left: calc(100% + 0.7rem);
+	top: 50%;
+	padding: 0.35rem 0.75rem;
+	border-radius: 999px;
+	border: 1px solid rgba(255, 255, 255, 0.28);
+	background: rgba(255, 255, 255, 0.16);
+	backdrop-filter: blur(14px) saturate(160%);
+	-webkit-backdrop-filter: blur(14px) saturate(160%);
+	color: var(--ih-white);
+	font-size: 0.72rem;
+	line-height: 1;
+	white-space: nowrap;
+	opacity: 0;
+	transform: translate(-6px, -50%);
+	pointer-events: none;
+	transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.ih-pnav--side .ih-pnav__links a:hover .ih-pnav__label,
+.ih-pnav--side .ih-pnav__links a:focus-visible .ih-pnav__label {
+	opacity: 1;
+	transform: translate(0, -50%);
+}
+
+/* Dark tinted glass on every background, light or dark sections alike. */
+.ih-pnav--side .ih-pnav__links {
+	border-color: rgba(255, 255, 255, 0.18);
+	background: linear-gradient(160deg, rgba(48, 52, 56, 0.88) 0%, rgba(12, 14, 16, 0.86) 100%);
+	box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.ih-pnav--side .ih-pnav__label {
+	background: rgba(16, 18, 20, 0.9);
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+.ih-pnav--side .ih-pnav__links,
+.ih-pnav--side .ih-pnav__label {
+	transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, opacity 0.2s ease, transform 0.2s ease;
+}
+
+@media (max-width: 900px) {
+	.ih-pnav--side {
+		left: 0.35rem;
+	}
+
+	.ih-pnav--side .ih-pnav__links {
+		display: flex;
+		padding: 0.5rem 0.3rem;
+	}
+
+	.ih-pnav--side .ih-pnav__links a {
+		width: 1.3rem;
+		height: 1.3rem;
+	}
+}
+
 /* Solid cyan button â€” a colour variant of .ih-btn, same shape/sizing. */
 .ih-btn--cyan {
 	color: var(--ih-bg);
@@ -3704,6 +3831,17 @@
 	text-align: left;
 }
 
+/* Piani page: the purchase plans open the page, so clear the fixed header
+   and replace the tagline/button footer with the two CTAs. */
+.ih-psol--hero {
+	padding-top: clamp(7rem, 16vh, 10rem);
+}
+
+.ih-psol__footer--ctas {
+	justify-content: center;
+	gap: 1rem;
+}
+
 .ih-psol__tagline {
 	margin: 0;
 	font-weight: 300;
@@ -3840,8 +3978,54 @@
 	padding-bottom: clamp(3rem, 8vh, 5rem);
 }
 
-.ih-inwhat__stack {
+.ih-showcase__stack.ih-inwhat__stack {
+	display: grid;
+	grid-template-columns: repeat(12, minmax(0, 1fr));
+	grid-auto-rows: clamp(15rem, 26vw, 25rem);
+	gap: clamp(1rem, 2vw, 1.6rem);
 	margin-top: clamp(2rem, 5vw, 3.5rem);
+}
+
+/* Static bento grid: wide + narrow on the first row, narrow + wide on the
+   second. The cards no longer pin and stack on scroll. */
+.ih-showcase__stack.ih-inwhat__stack .ih-acc.ih-acc--innov {
+	position: relative;
+	top: auto;
+	margin-bottom: 0;
+	aspect-ratio: auto;
+	grid-column: span 6;
+	box-shadow: none;
+	transform: none;
+}
+
+.ih-showcase__stack.ih-inwhat__stack .ih-acc.ih-acc--innov:nth-child(1),
+.ih-showcase__stack.ih-inwhat__stack .ih-acc.ih-acc--innov:nth-child(4) {
+	grid-column: span 7;
+}
+
+.ih-showcase__stack.ih-inwhat__stack .ih-acc.ih-acc--innov:nth-child(2),
+.ih-showcase__stack.ih-inwhat__stack .ih-acc.ih-acc--innov:nth-child(3) {
+	grid-column: span 5;
+}
+
+/* Plain heading text on the photo; only the copy sits in a frosted panel. */
+.ih-inwhat__stack .ih-acc--innov .ih-mcard__label {
+	background: none;
+	backdrop-filter: none;
+	-webkit-backdrop-filter: none;
+	padding: 0;
+	min-height: 0;
+	font-family: var(--ih-heading);
+	font-weight: 700;
+	letter-spacing: 0.01em;
+	font-size: clamp(0.95rem, 1.5vw, 1.4rem);
+}
+
+.ih-inwhat__stack .ih-acc--innov .ih-mcard__desc {
+	align-self: stretch;
+	max-width: 36rem;
+	border-radius: 22px;
+	font-size: clamp(0.78rem, 1vw, 0.95rem);
 }
 
 /* Wide banner proportions, against .ih-acc's tall min-height default.
@@ -3884,6 +4068,18 @@
 	.ih-acc.ih-acc--innov {
 		aspect-ratio: auto;
 		min-height: 42vh;
+	}
+}
+
+@media (max-width: 720px) {
+	.ih-showcase__stack.ih-inwhat__stack {
+		grid-template-columns: 1fr;
+		grid-auto-rows: minmax(17rem, auto);
+	}
+
+	.ih-showcase__stack.ih-inwhat__stack .ih-acc.ih-acc--innov,
+	.ih-showcase__stack.ih-inwhat__stack .ih-acc.ih-acc--innov:nth-child(n) {
+		grid-column: auto;
 	}
 }
 
@@ -5843,7 +6039,7 @@
 	height: 54px;
 	border: 1.5px solid rgba(0, 0, 0, 0.25);
 	border-radius: 999px;
-	background: var(--ih-white);
+	background: var(--ih-gray-100);
 	color: var(--ih-bg);
 	font-family: var(--ih-heading);
 	font-weight: 700;
@@ -5859,8 +6055,9 @@
 }
 
 .ih-tco__toggle-opt.is-active {
-	background: var(--ih-gray-100);
-	border-color: transparent;
+	background: var(--ih-white);
+	border-color: var(--ih-green);
+	box-shadow: 0 0 0 1px var(--ih-green);
 	color: var(--ih-bg);
 }
 
@@ -6841,8 +7038,8 @@
 	position: relative;
 	border-radius: var(--ih-radius);
 	overflow: hidden;
-	aspect-ratio: 3 / 4.15;
-	min-height: 440px;
+	aspect-ratio: 1 / 1;
+	min-height: 0;
 	box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
 	transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.5s ease;
 }
@@ -6909,7 +7106,7 @@
 	font-size: 0.78rem;
 	font-weight: 600;
 	letter-spacing: 0.04em;
-	color: var(--ih-cyan);
+	color: var(--ih-green);
 }
 
 .ih-reality-card__bottom {
@@ -8985,6 +9182,53 @@ body.ih-modal-open {
 	}
 }
 
+/* "Tre mondi, una missione": intro on top, three static boxes below
+   (no sticky stacking). Overrides the two-column pinned deck above. */
+.ih-showcase--static .ih-showcase__grid {
+	grid-template-columns: 1fr;
+	gap: clamp(2rem, 4vw, 3.5rem);
+}
+
+.ih-showcase--static .ih-showcase__intro-col {
+	position: static;
+}
+
+.ih-showcase--static .ih-showcase__intro {
+	max-width: 62rem;
+}
+
+.ih-showcase--static .ih-mission__cards {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: clamp(1rem, 2vw, 1.75rem);
+}
+
+.ih-showcase--static .ih-acc--mission {
+	position: relative;
+	top: auto;
+	margin-bottom: 0;
+	aspect-ratio: auto;
+	min-height: clamp(26rem, 34vw, 34rem);
+}
+
+.ih-showcase--static .ih-mcard__label {
+	font-size: clamp(0.8rem, 1.2vw, 1.25rem);
+}
+
+.ih-showcase--static .ih-mcard__desc {
+	font-size: clamp(0.8rem, 0.95vw, 1rem);
+}
+
+@media (max-width: 960px) {
+	.ih-showcase--static .ih-mission__cards {
+		grid-template-columns: 1fr;
+	}
+
+	.ih-showcase--static .ih-acc--mission {
+		min-height: 24rem;
+	}
+}
+
 /* ---------- Leader / Chi siamo (dark green + bento cards) ---------- */
 .ih-leader {
 	position: relative;
@@ -9241,6 +9485,23 @@ body.ih-modal-open {
 	color: var(--ih-gray-300);
 }
 
+.ih-footer__sedi {
+	max-width: 340px;
+	margin: 0 0 1.75rem;
+	font-size: 0.9rem;
+	line-height: 1.6;
+	color: var(--ih-gray-300);
+}
+
+.ih-footer__sedi p {
+	margin: 0 0 0.9rem;
+}
+
+.ih-footer__sedi strong {
+	color: #fff;
+	font-weight: 600;
+}
+
 .ih-footer__email {
 	display: flex;
 	align-items: center;
@@ -9375,6 +9636,11 @@ body.page-template-template-forklift-vr .ih,
 body.page-template-template-forklift-vr-php .ih {
 	--ih-cyan: #F2C300;
 	--ih-cyan-dark: #F2C300;
+}
+
+body.page-template-template-forklift-vr .ih-psys__grid,
+body.page-template-template-forklift-vr-php .ih-psys__grid {
+	padding-right: calc(max(0px, (100% - var(--ih-max)) / 2) + 1.5rem);
 }
 
 /* ---------- Electro VR: single accent ---------- */
@@ -10720,7 +10986,7 @@ body.page-template-template-electro-vr-php .ih {
 	}
 
 	.ih-reality-card {
-		min-height: 27.5rem; /* 440px */
+		min-height: 0;
 	}
 
 	.ih-why-card {
@@ -10970,6 +11236,81 @@ body.page-template-template-electro-vr-php .ih {
 	height: auto;
 	border: 0;
 	border-radius: var(--ih-radius);
+}
+
+/* ---- Funding banner (co-financed projects) ----
+   Plain HTML in the editor: <div class="ih-pj-funding"><p class="ih-pj-funding__text">…</p>
+   <div class="ih-pj-funding__logos"><img …>…</div></div>. Text left, institutional logos right,
+   each logo set off by a hairline divider; stacks on small screens. */
+.ih-pj__content .ih-pj-funding {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: clamp(1.5rem, 4vw, 4rem);
+	margin: clamp(2.5rem, 6vh, 4rem) 0 0;
+	padding: clamp(1.5rem, 3vw, 2.5rem) clamp(1.25rem, 3vw, 2.75rem);
+	background: var(--ih-white);
+	border: 1px solid rgba(16, 16, 16, 0.1);
+	border-radius: var(--ih-radius);
+}
+
+.ih-pj__content .ih-pj-funding__text {
+	flex: 1 1 34%;
+	max-width: 44rem;
+	margin: 0;
+	font-weight: 400;
+	line-height: 1.6;
+	color: var(--ih-bg);
+}
+
+.ih-pj__content .ih-pj-funding__logos {
+	flex: 0 1 auto;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	flex-wrap: nowrap;
+	gap: 0;
+}
+
+.ih-pj__content .ih-pj-funding__logos img {
+	display: block;
+	width: auto;
+	height: clamp(44px, 4.6vw, 68px);
+	max-width: 190px;
+	object-fit: contain;
+	border-radius: 0;
+	padding: 0 clamp(0.9rem, 1.8vw, 1.6rem);
+}
+
+.ih-pj__content .ih-pj-funding__logos img + img {
+	border-left: 1.5px solid rgba(16, 16, 16, 0.14);
+}
+
+@media (max-width: 860px) {
+	.ih-pj__content .ih-pj-funding {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	.ih-pj__content .ih-pj-funding__logos {
+		justify-content: flex-start;
+		flex-wrap: wrap;
+		gap: 1.25rem 0;
+	}
+
+	.ih-pj__content .ih-pj-funding__logos img:first-child {
+		padding-left: 0;
+	}
+}
+
+/* Banner lifted under the hero: the band gets its own breathing room, the body below
+   keeps its own top padding. */
+.ih-pj__funding {
+	padding: clamp(2rem, 5vh, 3.5rem) 0 0;
+}
+
+.ih-pj__funding .ih-pj-funding {
+	margin-top: 0;
 }
 
 /* ---- Gallery: the 2x2 tile grid ----
@@ -11997,4 +12338,87 @@ body.ih-video-modal-open {
 	line-height: 1.7;
 	text-align: left;
 	color: var(--ih-gray-700);
+}
+
+/* ---------- 81/08 information popup ---------- */
+.ih-popup {
+	position: fixed;
+	inset: 0;
+	z-index: 1000;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 1.25rem;
+}
+
+.ih-popup[hidden] {
+	display: none;
+}
+
+.ih-popup__backdrop {
+	position: absolute;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.62);
+	backdrop-filter: blur(3px);
+}
+
+.ih-popup__box {
+	position: relative;
+	width: min(100%, 560px);
+	max-height: 100%;
+	overflow-y: auto;
+	padding: clamp(1.75rem, 4vw, 2.75rem);
+	border-radius: 22px;
+	background: var(--ih-white);
+	color: var(--ih-bg);
+	box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+}
+
+.ih-popup__close {
+	position: absolute;
+	top: 0.7rem;
+	right: 0.9rem;
+	width: 2.2rem;
+	height: 2.2rem;
+	border: 0;
+	border-radius: 50%;
+	background: var(--ih-gray-100);
+	color: var(--ih-bg);
+	font-size: 1.5rem;
+	line-height: 1;
+	cursor: pointer;
+}
+
+.ih-popup__close:hover {
+	background: var(--ih-green);
+}
+
+.ih-popup__eyebrow {
+	margin: 0 0 0.5rem;
+	font-family: var(--ih-heading);
+	font-size: 0.75rem;
+	font-weight: 700;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	color: var(--ih-green);
+}
+
+.ih-popup__title {
+	margin: 0 0 1rem;
+	font-family: var(--ih-heading);
+	font-size: clamp(1.4rem, 3.4vw, 1.9rem);
+	line-height: 1.15;
+}
+
+.ih-popup__text {
+	margin: 0 0 0.9rem;
+	font-size: 0.95rem;
+	line-height: 1.6;
+}
+
+.ih-popup__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.75rem;
+	margin-top: 1.5rem;
 }

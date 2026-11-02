@@ -62,7 +62,7 @@ get_header();
 						'width' => 4716,
 						'height' => 2652,
 						'name'  => 'Firefighter VR',
-						'tag'   => 'Simulazione avanzata per emergenze antincendio',
+						'tag'   => 'Simulazione avanzata estinzione incendio',
 						'color' => '#e8503a',
 					),
 					array(
@@ -70,7 +70,7 @@ get_header();
 						'width' => 1930,
 						'height' => 1086,
 						'name'  => 'Electro VR',
-						'tag'   => 'Training VR per operatori su impianti elettrici',
+						'tag'   => 'Addestramento immersivo per operatori su impianti elettrici',
 						'color' => '#f7971e',
 					),
 				);
@@ -165,7 +165,7 @@ get_header();
 						'img'   => 'usecase-scuola.webp',
 						'alt'   => 'Ambiente scuola',
 						'title' => 'Ambiente<br>Scuola',
-						'cat'   => 'CFP, ITS, APL',
+						'cat'   => 'Istituti professionali e ITS',
 						'desc'  => 'Laboratori più sicuri,<br>costi minori,<br>studenti più preparati.',
 					),
 					array(
@@ -173,7 +173,7 @@ get_header();
 						'alt'   => 'Enti di formazione',
 						'title' => 'Enti di<br>Formazione',
 						'cat'   => 'CFP, ITS, APL',
-						'desc'  => 'Più ore-allievo,<br>meno costi per ora.',
+						'desc'  => 'Moltiplica le ore di pratica,<br>riduci il gap con il lavoro reale.',
 					),
 				);
 				foreach ( $immensive_realities as $i => $card ) :
@@ -201,7 +201,7 @@ get_header();
 		<div class="ih-why__sticky">
 			<div class="ih-why__intro">
 				<h2 class="ih-why__title">PERCHÉ FARE FORMAZIONE<br>CON LA REALTÀ VIRTUALE</h2>
-				<p class="ih-why__sub"><?php esc_html_e( 'I principali benefici per le Aziende, le scuole e gli enti formativi che scelgono di erogare percorsi formativi integrando soluzioni in realtà virtuale sono:', 'immensive' ); ?></p>
+				<p class="ih-why__sub"><?php esc_html_e( 'I principali benefici per le Aziende, le scuole e gli enti di formazione che scelgono di erogare percorsi formativi integrando soluzioni in realtà virtuale sono:', 'immensive' ); ?></p>
 			</div>
 		</div>
 
@@ -212,7 +212,7 @@ get_header();
 					array(
 						'n'     => '01',
 						'title' => 'Rischi Zero per il Discente',
-						'desc'  => 'L\'allievo si esercita in totale sicurezza: nessun rischio di infortunio in fase di apprendimento. Risposta concreta agli obblighi del D.Lgs. 81/08.',
+						'desc'  => 'L\'allievo si esercita in totale sicurezza: nessun rischio di infortunio in fase di apprendimento.',
 						'tone'  => 'dark',
 						'icon'  => 'icons/icon-eco.webp',
 					),
@@ -239,7 +239,7 @@ get_header();
 					),
 					array(
 						'n'     => '05',
-						'title' => 'Learning by Doing Reale',
+						'title' => 'Learning by Doing',
 						'desc'  => 'L\'allievo impara facendo: ripete il gesto, sbaglia in sicurezza, corregge subito. I tempi di apprendimento si riducono fino a 1/3.',
 						'tone'  => 'white',
 						'icon'  => 'icons/icon-efficace.webp',
@@ -247,7 +247,7 @@ get_header();
 					array(
 						'n'     => '06',
 						'title' => 'Performance Misurata e Certificabile',
-						'desc'  => 'Ogni esercizio genera un report oggettivo: parametri tecnici, errori, tempi, progressi. Uno strumento concreto per HR, formatori e rendicontazione bandi (Formazione 4.0, FSE+, Fondimpresa).',
+						'desc'  => 'Ogni esercizio genera un report oggettivo: parametri tecnici, errori, tempi, progressi. Uno strumento concreto per HR, formatori e per la tutela di RSPP e datori di lavoro.',
 						'tone'  => 'green',
 						'icon'  => '',
 					),
@@ -276,9 +276,9 @@ get_header();
 	<section class="ih-banner" style="background-image: url( '<?php echo esc_url( $immensive_img . 'formazione-bg.webp' ); ?>' );">
 		<div class="ih-banner__content ih-reveal">
 			<p class="ih-banner__eyebrow"><?php esc_html_e( 'I simulatori Immensive rientrano nel piano', 'immensive' ); ?></p>
-			<h2 class="ih-banner__title">FORMAZIONE 4.0</h2>
+			<h2 class="ih-banner__title">INDUSTRIA 4.0</h2>
 			<span class="ih-banner__rule" aria-hidden="true"></span>
-			<p class="ih-banner__sub"><?php echo wp_kses_post( __( 'Accedi al <strong>credito d\'imposta</strong> per la formazione professionale.', 'immensive' ) ); ?></p>
+			<p class="ih-banner__sub"><?php echo wp_kses_post( __( 'Accedi alle <strong>opportunità di agevolazione</strong> per la formazione professionale.', 'immensive' ) ); ?></p>
 		</div>
 	</section>
 
@@ -306,9 +306,8 @@ get_header();
 		<div class="ih-container ih-leader__grid">
 			<div class="ih-leader__intro ih-reveal">
 				<p class="ih-leader__eyebrow"><?php esc_html_e( 'Chi siamo', 'immensive' ); ?></p>
-				<h2 class="ih-leader__title">LEADER IN ITALIA NEI<br>SIMULATORI VR PER<br>LA FORMAZIONE TECNICA</h2>
+				<h2 class="ih-leader__title">LEADER IN ITALIA NELLA<br>SIMULAZIONE VR PER<br>LA FORMAZIONE TECNICA</h2>
 				<p class="ih-leader__text"><?php esc_html_e( 'Siamo una PMI innovativa premiata a livello nazionale per l\'innovazione applicata alla didattica immersiva.', 'immensive' ); ?></p>
-				<a class="ih-btn ih-btn--solid ih-leader__cta" href="#ih-contact"><?php esc_html_e( 'Conosci il Team', 'immensive' ); ?> <span aria-hidden="true">&rarr;</span></a>
 			</div>
 
 			<div class="ih-leader__bento ih-reveal">
@@ -342,6 +341,8 @@ get_header();
 	</div><!-- .ih-flow -->
 
 </div>
+
+<?php get_template_part( 'template-parts/popup-8108' ); ?>
 
 <?php
 get_footer();

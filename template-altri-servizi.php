@@ -180,7 +180,7 @@ get_header();
 	 * "Due mondi, una missione" (Figma node 2618:1365 + the two cards
 	 * 2618:1353 / 2618:1364).
 	 *
-	 * Reuses the Prodotti page's pinned scroll-through deck wholesale:
+	 * Originally the Prodotti page's pinned deck; now a static intro with three boxes below it (no sticky/scroll-driven behaviour, so the ids the showcase JS keys off are no longer used here):
 	 * .ih-showcase__grid + sticky .ih-acc cards, driven by the showcase
 	 * block in homepage.js. That block is bound to #ih-showcase /
 	 * #ih-showcase-stack, so those ids are intentional here — the two
@@ -197,26 +197,28 @@ get_header();
 			'href'  => home_url( '/soluzioni-culturali-creative/' ),
 		),
 		array(
-			'label' => 'Ricerca e innovazione',
+			'label' => 'Innovazione',
+			'desc'  => "Soluzioni digitali custom per aziende: configuratori 3D, applicazioni AR, simulazioni AEC e visualizzazioni avanzate progettate su misura.",
+			'img'   => 'innovazione/immensive_innovazione_aec.webp',
+			'href'  => home_url( '/innovazione/' ),
+		),
+		array(
+			'label' => 'Ricerca e sviluppo',
 			'desc'  => "Sviluppiamo progetti di ricerca in collaborazione con aziende, enti ed università — spesso nell'ambito di bandi regionali, nazionali ed europei — dalla diagnostica medica alla manutenzione assistita di apparati complessi, fino all'AEC con simulazioni ingegneristiche e visualizzazioni architettoniche avanzate. Realizziamo inoltre soluzioni digitali custom per la configurazione di spazi e prodotti, su misura per le esigenze di ogni azienda. Dall'idea al prototipo funzionante, con tecnologie immersive e intelligenza artificiale.",
 			'img'   => 'servizi/mission-ricerca.webp',
-			// This card covers both the Ricerca and Innovazione pages — no
-			// single page holds both, so it points at Ricerca as the primary
-			// of the two (matches the "Ricerca e Innovazione" nav parent's
-			// first child).
 			'href'  => home_url( '/ricerca/' ),
 		),
 	);
 	?>
-	<section class="ih-showcase ih-showcase--mission" id="ih-showcase">
+	<section class="ih-showcase ih-showcase--mission ih-showcase--static" id="ih-missione">
 		<div class="ih-showcase__sticky">
 			<div class="ih-container ih-showcase__grid">
 				<div class="ih-showcase__intro-col ih-reveal">
-					<h2 class="ih-heading">Due mondi<br>una missione</h2>
-					<p class="ih-showcase__intro"><?php esc_html_e( "Da oltre 10 anni, Immensive realizza progetti di ricerca, sviluppo e innovazione nell'ambito dei beni culturali e delle tecnologie applicate alla scienza, con un approccio orientato alla ricerca costante e all'innovazione tecnologica. Immensive segue tutte le fasi del progetto: dall'analisi delle esigenze e la valutazione di fattibilità, allo sviluppo, fino alla realizzazione di prototipi funzionanti e soluzioni pronte per l'uso reale. Tra i risultati di Immensive rientra SMAV – Supporto alla Manutenzione Aumentata e Virtuale, progetto cofinanziato dall'Unione Europea, dallo Stato Italiano e dalla Regione Campania nell'ambito del POR Campania FESR 2014-2020.", 'immensive' ); ?></p>
+					<h2 class="ih-heading">Tre mondi<br>una missione</h2>
+					<p class="ih-showcase__intro"><?php esc_html_e( "Da oltre 10 anni, Immensive realizza progetti di ricerca, sviluppo e innovazione nell'ambito dei beni culturali e delle tecnologie applicate alla scienza, con un approccio orientato alla ricerca costante e all'innovazione tecnologica. Immensive segue tutte le fasi del progetto: dall'analisi delle esigenze e la valutazione di fattibilità, allo sviluppo, fino alla realizzazione di prototipi funzionanti e soluzioni pronte per l'uso reale.", 'immensive' ); ?></p>
 				</div>
 
-				<div class="ih-showcase__stack" id="ih-showcase-stack">
+				<div class="ih-showcase__stack ih-mission__cards">
 					<?php foreach ( $immensive_mission_cards as $immensive_card ) : ?>
 						<a class="ih-acc ih-acc--mission" href="<?php echo esc_url( $immensive_card['href'] ); ?>" style="--acc-img:url('<?php echo esc_url( $immensive_img . $immensive_card['img'] ); ?>')">
 							<span class="ih-mcard__label"><?php echo esc_html( $immensive_card['label'] ); ?></span>
@@ -239,7 +241,6 @@ get_header();
 					<article class="ih-esplora-card ih-esplora-card--tall ih-reveal" id="ih-servizi-xr">
 						<img src="<?php echo esc_url( $immensive_img . 'servizi/immensive_altri_servizi_xr.webp' ); ?>" alt="" loading="lazy" decoding="async" width="471" height="471">
 						<span class="ih-esplora-card__label">Servizi XR</span>
-						<span class="ih-esplora-card__num">01</span>
 						<div class="ih-esplora-card__subs">
 							<div class="ih-esplora-card__sub">
 								<h4>Realtà Virtuale</h4>
@@ -259,14 +260,12 @@ get_header();
 					<article class="ih-esplora-card ih-reveal" id="ih-sviluppo-web">
 						<img src="<?php echo esc_url( $immensive_img . 'servizi/immensive_altri-servizi_sviluppo_web.webp' ); ?>" alt="" loading="lazy" decoding="async" width="826" height="814">
 						<span class="ih-esplora-card__label">Sviluppo Web</span>
-						<span class="ih-esplora-card__num">04</span>
 						<p class="ih-esplora-card__desc">Piattaforme web e portali gestionali: dashboard di monitoraggio, configuratori online, automazione di processi e collegamento con i sistemi del cliente.</p>
 					</article>
 
 					<article class="ih-esplora-card ih-reveal" id="ih-prototipazione">
 						<img src="<?php echo esc_url( $immensive_img . 'servizi/immensive_altri-servizi_prototipazione.webp' ); ?>" alt="" loading="lazy" decoding="async" width="1254" height="1254">
 						<span class="ih-esplora-card__label">Prototipazione</span>
-						<span class="ih-esplora-card__num">05</span>
 						<p class="ih-esplora-card__desc">Realizziamo prototipi industriali completi di meccanica, elettronica, sensoristica e PLC: dalla piccola serie per ricerca e sviluppo fino alla produzione su larga scala.</p>
 					</article>
 				</div>
@@ -275,21 +274,18 @@ get_header();
 					<article class="ih-esplora-card ih-reveal" id="ih-software-desktop">
 						<img src="<?php echo esc_url( $immensive_img . 'servizi/immensive_altri_servizi_software_desktop.webp' ); ?>" alt="" loading="lazy" decoding="async" width="706" height="706">
 						<span class="ih-esplora-card__label">Software Desktop</span>
-						<span class="ih-esplora-card__num">02</span>
 						<p class="ih-esplora-card__desc">Visualizzazione grafica 3D e simulazione per desktop, con integrazioni su misura: sensoristica, PLC, automazioni e CRM.</p>
 					</article>
 
 					<article class="ih-esplora-card ih-reveal" id="ih-app-mobile">
 						<img src="<?php echo esc_url( $immensive_img . 'servizi/immensive_altri-servizi_app_mobile.webp' ); ?>" alt="" loading="lazy" decoding="async" width="897" height="897">
 						<span class="ih-esplora-card__label">App Mobile</span>
-						<span class="ih-esplora-card__num">03</span>
 						<p class="ih-esplora-card__desc">App mobile native iOS e Android: esperienze AR, configuratori prodotto, dashboard aziendali e funzioni gestionali collegate ai sistemi esistenti.</p>
 					</article>
 
 					<article class="ih-esplora-card ih-esplora-card--tall ih-reveal" id="ih-integrazione-ai">
 						<img src="<?php echo esc_url( $immensive_img . 'servizi/immensive_altri_servizi_integrazioneai.webp' ); ?>" alt="" loading="lazy" decoding="async" width="826" height="814">
 						<span class="ih-esplora-card__label">Integrazione AI</span>
-						<span class="ih-esplora-card__num">06</span>
 						<p class="ih-esplora-card__desc">Integriamo modelli AI nei tuoi applicativi e processi: assistenti vocali, computer vision, generazione di contenuti, analisi predittive e automazioni personalizzate.</p>
 					</article>
 				</div>

@@ -49,23 +49,16 @@ get_header();
 		</div>
 	</section>
 
-	<nav class="ih-pnav" id="ih-pnav" aria-label="<?php esc_attr_e( 'Sezioni del prodotto', 'immensive' ); ?>">
-		<div class="ih-container ih-pnav__inner">
-			<a class="ih-pnav__brand" href="#ih-hero">
-				<img src="<?php echo esc_url( $immensive_img . 'forklift-vr-logo.webp' ); ?>" alt="Forklift VR Simulator" width="1024" height="274">
-			</a>
-
+	<nav class="ih-pnav ih-pnav--side" id="ih-pnav" aria-label="<?php esc_attr_e( 'Sezioni del prodotto', 'immensive' ); ?>">
 			<ul class="ih-pnav__links">
-				<li><a href="#ih-sistema"><?php esc_html_e( 'Il sistema', 'immensive' ); ?></a></li>
-				<li><a href="#ih-come-funziona"><?php esc_html_e( 'Come Funziona', 'immensive' ); ?></a></li>
-				<li><a href="#ih-benefici"><?php esc_html_e( 'Benefici', 'immensive' ); ?></a></li>
-				<li><a href="#ih-caratteristiche"><?php esc_html_e( 'Caratteristiche', 'immensive' ); ?></a></li>
-				<li><a href="#ih-dotazione"><?php esc_html_e( 'Dotazione', 'immensive' ); ?></a></li>
+				<li><a href="#ih-sistema" aria-label="Il sistema"><span class="ih-pnav__label"><?php esc_html_e( 'Il sistema', 'immensive' ); ?></span></a></li>
+				<li><a href="#ih-come-funziona" aria-label="Come Funziona"><span class="ih-pnav__label"><?php esc_html_e( 'Come Funziona', 'immensive' ); ?></span></a></li>
+				<li><a href="#ih-benefici" aria-label="Benefici"><span class="ih-pnav__label"><?php esc_html_e( 'Benefici', 'immensive' ); ?></span></a></li>
+				<li><a href="#ih-caratteristiche" aria-label="Caratteristiche"><span class="ih-pnav__label"><?php esc_html_e( 'Caratteristiche', 'immensive' ); ?></span></a></li>
+				<li><a href="#ih-dotazione" aria-label="Dotazione"><span class="ih-pnav__label"><?php esc_html_e( 'Dotazione', 'immensive' ); ?></span></a></li>
+				<li><a href="#ih-contact" aria-label="Contattaci"><span class="ih-pnav__label"><?php esc_html_e( 'Contattaci', 'immensive' ); ?></span></a></li>
 			</ul>
-
-			<a class="ih-btn ih-btn--ghost ih-pnav__cta" href="#ih-contact"><?php esc_html_e( 'Contattaci', 'immensive' ); ?></a>
-		</div>
-	</nav>
+		</nav>
 
 	<div class="ih-flow">
 
@@ -77,7 +70,7 @@ get_header();
 				<a class="ih-btn ih-btn--cyan" href="#ih-come-funziona"><?php esc_html_e( 'Come Funziona', 'immensive' ); ?></a>
 			</div>
 			<div class="ih-psys__media ih-reveal">
-				<img src="<?php echo esc_url( $immensive_img . 'forklift-vr-kit-provr.webp' ); ?>" alt="Postazione Forklift VR Simulator" loading="lazy" width="1024" height="575">
+				<img src="<?php echo esc_url( $immensive_img . 'forklift-vr-pro-plus-kit.webp' ); ?>" alt="Postazione Forklift VR Simulator" loading="lazy" width="1449" height="1086">
 			</div>
 		</div>
 	</section>
@@ -381,7 +374,7 @@ get_header();
 						<div class="ih-pdota__cards ih-pdota__cards--req">
 							<?php foreach ( $immensive_requisiti as $immensive_req ) : ?>
 							<article class="ih-pdota__card ih-reveal">
-							<div class="ih-pdota__card-media<?php echo 'forklift-vr-pro-plus-monitors.webp' === $immensive_req['image'] ? ' ih-pdota__card-media--contain' : ''; ?>" aria-hidden="true" <?php if ( ! empty( $immensive_req['image'] ) ) : ?>style="background-image:url('<?php echo esc_url( $immensive_img . $immensive_req['image'] ); ?>')"<?php endif; ?>></div>
+							<div class="ih-pdota__card-media<?php echo in_array( $immensive_req['image'], array( 'forklift-vr-pro-plus-monitors.webp', 'vive-pro-2-full-kit-buy.webp', 'metaQ2.webp' ), true ) ? ' ih-pdota__card-media--contain' : ''; ?>" aria-hidden="true" <?php if ( ! empty( $immensive_req['image'] ) ) : ?>style="background-image:url('<?php echo esc_url( $immensive_img . $immensive_req['image'] ); ?>')"<?php endif; ?>></div>
 							<div class="ih-pdota__card-body">
 								<h4 class="ih-pdota__card-title"><?php echo esc_html( $immensive_req['title'] ); ?></h4>
 								<p class="ih-pdota__card-desc"><?php echo esc_html( $immensive_req['desc'] ); ?></p>
@@ -438,7 +431,7 @@ get_header();
 					?>
 					<?php foreach ( $immensive_opzioni as $immensive_opz ) : ?>
 						<article class="ih-pdota__card ih-reveal">
-							<div class="ih-pdota__card-media" aria-hidden="true" style="background-image:url('<?php echo esc_url( $immensive_img . $immensive_opz['image'] ); ?>')"></div>
+							<div class="ih-pdota__card-media<?php echo in_array( $immensive_opz['image'], array( 'vive-pro-2-full-kit-buy.webp', 'metaQ2.webp' ), true ) ? ' ih-pdota__card-media--contain' : ''; ?>" aria-hidden="true" style="background-image:url('<?php echo esc_url( $immensive_img . $immensive_opz['image'] ); ?>')"></div>
 							<div class="ih-pdota__card-body">
 								<h4 class="ih-pdota__card-title"><?php echo esc_html( $immensive_opz['title'] ); ?></h4>
 								<p class="ih-pdota__card-desc"><?php echo esc_html( $immensive_opz['desc'] ); ?></p>
@@ -594,6 +587,8 @@ get_header();
 	</div>
 
 </div>
+
+<?php get_template_part( 'template-parts/popup-8108' ); ?>
 
 <?php
 get_footer();

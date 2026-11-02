@@ -30,24 +30,17 @@ get_header();
 		</div>
 	</section>
 
-	<nav class="ih-pnav" id="ih-pnav" aria-label="<?php esc_attr_e( 'Sezioni del prodotto', 'immensive' ); ?>">
-		<div class="ih-container ih-pnav__inner">
-			<a class="ih-pnav__brand" href="#ih-hero">
-				<img src="<?php echo esc_url( $immensive_img . 'product-weld-vr.webp' ); ?>" alt="Weld VR Simulator" width="700" height="284">
-			</a>
-
+	<nav class="ih-pnav ih-pnav--side" id="ih-pnav" aria-label="<?php esc_attr_e( 'Sezioni del prodotto', 'immensive' ); ?>">
 			<ul class="ih-pnav__links">
-				<li><a href="#ih-sistema"><?php esc_html_e( 'Il sistema', 'immensive' ); ?></a></li>
-				<li><a href="#ih-come-funziona"><?php esc_html_e( 'Come Funziona', 'immensive' ); ?></a></li>
-				<li><a href="#ih-benefici"><?php esc_html_e( 'Benefici', 'immensive' ); ?></a></li>
-				<li><a href="#ih-caratteristiche"><?php esc_html_e( 'Caratteristiche', 'immensive' ); ?></a></li>
-				<li><a href="#ih-dotazione"><?php esc_html_e( 'Dotazione', 'immensive' ); ?></a></li>
-				<li><a href="#ih-installazioni"><?php esc_html_e( 'Installazioni', 'immensive' ); ?></a></li>
+				<li><a href="#ih-sistema" aria-label="Il sistema"><span class="ih-pnav__label"><?php esc_html_e( 'Il sistema', 'immensive' ); ?></span></a></li>
+				<li><a href="#ih-come-funziona" aria-label="Come Funziona"><span class="ih-pnav__label"><?php esc_html_e( 'Come Funziona', 'immensive' ); ?></span></a></li>
+				<li><a href="#ih-benefici" aria-label="Benefici"><span class="ih-pnav__label"><?php esc_html_e( 'Benefici', 'immensive' ); ?></span></a></li>
+				<li><a href="#ih-caratteristiche" aria-label="Caratteristiche"><span class="ih-pnav__label"><?php esc_html_e( 'Caratteristiche', 'immensive' ); ?></span></a></li>
+				<li><a href="#ih-dotazione" aria-label="Dotazione"><span class="ih-pnav__label"><?php esc_html_e( 'Dotazione', 'immensive' ); ?></span></a></li>
+				<li><a href="#ih-installazioni" aria-label="Installazioni"><span class="ih-pnav__label"><?php esc_html_e( 'Installazioni', 'immensive' ); ?></span></a></li>
+				<li><a href="#ih-contact" aria-label="Contattaci"><span class="ih-pnav__label"><?php esc_html_e( 'Contattaci', 'immensive' ); ?></span></a></li>
 			</ul>
-
-			<a class="ih-btn ih-btn--ghost ih-pnav__cta" href="#ih-contact"><?php esc_html_e( 'Contattaci', 'immensive' ); ?></a>
-		</div>
-	</nav>
+		</nav>
 
 	<div class="ih-flow">
 
@@ -83,7 +76,7 @@ get_header();
 
 		<div class="ih-container ih-pfunziona__media-wrap">
 			<div class="ih-pfunziona__media ih-reveal">
-				<img src="<?php echo esc_url( $immensive_img . 'weld-vr-video-cover.jpg' ); ?>" alt="Weld VR Simulator — guarda il video dimostrativo" loading="lazy" width="1080" height="608">
+				<img src="<?php echo esc_url( $immensive_img . 'hero-weld-vr.webp' ); ?>" alt="Weld VR Simulator — guarda il video dimostrativo" loading="lazy" width="1080" height="608">
 				<button type="button" class="ih-pfunziona__video" data-video-src="https://youtu.be/Prhx4C9FEuY" aria-label="<?php esc_attr_e( 'Riproduci il video Weld VR', 'immensive' ); ?>"><span class="ih-pfunziona__play-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="m9 6 10 6-10 6V6Z" fill="currentColor"/></svg></span></button>
 			</div>
 		</div>
@@ -272,7 +265,7 @@ get_header();
 						),
 						array(
 							'title' => 'Kit HTC Vive Pro Room-Scale VR',
-							'image' => 'weld-vr-vive-pro.webp',
+							'image' => 'vive-pro-2-full-kit-buy.webp',
 							'desc'  => 'Vive Pro – Full Kit è il sistema progettato da HTC per vivere un\'esperienza di realtà virtuale professionale. Si compone di:',
 							'items' => array(
 								'Visore HTC Vive Pro',
@@ -341,7 +334,7 @@ get_header();
 						),
 						array(
 							'title' => 'Kit HTC Vive Pro Room-Scale VR',
-							'image' => 'weld-vr-vive-pro.webp',
+							'image' => 'vive-pro-2-full-kit-buy.webp',
 							'desc'  => 'Vive Pro – Full Kit è il sistema progettato da HTC per vivere un\'esperienza di realtà virtuale professionale. Si compone di:',
 							'items' => array(
 								'Visore HTC Vive Pro',
@@ -421,7 +414,7 @@ get_header();
 						<div class="ih-pdota__cards ih-pdota__cards--req">
 							<?php foreach ( $immensive_kit['requisiti'] as $immensive_req ) : ?>
 								<article class="ih-pdota__card ih-reveal">
-									<div class="ih-pdota__card-media" aria-hidden="true" <?php if ( ! empty( $immensive_req['image'] ) ) : ?>style="background-image:url('<?php echo esc_url( $immensive_img . $immensive_req['image'] ); ?>')"<?php endif; ?>></div>
+								<div class="ih-pdota__card-media<?php echo in_array( $immensive_req['image'], array( 'vive-pro-2-full-kit-buy.webp', 'metaQ2.webp' ), true ) ? ' ih-pdota__card-media--contain' : ''; ?>" aria-hidden="true" <?php if ( ! empty( $immensive_req['image'] ) ) : ?>style="background-image:url('<?php echo esc_url( $immensive_img . $immensive_req['image'] ); ?>')"<?php endif; ?>></div>
 									<div class="ih-pdota__card-body">
 										<h4 class="ih-pdota__card-title"><?php echo esc_html( $immensive_req['title'] ); ?></h4>
 										<p class="ih-pdota__card-desc"><?php echo esc_html( $immensive_req['desc'] ); ?></p>
@@ -446,7 +439,7 @@ get_header();
 						<div class="ih-pdota__cards ih-pdota__cards--opz">
 							<?php foreach ( $immensive_kit['opzioni'] as $immensive_opz ) : ?>
 								<article class="ih-pdota__card ih-reveal">
-									<div class="ih-pdota__card-media" aria-hidden="true" <?php if ( ! empty( $immensive_opz['image'] ) ) : ?>style="background-image:url('<?php echo esc_url( $immensive_img . $immensive_opz['image'] ); ?>')"<?php endif; ?>></div>
+								<div class="ih-pdota__card-media<?php echo in_array( $immensive_opz['image'], array( 'vive-pro-2-full-kit-buy.webp', 'metaQ2.webp' ), true ) ? ' ih-pdota__card-media--contain' : ''; ?>" aria-hidden="true" <?php if ( ! empty( $immensive_opz['image'] ) ) : ?>style="background-image:url('<?php echo esc_url( $immensive_img . $immensive_opz['image'] ); ?>')"<?php endif; ?>></div>
 									<div class="ih-pdota__card-body">
 										<h4 class="ih-pdota__card-title"><?php echo esc_html( $immensive_opz['title'] ); ?></h4>
 										<p class="ih-pdota__card-desc"><?php echo esc_html( $immensive_opz['desc'] ); ?></p>
@@ -484,7 +477,7 @@ get_header();
 				),
 				array(
 					'label' => 'Sistema rotante',
-					'image' => 'weld-vr-stand.webp',
+					'image' => 'weld-vr-sistema-rotante.webp',
 					'desc'  => 'Sistema rotante per simulazione dell’angolazione dell’elettrodo',
 				),
 				array(
@@ -831,6 +824,8 @@ get_header();
 	</div>
 
 </div>
+
+<?php get_template_part( 'template-parts/popup-8108' ); ?>
 
 <?php
 get_footer();

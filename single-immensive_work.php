@@ -94,11 +94,32 @@ if ( $immensive_pj_page ) {
 				</figure>
 			<?php endif; ?>
 
+			<?php
+			/* A funding banner (<div class="ih-pj-funding"> in the editor content) is shown
+			   right under the featured image instead of at the end of the text. It is lifted
+			   out of the raw content here so the editor keeps one place to edit everything. */
+			$immensive_pj_raw     = get_post_field( 'post_content', get_the_ID() );
+			$immensive_pj_funding = '';
+			if ( preg_match( '#<div class="ih-pj-funding">(?:(?!<div class="ih-pj-funding").)*?</p>(?:<div class="ih-pj-funding__logos">.*?</div>)?</div>#s', $immensive_pj_raw, $immensive_pj_m ) ) {
+				$immensive_pj_funding = $immensive_pj_m[0];
+				$immensive_pj_raw     = str_replace( $immensive_pj_funding, '', $immensive_pj_raw );
+			}
+			if ( $immensive_pj_funding ) :
+				?>
+				<div class="ih-pj__funding">
+					<div class="ih-container">
+						<div class="ih-pj__content">
+							<?php echo wp_kses_post( apply_filters( 'the_content', $immensive_pj_funding ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+						</div>
+					</div>
+				</div>
+			<?php endif; ?>
+
 			<div class="ih-pj__body">
 				<div class="ih-container">
 					<div class="ih-pj__content">
 						<?php
-						the_content();
+						echo apply_filters( 'the_content', $immensive_pj_raw ); // phpcs:ignore WordPress.Security.EscapeOutput
 
 						wp_link_pages(
 							array(

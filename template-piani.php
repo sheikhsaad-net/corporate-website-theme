@@ -11,29 +11,113 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $immensive_img = get_template_directory_uri() . '/assets/images/';
 
+$immensive_contatti     = get_page_by_path( 'contatti' );
+$immensive_contatti_url = $immensive_contatti ? get_permalink( $immensive_contatti ) : 'mailto:info@immensive.it';
+
+/* Same four purchase plans as the product pages' "Soluzioni di acquisto". */
+$immensive_soluzioni = array(
+array(
+	'title'    => 'Lifetime',
+	'sub'      => 'Paghi una volta, usi per sempre',
+	'featured' => false,
+	'items'    => array(
+		'Pagamento una tantum',
+		'Nessun canone ricorrente',
+		'Solo aggiornamenti critici',
+		'Supporto base a ticket',
+	),
+),
+array(
+	'title'    => 'Lifetime + Manutenzione',
+	'sub'      => 'Proprietà a vita con assistenza continua',
+	'featured' => false,
+	'items'    => array(
+		'Pagamento una tantum + canone',
+		'Aggiornamenti software inclusi',
+		'Supporto prioritario',
+		'Sostituzione kit consumabili inclusa',
+	),
+),
+array(
+	'title'    => 'Abbonamento Annuale',
+	'sub'      => 'Il massimo servizio con flessibilità media',
+	'featured' => true,
+	'badge'    => 'Più scelto',
+	'items'    => array(
+		'Canone annuale',
+		'Aggiornamenti software inclusi',
+		'Supporto prioritario + onboarding',
+		'Sostituzione kit consumabili inclusa',
+	),
+),
+array(
+	'title'    => 'Abbonamento Mensile',
+	'sub'      => 'Massima flessibilità, zero vincoli',
+	'featured' => false,
+	'items'    => array(
+		'Canone mensile',
+		'Aggiornamenti software inclusi',
+		'Supporto standard',
+		'Sostituzione kit consumabili inclusa',
+	),
+),
+			);
+
 get_header();
 ?>
 
-<div class="ih">
+<div class="ih ih--no-hero">
 
 	<?php get_template_part( 'template-parts/site-header' ); ?>
 
-	<section class="ih-phero ih-phero--piani" id="ih-hero">
-		<div class="ih-phero__bg" aria-hidden="true"></div>
+	<section class="ih-psol ih-psol--hero" id="ih-hero">
+		<div class="ih-container" id="ih-piani">
+			<p class="ih-psol__eyebrow"><?php esc_html_e( 'Scegli come comprare i simulatori VR Immensive.', 'immensive' ); ?></p>
 
-		<div class="ih-phero__inner">
-			<h1 class="ih-phero__title">
-				COME COMPRARE<br>I SIMULATORI VR<br><span class="ih-phero__accent">IMMENSIVE</span>
+			<h1 class="ih-psol__heading">
+				<?php esc_html_e( 'Piani', 'immensive' ); ?><br>
+				<span class="ih-psol__heading-line">
+					<?php esc_html_e( 'e Soluzioni di Acquisto', 'immensive' ); ?>
+					<span class="ih-psol__price">
+						<span class="ih-psol__price-label"><?php esc_html_e( 'A partire da', 'immensive' ); ?></span>
+						<span class="ih-psol__price-value">&euro;40,00<span class="ih-psol__price-unit">/mo</span></span>
+					</span>
+				</span>
 			</h1>
-			<p class="ih-phero__sub"><?php esc_html_e( '4 modelli, una sola qualità. Attivazione in 7 giorni. Compatibile Formazione 4.0.', 'immensive' ); ?></p>
-			<div class="ih-phero__actions">
-				<a class="ih-btn ih-btn--solid" href="#ih-tco-form"><?php esc_html_e( 'Richiedi un Preventivo', 'immensive' ); ?></a>
+
+			<div class="ih-psol__grid">
+				<?php foreach ( $immensive_soluzioni as $immensive_sol ) : ?>
+					<article class="ih-psol__card<?php echo $immensive_sol['featured'] ? ' is-featured' : ''; ?> ih-reveal">
+						<span class="ih-psol__glare" aria-hidden="true"></span>
+						<div class="ih-psol__card-head">
+							<h3 class="ih-psol__card-title"><?php echo esc_html( $immensive_sol['title'] ); ?></h3>
+							<?php if ( ! empty( $immensive_sol['badge'] ) ) : ?>
+								<span class="ih-psol__card-badge"><?php echo esc_html( $immensive_sol['badge'] ); ?></span>
+							<?php endif; ?>
+						</div>
+						<div class="ih-psol__card-body">
+							<p class="ih-psol__card-sub"><?php echo esc_html( $immensive_sol['sub'] ); ?></p>
+							<ul class="ih-psol__list">
+								<?php foreach ( $immensive_sol['items'] as $immensive_sol_item ) : ?>
+									<li>
+										<span class="ih-psol__check" aria-hidden="true">
+											<svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+										</span>
+										<span><?php echo esc_html( $immensive_sol_item ); ?></span>
+									</li>
+								<?php endforeach; ?>
+							</ul>
+						</div>
+					</article>
+				<?php endforeach; ?>
+			</div>
+
+			<div class="ih-psol__footer ih-psol__footer--ctas">
+				<a class="ih-btn ih-btn--solid" href="<?php echo esc_url( $immensive_contatti_url ); ?>"><?php esc_html_e( 'Richiedi un Preventivo', 'immensive' ); ?></a>
 				<a class="ih-btn ih-btn--ghost" href="tel:+390813358542"><?php esc_html_e( 'Parla con un Consulente', 'immensive' ); ?></a>
 			</div>
 		</div>
 	</section>
-
-	<div class="ih-flow">
 
 	<section class="ih-sistema" id="ih-sistema">
 		<div class="ih-sistema__sticky">
@@ -90,86 +174,6 @@ get_header();
 							<a class="ih-btn ih-btn--ghost ih-sistema-card__cta" href="#ih-piani"><?php esc_html_e( 'Scopri i Piani', 'immensive' ); ?></a>
 						<?php endif; ?>
 					</article>
-				<?php endforeach; ?>
-			</div>
-		</div>
-	</section>
-
-	<section class="ih-pianitab" id="ih-piani">
-		<h2 class="ih-pianitab__heading">PIANI</h2>
-
-		<div class="ih-container">
-			<div class="ih-pianitab__panel ih-reveal" id="ih-pianitab-panel">
-				<div class="ih-pianitab__glare" aria-hidden="true"></div>
-
-				<div class="ih-pianitab__labels">
-					<span class="ih-pianitab__corner" aria-hidden="true"></span>
-					<span class="ih-pianitab__label"><?php esc_html_e( 'Costo licenza', 'immensive' ); ?></span>
-					<span class="ih-pianitab__label"><?php esc_html_e( 'Aggiornamenti software', 'immensive' ); ?></span>
-					<span class="ih-pianitab__label"><?php esc_html_e( 'Supporto', 'immensive' ); ?></span>
-					<span class="ih-pianitab__label"><?php esc_html_e( 'Sostituzione kit consumabili', 'immensive' ); ?></span>
-				</div>
-
-				<?php
-				$immensive_piani_plans = array(
-					array(
-						'name'   => 'Lifetime',
-						'badge'  => '',
-						'hl'     => false,
-						'values' => array(
-							array( 'Una tantum', false ),
-							array( 'Solo critici', false ),
-							array( 'Base, a ticket', false ),
-							array( 'A pagamento', false ),
-						),
-					),
-					array(
-						'name'   => 'Lifetime +<br>Manutenzione',
-						'badge'  => '',
-						'hl'     => false,
-						'values' => array(
-							array( 'Una tantum + canone', false ),
-							array( 'Inclusi', true ),
-							array( 'Continuo', false ),
-							array( 'Inclusa', true ),
-						),
-					),
-					array(
-						'name'   => 'Abbonamento<br>Annuale',
-						'badge'  => 'Più scelto',
-						'hl'     => true,
-						'values' => array(
-							array( 'Canone annuale', false ),
-							array( 'Inclusi', true ),
-							array( 'Continuo', false ),
-							array( 'Inclusa', true ),
-						),
-					),
-					array(
-						'name'   => 'Abbonamento<br>Mensile',
-						'badge'  => '',
-						'hl'     => false,
-						'values' => array(
-							array( 'Canone mensile', false ),
-							array( 'Inclusi', true ),
-							array( 'Continuo', false ),
-							array( 'Inclusa', true ),
-						),
-					),
-				);
-				foreach ( $immensive_piani_plans as $immensive_plan ) :
-					?>
-					<div class="ih-pianitab__col<?php echo $immensive_plan['hl'] ? ' ih-pianitab__col--hl' : ''; ?>">
-						<h3 class="ih-pianitab__plan">
-							<?php echo wp_kses( $immensive_plan['name'], array( 'br' => array() ) ); ?>
-							<?php if ( $immensive_plan['badge'] ) : ?>
-								<span class="ih-pianitab__badge"><?php echo esc_html( $immensive_plan['badge'] ); ?></span>
-							<?php endif; ?>
-						</h3>
-						<?php foreach ( $immensive_plan['values'] as $immensive_val ) : ?>
-							<span class="ih-pianitab__cell<?php echo $immensive_val[1] ? ' ih-pianitab__cell--ok' : ''; ?>"><?php echo esc_html( $immensive_val[0] ); ?></span>
-						<?php endforeach; ?>
-					</div>
 				<?php endforeach; ?>
 			</div>
 		</div>
@@ -335,8 +339,6 @@ get_header();
 	<?php get_template_part( 'template-parts/contact-cta' ); ?>
 
 	<?php get_template_part( 'template-parts/site-footer' ); ?>
-
-	</div><!-- .ih-flow -->
 
 </div>
 

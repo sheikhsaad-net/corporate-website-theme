@@ -12,7 +12,10 @@ $immensive_img = get_template_directory_uri() . '/assets/images/';
 	<footer class="ih-footer">
 		<div class="ih-container ih-footer__inner">
 			<div class="ih-footer__brand">
-				<p class="ih-footer__desc"><?php esc_html_e( 'Immensive è specializzata nello sviluppo di progetti customizzati in realtà estesa (VR, AR, MR). Partendo dall\'idea aziendale, studiamo il progetto, individuiamo la migliore tecnologia da impiegare e sviluppiamo l\'applicativo.', 'immensive' ); ?></p>
+				<div class="ih-footer__sedi">
+					<p><strong><?php esc_html_e( 'Sede legale', 'immensive' ); ?></strong><br>Via Firenze 3, 81030 Parete (CE), Italia</p>
+					<p><strong><?php esc_html_e( 'Sede operativa', 'immensive' ); ?></strong><br>Via Giuseppe Savoia 191, 81030 Casaluce (CE), Italia</p>
+				</div>
 
 				<p class="ih-footer__email">
 					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="m4 7 8 6 8-6" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>

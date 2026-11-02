@@ -1534,4 +1534,90 @@
 		});
 	}
 
+	/* ---- Product side menu scroll-spy ----
+	   .ih-pnav--side is a fixed dot rail; mark the link whose section is the
+	   last one to have crossed ~40% of the viewport height. */
+	(function () {
+		var rail = document.querySelector('.ih-pnav--side');
+		if (!rail) { return; }
+		var items = [];
+		rail.querySelectorAll('a[href^="#"]').forEach(function (a) {
+			var target = document.getElementById(a.getAttribute('href').slice(1));
+			if (target) { items.push({ link: a, el: target }); }
+		});
+		if (!items.length) { return; }
+		/* True when the first opaque, image-free background behind the rail is
+		   light, so the glass can switch to a dark tint and stay visible. */
+		function isLightBehind() {
+			var r = rail.getBoundingClientRect();
+			var els = document.elementsFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+			for (var i = 0; i < els.length; i++) {
+				var el = els[i];
+				if (rail.contains(el) || el.closest(".ih-popup")) { continue; }
+				var cs = window.getComputedStyle(el);
+				if (cs.backgroundImage !== 'none') { return false; }
+				var m = cs.backgroundColor.match(/[0-9.]+/g);
+				if (m && m.length >= 3 && (m.length < 4 || parseFloat(m[3]) > 0.5)) {
+					return (0.299 * m[0] + 0.587 * m[1] + 0.114 * m[2]) > 150;
+				}
+			}
+			return false;
+		}
+		var ticking = false;
+		function update() {
+			ticking = false;
+			var line = window.innerHeight * 0.4;
+			var current = null;
+			items.forEach(function (it) {
+				if (it.el.getBoundingClientRect().top <= line) { current = it; }
+			});
+			items.forEach(function (it) {
+				var on = it === current;
+				it.link.classList.toggle('is-active', on);
+				if (on) { it.link.setAttribute('aria-current', 'true'); } else { it.link.removeAttribute('aria-current'); }
+			});
+			rail.classList.toggle('is-light', isLightBehind());
+		}
+		function onScroll() {
+			if (!ticking) { ticking = true; window.requestAnimationFrame(update); }
+		}
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		update();
+	})();
+
+
+	/* ---- 81/08 popup ----
+	   Opens once per browser session a few seconds after load; closes on the
+	   x / backdrop / Escape. Skipped when storage is unavailable only for the
+	   "seen" flag (it then simply shows once per page view). */
+	(function () {
+		var popup = document.getElementById('ih-popup-8108');
+		if (!popup) { return; }
+		var KEY = 'ih-popup-8108-seen';
+		try { if (window.sessionStorage.getItem(KEY)) { return; } } catch (e) {}
+		var lastFocus = null;
+		function close() {
+			popup.hidden = true;
+			document.body.classList.remove('ih-modal-open');
+			document.removeEventListener('keydown', onKey);
+			if (lastFocus && lastFocus.focus) { lastFocus.focus(); }
+		}
+		function onKey(e) { if (e.key === 'Escape') { close(); } }
+		function open() {
+			if (document.body.classList.contains('ih-modal-open')) { return; }
+			lastFocus = document.activeElement;
+			popup.hidden = false;
+			document.body.classList.add('ih-modal-open');
+			document.addEventListener('keydown', onKey);
+			var btn = popup.querySelector('.ih-popup__close');
+			if (btn) { btn.focus(); }
+			try { window.sessionStorage.setItem(KEY, '1'); } catch (e) {}
+		}
+		popup.querySelectorAll('[data-popup-close]').forEach(function (el) {
+			el.addEventListener('click', close);
+		});
+		window.setTimeout(open, 5000);
+	})();
+
 })();

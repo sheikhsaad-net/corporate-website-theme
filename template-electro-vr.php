@@ -56,23 +56,16 @@ get_header();
 		</div>
 	</section>
 
-	<nav class="ih-pnav" id="ih-pnav" aria-label="<?php esc_attr_e( 'Sezioni del prodotto', 'immensive' ); ?>">
-		<div class="ih-container ih-pnav__inner">
-			<a class="ih-pnav__brand" href="#ih-hero">
-				<img src="<?php echo esc_url( $immensive_img . 'electro-vr-logo.webp' ); ?>" alt="Electro VR Simulator" width="1024" height="324">
-			</a>
-
+	<nav class="ih-pnav ih-pnav--side" id="ih-pnav" aria-label="<?php esc_attr_e( 'Sezioni del prodotto', 'immensive' ); ?>">
 			<ul class="ih-pnav__links">
-				<li><a href="#ih-sistema"><?php esc_html_e( 'Il sistema', 'immensive' ); ?></a></li>
-				<li><a href="#ih-come-funziona"><?php esc_html_e( 'Come Funziona', 'immensive' ); ?></a></li>
-				<li><a href="#ih-benefici"><?php esc_html_e( 'Benefici', 'immensive' ); ?></a></li>
-				<li><a href="#ih-caratteristiche"><?php esc_html_e( 'Caratteristiche', 'immensive' ); ?></a></li>
-				<li><a href="#ih-dotazione"><?php esc_html_e( 'Dotazione', 'immensive' ); ?></a></li>
+				<li><a href="#ih-sistema" aria-label="Il sistema"><span class="ih-pnav__label"><?php esc_html_e( 'Il sistema', 'immensive' ); ?></span></a></li>
+				<li><a href="#ih-come-funziona" aria-label="Come Funziona"><span class="ih-pnav__label"><?php esc_html_e( 'Come Funziona', 'immensive' ); ?></span></a></li>
+				<li><a href="#ih-benefici" aria-label="Benefici"><span class="ih-pnav__label"><?php esc_html_e( 'Benefici', 'immensive' ); ?></span></a></li>
+				<li><a href="#ih-caratteristiche" aria-label="Caratteristiche"><span class="ih-pnav__label"><?php esc_html_e( 'Caratteristiche', 'immensive' ); ?></span></a></li>
+				<li><a href="#ih-dotazione" aria-label="Dotazione"><span class="ih-pnav__label"><?php esc_html_e( 'Dotazione', 'immensive' ); ?></span></a></li>
+				<li><a href="#ih-contact" aria-label="Contattaci"><span class="ih-pnav__label"><?php esc_html_e( 'Contattaci', 'immensive' ); ?></span></a></li>
 			</ul>
-
-			<a class="ih-btn ih-btn--ghost ih-pnav__cta" href="#ih-contact"><?php esc_html_e( 'Contattaci', 'immensive' ); ?></a>
-		</div>
-	</nav>
+		</nav>
 
 	<div class="ih-flow">
 
@@ -84,7 +77,7 @@ get_header();
 				<a class="ih-btn ih-btn--cyan" href="#ih-come-funziona"><?php esc_html_e( 'Come Funziona', 'immensive' ); ?></a>
 			</div>
 			<div class="ih-psys__media ih-reveal">
-				<img src="<?php echo esc_url( $immensive_img . 'electro-vr-system.webp' ); ?>" alt="Postazione Electro VR Simulator" loading="lazy" width="1024" height="576">
+				<img src="<?php echo esc_url( $immensive_img . 'electro-vr-system.webp' ); ?>" alt="Postazione Electro VR Simulator" loading="lazy" width="1525" height="858">
 			</div>
 		</div>
 	</section>
@@ -267,7 +260,7 @@ get_header();
 			<div class="ih-pdota__panel" data-version-panel="base">
 				<div class="ih-pdota__row">
 					<div class="ih-pdota__media ih-reveal">
-						<img src="<?php echo esc_url( $immensive_img . 'electro-vr-kit.webp' ); ?>" alt="Kit Electro VR Simulator" loading="lazy" width="1024" height="749">
+						<img src="<?php echo esc_url( $immensive_img . 'electro-vr-dotazione-base.webp' ); ?>" alt="Kit Base Electro VR Simulator con controller hand-tracking" loading="lazy" width="1081" height="1081">
 					</div>
 					<div class="ih-pdota__content ih-reveal">
 						<h3 class="ih-pdota__title">Kit Base</h3>
@@ -381,6 +374,8 @@ get_header();
 	</div>
 
 </div>
+
+<?php get_template_part( 'template-parts/popup-8108' ); ?>
 
 <?php
 get_footer();

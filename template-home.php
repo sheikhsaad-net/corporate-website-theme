@@ -42,7 +42,7 @@ $immensive_split_sides = array(
 	array(
 		'tone'  => 'light',
 		'href'  => home_url( '/servizi/' ),
-		'title' => 'RICERCA &amp;<br>SOLUZIONI DIGITALI',
+		'title' => 'SERVIZI DIGITALI<br>E INNOVAZIONE',
 		'text'  => 'Progettiamo sistemi integrati basati sulle tecnologie immersive e digitali più avanzate. Ogni progetto nasce da un\'analisi attenta delle esigenze del cliente e si trasforma in una soluzione su misura, pensata per funzionare nel mondo reale.',
 		'cta'   => 'Scopri le nostre soluzioni',
 		'img'   => $immensive_img . 'hero-split-digitale.webp',

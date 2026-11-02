@@ -53,8 +53,8 @@ $immensive_groups = array(
 		// Veins Catheter, Gragnano, Livia, Univrsafe, Archiproducts, Kaledo,
 		// Showroom VR, Residenza CH, Residenza IT, Struttura ospedaliera,
 		// VR Yacht, Foof, Ponics, Fitness Island, Ircss Maugeri,
-		// Drawing Studio, VR Medical Dataviewer (EP Solutions).
-		'ids'  => array( 199, 172, 178, 164, 193, 84, 140, 86, 160, 176, 78, 76, 80, 197, 152, 148, 174, 150, 144, 146, 134, 142, 138, 166, 132, 136, 168, 162 ),
+		// Drawing Studio, VR Medical Dataviewer (EP Solutions), SMAV.
+		'ids'  => array( 199, 172, 178, 164, 193, 84, 140, 86, 160, 176, 78, 76, 80, 197, 152, 148, 174, 150, 144, 146, 134, 142, 138, 166, 132, 136, 168, 162, 255 ),
 	),
 );
 
