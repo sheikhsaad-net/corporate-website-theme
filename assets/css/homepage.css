@@ -267,7 +267,9 @@
 	content: '';
 	position: absolute;
 	inset: 0;
-	background: radial-gradient(66% 78% at 64% -8%, rgba(126, 170, 40, 0.52), transparent 60%);
+	background:
+		radial-gradient(50% 55% at 50% 30%, rgba(142, 184, 38, 0.5), rgba(110, 150, 28, 0.2) 55%, transparent 80%),
+		radial-gradient(80% 90% at 64% -8%, rgba(150, 196, 46, 0.7), transparent 62%);
 	animation: ih-phero-sweep 16s ease-in-out infinite alternate;
 	will-change: transform, opacity;
 }
@@ -3838,8 +3840,75 @@
 }
 
 .ih-psol__footer--ctas {
-	justify-content: center;
+	justify-content: space-between;
+	gap: 1.5rem 2rem;
+}
+
+.ih-psol__footer--ctas .ih-psol__tagline {
+	color: var(--ih-white);
+	font-weight: 300;
+}
+
+.ih-psol__footer--ctas .ih-psol__tagline strong {
+	font-weight: 300;
+}
+
+.ih-psol__note {
+	display: block;
+	margin-top: 0.6rem;
+	font-size: 0.8rem;
+	line-height: 1.4;
+	color: rgba(255, 255, 255, 0.8);
+}
+
+.ih-psol__ctas {
+	display: flex;
+	flex-wrap: wrap;
 	gap: 1rem;
+}
+
+/* Piani hero: green glow bleeding in from the top over the dark background. */
+/* Same aurora as the old Piani hero (.ih-phero__bg): a dark green-tinted base
+   plus two blurred, slowly drifting gradient layers. */
+.ih-psol--hero {
+	background: radial-gradient(125% 125% at 100% 0%, #3f6618 0%, #243a10 36%, #0e1608 62%, #060705 100%);
+}
+
+.ih-psol--hero::before,
+.ih-psol--hero::after {
+	content: '';
+	position: absolute;
+	inset: -35%;
+	z-index: 0;
+	filter: blur(16px);
+	pointer-events: none;
+	will-change: transform, opacity;
+}
+
+.ih-psol--hero::before {
+	background:
+		radial-gradient(44% 54% at 84% 6%, rgba(198, 238, 100, 0.95), rgba(150, 196, 46, 0.45) 40%, transparent 70%),
+		radial-gradient(82% 92% at 106% 16%, rgba(142, 184, 38, 0.62), transparent 62%);
+	animation: ih-phero-aurora 12s ease-in-out infinite alternate;
+}
+
+.ih-psol--hero::after {
+	background: radial-gradient(66% 78% at 64% -8%, rgba(126, 170, 40, 0.52), transparent 60%);
+	animation: ih-phero-sweep 16s ease-in-out infinite alternate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.ih-psol--hero::before,
+	.ih-psol--hero::after {
+		animation: none;
+	}
+}
+
+@media (max-width: 760px) {
+	.ih-psol__footer--ctas {
+		flex-direction: column;
+		align-items: flex-start;
+	}
 }
 
 .ih-psol__tagline {
@@ -9191,24 +9260,36 @@ body.ih-modal-open {
 
 .ih-showcase--static .ih-showcase__intro-col {
 	position: static;
+	text-align: center;
+}
+
+.ih-showcase--static .ih-showcase__intro-col .ih-heading {
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 .ih-showcase--static .ih-showcase__intro {
 	max-width: 62rem;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
 }
 
 .ih-showcase--static .ih-mission__cards {
+	align-items: stretch;
 	display: grid;
 	grid-template-columns: repeat(3, minmax(0, 1fr));
 	gap: clamp(1rem, 2vw, 1.75rem);
 }
 
-.ih-showcase--static .ih-acc--mission {
+.ih-showcase--static .ih-mission__cards .ih-acc.ih-acc--mission {
 	position: relative;
 	top: auto;
 	margin-bottom: 0;
 	aspect-ratio: auto;
-	min-height: clamp(26rem, 34vw, 34rem);
+	min-height: clamp(28rem, 36vw, 38rem);
+	height: 100%;
 }
 
 .ih-showcase--static .ih-mcard__label {
@@ -9224,7 +9305,7 @@ body.ih-modal-open {
 		grid-template-columns: 1fr;
 	}
 
-	.ih-showcase--static .ih-acc--mission {
+	.ih-showcase--static .ih-mission__cards .ih-acc.ih-acc--mission {
 		min-height: 24rem;
 	}
 }
@@ -12342,6 +12423,13 @@ body.ih-video-modal-open {
 
 /* ---------- 81/08 information popup ---------- */
 .ih-popup {
+	/* Rendered outside .ih, so the design tokens are repeated here. */
+	--ih-green: #8eb826;
+	--ih-white: #fffefe;
+	--ih-display: 'Bebas Neue', Impact, sans-serif;
+	--ih-heading: 'Montserrat', sans-serif;
+	--ih-body: 'Inter', sans-serif;
+	font-family: var(--ih-heading);
 	position: fixed;
 	inset: 0;
 	z-index: 1000;
@@ -12358,67 +12446,292 @@ body.ih-video-modal-open {
 .ih-popup__backdrop {
 	position: absolute;
 	inset: 0;
-	background: rgba(0, 0, 0, 0.62);
-	backdrop-filter: blur(3px);
+	background: rgba(0, 0, 0, 0.6);
+	backdrop-filter: blur(4px);
+	-webkit-backdrop-filter: blur(4px);
 }
 
 .ih-popup__box {
 	position: relative;
-	width: min(100%, 560px);
+	width: min(100%, 720px);
 	max-height: 100%;
-	overflow-y: auto;
-	padding: clamp(1.75rem, 4vw, 2.75rem);
-	border-radius: 22px;
-	background: var(--ih-white);
-	color: var(--ih-bg);
-	box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+	overflow: hidden auto;
+	padding: clamp(2rem, 5vw, 3.25rem) clamp(1.5rem, 6vw, 3.5rem) clamp(1.5rem, 3vw, 2.25rem);
+	border: 1px solid rgba(255, 255, 255, 0.22);
+	border-radius: 34px;
+	background: #111;
+	color: var(--ih-white);
+	text-align: center;
+	box-shadow: 0 30px 90px rgba(0, 0, 0, 0.6);
+	isolation: isolate;
 }
 
-.ih-popup__close {
+/* Green arc sweeping across the top-right corner. */
+.ih-popup__arc {
 	position: absolute;
-	top: 0.7rem;
-	right: 0.9rem;
-	width: 2.2rem;
-	height: 2.2rem;
-	border: 0;
+	top: -62%;
+	right: -38%;
+	z-index: -1;
+	width: 95%;
+	aspect-ratio: 1;
 	border-radius: 50%;
-	background: var(--ih-gray-100);
-	color: var(--ih-bg);
-	font-size: 1.5rem;
-	line-height: 1;
-	cursor: pointer;
+	background: rgba(142, 184, 38, 0.32);
+	border: 3px solid var(--ih-green);
+	pointer-events: none;
 }
 
-.ih-popup__close:hover {
-	background: var(--ih-green);
-}
-
-.ih-popup__eyebrow {
-	margin: 0 0 0.5rem;
-	font-family: var(--ih-heading);
-	font-size: 0.75rem;
-	font-weight: 700;
-	letter-spacing: 0.1em;
+.ih-popup__badge {
+	position: absolute;
+	top: clamp(1rem, 3vw, 1.6rem);
+	left: clamp(1rem, 3vw, 1.6rem);
+	padding: 0.55rem 1.4rem;
+	border: 1px solid rgba(255, 255, 255, 0.25);
+	border-radius: 999px;
+	background: rgba(255, 255, 255, 0.12);
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	font-family: var(--ih-display);
+	font-size: 1.05rem;
+	letter-spacing: 0.02em;
 	text-transform: uppercase;
 	color: var(--ih-green);
 }
 
 .ih-popup__title {
-	margin: 0 0 1rem;
+	margin: clamp(2.2rem, 5vw, 3rem) 0 0.5rem;
+	font-family: var(--ih-display);
+	font-weight: 400;
+	font-size: clamp(2.6rem, 8vw, 5rem);
+	line-height: 0.95;
+	text-transform: uppercase;
+	color: var(--ih-white);
+}
+
+.ih-popup__lead {
+	margin: 0 0 1.75rem;
 	font-family: var(--ih-heading);
-	font-size: clamp(1.4rem, 3.4vw, 1.9rem);
-	line-height: 1.15;
+	font-size: clamp(1rem, 2.4vw, 1.35rem);
+	line-height: 1.35;
+}
+
+.ih-popup__lead span {
+	color: var(--ih-green);
+	letter-spacing: 0.04em;
+}
+
+.ih-popup__ref {
+	margin: 0 0 1rem;
+	font-size: 0.8rem;
+	line-height: 1.6;
+	color: rgba(255, 255, 255, 0.85);
+}
+
+.ih-popup__ref strong {
+	font-size: 0.95rem;
+	color: var(--ih-white);
+}
+
+.ih-popup__quote {
+	margin: 0 0 1.5rem;
+	padding: 1.2rem 1.6rem;
+	border-radius: 34px;
+	background: rgba(255, 255, 255, 0.1);
+	font-size: 0.88rem;
+	font-style: italic;
+	line-height: 1.55;
+	color: rgba(255, 255, 255, 0.8);
 }
 
 .ih-popup__text {
-	margin: 0 0 0.9rem;
-	font-size: 0.95rem;
+	margin: 0 0 2.2rem;
+	font-size: 0.92rem;
 	line-height: 1.6;
 }
 
 .ih-popup__actions {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 0.75rem;
-	margin-top: 1.5rem;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+}
+
+.ih-popup__snooze {
+	padding: 0;
+	border: 0;
+	background: none;
+	font-family: inherit;
+	font-size: 0.78rem;
+	color: rgba(255, 255, 255, 0.55);
+	cursor: pointer;
+}
+
+.ih-popup__snooze:hover {
+	color: var(--ih-white);
+}
+
+.ih-popup__cta {
+	padding: 0.95rem 2.2rem;
+	border: 1px solid rgba(255, 255, 255, 0.8);
+	border-radius: 999px;
+	font-family: var(--ih-heading);
+	font-size: 0.78rem;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	text-decoration: none;
+	color: var(--ih-white);
+	transition: background 0.2s ease, color 0.2s ease;
+}
+
+.ih-popup__cta:hover {
+	background: var(--ih-green);
+	border-color: var(--ih-green);
+	color: #111;
+}
+
+@media (max-width: 560px) {
+	.ih-popup__actions {
+		flex-direction: column-reverse;
+		justify-content: center;
+	}
+}
+
+/* ---------- "Novità normativa" band (Prodotti, between the 3 realtà and "Perché fare formazione") ---------- */
+.ih-norma {
+	position: relative;
+	overflow: hidden;
+	background: var(--ih-white);
+	padding: clamp(2.5rem, 6vw, 4rem) 0;
+}
+
+/* Soft green sweep in the bottom-left corner. */
+.ih-norma__swoosh {
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: clamp(14rem, 25%, 26rem);
+	height: 100%;
+	background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 287' preserveAspectRatio='none'><path d='M0 185 Q150 150 318 287 L0 287 Z' fill='%238eb826' fill-opacity='.12'/><path d='M0 110 C40 190 110 250 195 287 L0 287 Z' fill='%238eb826' fill-opacity='.14'/><path d='M0 110 C40 190 110 250 195 287' fill='none' stroke='%238eb826' stroke-width='2' vector-effect='non-scaling-stroke'/></svg>") left bottom / 100% 100% no-repeat;
+	pointer-events: none;
+}
+
+.ih-norma__inner {
+	position: relative;
+	display: grid;
+	grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+	align-items: center;
+	gap: clamp(2rem, 5vw, 4rem);
+}
+
+.ih-norma__side {
+	padding-left: clamp(1.5rem, 4vw, 3rem);
+	border-left: 1px solid rgba(0, 0, 0, 0.35);
+}
+
+.ih-norma__badge {
+	display: inline-block;
+	margin-bottom: 1rem;
+	padding: 0.3rem 1.1rem;
+	border-radius: 999px;
+	background: var(--ih-green);
+	font-family: var(--ih-display);
+	font-size: 0.8rem;
+	letter-spacing: 0.03em;
+	text-transform: uppercase;
+	color: var(--ih-white);
+}
+
+.ih-norma__title {
+	margin: 0 0 0.35rem;
+	font-family: var(--ih-display);
+	font-weight: 400;
+	font-size: clamp(2rem, 4.4vw, 3.3rem);
+	line-height: 1;
+	text-transform: uppercase;
+	color: #111;
+}
+
+.ih-norma__lead {
+	margin: 0 0 0.35rem;
+	font-family: var(--ih-display);
+	font-size: clamp(1.1rem, 2.2vw, 1.6rem);
+	line-height: 1.1;
+	text-transform: uppercase;
+	color: #111;
+}
+
+.ih-norma__lead span {
+	color: var(--ih-green);
+}
+
+.ih-norma__ref {
+	margin: 0;
+	font-size: 0.78rem;
+	color: #333;
+}
+
+.ih-norma__text {
+	margin: 0 0 1.4rem;
+	max-width: 22rem;
+	font-size: 0.9rem;
+	line-height: 1.5;
+	color: #111;
+}
+
+.ih-norma__cta {
+	display: inline-block;
+	padding: 0.8rem 1.9rem;
+	border: 1px solid #111;
+	border-radius: 999px;
+	font-family: var(--ih-heading);
+	font-size: 0.75rem;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	text-decoration: none;
+	color: #111;
+	transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.ih-norma__cta:hover {
+	background: var(--ih-green);
+	border-color: var(--ih-green);
+	color: var(--ih-white);
+}
+
+@media (max-width: 760px) {
+	.ih-norma__inner {
+		grid-template-columns: 1fr;
+	}
+
+	.ih-norma__side {
+		padding-left: 0;
+		padding-top: 1.5rem;
+		border-left: 0;
+		border-top: 1px solid rgba(0, 0, 0, 0.35);
+	}
+}
+
+/* Piani hero: the featured plan is green here (the product pages keep cyan). */
+.ih-psol--hero .ih-psol__card.is-featured {
+	border-color: rgba(142, 184, 38, 0.7);
+	border-top-color: var(--ih-green);
+	background: linear-gradient(170deg, rgba(142, 184, 38, 0.22), rgba(142, 184, 38, 0.06) 50%, rgba(13, 13, 13, 0.32));
+}
+
+.ih-psol--hero .ih-psol__card.is-featured:hover {
+	border-color: var(--ih-green);
+	background: linear-gradient(170deg, rgba(142, 184, 38, 0.28), rgba(142, 184, 38, 0.08) 50%, rgba(13, 13, 13, 0.3));
+}
+
+.ih-psol--hero .ih-psol__card.is-featured .ih-psol__card-head {
+	background: linear-gradient(180deg, rgba(142, 184, 38, 0.95) 0%, rgba(109, 148, 32, 0.85) 100%);
+}
+
+/* Piani hero: no overlap with the heading, so "ACQUISTO" and the price read in full. */
+.ih-psol--hero .ih-psol__grid {
+	margin-top: clamp(-1.8rem, -1.6vw, -0.8rem);
+}
+
+.ih-psol--hero .ih-psol__card.is-featured {
+	margin-top: -0.9rem;
 }

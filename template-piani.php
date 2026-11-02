@@ -72,12 +72,12 @@ get_header();
 
 	<section class="ih-psol ih-psol--hero" id="ih-hero">
 		<div class="ih-container" id="ih-piani">
-			<p class="ih-psol__eyebrow"><?php esc_html_e( 'Scegli come comprare i simulatori VR Immensive.', 'immensive' ); ?></p>
+			<p class="ih-psol__eyebrow"><?php esc_html_e( 'Scegli come comprare i simulatori Immensive', 'immensive' ); ?></p>
 
 			<h1 class="ih-psol__heading">
-				<?php esc_html_e( 'Piani', 'immensive' ); ?><br>
+				<?php esc_html_e( 'Soluzioni di', 'immensive' ); ?><br>
 				<span class="ih-psol__heading-line">
-					<?php esc_html_e( 'e Soluzioni di Acquisto', 'immensive' ); ?>
+					<?php esc_html_e( 'Acquisto', 'immensive' ); ?>
 					<span class="ih-psol__price">
 						<span class="ih-psol__price-label"><?php esc_html_e( 'A partire da', 'immensive' ); ?></span>
 						<span class="ih-psol__price-value">&euro;40,00<span class="ih-psol__price-unit">/mo</span></span>
@@ -113,8 +113,15 @@ get_header();
 			</div>
 
 			<div class="ih-psol__footer ih-psol__footer--ctas">
-				<a class="ih-btn ih-btn--solid" href="<?php echo esc_url( $immensive_contatti_url ); ?>"><?php esc_html_e( 'Richiedi un Preventivo', 'immensive' ); ?></a>
-				<a class="ih-btn ih-btn--ghost" href="tel:+390813358542"><?php esc_html_e( 'Parla con un Consulente', 'immensive' ); ?></a>
+				<p class="ih-psol__tagline">
+					<span><?php esc_html_e( 'Quattro modelli,', 'immensive' ); ?></span><br>
+					<strong><?php esc_html_e( 'un solo prodotto.', 'immensive' ); ?></strong>
+					<small class="ih-psol__note"><?php esc_html_e( 'Attivazione in 7 giorni. Compatibile Formazione 4.0.', 'immensive' ); ?></small>
+				</p>
+				<div class="ih-psol__ctas">
+					<a class="ih-btn ih-btn--solid" href="<?php echo esc_url( $immensive_contatti_url ); ?>"><?php esc_html_e( 'Richiedi un Preventivo', 'immensive' ); ?></a>
+					<a class="ih-btn ih-btn--ghost" href="tel:+390813358542"><?php esc_html_e( 'Parla con un Consulente', 'immensive' ); ?></a>
+				</div>
 			</div>
 		</div>
 	</section>
@@ -180,14 +187,6 @@ get_header();
 	</section>
 
 	<section class="ih-tco" id="ih-tco">
-		<div class="ih-container">
-			<div class="ih-tco__banner ih-reveal">
-				<p class="ih-tco__banner-text"><strong><?php esc_html_e( 'Non sei sicuro del modello?', 'immensive' ); ?></strong> <?php esc_html_e( 'Risparmiamo tempo: lascia 3 dati e ti chiamiamo entro 24h.', 'immensive' ); ?></p>
-				<a class="ih-btn ih-btn--solid ih-tco__banner-cta" href="#ih-tco-form"><?php esc_html_e( 'Fammi Richiamare', 'immensive' ); ?></a>
-			</div>
-
-		</div>
-
 		<div class="ih-tco__sticky">
 			<div class="ih-tco__head">
 				<p class="ih-tco__eyebrow"><?php esc_html_e( 'Calcolatore TCO', 'immensive' ); ?></p>

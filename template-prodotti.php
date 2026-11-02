@@ -197,6 +197,22 @@ get_header();
 		</div>
 	</section>
 
+	<section class="ih-norma" id="ih-norma">
+		<span class="ih-norma__swoosh" aria-hidden="true"></span>
+		<div class="ih-container ih-norma__inner">
+			<div class="ih-norma__main ih-reveal">
+				<span class="ih-norma__badge"><?php esc_html_e( 'Novità normativa', 'immensive' ); ?></span>
+				<h2 class="ih-norma__title"><?php esc_html_e( 'Addestramento sulla sicurezza', 'immensive' ); ?></h2>
+				<p class="ih-norma__lead"><?php esc_html_e( 'Ora anche con la simulazione in', 'immensive' ); ?> <span><?php esc_html_e( 'ambiente virtuale', 'immensive' ); ?></span></p>
+				<p class="ih-norma__ref"><?php esc_html_e( 'Art. 37, comma 5 – D.Lgs. 81/2008 (Testo Unico sulla Sicurezza)', 'immensive' ); ?></p>
+			</div>
+			<div class="ih-norma__side ih-reveal">
+				<p class="ih-norma__text"><?php esc_html_e( 'La simulazione entra formalmente nei percorsi di addestramento. Con le soluzioni Immensive formi in sicurezza e tracci ogni sessione.', 'immensive' ); ?></p>
+				<a class="ih-norma__cta" href="<?php echo esc_url( home_url( '/contatti/' ) ); ?>"><?php esc_html_e( 'Parla con un consulente', 'immensive' ); ?></a>
+			</div>
+		</div>
+	</section>
+
 	<section class="ih-why" id="ih-why">
 		<div class="ih-why__sticky">
 			<div class="ih-why__intro">

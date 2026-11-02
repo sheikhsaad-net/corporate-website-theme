@@ -1588,36 +1588,37 @@
 
 
 	/* ---- 81/08 popup ----
-	   Opens once per browser session a few seconds after load; closes on the
-	   x / backdrop / Escape. Skipped when storage is unavailable only for the
-	   "seen" flag (it then simply shows once per page view). */
+	   Opens as soon as the page loads; closes on the backdrop / Escape / CTA.
+	   "Non mostrare più" hides it for SNOOZE_DAYS (localStorage; if storage is
+	   unavailable it simply shows on every page view). */
 	(function () {
 		var popup = document.getElementById('ih-popup-8108');
 		if (!popup) { return; }
-		var KEY = 'ih-popup-8108-seen';
-		try { if (window.sessionStorage.getItem(KEY)) { return; } } catch (e) {}
-		var lastFocus = null;
+		var KEY = 'ih-popup-8108-until';
+		var SNOOZE_DAYS = 7;
+		try {
+			var until = parseInt(window.localStorage.getItem(KEY), 10);
+			if (until && until > Date.now()) { return; }
+		} catch (e) {}
 		function close() {
 			popup.hidden = true;
 			document.body.classList.remove('ih-modal-open');
 			document.removeEventListener('keydown', onKey);
-			if (lastFocus && lastFocus.focus) { lastFocus.focus(); }
 		}
 		function onKey(e) { if (e.key === 'Escape') { close(); } }
-		function open() {
-			if (document.body.classList.contains('ih-modal-open')) { return; }
-			lastFocus = document.activeElement;
-			popup.hidden = false;
-			document.body.classList.add('ih-modal-open');
-			document.addEventListener('keydown', onKey);
-			var btn = popup.querySelector('.ih-popup__close');
-			if (btn) { btn.focus(); }
-			try { window.sessionStorage.setItem(KEY, '1'); } catch (e) {}
-		}
+		popup.hidden = false;
+		document.body.classList.add('ih-modal-open');
+		document.addEventListener('keydown', onKey);
 		popup.querySelectorAll('[data-popup-close]').forEach(function (el) {
 			el.addEventListener('click', close);
 		});
-		window.setTimeout(open, 5000);
+		var snooze = popup.querySelector('[data-popup-snooze]');
+		if (snooze) {
+			snooze.addEventListener('click', function () {
+				try { window.localStorage.setItem(KEY, String(Date.now() + SNOOZE_DAYS * 86400000)); } catch (e) {}
+				close();
+			});
+		}
 	})();
 
 })();
