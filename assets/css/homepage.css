@@ -12735,3 +12735,218 @@ body.ih-video-modal-open {
 .ih-psol--hero .ih-psol__card.is-featured {
 	margin-top: -0.9rem;
 }
+
+/* ---------- Interaction polish (see assets/js/effects.js) ---------- */
+.ih-progress {
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 1001;
+	width: 100%;
+	height: 3px;
+	background: linear-gradient(90deg, #6d9420, #8eb826 60%, #c6ee64);
+	box-shadow: 0 0 10px rgba(142, 184, 38, 0.6);
+	transform: scaleX(0);
+	transform-origin: left center;
+	pointer-events: none;
+}
+
+/* Animated contour lines behind the contact CTA band. */
+.ih-contact__glow {
+	display: block;
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+	pointer-events: none;
+	-webkit-mask-image: radial-gradient(75% 85% at 50% 50%, #000 25%, transparent 100%);
+	mask-image: radial-gradient(75% 85% at 50% 50%, #000 25%, transparent 100%);
+}
+
+.ih-topo {
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+/* Cursor glare + tilt on cards. */
+.ih-fx-glare {
+	position: absolute;
+	inset: 0;
+	z-index: 4;
+	border-radius: inherit;
+	background: radial-gradient(320px circle at var(--mx, 50%) var(--my, 40%), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05) 40%, transparent 65%);
+	mix-blend-mode: soft-light;
+	opacity: 0;
+	transition: opacity 0.3s ease;
+	pointer-events: none;
+}
+
+.ih-fx-card:hover > .ih-fx-glare {
+	opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.ih-progress {
+		transition: none;
+	}
+}
+
+/* Split-word heading reveal. */
+.ih-split-word {
+	display: inline-block;
+	overflow: hidden;
+	vertical-align: top;
+	padding-block: 0.08em;
+	margin-block: -0.08em;
+}
+
+.ih-split-word > span {
+	display: inline-block;
+	transform: translateY(115%);
+	transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+	transition-delay: calc(var(--i, 0) * 70ms);
+}
+
+.ih-split.is-in .ih-split-word > span {
+	transform: none;
+}
+
+/* Page transitions. */
+@keyframes ih-page-in {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+body.ih-page {
+	animation: ih-page-in 0.45s ease both;
+}
+
+body.ih-leaving {
+	opacity: 0;
+	transition: opacity 0.22s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	body.ih-page {
+		animation: none;
+	}
+}
+
+/* ---------- Interaction polish, round 2 (see assets/js/effects.js) ---------- */
+
+/* Light sweep across solid buttons on hover. */
+@keyframes ih-shine {
+	from { background-position: 130% 0; }
+	to { background-position: -30% 0; }
+}
+
+.ih-btn--solid:hover {
+	background-image: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.38) 50%, transparent 70%);
+	background-size: 250% 100%;
+	background-repeat: no-repeat;
+	animation: ih-shine 0.9s ease;
+}
+
+/* Underline that draws in under footer links. */
+.ih-footer__links a {
+	background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+	padding-bottom: 2px;
+	transition: color var(--ih-hover) var(--ih-ease-hover), background-size 0.35s ease;
+}
+
+.ih-footer__links a:hover {
+	background-size: 100% 1px;
+}
+
+/* Pointer spotlight on dark hero / CTA bands. */
+.ih-spot {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	pointer-events: none;
+	background: radial-gradient(420px circle at var(--sx, 50%) var(--sy, 50%), rgba(142, 184, 38, 0.13), transparent 70%);
+	opacity: 0;
+	transition: opacity 0.4s ease;
+}
+
+.ih-spot.is-on {
+	opacity: 1;
+}
+
+/* Back-to-top button with scroll-progress ring. */
+.ih-totop {
+	position: fixed;
+	right: 1.4rem;
+	bottom: 1.4rem;
+	z-index: 90;
+	width: 50px;
+	height: 50px;
+	padding: 0;
+	border: 0;
+	border-radius: 50%;
+	background: rgba(11, 13, 16, 0.82);
+	-webkit-backdrop-filter: blur(10px);
+	backdrop-filter: blur(10px);
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+	color: #fff;
+	cursor: pointer;
+	opacity: 0;
+	transform: translateY(14px) scale(0.9);
+	pointer-events: none;
+	transition: opacity 0.3s ease, transform 0.3s ease, background 0.25s ease;
+}
+
+.ih-totop.is-on {
+	opacity: 1;
+	transform: none;
+	pointer-events: auto;
+}
+
+.ih-totop:hover {
+	background: #8eb826;
+	color: #0b0d10;
+}
+
+.ih-totop svg {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	transform: rotate(-90deg);
+}
+
+.ih-totop circle {
+	fill: none;
+	stroke-width: 2.5;
+}
+
+.ih-totop__track {
+	stroke: rgba(255, 255, 255, 0.16);
+}
+
+.ih-totop__bar {
+	stroke: #8eb826;
+	stroke-linecap: round;
+	stroke-dasharray: 144.5;
+	stroke-dashoffset: 144.5;
+}
+
+.ih-totop__arrow {
+	position: absolute;
+	inset: 0;
+	margin: auto;
+	width: 18px;
+	height: 18px;
+	transform: none;
+	fill: none;
+	stroke: currentColor;
+	stroke-width: 2;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.ih-btn--solid:hover {
+		animation: none;
+	}
+}

@@ -166,6 +166,15 @@ function immensive_scripts() {
 			true
 		);
 
+		$immensive_fx = get_template_directory() . '/assets/js/effects.js';
+		wp_enqueue_script(
+			'immensive-effects',
+			get_template_directory_uri() . '/assets/js/effects.js',
+			array(),
+			file_exists( $immensive_fx ) ? filemtime( $immensive_fx ) : wp_get_theme()->get( 'Version' ),
+			true
+		);
+
 		if ( ! $immensive_portfolio_listing ) {
 			// Front-end data for Contatti's AJAX forms; the portfolio listing
 			// does not use either form or their associated JavaScript.
