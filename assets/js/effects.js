@@ -312,7 +312,7 @@
 
 	/* ---- 3. Tilt + glare on cards ---- */
 	(function () {
-		var sel = '.ih-reality-card, .ih-why-card, .ih-esplora-card, .ih-acc--innov, .ih-acc--mission';
+		var sel = '.ih-reality-card, .ih-why-card, .ih-esplora-card, .ih-tool, .ih-acc--innov, .ih-acc--mission';
 		document.querySelectorAll(sel).forEach(function (card) {
 			var glare = document.createElement('span');
 			glare.className = 'ih-fx-glare';

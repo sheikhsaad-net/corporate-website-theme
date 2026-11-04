@@ -61,7 +61,7 @@ endif;
 			<span class="ih-sccp__media" aria-hidden="true">
 				<?php
 				if ( has_post_thumbnail( $immensive_pg_p ) ) {
-					echo get_the_post_thumbnail( $immensive_pg_p, 'large', array( 'loading' => 'lazy', 'decoding' => 'async' ) );
+					echo get_the_post_thumbnail( $immensive_pg_p, '1536x1536', array( 'loading' => 'lazy', 'decoding' => 'async', 'sizes' => '1536px', 'srcset' => (string) wp_get_attachment_image_url( get_post_thumbnail_id( $immensive_pg_p ), '1536x1536' ) . ' 1536w' ) );
 				}
 				?>
 			</span>

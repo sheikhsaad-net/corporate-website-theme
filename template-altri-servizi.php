@@ -199,7 +199,7 @@ get_header();
 		array(
 			'label' => 'Innovazione',
 			'desc'  => "Soluzioni digitali custom per aziende: configuratori 3D, applicazioni AR, simulazioni AEC e visualizzazioni avanzate progettate su misura.",
-			'img'   => 'innovazione/immensive_innovazione_aec.webp',
+			'img'   => 'servizi/mission-innovazione.webp',
 			'href'  => home_url( '/innovazione/' ),
 		),
 		array(
@@ -236,59 +236,24 @@ get_header();
 		</div>
 
 		<div class="ih-container ih-realities__cards">
-			<div class="ih-esplora-grid">
-				<div class="ih-esplora-col">
-					<article class="ih-esplora-card ih-esplora-card--tall ih-reveal" id="ih-servizi-xr">
-						<img src="<?php echo esc_url( $immensive_img . 'servizi/immensive_altri_servizi_xr.webp' ); ?>" alt="" loading="lazy" decoding="async" width="471" height="471">
-						<span class="ih-esplora-card__label">Servizi XR</span>
-						<div class="ih-esplora-card__subs">
-							<div class="ih-esplora-card__sub">
-								<h4>Realtà Virtuale</h4>
-								<p>Ambienti totalmente ricostruiti al computer con immersione multisensoriale. Ideale per formazione e simulazione di processi con interazione umana.</p>
-							</div>
-							<div class="ih-esplora-card__sub">
-								<h4>Realtà Aumentata</h4>
-								<p>Contenuti virtuali sovrapposti al mondo reale tramite smartphone o device indossabili. Perfetta per musei, entertainment, ristorazione e marketing.</p>
-							</div>
-							<div class="ih-esplora-card__sub ih-esplora-card__sub--wide">
-								<h4>Realtà Mista</h4>
-								<p>Fusione di AR e VR: oggetti virtuali ancorati alla realtà fisica per un'interazione dinamica. Ideale per industria, assistenza remota e manutenzione.</p>
-							</div>
-						</div>
+			<?php
+			$immensive_tools = array(
+				array( 'id' => 'ih-servizi-xr', 'mod' => 'dark', 'title' => 'Servizi XR', 'desc' => "Realtà virtuale, aumentata e mista: ambienti immersivi per formazione e simulazione, contenuti digitali per musei e marketing, assistenza remota e manutenzione per l'industria." ),
+				array( 'id' => 'ih-software-desktop', 'mod' => 'green-dark', 'title' => 'Software Desktop', 'desc' => 'Visualizzazione grafica 3D e simulazione per desktop, con integrazioni su misura: sensoristica, PLC, automatismi e CRM.' ),
+				array( 'id' => 'ih-app-mobile', 'mod' => 'grey', 'title' => 'App Mobile', 'desc' => 'App mobile native iOS e Android: esperienze AR, configuratori prodotto, dashboard aziendali e funzioni gestionali collegate ai sistemi esistenti.' ),
+				array( 'id' => 'ih-sviluppo-web', 'mod' => 'grey', 'title' => 'Sviluppo Web', 'desc' => 'Piattaforme web e portali gestionali: dashboard di monitoraggio, configuratori online, automazione di processi e collegamento con i sistemi del cliente.' ),
+				array( 'id' => 'ih-integrazione-ai', 'mod' => 'white', 'title' => 'Integrazione AI', 'desc' => 'Integriamo modelli AI nei tuoi applicativi e processi: assistenti vocali, computer vision, generazione di contenuti, analisi predittive e automazioni personalizzate.' ),
+				array( 'id' => 'ih-prototipazione', 'mod' => 'green', 'title' => 'Prototipazione', 'desc' => 'Realizziamo prototipi industriali completi di meccanica, elettronica, sensoristica e PLC: dalla piccola serie per ricerca e sviluppo fino alla produzione su larga scala.' ),
+			);
+			?>
+			<div class="ih-tools">
+				<?php foreach ( $immensive_tools as $immensive_i => $immensive_tool ) : ?>
+					<article class="ih-tool ih-tool--<?php echo esc_attr( $immensive_tool['mod'] ); ?> ih-reveal" id="<?php echo esc_attr( $immensive_tool['id'] ); ?>">
+						<span class="ih-tool__num" aria-hidden="true"><?php echo esc_html( str_pad( (string) ( $immensive_i + 1 ), 2, '0', STR_PAD_LEFT ) ); ?></span>
+						<h3 class="ih-tool__title"><?php echo esc_html( $immensive_tool['title'] ); ?></h3>
+						<p class="ih-tool__desc"><?php echo esc_html( $immensive_tool['desc'] ); ?></p>
 					</article>
-
-					<article class="ih-esplora-card ih-reveal" id="ih-sviluppo-web">
-						<img src="<?php echo esc_url( $immensive_img . 'servizi/immensive_altri-servizi_sviluppo_web.webp' ); ?>" alt="" loading="lazy" decoding="async" width="826" height="814">
-						<span class="ih-esplora-card__label">Sviluppo Web</span>
-						<p class="ih-esplora-card__desc">Piattaforme web e portali gestionali: dashboard di monitoraggio, configuratori online, automazione di processi e collegamento con i sistemi del cliente.</p>
-					</article>
-
-					<article class="ih-esplora-card ih-reveal" id="ih-prototipazione">
-						<img src="<?php echo esc_url( $immensive_img . 'servizi/immensive_altri-servizi_prototipazione.webp' ); ?>" alt="" loading="lazy" decoding="async" width="1254" height="1254">
-						<span class="ih-esplora-card__label">Prototipazione</span>
-						<p class="ih-esplora-card__desc">Realizziamo prototipi industriali completi di meccanica, elettronica, sensoristica e PLC: dalla piccola serie per ricerca e sviluppo fino alla produzione su larga scala.</p>
-					</article>
-				</div>
-
-				<div class="ih-esplora-col">
-					<article class="ih-esplora-card ih-reveal" id="ih-software-desktop">
-						<img src="<?php echo esc_url( $immensive_img . 'servizi/immensive_altri_servizi_software_desktop.webp' ); ?>" alt="" loading="lazy" decoding="async" width="706" height="706">
-						<span class="ih-esplora-card__label">Software Desktop</span>
-						<p class="ih-esplora-card__desc">Visualizzazione grafica 3D e simulazione per desktop, con integrazioni su misura: sensoristica, PLC, automazioni e CRM.</p>
-					</article>
-
-					<article class="ih-esplora-card ih-reveal" id="ih-app-mobile">
-						<img src="<?php echo esc_url( $immensive_img . 'servizi/immensive_altri-servizi_app_mobile.webp' ); ?>" alt="" loading="lazy" decoding="async" width="897" height="897">
-						<span class="ih-esplora-card__label">App Mobile</span>
-						<p class="ih-esplora-card__desc">App mobile native iOS e Android: esperienze AR, configuratori prodotto, dashboard aziendali e funzioni gestionali collegate ai sistemi esistenti.</p>
-					</article>
-
-					<article class="ih-esplora-card ih-esplora-card--tall ih-reveal" id="ih-integrazione-ai">
-						<img src="<?php echo esc_url( $immensive_img . 'servizi/immensive_altri_servizi_integrazioneai.webp' ); ?>" alt="" loading="lazy" decoding="async" width="826" height="814">
-						<span class="ih-esplora-card__label">Integrazione AI</span>
-						<p class="ih-esplora-card__desc">Integriamo modelli AI nei tuoi applicativi e processi: assistenti vocali, computer vision, generazione di contenuti, analisi predittive e automazioni personalizzate.</p>
-					</article>
-				</div>
+				<?php endforeach; ?>
 			</div>
 		</div>
 	</section>
@@ -324,7 +289,7 @@ get_header();
 						<span class="ih-work__media" aria-hidden="true">
 							<?php
 							if ( has_post_thumbnail( $immensive_work ) ) {
-								echo get_the_post_thumbnail( $immensive_work, 'large', array( 'loading' => 'lazy', 'decoding' => 'async' ) );
+								echo get_the_post_thumbnail( $immensive_work, '1536x1536', array( 'loading' => 'lazy', 'decoding' => 'async', 'sizes' => '1536px', 'srcset' => (string) wp_get_attachment_image_url( get_post_thumbnail_id( $immensive_work ), '1536x1536' ) . ' 1536w' ) );
 							}
 							?>
 						</span>

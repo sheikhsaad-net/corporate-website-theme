@@ -46,6 +46,7 @@ get_header();
 						'width' => 3344,
 						'height' => 1882,
 						'name'  => 'Weld VR',
+						'slug'  => 'weld-vr',
 						'tag'   => 'Formazione professionale alla saldatura in VR',
 						'color' => '#69ceeb',
 					),
@@ -54,6 +55,7 @@ get_header();
 						'width' => 3840,
 						'height' => 2160,
 						'name'  => 'Forklift VR',
+						'slug'  => 'forklift-vr',
 						'tag'   => 'Addestramento immersivo per carrellisti',
 						'color' => '#f2b90d',
 					),
@@ -62,6 +64,7 @@ get_header();
 						'width' => 4716,
 						'height' => 2652,
 						'name'  => 'Firefighter VR',
+						'slug'  => 'firefighter-vr',
 						'tag'   => 'Simulazione avanzata estinzione incendio',
 						'color' => '#e8503a',
 					),
@@ -70,6 +73,7 @@ get_header();
 						'width' => 1930,
 						'height' => 1086,
 						'name'  => 'Electro VR',
+						'slug'  => 'electro-vr',
 						'tag'   => 'Addestramento immersivo per operatori su impianti elettrici',
 						'color' => '#f7971e',
 					),
@@ -92,7 +96,7 @@ get_header();
 							<h3 class="ih-slide__name"><?php echo esc_html( $slide['name'] ); ?></h3>
 							<p class="ih-slide__tag"><?php echo esc_html( $slide['tag'] ); ?></p>
 							<div class="ih-slide__details">
-								<a class="ih-slide__cta" href="#ih-contact">
+								<a class="ih-slide__cta" href="<?php echo esc_url( home_url( '/' . $slide['slug'] . '/' ) ); ?>">
 									<?php esc_html_e( 'Scopri il Prodotto', 'immensive' ); ?>
 									<span class="ih-slide__cta-arrow" aria-hidden="true">&rarr;</span>
 								</a>
@@ -109,7 +113,7 @@ get_header();
 		<div class="ih-hero__footer">
 			<div class="ih-hero__actions">
 				<a class="ih-btn ih-btn--outline" href="#ih-contact"><?php esc_html_e( 'Richiedi una Demo', 'immensive' ); ?></a>
-				<a class="ih-btn ih-btn--outline ih-btn--tint" href="<?php echo esc_url( home_url( '/piani/' ) ); ?>"><?php esc_html_e( 'Scopri i Piani', 'immensive' ); ?></a>
+				<a class="ih-btn ih-btn--outline" href="<?php echo esc_url( home_url( '/piani/' ) ); ?>"><?php esc_html_e( 'Scopri i Piani', 'immensive' ); ?></a>
 				<a class="ih-btn ih-btn--outline" href="<?php echo esc_url( home_url( '/rivenditori/' ) ); ?>"><?php esc_html_e( 'Diventa Distributore', 'immensive' ); ?></a>
 			</div>
 

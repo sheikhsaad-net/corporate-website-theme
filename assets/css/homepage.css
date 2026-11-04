@@ -3641,7 +3641,8 @@
 	grid-template-columns: repeat(4, 1fr);
 	gap: 1.1rem;
 	align-items: start;
-	margin-top: clamp(-3.5rem, -3vw, -1.5rem);
+	/* Light overlap only: a deeper pull-up buried the price beside "ACQUISTO". */
+	margin-top: clamp(-1.8rem, -1.6vw, -0.8rem);
 	text-align: left;
 }
 
@@ -3696,7 +3697,7 @@
 }
 
 .ih-psol__card.is-featured {
-	margin-top: -1.25rem;
+	margin-top: -0.6rem;
 	border-color: rgba(105, 206, 235, 0.55);
 	border-top-color: rgba(105, 206, 235, 0.75);
 	background: linear-gradient(170deg, rgba(105, 206, 235, 0.18), rgba(105, 206, 235, 0.05) 50%, rgba(13, 13, 13, 0.32));
@@ -6989,14 +6990,9 @@
 	color: var(--ih-cyan);
 }
 
-.ih-btn--tint {
-	background: rgba(105, 206, 235, 0.16);
-	border-color: rgba(105, 206, 235, 0.4);
-}
-
-.ih-btn--tint:hover {
-	background: rgba(105, 206, 235, 0.28);
-	color: var(--ih-white);
+.ih-hero__actions .ih-btn--outline:hover {
+	border-color: var(--ih-green);
+	color: var(--ih-green);
 }
 
 .ih-hero__badges {
@@ -7288,7 +7284,7 @@
 	z-index: 2;
 	/* Pull the cards up so they overlap the lower half of the pinned
 	   heading as the page scrolls. */
-	margin-top: -55vh;
+	margin-top: -46vh;
 	/* Bottom space lives here (not as section padding) so it counts as
 	   parent content and keeps the heading pinned while the cards scroll
 	   up and over it ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â same trick as .ih-realities__cards. The why cards
@@ -10803,7 +10799,7 @@ body.page-template-template-electro-vr-php .ih {
 	}
 
 	.ih-why__cards {
-		margin-top: -30vh;
+		margin-top: -26vh;
 	}
 
 	.ih-why__sticky {
@@ -12948,5 +12944,95 @@ body.ih-leaving {
 @media (prefers-reduced-motion: reduce) {
 	.ih-btn--solid:hover {
 		animation: none;
+	}
+}
+
+/* ---------- "Gli strumenti dietro l'innovazione" tiles (Servizi) ---------- */
+.ih-tools {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: clamp(0.8rem, 1.6vw, 1.5rem);
+	max-width: none;
+}
+
+.ih-tool {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	min-height: clamp(17rem, 30vw, 30rem);
+	padding: clamp(1.3rem, 2.6vw, 2.5rem);
+	border-radius: 20px;
+	overflow: hidden;
+	background: #d9d9d9;
+	color: #111;
+	transition: opacity 0.7s ease, transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.ih-tool:hover {
+	transform: translateY(-6px);
+	box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+}
+
+.ih-tool__num {
+	align-self: flex-end;
+	font-family: var(--ih-display);
+	font-size: clamp(1.5rem, 2.8vw, 2.5rem);
+	line-height: 1;
+}
+
+.ih-tool__title {
+	margin: clamp(0.6rem, 1.4vw, 1.2rem) 0 0;
+	font-family: var(--ih-display);
+	font-weight: 400;
+	font-size: clamp(2.2rem, 4.6vw, 4.2rem);
+	line-height: 0.95;
+	text-transform: uppercase;
+	color: inherit;
+}
+
+.ih-tool__desc {
+	margin: auto 0 0;
+	padding-top: 1.2rem;
+	font-size: clamp(0.8rem, 1.1vw, 1rem);
+	line-height: 1.5;
+	color: inherit;
+}
+
+.ih-tool--dark {
+	background: #111;
+	color: #fff;
+}
+
+.ih-tool--green-dark {
+	background: linear-gradient(135deg, #8eb826 0%, #3d5a10 45%, #0c0f08 100%);
+	color: #fff;
+}
+
+.ih-tool--grey {
+	background: #d9d9d9;
+}
+
+.ih-tool--white {
+	background: #fff;
+}
+
+.ih-tool--green {
+	background: #8eb826;
+	color: #fff;
+}
+
+@media (max-width: 900px) {
+	.ih-tools {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 560px) {
+	.ih-tools {
+		grid-template-columns: 1fr;
+	}
+
+	.ih-tool {
+		min-height: 15rem;
 	}
 }

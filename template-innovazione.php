@@ -39,7 +39,7 @@ $immensive_in_cards = array(
 	array(
 		'label' => 'Soluzioni per il medicale',
 		'desc'  => 'Esperienze immersive per formazione clinica, simulazione di procedure e visualizzazione medica avanzata.',
-		'img'   => 'innovazione/immensive_innovazione_dallidea-bg.webp',
+		'img'   => 'innovazione/immensive_innovazione_medicale.webp',
 	),
 	array(
 		'label' => 'Applicazioni AR',
