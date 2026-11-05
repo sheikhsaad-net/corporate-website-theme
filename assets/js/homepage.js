@@ -1589,16 +1589,18 @@
 
 	/* ---- 81/08 popup ----
 	   Opens as soon as the page loads; closes on the backdrop / Escape / CTA.
-	   "Non mostrare più" hides it for SNOOZE_DAYS (localStorage; if storage is
-	   unavailable it simply shows on every page view). */
+	   "Non mostrare più" hides it for SNOOZE_DAYS (localStorage); the main CTA
+	   hides it for the rest of the browser session (sessionStorage). If
+	   storage is unavailable it simply shows on every page view. */
 	(function () {
 		var popup = document.getElementById('ih-popup-8108');
 		if (!popup) { return; }
 		var KEY = 'ih-popup-8108-until';
-		var SNOOZE_DAYS = 7;
+		var SNOOZE_DAYS = 2;
 		try {
 			var until = parseInt(window.localStorage.getItem(KEY), 10);
 			if (until && until > Date.now()) { return; }
+			if (window.sessionStorage.getItem(KEY)) { return; }
 		} catch (e) {}
 		function close() {
 			popup.hidden = true;
@@ -1612,6 +1614,12 @@
 		popup.querySelectorAll('[data-popup-close]').forEach(function (el) {
 			el.addEventListener('click', close);
 		});
+		var cta = popup.querySelector('.ih-popup__cta');
+		if (cta) {
+			cta.addEventListener('click', function () {
+				try { window.sessionStorage.setItem(KEY, '1'); } catch (e) {}
+			});
+		}
 		var snooze = popup.querySelector('[data-popup-snooze]');
 		if (snooze) {
 			snooze.addEventListener('click', function () {
