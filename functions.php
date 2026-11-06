@@ -847,6 +847,46 @@ function immensive_head_cleanup() {
 add_action( 'init', 'immensive_head_cleanup' );
 
 /**
+ * Security hardening.
+ *
+ * - XML-RPC and pingbacks are not used on this site, so they are switched off.
+ * - The public REST user list exposes login names; visitors get no access to it.
+ * - Author archives (/author/{login}/ and ?author=N) expose login names; they redirect home.
+ */
+add_filter( 'xmlrpc_enabled', '__return_false' );
+
+add_filter(
+	'wp_headers',
+	function ( $headers ) {
+		unset( $headers['X-Pingback'] );
+		return $headers;
+	}
+);
+
+add_filter(
+	'rest_endpoints',
+	function ( $endpoints ) {
+		if ( ! is_user_logged_in() ) {
+			unset( $endpoints['/wp/v2/users'], $endpoints['/wp/v2/users/(?P<id>[\d]+)'] );
+		}
+		return $endpoints;
+	}
+);
+
+// Priority 1 runs before WordPress's own canonical redirect, so ?author=N never
+// reveals the login name in a Location header.
+add_action(
+	'template_redirect',
+	function () {
+		if ( is_author() ) {
+			wp_safe_redirect( home_url( '/' ), 301 );
+			exit;
+		}
+	},
+	1
+);
+
+/**
  * Disable the emoji script/style, saving an extra request and inline CSS
  * on every page load.
  */

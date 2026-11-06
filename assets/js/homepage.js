@@ -1596,7 +1596,7 @@
 		var popup = document.getElementById('ih-popup-8108');
 		if (!popup) { return; }
 		var KEY = 'ih-popup-8108-until';
-		var SNOOZE_DAYS = 2;
+		var SNOOZE_DAYS = 7;
 		try {
 			var until = parseInt(window.localStorage.getItem(KEY), 10);
 			if (until && until > Date.now()) { return; }
