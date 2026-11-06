@@ -72,7 +72,8 @@ get_header();
 				<span class="ih-splithero__shade" aria-hidden="true"></span>
 
 				<span class="ih-splithero__inner">
-					<h2 class="ih-splithero__title"><?php echo wp_kses( $immensive_side['title'], array( 'br' => array() ) ); ?></h2>
+					<?php $immensive_title_tag = 0 === $immensive_i ? 'h1' : 'h2'; /* one <h1> per page: the first hero side */ ?>
+					<<?php echo $immensive_title_tag; ?> class="ih-splithero__title"><?php echo wp_kses( $immensive_side['title'], array( 'br' => array() ) ); ?></<?php echo $immensive_title_tag; ?>>
 					<span class="ih-splithero__reveal">
 						<span class="ih-splithero__text"><?php echo esc_html( $immensive_side['text'] ); ?></span>
 						<span class="ih-splithero__cta"><?php echo esc_html( $immensive_side['cta'] ); ?> <span aria-hidden="true">&rarr;</span></span>

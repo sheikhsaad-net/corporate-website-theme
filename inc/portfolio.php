@@ -25,6 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 const IMMENSIVE_PORTFOLIO_POST_TYPE  = 'immensive_work';
 const IMMENSIVE_PORTFOLIO_TAG_META   = '_immensive_work_tag';
 const IMMENSIVE_PORTFOLIO_FEAT_META  = '_immensive_work_featured';
+const IMMENSIVE_PORTFOLIO_GROUP_META = '_immensive_work_group';
 
 /**
  * Placement meta key prefix.
@@ -128,6 +129,101 @@ function immensive_portfolio_for_page( $page_id = 0, $limit = 0 ) {
 }
 
 /**
+ * The two hand-ordered groups of the main Portfolio page.
+ *
+ * `legacy_ids` keeps the order the groups had before the editor setting
+ * existed, so projects without a group setting render where they always did.
+ *
+ * @return array<string, array>
+ */
+function immensive_portfolio_group_definitions() {
+	return array(
+		'prodotti-formazione' => array(
+			'name'       => __( 'Prodotti per la formazione', 'immensive' ),
+			'desc'       => __( 'Simulatori VR con kit hardware dedicati per la formazione tecnica e professionale: saldatura, sollevamento, antincendio e impianti elettrici.', 'immensive' ),
+			'icon'       => 'formazione',
+			// Weld, Forklift, Electro, Firefighter.
+			'legacy_ids' => array( 156, 154, 195, 158 ),
+		),
+		'altri-servizi'       => array(
+			'name'       => __( 'Altri servizi', 'immensive' ),
+			'desc'       => __( 'App, configuratori, software e ambienti digitali su misura per aziende, cultura, sanità e design.', 'immensive' ),
+			'icon'       => 'altri-servizi',
+			'legacy_ids' => array( 199, 172, 178, 164, 193, 84, 140, 86, 160, 176, 78, 76, 80, 197, 152, 148, 174, 150, 144, 146, 134, 142, 138, 166, 132, 136, 168, 162, 255 ),
+		),
+	);
+}
+
+/**
+ * Every published project, sorted into the two Portfolio groups.
+ *
+ * Group = the editor setting when one is chosen, otherwise the legacy list the
+ * project was in, otherwise "Altri servizi". Within a group, legacy projects
+ * keep their legacy order; the rest follow menu_order, then newest first.
+ *
+ * @return array<int, array> Each entry: slug, name, desc, icon, projects (WP_Post[]).
+ */
+function immensive_portfolio_grouped() {
+	$definitions = immensive_portfolio_group_definitions();
+
+	$all = get_posts(
+		array(
+			'post_type'      => IMMENSIVE_PORTFOLIO_POST_TYPE,
+			'post_status'    => 'publish',
+			'posts_per_page' => -1,
+			'orderby'        => array(
+				'menu_order' => 'ASC',
+				'date'       => 'DESC',
+			),
+		)
+	);
+
+	$legacy_group = array();
+	foreach ( $definitions as $slug => $definition ) {
+		foreach ( $definition['legacy_ids'] as $position => $post_id ) {
+			$legacy_group[ $post_id ] = array( $slug, $position );
+		}
+	}
+
+	$buckets = array();
+	foreach ( array_keys( $definitions ) as $slug ) {
+		$buckets[ $slug ] = array();
+	}
+	foreach ( $all as $index => $project ) {
+		$group = get_post_meta( $project->ID, IMMENSIVE_PORTFOLIO_GROUP_META, true );
+		if ( ! isset( $definitions[ $group ] ) ) {
+			$group = isset( $legacy_group[ $project->ID ] ) ? $legacy_group[ $project->ID ][0] : 'altri-servizi';
+		}
+		$buckets[ $group ][] = array(
+			'project' => $project,
+			'index'   => $index,
+		);
+	}
+
+	$out = array();
+	foreach ( $definitions as $slug => $definition ) {
+		$items = $buckets[ $slug ];
+		usort(
+			$items,
+			function ( $a, $b ) use ( $definition ) {
+				$pos_a = array_search( $a['project']->ID, $definition['legacy_ids'], true );
+				$pos_b = array_search( $b['project']->ID, $definition['legacy_ids'], true );
+				$key_a = false === $pos_a ? 1000 + $a['index'] : $pos_a;
+				$key_b = false === $pos_b ? 1000 + $b['index'] : $pos_b;
+				return $key_a <=> $key_b;
+			}
+		);
+		$out[] = array_merge(
+			array( 'slug' => $slug ),
+			$definition,
+			array( 'projects' => array_map( function ( $item ) { return $item['project']; }, $items ) )
+		);
+	}
+
+	return $out;
+}
+
+/**
  * Register the post type.
  *
  * `page-attributes` is what exposes the Order field, which the grid sorts by.
@@ -199,6 +295,23 @@ function immensive_render_portfolio_meta_box( $post ) {
 		<span class="description"><?php esc_html_e( 'Testo della pillola in basso a destra sulla card.', 'immensive' ); ?></span>
 	</p>
 	<p>
+		<label for="immensive_work_group"><strong><?php esc_html_e( 'Gruppo nel portfolio', 'immensive' ); ?></strong></label><br>
+		<select id="immensive_work_group" name="immensive_work_group" class="widefat">
+			<?php
+			$immensive_group_now  = get_post_meta( $post->ID, IMMENSIVE_PORTFOLIO_GROUP_META, true );
+			$immensive_group_opts = array(
+				''                    => __( 'Automatico (come oggi)', 'immensive' ),
+				'prodotti-formazione' => __( 'Prodotti per la formazione', 'immensive' ),
+				'altri-servizi'       => __( 'Altri servizi', 'immensive' ),
+			);
+			foreach ( $immensive_group_opts as $immensive_opt_value => $immensive_opt_label ) :
+				?>
+				<option value="<?php echo esc_attr( $immensive_opt_value ); ?>" <?php selected( $immensive_group_now, $immensive_opt_value ); ?>><?php echo esc_html( $immensive_opt_label ); ?></option>
+			<?php endforeach; ?>
+		</select>
+		<span class="description"><?php esc_html_e( 'In quale gruppo compare il progetto nella pagina Portfolio.', 'immensive' ); ?></span>
+	</p>
+	<p>
 		<strong><?php esc_html_e( 'Mostra nelle pagine', 'immensive' ); ?></strong><br>
 		<span class="description"><?php esc_html_e( 'Spunta le pagine in cui questo progetto deve comparire e indica la posizione (numero piu\' basso = piu\' in alto).', 'immensive' ); ?></span>
 	</p>
@@ -246,6 +359,16 @@ function immensive_save_portfolio_meta( $post_id ) {
 			delete_post_meta( $post_id, IMMENSIVE_PORTFOLIO_TAG_META );
 		} else {
 			update_post_meta( $post_id, IMMENSIVE_PORTFOLIO_TAG_META, $immensive_tag );
+		}
+	}
+
+	if ( isset( $_POST['immensive_work_group'] ) ) {
+		$immensive_group_value = sanitize_key( wp_unslash( $_POST['immensive_work_group'] ) );
+		$immensive_allowed     = array_keys( immensive_portfolio_group_definitions() );
+		if ( in_array( $immensive_group_value, $immensive_allowed, true ) ) {
+			update_post_meta( $post_id, IMMENSIVE_PORTFOLIO_GROUP_META, $immensive_group_value );
+		} else {
+			delete_post_meta( $post_id, IMMENSIVE_PORTFOLIO_GROUP_META );
 		}
 	}
 
