@@ -86,7 +86,7 @@ get_header();
 
 		<div class="ih-container ih-pfunziona__media-wrap">
 			<div class="ih-pfunziona__media ih-reveal">
-				<img src="<?php echo esc_url( $immensive_img . 'firefighter-vr-video-cover.jpg' ); ?>" alt="Firefighter VR Simulator — guarda il video dimostrativo" loading="lazy" width="2507" height="1410">
+				<img src="<?php echo esc_url( $immensive_img . 'firefighter-vr-video-cover.webp' ); ?>" alt="Firefighter VR Simulator — guarda il video dimostrativo" loading="lazy" width="2507" height="1410">
 				<button type="button" class="ih-pfunziona__video" data-video-src="https://youtu.be/QcfsWtZk5KM" aria-label="<?php esc_attr_e( 'Riproduci il video Firefighter VR', 'immensive' ); ?>"><span class="ih-pfunziona__play-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="m9 6 10 6-10 6V6Z" fill="currentColor"/></svg></span></button>
 			</div>
 		</div>
