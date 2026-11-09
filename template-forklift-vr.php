@@ -82,7 +82,7 @@ get_header();
 		</div>
 	</section>
 
-	<section class="ih-pteach ih-pteach--flow" style="background-image: linear-gradient(160deg, #1a1a1a 0%, #6b5808 60%, #4d3f05 100%);">
+	<section class="ih-pteach ih-pteach--flow" style="--pc: #f2b90d; background-image: linear-gradient(160deg, #1a1a1a 0%, #6b5808 60%, #4d3f05 100%);">
 		<div class="ih-pteach__scrim" aria-hidden="true"></div>
 		<div class="ih-container ih-pteach__inner ih-reveal">
 			<h2 class="ih-pteach__title"><?php esc_html_e( 'Innova il tuo modo di formare gli addetti alla guida di carrelli elevatori', 'immensive' ); ?></h2>

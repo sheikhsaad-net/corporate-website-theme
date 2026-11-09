@@ -13299,3 +13299,108 @@ body.ih-leaving {
 	height: 56px;
 	object-fit: contain;
 }
+
+/* One size for every button (same padding, font, weight, tracking, border)
+   whatever the page or colour variant. Only the header pill keeps its own. */
+body .ih-btn:not(.ih-header__cta),
+body .ih-popup__cta,
+body .ih-norma__cta,
+body .ih-splithero__cta,
+body .ih-slide__cta {
+	box-sizing: border-box;
+	justify-content: center;
+	padding: 0.95rem 2.2rem !important;
+	font-family: var(--ih-heading);
+	font-size: 0.85rem !important;
+	font-weight: 600;
+	letter-spacing: 0.06em !important;
+	line-height: 1.2;
+	text-transform: uppercase;
+	border-width: 1.5px;
+	border-style: solid;
+	white-space: nowrap;
+}
+
+body .ih-btn--solid:not(.ih-header__cta),
+body .ih-btn--cyan,
+body .ih-btn--pc {
+	border-color: var(--ih-green);
+}
+
+body .ih-btn--pill:not(.ih-header__cta) {
+	border-color: transparent;
+}
+
+@media (max-width: 480px) {
+	body .ih-btn:not(.ih-header__cta) {
+		white-space: normal;
+		text-align: center;
+	}
+}
+
+/* "Innova il tuo modo di insegnare": animated gradient in the background —
+   soft blobs of the product colour drift and swell behind the text, and the
+   hue slowly progresses, so the band is always gently alive. */
+@keyframes ih-pteach-blobs {
+	0%   { background-position: 0% 0%, 100% 100%, 50% 50%; transform: scale(1) rotate(0deg); }
+	33%  { background-position: 60% 40%, 30% 70%, 80% 20%; transform: scale(1.15) rotate(6deg); }
+	66%  { background-position: 100% 100%, 0% 0%, 20% 80%; transform: scale(1.05) rotate(-5deg); }
+	100% { background-position: 0% 0%, 100% 100%, 50% 50%; transform: scale(1) rotate(0deg); }
+}
+
+@keyframes ih-pteach-hue {
+	0%, 100% { filter: hue-rotate(0deg) saturate(1); }
+	50% { filter: hue-rotate(-22deg) saturate(1.25); }
+}
+
+.ih-pteach--flow::before {
+	content: "";
+	position: absolute;
+	inset: -25%;
+	z-index: 0;
+	pointer-events: none;
+	background:
+		radial-gradient(40% 45% at 25% 30%, color-mix(in srgb, var(--pc, #69ceeb) 70%, transparent), transparent 70%),
+		radial-gradient(45% 50% at 78% 70%, color-mix(in srgb, var(--pc, #69ceeb) 50%, #ffffff 0%), transparent 72%),
+		radial-gradient(35% 40% at 55% 45%, color-mix(in srgb, var(--pc, #69ceeb) 40%, #ffffff 25%), transparent 70%);
+	background-size: 160% 160%, 170% 170%, 150% 150%;
+	background-repeat: no-repeat;
+	opacity: 0.55;
+	mix-blend-mode: screen;
+	animation: ih-pteach-blobs 16s ease-in-out infinite, ih-pteach-hue 24s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.ih-pteach--flow::before {
+		animation: none;
+	}
+}
+
+/* Flowing wave lines (canvas, see effects.js §13) sit above the colour blobs
+   and below the scrim/text; the blobs are toned down so the lines read. */
+.ih-wave {
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+	width: 100%;
+	height: 100%;
+	pointer-events: none;
+	-webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
+	mask-image: linear-gradient(90deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
+}
+
+.ih-pteach--flow::before {
+	opacity: 0.4;
+}
+
+/* Wave lines: full width (no edge fade), above the scrim, text above them. */
+.ih-wave {
+	z-index: 1;
+	-webkit-mask-image: none;
+	mask-image: none;
+}
+
+.ih-pteach--flow .ih-pteach__inner {
+	z-index: 2;
+}
+

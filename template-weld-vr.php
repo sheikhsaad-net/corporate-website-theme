@@ -64,7 +64,7 @@ get_header();
 		</div>
 	</section>
 
-	<section class="ih-pteach ih-pteach--flow" style="background-image: linear-gradient(160deg, #0b1a1f 0%, #2f8aa0 55%, #1d5d70 100%);">
+	<section class="ih-pteach ih-pteach--flow" style="--pc: #69ceeb; background-image: linear-gradient(160deg, #0b1a1f 0%, #2f8aa0 55%, #1d5d70 100%);">
 		<div class="ih-pteach__scrim" aria-hidden="true"></div>
 		<div class="ih-container ih-pteach__inner ih-reveal">
 			<h2 class="ih-pteach__title"><?php esc_html_e( 'Innova il tuo modo di insegnare le pratiche di saldatura', 'immensive' ); ?></h2>

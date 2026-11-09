@@ -87,7 +87,7 @@ get_header();
 		</div>
 	</section>
 
-	<section class="ih-pteach ih-pteach--flow" style="background-image: linear-gradient(160deg, #1a1a1a 0%, #8a3c1e 60%, #6b2c15 100%);">
+	<section class="ih-pteach ih-pteach--flow" style="--pc: #f7971e; background-image: linear-gradient(160deg, #1a1a1a 0%, #8a3c1e 60%, #6b2c15 100%);">
 		<div class="ih-pteach__scrim" aria-hidden="true"></div>
 		<div class="ih-container ih-pteach__inner ih-reveal">
 			<h2 class="ih-pteach__title"><?php esc_html_e( 'Innova il tuo modo di formare gli elettricisti del domani', 'immensive' ); ?></h2>

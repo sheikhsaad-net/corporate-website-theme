@@ -353,6 +353,121 @@
 			btn.addEventListener('pointerleave', function () { btn.style.translate = ''; });
 		});
 	})();
+	/* ---- 12. Light beam following the pointer on every button ---- */
+	(function () {
+		document.querySelectorAll('.ih-btn').forEach(function (btn) {
+			btn.classList.add('has-beam');
+			btn.addEventListener('pointermove', function (e) {
+				var r = btn.getBoundingClientRect();
+				btn.style.setProperty('--bx', (e.clientX - r.left).toFixed(0) + 'px');
+				btn.style.setProperty('--by', (e.clientY - r.top).toFixed(0) + 'px');
+			});
+		});
+	})();
+
+	/* ---- 13. Flowing wave lines behind the "Innova il tuo modo di insegnare" band ---- */
+	(function () {
+		document.querySelectorAll('.ih-pteach--flow').forEach(function (band) {
+			var canvas = document.createElement('canvas');
+			canvas.className = 'ih-wave';
+			canvas.setAttribute('aria-hidden', 'true');
+			band.insertBefore(canvas, band.firstChild);
+			var ctx = canvas.getContext('2d');
+			if (!ctx) { return; }
+			var hex = (getComputedStyle(band).getPropertyValue('--pc') || '#69ceeb').trim().replace('#', '');
+			if (hex.length === 3) { hex = hex.replace(/(.)/g, '$1$1'); }
+			var rgb = [parseInt(hex.substr(0, 2), 16) || 105, parseInt(hex.substr(2, 2), 16) || 206, parseInt(hex.substr(4, 2), 16) || 235];
+			var LINES = 11, w = 0, h = 0, dpr = 1, raf = 0, running = false;
+			var ptr = { x: -9999, y: -9999, tx: -9999, ty: -9999, p: 0, tp: 0 };
+
+			function resize() {
+				var r = band.getBoundingClientRect();
+				dpr = Math.min(window.devicePixelRatio || 1, 2);
+				w = Math.max(1, Math.round(r.width));
+				h = Math.max(1, Math.round(r.height));
+				canvas.width = w * dpr;
+				canvas.height = h * dpr;
+				ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+			}
+
+			function draw(t) {
+				ctx.clearRect(0, 0, w, h);
+				ctx.lineWidth = 1;
+				ctx.lineJoin = 'round';
+				for (var i = 0; i < LINES; i++) {
+					var k = i / (LINES - 1);
+					var base = h * (0.14 + k * 0.72);
+					/* Near-parallel ribbons: one shared wave, tiny per-line offset, so lines never tangle. */
+					var ph = t * 0.35 + i * 0.09;
+					var alpha = 0.10 + 0.20 * Math.sin(k * Math.PI);
+					var g = ctx.createLinearGradient(0, 0, w, 0);
+					g.addColorStop(0, 'rgba(' + rgb + ',' + (alpha * 0.8).toFixed(3) + ')');
+					g.addColorStop(0.5, 'rgba(255,255,255,' + (alpha * 0.9).toFixed(3) + ')');
+					g.addColorStop(1, 'rgba(' + rgb + ',' + (alpha * 0.8).toFixed(3) + ')');
+					ctx.strokeStyle = g;
+					ctx.beginPath();
+					for (var x = -10; x <= w + 10; x += 10) {
+						var u = x / w;
+						var y = base + Math.sin(u * 3.4 + ph) * h * 0.07 + Math.sin(u * 7 - ph * 0.8) * h * 0.012 * (0.4 + k);
+						if (ptr.p > 0.01) {
+							var dx = x - ptr.x, dy = y - ptr.y;
+							var f = Math.exp(-(dx * dx) / 42000 - (dy * dy) / 90000) * ptr.p;
+							y += dy * f * 0.32;
+						}
+						if (x === -10) { ctx.moveTo(x, y); } else { ctx.lineTo(x, y); }
+					}
+					ctx.stroke();
+				}
+				if (ptr.p > 0.01) {
+					var rg = ctx.createRadialGradient(ptr.x, ptr.y, 0, ptr.x, ptr.y, 200);
+					rg.addColorStop(0, 'rgba(' + rgb + ',' + (0.16 * ptr.p).toFixed(3) + ')');
+					rg.addColorStop(1, 'rgba(' + rgb + ',0)');
+					ctx.fillStyle = rg;
+					ctx.fillRect(0, 0, w, h);
+				}
+			}
+
+			var start = performance.now();
+			function frame(now) {
+				if (!running) { return; }
+				ptr.x += (ptr.tx - ptr.x) * 0.14;
+				ptr.y += (ptr.ty - ptr.y) * 0.14;
+				ptr.p += (ptr.tp - ptr.p) * 0.08;
+				draw((now - start) / 1000);
+				raf = window.requestAnimationFrame(frame);
+			}
+			function setRunning(on) {
+				if (on && !running && !reduced) {
+					running = true;
+					raf = window.requestAnimationFrame(frame);
+				} else if (!on && running) {
+					running = false;
+					window.cancelAnimationFrame(raf);
+				}
+			}
+
+			if (finePointer && !reduced) {
+				band.addEventListener('pointermove', function (e) {
+					var r = band.getBoundingClientRect();
+					ptr.tx = e.clientX - r.left;
+					ptr.ty = e.clientY - r.top;
+					if (ptr.x < -9000) { ptr.x = ptr.tx; ptr.y = ptr.ty; }
+					ptr.tp = 1;
+				});
+				band.addEventListener('pointerleave', function () { ptr.tp = 0; });
+			}
+
+			resize();
+			draw(0);
+			window.addEventListener('resize', function () { resize(); draw((performance.now() - start) / 1000); });
+			if ('IntersectionObserver' in window) {
+				new IntersectionObserver(function (entries) { setRunning(entries[0].isIntersecting); }, { threshold: 0 }).observe(band);
+			} else {
+				setRunning(true);
+			}
+		});
+	})();
+
 	/* ---- 11. Pointer spotlight on dark bands ---- */
 	(function () {
 		document.querySelectorAll('.ih-psol--hero, .ih-contact').forEach(function (band) {

@@ -73,7 +73,7 @@ get_header();
 		</div>
 	</section>
 
-	<section class="ih-pteach ih-pteach--flow" style="background-image: linear-gradient(160deg, #2b0f0e 0%, #7a2c2a 60%, #973735 100%);">
+	<section class="ih-pteach ih-pteach--flow" style="--pc: #e8503a; background-image: linear-gradient(160deg, #2b0f0e 0%, #7a2c2a 60%, #973735 100%);">
 		<div class="ih-pteach__scrim" aria-hidden="true"></div>
 		<div class="ih-container ih-pteach__inner ih-reveal">
 			<h2 class="ih-pteach__title"><?php esc_html_e( 'Innova il tuo modo di svolgere i corsi antincendio', 'immensive' ); ?></h2>
