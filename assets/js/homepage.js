@@ -1465,7 +1465,9 @@
 		var vmEmbedUrl = function (src) {
 			var yt = src.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([\w-]+)/);
 			if (yt) {
-				return 'https://www.youtube.com/embed/' + yt[1] + '?autoplay=1&rel=0';
+				// youtube-nocookie: same player, but no tracking cookies until the
+				// visitor presses play (GDPR-friendlier, no visual change).
+				return 'https://www.youtube-nocookie.com/embed/' + yt[1] + '?autoplay=1&rel=0';
 			}
 			var vimeo = src.match(/vimeo\.com\/(\d+)/);
 			if (vimeo) {

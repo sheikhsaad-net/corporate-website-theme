@@ -41,6 +41,7 @@ get_header();
 		<div class="ih-phero__bg" aria-hidden="true"></div>
 
 		<div class="ih-acad-hero__inner">
+			<h1 class="ih-visually-hidden">Immensive Academy</h1>
 			<img class="ih-acad-hero__logo" src="<?php echo esc_url( $immensive_aca . 'logo-academy.png' ); ?>" alt="Immensive Academy" width="470" height="133">
 			<p class="ih-acad-hero__sub"><?php esc_html_e( 'Specializzati nelle nuove arti digitali. Scopri i prossimi corsi in aula e online tenuti da professionisti del settore.', 'immensive' ); ?></p>
 

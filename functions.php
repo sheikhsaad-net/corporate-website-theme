@@ -36,6 +36,9 @@ add_action( 'after_setup_theme', 'immensive_setup' );
 // "Selected works" portfolio post type (see inc/portfolio.php).
 require_once get_template_directory() . '/inc/portfolio.php';
 
+// Dashboard quick guide and team-facing admin tidy-ups (see inc/admin.php).
+require_once get_template_directory() . '/inc/admin.php';
+
 /**
  * All page templates that share the "ih" design system (dark header/footer,
  * homepage.css/js, no default site-header/site-footer markup).
@@ -111,6 +114,17 @@ function immensive_body_class( $classes ) {
 	return $classes;
 }
 add_filter( 'body_class', 'immensive_body_class' );
+
+/**
+ * The site content is Italian, so the <html lang> must say so. WordPress
+ * reports the installation locale (en_GB here), which makes screen readers
+ * pronounce the Italian copy with an English voice and hurts search matching.
+ */
+function immensive_html_lang( $output ) {
+	return preg_replace( '/lang="[^"]*"/', 'lang="it-IT"', $output, 1 );
+}
+add_filter( 'language_attributes', 'immensive_html_lang' );
+
 
 function immensive_widgets_init() {
 	register_sidebar(
@@ -277,7 +291,9 @@ function immensive_preload_portfolio_lcp_image() {
 	if ( ! is_page_template( 'template-portfolio.php' ) ) {
 		return;
 	}
-	$immensive_attachment_id = get_post_thumbnail_id( 156 );
+	$immensive_groups      = immensive_portfolio_grouped();
+	$immensive_first       = ! empty( $immensive_groups[0]['projects'] ) ? $immensive_groups[0]['projects'][0] : null;
+	$immensive_attachment_id = $immensive_first ? get_post_thumbnail_id( $immensive_first->ID ) : 0;
 	$immensive_image         = $immensive_attachment_id ? immensive_portfolio_thumbnail_data( $immensive_attachment_id ) : false;
 	if ( ! $immensive_image || ! $immensive_image['srcset'] ) {
 		return;

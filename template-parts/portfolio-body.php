@@ -30,60 +30,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 $immensive_settori    = immensive_portfolio_terms( IMMENSIVE_TAX_SETTORE );
 $immensive_tecnologie = immensive_portfolio_terms( IMMENSIVE_TAX_TECNOLOGIA );
 
-// The main portfolio page is NOT grouped by Tecnologia any more: it shows two
-// hand-ordered groups. Projects are listed by post ID, in the order they
-// should appear; a published project missing from both lists is appended to
-// "Altri servizi" so it can never silently disappear from the page.
-$immensive_groups = array(
-	array(
-		'slug' => 'prodotti-formazione',
-		'name' => __( 'Prodotti per la formazione', 'immensive' ),
-		'desc' => __( 'Simulatori VR con kit hardware dedicati per la formazione tecnica e professionale: saldatura, sollevamento, antincendio e impianti elettrici.', 'immensive' ),
-		'icon' => 'formazione',
-		// Weld, Forklift, Electro, Firefighter.
-		'ids'  => array( 156, 154, 195, 158 ),
-	),
-	array(
-		'slug' => 'altri-servizi',
-		'name' => __( 'Altri servizi', 'immensive' ),
-		'desc' => __( 'App, configuratori, software e ambienti digitali su misura per aziende, cultura, sanità e design.', 'immensive' ),
-		'icon' => 'altri-servizi',
-		// Luoghi e Percorsi, Cosyma, Socrate, Aqualif.es, AI4HOT, Oceania,
-		// Configuratore VR, Museo Serra di Cassano, Forma Aquae, POY, DOMA,
-		// Veins Catheter, Gragnano, Livia, Univrsafe, Archiproducts, Kaledo,
-		// Showroom VR, Residenza CH, Residenza IT, Struttura ospedaliera,
-		// VR Yacht, Foof, Ponics, Fitness Island, Ircss Maugeri,
-		// Drawing Studio, VR Medical Dataviewer (EP Solutions), SMAV.
-		'ids'  => array( 199, 172, 178, 164, 193, 84, 140, 86, 160, 176, 78, 76, 80, 197, 152, 148, 174, 150, 144, 146, 134, 142, 138, 166, 132, 136, 168, 162, 255 ),
-	),
-);
+// Two hand-ordered groups (Prodotti per la formazione, Altri servizi). The
+// group of each project comes from its "Gruppo nel portfolio" setting in
+// the editor. Projects with no setting keep their legacy place, and any other
+// published project lands in "Altri servizi", so none can disappear.
+// See immensive_portfolio_grouped() in inc/portfolio.php.
+$immensive_groups = immensive_portfolio_grouped();
 
-$immensive_all = get_posts(
-	array(
-		'post_type'      => IMMENSIVE_PORTFOLIO_POST_TYPE,
-		'post_status'    => 'publish',
-		'posts_per_page' => -1,
-		'orderby'        => array( 'menu_order' => 'ASC', 'date' => 'DESC' ),
-	)
-);
-$immensive_by_id = array();
-foreach ( $immensive_all as $immensive_p ) {
-	$immensive_by_id[ $immensive_p->ID ] = $immensive_p;
-}
-$immensive_placed = array();
-foreach ( $immensive_groups as $immensive_gi => $immensive_g ) {
-	$immensive_groups[ $immensive_gi ]['projects'] = array();
-	foreach ( $immensive_g['ids'] as $immensive_pid ) {
-		if ( isset( $immensive_by_id[ $immensive_pid ] ) ) {
-			$immensive_groups[ $immensive_gi ]['projects'][] = $immensive_by_id[ $immensive_pid ];
-			$immensive_placed[ $immensive_pid ]                    = true;
-		}
-	}
-}
-foreach ( $immensive_by_id as $immensive_pid => $immensive_p ) {
-	if ( ! isset( $immensive_placed[ $immensive_pid ] ) ) {
-		$immensive_groups[1]['projects'][] = $immensive_p;
-	}
+// Every published project, for the empty-state check below.
+$immensive_all = array();
+foreach ( $immensive_groups as $immensive_group_all ) {
+	$immensive_all = array_merge( $immensive_all, $immensive_group_all['projects'] );
 }
 
 // The archive uses <h1> for the page title; the page template passes its own
