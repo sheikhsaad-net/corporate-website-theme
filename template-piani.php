@@ -116,7 +116,6 @@ get_header();
 				<p class="ih-psol__tagline">
 					<span><?php esc_html_e( 'Quattro modelli,', 'immensive' ); ?></span><br>
 					<strong><?php esc_html_e( 'un solo prodotto.', 'immensive' ); ?></strong>
-					<small class="ih-psol__note"><?php esc_html_e( 'Attivazione in 7 giorni. Compatibile Formazione 4.0.', 'immensive' ); ?></small>
 				</p>
 				<div class="ih-psol__ctas">
 					<a class="ih-btn ih-btn--solid" href="<?php echo esc_url( $immensive_contatti_url ); ?>"><?php esc_html_e( 'Richiedi un Preventivo', 'immensive' ); ?></a>
@@ -147,9 +146,9 @@ get_header();
 					),
 					array(
 						'slug'  => 'immensive_Kit_hardware',
-						'title' => 'Kit Hardware<br>Immensive',
+						'title' => 'Kit Hardware<br>Immensive*',
 						'desc'  => 'Componenti proprietari che rendono realistica l\'interazione VR: torce, estintori, controller dedicati. Sviluppati e venduti esclusivamente da Immensive.',
-						'note'  => 'Richiesto solo per i simulatori che lo prevedono.',
+						'note'  => '*Richiesto solo per i simulatori che lo prevedono.',
 						'cta'   => false,
 					),
 					array(
@@ -157,7 +156,7 @@ get_header();
 						'title' => 'Licenza<br>Software',
 						'desc'  => 'Il software che dà vita al simulatore. Quattro piani a scelta: Lifetime o abbonamento, per adattarsi a ogni esigenza e strategia aziendale.',
 						'note'  => '',
-						'cta'   => true,
+						'cta'   => false,
 					),
 				);
 				foreach ( $immensive_sistema_cards as $immensive_card ) :

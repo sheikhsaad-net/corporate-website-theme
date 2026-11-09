@@ -38,6 +38,11 @@ get_header();
 				<img src="<?php echo esc_url( $immensive_img . 'firefighter-vr-logo.webp' ); ?>" alt="Firefighter VR Simulator" width="768" height="192">
 			</h1>
 			<p class="ih-pprod-hero__sub"><?php esc_html_e( 'Simulatore Antincendio in Realtà Virtuale Immersiva', 'immensive' ); ?></p>
+			<div class="ih-pprod-hero__actions">
+				<button type="button" class="ih-btn ih-btn--outline" data-demo-modal-open><?php esc_html_e( 'Richiedi una Demo', 'immensive' ); ?></button>
+				<a class="ih-btn ih-btn--outline" href="<?php echo esc_url( home_url( '/piani/' ) ); ?>"><?php esc_html_e( 'Scopri i Piani', 'immensive' ); ?></a>
+				<a class="ih-btn ih-btn--outline" href="<?php echo esc_url( home_url( '/rivenditori/' ) ); ?>"><?php esc_html_e( 'Diventa Rivenditore', 'immensive' ); ?></a>
+			</div>
 		</div>
 	</section>
 
@@ -45,9 +50,10 @@ get_header();
 			<ul class="ih-pnav__links">
 				<li><a href="#ih-sistema" aria-label="Il sistema"><span class="ih-pnav__label"><?php esc_html_e( 'Il sistema', 'immensive' ); ?></span></a></li>
 				<li><a href="#ih-come-funziona" aria-label="Come Funziona"><span class="ih-pnav__label"><?php esc_html_e( 'Come Funziona', 'immensive' ); ?></span></a></li>
-				<li><a href="#ih-benefici" aria-label="Benefici"><span class="ih-pnav__label"><?php esc_html_e( 'Benefici', 'immensive' ); ?></span></a></li>
 				<li><a href="#ih-caratteristiche" aria-label="Caratteristiche"><span class="ih-pnav__label"><?php esc_html_e( 'Caratteristiche', 'immensive' ); ?></span></a></li>
 				<li><a href="#ih-dotazione" aria-label="Dotazione"><span class="ih-pnav__label"><?php esc_html_e( 'Dotazione', 'immensive' ); ?></span></a></li>
+				<li><a href="#ih-soluzioni" aria-label="Piani"><span class="ih-pnav__label"><?php esc_html_e( 'Piani', 'immensive' ); ?></span></a></li>
+				<li><a href="#ih-benefici" aria-label="Benefici"><span class="ih-pnav__label"><?php esc_html_e( 'Benefici', 'immensive' ); ?></span></a></li>
 				<li><a href="#ih-contact" aria-label="Contattaci"><span class="ih-pnav__label"><?php esc_html_e( 'Contattaci', 'immensive' ); ?></span></a></li>
 			</ul>
 		</nav>
@@ -67,10 +73,9 @@ get_header();
 		</div>
 	</section>
 
-	<section class="ih-pteach" style="background-image: linear-gradient(160deg, #2b0f0e 0%, #7a2c2a 60%, #973735 100%);">
+	<section class="ih-pteach ih-pteach--flow" style="background-image: linear-gradient(160deg, #2b0f0e 0%, #7a2c2a 60%, #973735 100%);">
 		<div class="ih-pteach__scrim" aria-hidden="true"></div>
 		<div class="ih-container ih-pteach__inner ih-reveal">
-			<p class="ih-pteach__eyebrow">Firefighter VR Simulator</p>
 			<h2 class="ih-pteach__title"><?php esc_html_e( 'Innova il tuo modo di svolgere i corsi antincendio', 'immensive' ); ?></h2>
 			<p class="ih-pteach__sub"><?php esc_html_e( 'Introduci il sistema Firefighter VR Simulator nei tuoi corsi antincendio ed offri ai partecipanti un\'esperienza coinvolgente, efficace e sicura.', 'immensive' ); ?></p>
 		</div>
@@ -92,108 +97,6 @@ get_header();
 		</div>
 	</section>
 
-	<section class="ih-pbenefici" id="ih-benefici">
-		<div class="ih-container">
-			<h2 class="ih-pbenefici__heading"><?php esc_html_e( 'Perché fare formazione con Firefighter VR Simulator', 'immensive' ); ?></h2>
-			<p class="ih-pbenefici__sub"><?php esc_html_e( 'I principali benefici per gli Enti Formativi che scelgono di erogare corsi di formazione antincendio integrando il sistema Firefighter VR Simulator sono:', 'immensive' ); ?></p>
-
-			<?php
-			$immensive_benefici = array(
-				array(
-					'tone'  => 'dark',
-					'icon'  => 'firefighter-vr-icon-sicuro.webp',
-					'title' => 'Sicuro ed ecosostenibile',
-					'desc'  => 'Riduce sensibilmente il rischio per chi svolge l\'esercizio e per chi gli è intorno. Zero emissioni di CO2 e spreco di composito.',
-				),
-				array(
-					'tone'     => 'light',
-					'icon_svg' => '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M9.5 9.2c0-1.3 1.1-2.2 2.6-2.2s2.6.9 2.6 2.1c0 1.7-2.6 1.7-2.6 3.4M12 16.2h.01" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-					'title'    => 'Riduzione dei costi',
-					'desc'     => 'Abbatte in maniera importante i costi di materiale per le esercitazioni (estintori e vaschette antincendio).',
-				),
-				array(
-					'tone'  => 'muted',
-					'icon'  => 'firefighter-vr-icon-apprendimento.webp',
-					'title' => 'Apprendimento completo ed efficace',
-					'desc'  => 'Permette di sperimentare in maniera più completa ed efficace la situazione di emergenza e crea maggiore coinvolgimento nei partecipanti.',
-				),
-				array(
-					'tone'  => 'dark',
-					'icon'  => 'firefighter-vr-icon-grado.webp',
-					'title' => 'Maggiore grado di esercitazione',
-					'desc'  => 'Elimina i tempi di setup tra gli esercizi, massimizzando il tempo a disposizione che ogni utente può dedicare ai task. Permette di svolgere l\'esercitazione in spazi ridotti (3 mq).',
-				),
-				array(
-					'tone'  => 'light',
-					'icon'  => 'firefighter-vr-icon-simulazioni.webp',
-					'title' => 'Simulazione di ambienti e situazioni particolari',
-					'desc'  => 'Simulazione di condizioni particolari difficilmente riproducibili, es. estinzione incendio in luoghi chiusi o con presenza di vento.',
-				),
-				array(
-					'tone'  => 'muted',
-					'icon'  => 'firefighter-vr-icon-gap.webp',
-					'title' => 'Colma il gap tra la fase di teoria e pratica',
-					'desc'  => 'Permette all\'utente di comprendere velocemente le modalità di estinzione di un incendio e di eseguire più volte i task prima di passare all\'esercitazione reale.',
-				),
-			);
-			?>
-			<div class="ih-pbenefici__grid">
-				<?php foreach ( $immensive_benefici as $immensive_ben ) : ?>
-					<article class="ih-pbenefici__card ih-pbenefici__card--<?php echo esc_attr( $immensive_ben['tone'] ); ?> ih-reveal">
-						<span class="ih-pbenefici__icon">
-							<?php if ( ! empty( $immensive_ben['icon_svg'] ) ) : ?>
-								<?php echo $immensive_ben['icon_svg']; // phpcs:ignore WordPress.Security.EscapeOutput -- static inline SVG. ?>
-							<?php else : ?>
-								<img src="<?php echo esc_url( $immensive_img . $immensive_ben['icon'] ); ?>" alt="" width="64" height="64" loading="lazy" decoding="async">
-							<?php endif; ?>
-						</span>
-						<h3 class="ih-pbenefici__title"><?php echo esc_html( $immensive_ben['title'] ); ?></h3>
-						<p class="ih-pbenefici__desc"><?php echo esc_html( $immensive_ben['desc'] ); ?></p>
-					</article>
-				<?php endforeach; ?>
-			</div>
-		</div>
-	</section>
-
-	<section class="ih-pgap" id="ih-gap">
-		<div class="ih-container">
-			<h2 class="ih-pgap__heading"><?php esc_html_e( 'Colma il gap tra la fase di teoria e di pratica', 'immensive' ); ?></h2>
-
-			<div class="ih-pgap__steps">
-				<span class="ih-pgap__line ih-pgap__line--edge" aria-hidden="true"></span>
-
-				<div class="ih-pgap__step ih-reveal">
-					<span class="ih-pgap__num" aria-hidden="true">1</span>
-					<div class="ih-pgap__box">
-						<span class="ih-pgap__label"><?php esc_html_e( 'Teoria', 'immensive' ); ?></span>
-					</div>
-				</div>
-
-				<span class="ih-pgap__line" aria-hidden="true"></span>
-
-				<div class="ih-pgap__step ih-reveal">
-					<span class="ih-pgap__num" aria-hidden="true">2</span>
-					<div class="ih-pgap__box">
-						<span class="ih-pgap__logo">FIREFIGHTER<span class="ih-pgap__logo-vr">VR</span><br><span class="ih-pgap__logo-sub">SIMULATOR</span></span>
-					</div>
-				</div>
-
-				<span class="ih-pgap__line" aria-hidden="true"></span>
-
-				<div class="ih-pgap__step ih-reveal">
-					<span class="ih-pgap__num" aria-hidden="true">3</span>
-					<div class="ih-pgap__box">
-						<span class="ih-pgap__label"><?php esc_html_e( 'Pratica', 'immensive' ); ?></span>
-					</div>
-				</div>
-
-				<span class="ih-pgap__line ih-pgap__line--edge" aria-hidden="true"></span>
-			</div>
-
-			<p class="ih-pgap__desc"><?php esc_html_e( 'L\'introduzione del sistema Firefighter VR Simulator all\'interno di un corso antincendio permette di fare esercitare in piena sicurezza e in maggior misura i partecipanti, che possono ripetere le prove di spegnimento finché non acquisiscono la sicurezza necessaria per passare alla prova reale.', 'immensive' ); ?></p>
-		</div>
-	</section>
-
 	<section class="ih-pfeat" id="ih-caratteristiche">
 		<div class="ih-container">
 			<h2 class="ih-pfeat__heading"><?php esc_html_e( 'Caratteristiche Principali', 'immensive' ); ?></h2>
@@ -201,27 +104,27 @@ get_header();
 			<?php
 			$immensive_features = array(
 				array(
-					'icon' => '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 21V9l8-5 8 5v12" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M9 21v-6h6v6" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M4 9h16" stroke="currentColor" stroke-width="1.4"/></svg>',
+					'img'  => 'firefighter-vr-feat-ambienti.webp',
 					'desc' => 'Simulazioni in ambienti interni ed esterni con opzioni settabili per ogni task.',
 				),
 				array(
-					'icon' => '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 20V9c0-1.5.5-2.5 1.5-3.5L12 4l1.5 1.5C14.5 6.5 15 7.5 15 9v11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 13h6M8 20h8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>',
+					'img'  => 'firefighter-vr-feat-estintore.webp',
 					'desc' => 'Dotazione di estintore reale e Vive tracker per restituire la maggior fedeltà possibile.',
 				),
 				array(
-					'icon' => '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 20c-3.5-2-5-9 0-15 2 3 1 5 3 6 1-2 0-4 1-6 5 4 6 12 0 15" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>',
+					'img'  => 'firefighter-vr-feat-incendi.webp',
 					'desc' => 'Tipologie diverse di incendi e contenitori, sia per interni che per esterni.',
 				),
 				array(
-					'icon' => '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="13" r="8" stroke="currentColor" stroke-width="1.4"/><path d="M12 13l4-3M12 5V3M4.5 8.5l-1-1M19.5 8.5l1-1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>',
+					'img'  => 'firefighter-vr-feat-parametri.webp',
 					'desc' => 'Monitoraggio parametri: Tempo di Estinzione, Distanza di Intervento, Allineamento con il vento.',
 				),
 				array(
-					'icon' => '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 20V10M9 20V4M14 20v-7M19 20V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>',
+					'img'  => 'firefighter-vr-feat-report.webp',
 					'desc' => 'Report istantaneo dell\'esercizio con salvataggio dei risultati.',
 				),
 				array(
-					'icon' => '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="8.5" cy="8" r="2.8" stroke="currentColor" stroke-width="1.4"/><circle cx="16" cy="9" r="2.2" stroke="currentColor" stroke-width="1.4"/><path d="M3 19c0-3 2.5-5 5.5-5s5.5 2 5.5 5M14.5 14.5c2.5.2 4.5 2 4.5 4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>',
+					'img'  => 'firefighter-vr-feat-utenti.webp',
 					'desc' => 'Gestione utenti per un corretto monitoraggio dei progressi dell\'aula.',
 				),
 			);
@@ -229,7 +132,7 @@ get_header();
 			<div class="ih-pfeat__grid ih-pfeat__grid--3col">
 				<?php foreach ( $immensive_features as $immensive_feat ) : ?>
 					<div class="ih-pfeat__item ih-reveal">
-						<span class="ih-pfeat__icon"><?php echo $immensive_feat['icon']; // phpcs:ignore WordPress.Security.EscapeOutput -- static inline SVG, not user input. ?></span>
+						<span class="ih-pfeat__icon"><?php if ( ! empty( $immensive_feat['img'] ) ) : ?><img src="<?php echo esc_url( $immensive_img . $immensive_feat['img'] ); ?>" alt="" width="40" height="40" loading="lazy" decoding="async"><?php else : echo $immensive_feat['icon']; // phpcs:ignore WordPress.Security.EscapeOutput -- static inline SVG, not user input. ?><?php endif; ?></span>
 						<p class="ih-pfeat__desc"><?php echo esc_html( $immensive_feat['desc'] ); ?></p>
 					</div>
 				<?php endforeach; ?>
@@ -371,6 +274,160 @@ get_header();
 		</div>
 	</section>
 
+	<section class="ih-psol" id="ih-soluzioni">
+		<div class="ih-container">
+			<p class="ih-psol__eyebrow"><?php esc_html_e( 'Scegli come comprare Firefighter VR.', 'immensive' ); ?></p>
+
+			<h2 class="ih-psol__heading">
+				<?php esc_html_e( 'Soluzioni di', 'immensive' ); ?><br>
+				<span class="ih-psol__heading-line">
+					<?php esc_html_e( 'Acquisto', 'immensive' ); ?>
+				</span>
+			</h2>
+
+			<?php
+			$immensive_soluzioni = array(
+				array(
+					'title'    => 'Lifetime',
+					'sub'      => 'Paghi una volta, usi per sempre',
+					'featured' => false,
+					'items'    => array(
+						'Pagamento una tantum',
+						'Nessun canone ricorrente',
+						'Solo aggiornamenti critici',
+						'Supporto base a ticket',
+					),
+				),
+				array(
+					'title'    => 'Lifetime + Manutenzione',
+					'sub'      => 'Proprietà a vita con assistenza continua',
+					'featured' => false,
+					'items'    => array(
+						'Pagamento una tantum + canone',
+						'Aggiornamenti software inclusi',
+						'Supporto prioritario',
+						'Sostituzione kit consumabili inclusa',
+					),
+				),
+				array(
+					'title'    => 'Abbonamento Annuale',
+					'sub'      => 'Il massimo servizio con flessibilità media',
+					'featured' => true,
+					'badge'    => 'Più scelto',
+					'items'    => array(
+						'Canone annuale',
+						'Aggiornamenti software inclusi',
+						'Supporto prioritario + onboarding',
+						'Sostituzione kit consumabili inclusa',
+					),
+				),
+				array(
+					'title'    => 'Abbonamento Mensile',
+					'sub'      => 'Massima flessibilità, zero vincoli',
+					'featured' => false,
+					'items'    => array(
+						'Canone mensile',
+						'Aggiornamenti software inclusi',
+						'Supporto standard',
+						'Sostituzione kit consumabili inclusa',
+					),
+				),
+			);
+			?>
+
+			<div class="ih-psol__grid">
+				<?php foreach ( $immensive_soluzioni as $immensive_sol ) : ?>
+					<article class="ih-psol__card<?php echo $immensive_sol['featured'] ? ' is-featured' : ''; ?> ih-reveal">
+						<span class="ih-psol__glare" aria-hidden="true"></span>
+						<div class="ih-psol__card-head">
+							<h3 class="ih-psol__card-title"><?php echo esc_html( $immensive_sol['title'] ); ?></h3>
+							<?php if ( ! empty( $immensive_sol['badge'] ) ) : ?>
+								<span class="ih-psol__card-badge"><?php echo esc_html( $immensive_sol['badge'] ); ?></span>
+							<?php endif; ?>
+						</div>
+						<div class="ih-psol__card-body">
+							<p class="ih-psol__card-sub"><?php echo esc_html( $immensive_sol['sub'] ); ?></p>
+							<ul class="ih-psol__list">
+								<?php foreach ( $immensive_sol['items'] as $immensive_sol_item ) : ?>
+									<li>
+										<span class="ih-psol__check" aria-hidden="true">
+											<svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+										</span>
+										<span><?php echo esc_html( $immensive_sol_item ); ?></span>
+									</li>
+								<?php endforeach; ?>
+							</ul>
+						</div>
+					</article>
+				<?php endforeach; ?>
+			</div>
+
+		</div>
+	</section>
+
+	<section class="ih-pbenefici" id="ih-benefici">
+		<div class="ih-container">
+			<h2 class="ih-pbenefici__heading"><?php esc_html_e( 'Perché fare formazione con Firefighter VR Simulator', 'immensive' ); ?></h2>
+			<p class="ih-pbenefici__sub"><?php esc_html_e( 'I principali benefici per gli Enti Formativi che scelgono di erogare corsi di formazione antincendio integrando il sistema Firefighter VR Simulator sono:', 'immensive' ); ?></p>
+
+			<?php
+			$immensive_benefici = array(
+				array(
+					'tone'  => 'dark',
+					'icon'  => 'firefighter-vr-icon-sicuro.webp',
+					'title' => 'Sicuro ed ecosostenibile',
+					'desc'  => 'Riduce sensibilmente il rischio per chi svolge l\'esercizio e per chi gli è intorno. Zero emissioni di CO2 e spreco di composito.',
+				),
+				array(
+					'tone'     => 'light',
+					'icon_svg' => '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M9.5 9.2c0-1.3 1.1-2.2 2.6-2.2s2.6.9 2.6 2.1c0 1.7-2.6 1.7-2.6 3.4M12 16.2h.01" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+					'title'    => 'Riduzione dei costi',
+					'desc'     => 'Abbatte in maniera importante i costi di materiale per le esercitazioni (estintori e vaschette antincendio).',
+				),
+				array(
+					'tone'  => 'muted',
+					'icon'  => 'firefighter-vr-icon-apprendimento.webp',
+					'title' => 'Apprendimento completo ed efficace',
+					'desc'  => 'Permette di sperimentare in maniera più completa ed efficace la situazione di emergenza e crea maggiore coinvolgimento nei partecipanti.',
+				),
+				array(
+					'tone'  => 'dark',
+					'icon'  => 'firefighter-vr-icon-grado.webp',
+					'title' => 'Maggiore grado di esercitazione',
+					'desc'  => 'Elimina i tempi di setup tra gli esercizi, massimizzando il tempo a disposizione che ogni utente può dedicare ai task. Permette di svolgere l\'esercitazione in spazi ridotti (3 mq).',
+				),
+				array(
+					'tone'  => 'light',
+					'icon'  => 'firefighter-vr-icon-simulazioni.webp',
+					'title' => 'Simulazione di ambienti e situazioni particolari',
+					'desc'  => 'Simulazione di condizioni particolari difficilmente riproducibili, es. estinzione incendio in luoghi chiusi o con presenza di vento.',
+				),
+				array(
+					'tone'  => 'muted',
+					'icon'  => 'firefighter-vr-icon-gap.webp',
+					'title' => 'Colma il gap tra la fase di teoria e pratica',
+					'desc'  => 'Permette all\'utente di comprendere velocemente le modalità di estinzione di un incendio e di eseguire più volte i task prima di passare all\'esercitazione reale.',
+				),
+			);
+			?>
+			<div class="ih-pbenefici__grid">
+				<?php foreach ( $immensive_benefici as $immensive_ben ) : ?>
+					<article class="ih-pbenefici__card ih-pbenefici__card--<?php echo esc_attr( $immensive_ben['tone'] ); ?> ih-reveal">
+						<span class="ih-pbenefici__icon">
+							<?php if ( ! empty( $immensive_ben['icon_svg'] ) ) : ?>
+								<?php echo $immensive_ben['icon_svg']; // phpcs:ignore WordPress.Security.EscapeOutput -- static inline SVG. ?>
+							<?php else : ?>
+								<img src="<?php echo esc_url( $immensive_img . $immensive_ben['icon'] ); ?>" alt="" width="64" height="64" loading="lazy" decoding="async">
+							<?php endif; ?>
+						</span>
+						<h3 class="ih-pbenefici__title"><?php echo esc_html( $immensive_ben['title'] ); ?></h3>
+						<p class="ih-pbenefici__desc"><?php echo esc_html( $immensive_ben['desc'] ); ?></p>
+					</article>
+				<?php endforeach; ?>
+			</div>
+		</div>
+	</section>
+
 	<section class="ih-casi" id="ih-casi">
 		<div class="ih-container">
 			<h2 class="ih-casi__heading"><?php esc_html_e( 'Casi', 'immensive' ); ?><br><?php esc_html_e( 'Reali', 'immensive' ); ?></h2>
@@ -415,8 +472,8 @@ get_header();
 				<button type="button" class="ih-btn ih-btn--cyan" data-demo-modal-open><?php esc_html_e( 'Richiedi Demo', 'immensive' ); ?></button>
 			</div>
 			<div class="ih-pdual__col ih-reveal">
-				<p class="ih-pdual__label"><?php esc_html_e( "I'm a reseller in EU", 'immensive' ); ?></p>
-				<a class="ih-btn ih-btn--ghost" href="<?php echo esc_url( home_url( '/rivenditori/' ) ); ?>"><?php esc_html_e( 'Get More Info', 'immensive' ); ?></a>
+				<p class="ih-pdual__label"><?php esc_html_e( 'Sono un rivenditore', 'immensive' ); ?></p>
+				<a class="ih-btn ih-btn--pc" style="--pc:#e8503a" href="<?php echo esc_url( home_url( '/rivenditori/' ) ); ?>"><?php esc_html_e( 'Maggiori informazioni', 'immensive' ); ?></a>
 			</div>
 		</div>
 	</section>

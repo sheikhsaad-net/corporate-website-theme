@@ -13049,3 +13049,253 @@ body.ih-leaving {
 	white-space: nowrap;
 	border: 0;
 }
+
+/* Notes 06 Nov — tags on the three "Pensati per ogni realtà" boxes become
+   glass-effect pills. */
+.ih-reality-card__cat {
+	display: inline-block;
+	margin-top: 0.6rem;
+	padding: 0.35rem 0.95rem;
+	border: 1px solid rgba(255, 255, 255, 0.28);
+	border-radius: 999px;
+	background: rgba(255, 255, 255, 0.12);
+	-webkit-backdrop-filter: blur(10px) saturate(1.4);
+	backdrop-filter: blur(10px) saturate(1.4);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+	color: #fff;
+}
+
+/* Notes 06 Nov — Demo / Piani / Rivenditore CTAs in every product hero. */
+.ih-pprod-hero__actions {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 0.9rem;
+	margin-top: 1.6rem;
+}
+
+.ih-pprod-hero__actions .ih-btn--outline:hover {
+	border-color: var(--ih-green);
+	color: var(--ih-green);
+}
+
+/* Notes 06 Nov — "Innova il tuo modo di insegnare/formare": all four
+   simulators share the same coloured gradient background, slowly drifting. */
+@keyframes ih-pteach-flow {
+	0% { background-position: 0% 30%; }
+	50% { background-position: 100% 70%; }
+	100% { background-position: 0% 30%; }
+}
+
+.ih-pteach--flow {
+	background-size: 220% 220%;
+	background-attachment: scroll;
+	animation: ih-pteach-flow 22s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.ih-pteach--flow {
+		animation: none;
+	}
+}
+
+/* Notes 06 Nov — reseller CTA above the footer takes the product's colour
+   (set per page through --pc). */
+.ih-btn--pc {
+	background: var(--pc, var(--ih-cyan));
+	border: 1.5px solid var(--pc, var(--ih-cyan));
+	color: #101010;
+}
+
+.ih-btn--pc:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+	filter: brightness(1.08);
+}
+
+/* Notes 06 Nov — Requisiti and Opzioni side by side (Weld VR), so the
+   section is shorter: requirements left, options right, cards in 2 columns. */
+.ih-pdota__reqopt {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	align-items: start;
+	gap: clamp(2rem, 4vw, 3.5rem);
+	margin-top: clamp(4rem, 8vh, 6rem);
+}
+
+.ih-pdota__reqopt > .ih-pdota__block {
+	display: block;
+	margin-top: 0;
+	min-width: 0;
+}
+
+.ih-pdota__reqopt .ih-pdota__cards {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 1.25rem;
+}
+
+.ih-pdota__reqopt .ih-pdota__block--req .ih-pdota__cards--req > .ih-pdota__card {
+	align-self: stretch;
+}
+
+@media (max-width: 900px) {
+	.ih-pdota__reqopt {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media (max-width: 560px) {
+	.ih-pdota__reqopt .ih-pdota__cards {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* Notes 06 Nov — Weld VR comparison table: black texts. */
+.ih-pcomp__row-label {
+	color: #101010;
+}
+
+/* Notes 06 Nov — smaller installations map (still crisp: the file is wider
+   than the box it is shown in). */
+.ih-pinst__map {
+	max-width: 600px;
+	margin-inline: auto;
+}
+
+/* Notes 06 Nov — "Scoprilo nel dettaglio": the stage is capped so the whole
+   slider (heading + image) fits in the viewport height; same 16:9 ratio. */
+.ih-pdett__stage {
+	max-width: min(100%, max(26rem, calc((100vh - 13rem) * 16 / 9)));
+	margin-inline: auto;
+}
+
+/* Notes 06 Nov — Piani page: green bullet points instead of check marks, and a
+   smaller asterisk note under the hardware-kit card. */
+.ih-psol--hero .ih-psol__check {
+	width: 8px;
+	height: 8px;
+	margin-top: 0.45rem;
+	border-radius: 50%;
+	background: var(--ih-green);
+	color: var(--ih-green);
+}
+
+.ih-psol--hero .ih-psol__check svg {
+	display: none;
+}
+
+.ih-sistema-card__note {
+	font-size: 0.72rem;
+	font-style: normal;
+	font-weight: 400;
+	opacity: 0.85;
+}
+
+/* Notes 06 Nov — Rivenditori: two buttons under the "Contattaci" heading, and
+   the reseller CTA now sits under the numbers instead of above them. */
+.ih-contact__actions {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 1rem;
+}
+
+.ih-stats__grid + .ih-stats__cta {
+	margin: clamp(2rem, 4vw, 3rem) 0 0;
+}
+
+/* Notes 06 Nov — desktop "Prodotti" menu: a compact list (logo + name), the
+   same rows the mobile accordion shows, instead of the four big white cards. */
+@media (min-width: 721px) {
+	.ih-nav .ih-mega.ih-mega--cols-4 {
+		position: absolute;
+		top: calc(100% + 1rem);
+		left: 0;
+		right: auto;
+		display: block;
+		width: 300px;
+		padding: 0.5rem;
+		background: rgba(11, 13, 16, 0.96);
+		-webkit-backdrop-filter: blur(12px);
+		backdrop-filter: blur(12px);
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		border-radius: 14px;
+		box-shadow: 0 20px 45px rgba(0, 0, 0, 0.4);
+	}
+
+	.admin-bar .ih-nav .ih-mega.ih-mega--cols-4 {
+		top: calc(100% + 1rem);
+	}
+
+	.ih-mega--cols-4 .ih-mega__card {
+		flex-direction: row;
+		justify-content: flex-start;
+		text-align: left;
+		gap: 0.85rem;
+		min-height: 0;
+		height: auto;
+		padding: 0.6rem 0.8rem;
+		border-radius: 8px;
+		background: transparent;
+		color: var(--ih-white);
+	}
+
+	.ih-mega--cols-4 .ih-mega__card:hover {
+		transform: none;
+		box-shadow: none;
+		background: rgba(255, 255, 255, 0.07);
+	}
+
+	.ih-mega--cols-4 .ih-mega__logo {
+		width: 34px;
+		height: 34px;
+		flex-shrink: 0;
+	}
+
+	.ih-mega--cols-4 .ih-mega__logo img {
+		max-width: 100%;
+		max-height: 34px;
+		filter: none;
+		opacity: 1;
+	}
+
+	.ih-mega--cols-4 .ih-mega__logo-fallback {
+		width: 34px;
+		height: 34px;
+		border-radius: 9px;
+		font-size: 1rem;
+		background: rgba(255, 255, 255, 0.1);
+	}
+
+	.ih-mega--cols-4 .ih-mega__title {
+		font-size: 0.9rem;
+		font-weight: 400;
+		letter-spacing: 0;
+		text-transform: none;
+		color: var(--ih-white);
+	}
+
+	.ih-mega--cols-4 .ih-mega__desc {
+		display: none;
+	}
+}
+
+/* Notes 06 Nov — titles on light grey sections: black, not white (including
+   the product pages). */
+.ih-pdota__heading,
+.ih-pcomp__title,
+.ih-realities__heading,
+.ih-xrintro__title,
+.ih-successi__heading,
+.ih-testi__heading,
+.ih-sccwhat__heading,
+.ih-wr__heading {
+	color: #101010;
+}
+
+.ih-pfeat__icon img {
+	width: 56px;
+	height: 56px;
+	object-fit: contain;
+}

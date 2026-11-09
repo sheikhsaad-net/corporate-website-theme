@@ -29,7 +29,7 @@ get_header();
 
 		<div class="ih-phero__inner">
 			<h1 class="ih-phero__title">
-				DIVENTA RIVENDITORE<br>AUTORIZZATO IMMENSIVE<br>IN EUROPA
+				DIVENTA RIVENDITORE<br>AUTORIZZATO IMMENSIVE
 			</h1>
 			<div class="ih-phero__actions">
 				<a class="ih-btn ih-btn--solid" href="<?php echo esc_url( $immensive_contatti_url ); ?>"><?php esc_html_e( 'Richiedi informazioni', 'immensive' ); ?></a>
@@ -131,9 +131,6 @@ get_header();
 		<div class="ih-container">
 			<h2 class="ih-stats__title ih-reveal">LASCIAMO PARLARE<br>I NUMERI</h2>
 			<p class="ih-stats__sub ih-reveal"><?php esc_html_e( 'I simulatori Immensive sono il riferimento per la formazione professionale nella scuola italiana. Porta i nostri prodotti nel tuo paese.', 'immensive' ); ?></p>
-			<div class="ih-stats__cta ih-reveal">
-				<a class="ih-btn ih-btn--solid" href="<?php echo esc_url( $immensive_contatti_url ); ?>"><?php esc_html_e( 'Diventa rivenditore', 'immensive' ); ?></a>
-			</div>
 			<div class="ih-stats__grid">
 				<div class="ih-stat ih-stat--dark ih-reveal">
 					<span class="ih-stat__number" data-count="350">0</span><span class="ih-stat__plus">+</span>
@@ -148,6 +145,9 @@ get_header();
 					<p><?php esc_html_e( 'Premi ai prodotti', 'immensive' ); ?></p>
 				</div>
 			</div>
+			<div class="ih-stats__cta ih-reveal">
+				<a class="ih-btn ih-btn--solid" href="<?php echo esc_url( $immensive_contatti_url ); ?>"><?php esc_html_e( 'Diventa rivenditore', 'immensive' ); ?></a>
+			</div>
 		</div>
 	</section>
 
@@ -156,10 +156,11 @@ get_header();
 		'template-parts/contact-cta',
 		null,
 		array(
-			'eyebrow' => __( 'Vuoi collaborare?', 'immensive' ),
-			'heading' => "PARLIAMONE",
-			'label'   => 'partners@immensive.it',
-			'href'    => 'mailto:partners@immensive.it',
+			'heading' => 'CONTATTACI',
+			'actions' => array(
+				array( 'label' => __( 'Richiedi informazioni', 'immensive' ), 'href' => $immensive_contatti_url, 'class' => 'ih-btn--solid' ),
+				array( 'label' => __( 'Prenota una call di 30 minuti', 'immensive' ), 'href' => $immensive_contatti_url, 'class' => 'ih-btn--ghost' ),
+			),
 		)
 	);
 	?>

@@ -53,7 +53,7 @@ $immensive_img = get_template_directory_uri() . '/assets/images/';
 					<li><a href="<?php echo esc_url( home_url( '/electro-vr/' ) ); ?>">Electro VR Simulator</a></li>
 				</ul>
 				<a class="ih-footer__title ih-footer__title--link" href="<?php echo esc_url( home_url( '/piani/' ) ); ?>"><?php esc_html_e( 'Piani', 'immensive' ); ?></a>
-				<a class="ih-footer__title ih-footer__title--link" href="<?php echo esc_url( home_url( '/rivenditori/' ) ); ?>"><?php esc_html_e( 'Rivenditori EU', 'immensive' ); ?></a>
+				<a class="ih-footer__title ih-footer__title--link" href="<?php echo esc_url( home_url( '/rivenditori/' ) ); ?>"><?php esc_html_e( 'Rivenditori', 'immensive' ); ?></a>
 			</div>
 
 			<div class="ih-footer__col">

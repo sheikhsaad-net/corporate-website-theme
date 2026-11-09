@@ -53,6 +53,11 @@ get_header();
 				<img src="<?php echo esc_url( $immensive_img . 'electro-vr-logo.webp' ); ?>" alt="Electro VR Simulator" width="1024" height="324">
 			</h1>
 			<p class="ih-pprod-hero__sub"><?php esc_html_e( 'Simulatore di Impianti Elettrici in Realtà Virtuale Immersiva', 'immensive' ); ?></p>
+			<div class="ih-pprod-hero__actions">
+				<button type="button" class="ih-btn ih-btn--outline" data-demo-modal-open><?php esc_html_e( 'Richiedi una Demo', 'immensive' ); ?></button>
+				<a class="ih-btn ih-btn--outline" href="<?php echo esc_url( home_url( '/piani/' ) ); ?>"><?php esc_html_e( 'Scopri i Piani', 'immensive' ); ?></a>
+				<a class="ih-btn ih-btn--outline" href="<?php echo esc_url( home_url( '/rivenditori/' ) ); ?>"><?php esc_html_e( 'Diventa Rivenditore', 'immensive' ); ?></a>
+			</div>
 		</div>
 	</section>
 
@@ -60,9 +65,9 @@ get_header();
 			<ul class="ih-pnav__links">
 				<li><a href="#ih-sistema" aria-label="Il sistema"><span class="ih-pnav__label"><?php esc_html_e( 'Il sistema', 'immensive' ); ?></span></a></li>
 				<li><a href="#ih-come-funziona" aria-label="Come Funziona"><span class="ih-pnav__label"><?php esc_html_e( 'Come Funziona', 'immensive' ); ?></span></a></li>
-				<li><a href="#ih-benefici" aria-label="Benefici"><span class="ih-pnav__label"><?php esc_html_e( 'Benefici', 'immensive' ); ?></span></a></li>
 				<li><a href="#ih-caratteristiche" aria-label="Caratteristiche"><span class="ih-pnav__label"><?php esc_html_e( 'Caratteristiche', 'immensive' ); ?></span></a></li>
 				<li><a href="#ih-dotazione" aria-label="Dotazione"><span class="ih-pnav__label"><?php esc_html_e( 'Dotazione', 'immensive' ); ?></span></a></li>
+				<li><a href="#ih-benefici" aria-label="Benefici"><span class="ih-pnav__label"><?php esc_html_e( 'Benefici', 'immensive' ); ?></span></a></li>
 				<li><a href="#ih-contact" aria-label="Contattaci"><span class="ih-pnav__label"><?php esc_html_e( 'Contattaci', 'immensive' ); ?></span></a></li>
 			</ul>
 		</nav>
@@ -82,10 +87,9 @@ get_header();
 		</div>
 	</section>
 
-	<section class="ih-pteach" style="background-image: linear-gradient(160deg, #1a1a1a 0%, #8a3c1e 60%, #6b2c15 100%);">
+	<section class="ih-pteach ih-pteach--flow" style="background-image: linear-gradient(160deg, #1a1a1a 0%, #8a3c1e 60%, #6b2c15 100%);">
 		<div class="ih-pteach__scrim" aria-hidden="true"></div>
 		<div class="ih-container ih-pteach__inner ih-reveal">
-			<p class="ih-pteach__eyebrow">Electro VR Simulator</p>
 			<h2 class="ih-pteach__title"><?php esc_html_e( 'Innova il tuo modo di formare gli elettricisti del domani', 'immensive' ); ?></h2>
 			<p class="ih-pteach__sub"><?php esc_html_e( 'Introduci il sistema Electro VR Simulator nei tuoi corsi di formazione ed offri ai partecipanti un\'esperienza coinvolgente, efficace e sicura.', 'immensive' ); ?></p>
 		</div>
@@ -106,102 +110,6 @@ get_header();
 					<span class="ih-pfunziona__play-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="m9 6 10 6-10 6V6Z" fill="currentColor"/></svg></span>
 				</button>
 			</div>
-		</div>
-	</section>
-
-	<section class="ih-pbenefici" id="ih-benefici">
-		<div class="ih-container">
-			<h2 class="ih-pbenefici__heading"><?php esc_html_e( 'Perché fare formazione con Electro VR Simulator', 'immensive' ); ?></h2>
-			<p class="ih-pbenefici__sub"><?php esc_html_e( 'I principali benefici per gli Enti di Formazione che scelgono di erogare corsi di formazione integrando il sistema Electro VR Simulator sono:', 'immensive' ); ?></p>
-
-			<?php
-			$immensive_benefici = array(
-				array(
-					'tone'  => 'dark',
-					'icon'  => 'electro-vr-icon-sicuro.webp',
-					'title' => 'Sicuro ed ecosostenibile',
-					'desc'  => 'Nessun rischio per l\'utente che svolge l\'esercizio e per le persone che lo circondano. Zero emissioni di CO2.',
-				),
-				array(
-					'tone'  => 'light',
-					'icon'  => 'electro-vr-icon-coinvolgimento.webp',
-					'title' => 'Maggiore coinvolgimento',
-					'desc'  => 'Crea maggiore coinvolgimento ed engagement nei partecipanti al corso, aumentando il grado di apprendimento.',
-				),
-				array(
-					'tone'  => 'muted',
-					'icon'  => 'electro-vr-icon-simulazioni.webp',
-					'title' => 'Simulazione di ambienti e situazioni particolari',
-					'desc'  => 'Simulazione di ambienti e condizioni particolari, difficilmente riproducibili durante le classiche esercitazioni reali.',
-				),
-				array(
-					'tone'  => 'dark',
-					'icon'  => 'electro-vr-icon-grado.webp',
-					'title' => 'Maggiore grado di esercitazione',
-					'desc'  => 'Elimina i tempi di setup tra gli esercizi, massimizzando il tempo a disposizione che ogni utente può dedicare ai task. Permette di svolgere l\'esercitazione in qualsiasi ambiente.',
-				),
-				array(
-					'tone'  => 'light',
-					'icon'  => 'electro-vr-icon-efficace.webp',
-					'title' => 'Efficace e di veloce apprendimento',
-					'desc'  => 'Permette all\'utente di comprendere velocemente le modalità operative e di eseguire più volte i task prima di passare all\'esercitazione reale.',
-				),
-				array(
-					'tone'  => 'muted',
-					'icon'  => 'electro-vr-icon-monitoraggio.webp',
-					'title' => 'Monitoraggio dell\'apprendimento',
-					'desc'  => 'Monitoraggio di tutte le micro-azioni che portano alla realizzazione dei collegamenti elettrici e dei progressi nell\'apprendimento da parte dell\'utente. Elaborazione report valutativo della performance.',
-				),
-			);
-			?>
-			<div class="ih-pbenefici__grid">
-				<?php foreach ( $immensive_benefici as $immensive_ben ) : ?>
-					<article class="ih-pbenefici__card ih-pbenefici__card--<?php echo esc_attr( $immensive_ben['tone'] ); ?> ih-reveal">
-						<span class="ih-pbenefici__icon"><img src="<?php echo esc_url( $immensive_img . $immensive_ben['icon'] ); ?>" alt="" width="64" height="64" loading="lazy" decoding="async"></span>
-						<h3 class="ih-pbenefici__title"><?php echo esc_html( $immensive_ben['title'] ); ?></h3>
-						<p class="ih-pbenefici__desc"><?php echo esc_html( $immensive_ben['desc'] ); ?></p>
-					</article>
-				<?php endforeach; ?>
-			</div>
-		</div>
-	</section>
-
-	<section class="ih-pgap" id="ih-gap">
-		<div class="ih-container">
-			<h2 class="ih-pgap__heading"><?php esc_html_e( 'Colma il gap tra la fase di teoria e di pratica', 'immensive' ); ?></h2>
-
-			<div class="ih-pgap__steps">
-				<span class="ih-pgap__line ih-pgap__line--edge" aria-hidden="true"></span>
-
-				<div class="ih-pgap__step ih-reveal">
-					<span class="ih-pgap__num" aria-hidden="true">1</span>
-					<div class="ih-pgap__box">
-						<span class="ih-pgap__label"><?php esc_html_e( 'Teoria', 'immensive' ); ?></span>
-					</div>
-				</div>
-
-				<span class="ih-pgap__line" aria-hidden="true"></span>
-
-				<div class="ih-pgap__step ih-reveal">
-					<span class="ih-pgap__num" aria-hidden="true">2</span>
-					<div class="ih-pgap__box">
-						<span class="ih-pgap__logo">ELECTRO<span class="ih-pgap__logo-vr">VR</span><br><span class="ih-pgap__logo-sub">SIMULATOR</span></span>
-					</div>
-				</div>
-
-				<span class="ih-pgap__line" aria-hidden="true"></span>
-
-				<div class="ih-pgap__step ih-reveal">
-					<span class="ih-pgap__num" aria-hidden="true">3</span>
-					<div class="ih-pgap__box">
-						<span class="ih-pgap__label"><?php esc_html_e( 'Pratica', 'immensive' ); ?></span>
-					</div>
-				</div>
-
-				<span class="ih-pgap__line ih-pgap__line--edge" aria-hidden="true"></span>
-			</div>
-
-			<p class="ih-pgap__desc"><?php esc_html_e( 'L\'introduzione del sistema Electro VR Simulator nei corsi di formazione permette ai partecipanti di esercitarsi nella realizzazione di collegamenti elettrici in modo sicuro ed efficace, potendo ripetere gli esercizi diverse volte, in tantissime condizioni operative, finché non acquisiscono la sicurezza necessaria per svolgere le attività nei contesti reali.', 'immensive' ); ?></p>
 		</div>
 	</section>
 
@@ -343,6 +251,102 @@ get_header();
 		</div>
 	</section>
 
+	<section class="ih-pbenefici" id="ih-benefici">
+		<div class="ih-container">
+			<h2 class="ih-pbenefici__heading"><?php esc_html_e( 'Perché fare formazione con Electro VR Simulator', 'immensive' ); ?></h2>
+			<p class="ih-pbenefici__sub"><?php esc_html_e( 'I principali benefici per gli Enti di Formazione che scelgono di erogare corsi di formazione integrando il sistema Electro VR Simulator sono:', 'immensive' ); ?></p>
+
+			<?php
+			$immensive_benefici = array(
+				array(
+					'tone'  => 'dark',
+					'icon'  => 'electro-vr-icon-sicuro.webp',
+					'title' => 'Sicuro ed ecosostenibile',
+					'desc'  => 'Nessun rischio per l\'utente che svolge l\'esercizio e per le persone che lo circondano. Zero emissioni di CO2.',
+				),
+				array(
+					'tone'  => 'light',
+					'icon'  => 'electro-vr-icon-coinvolgimento.webp',
+					'title' => 'Maggiore coinvolgimento',
+					'desc'  => 'Crea maggiore coinvolgimento ed engagement nei partecipanti al corso, aumentando il grado di apprendimento.',
+				),
+				array(
+					'tone'  => 'muted',
+					'icon'  => 'electro-vr-icon-simulazioni.webp',
+					'title' => 'Simulazione di ambienti e situazioni particolari',
+					'desc'  => 'Simulazione di ambienti e condizioni particolari, difficilmente riproducibili durante le classiche esercitazioni reali.',
+				),
+				array(
+					'tone'  => 'dark',
+					'icon'  => 'electro-vr-icon-grado.webp',
+					'title' => 'Maggiore grado di esercitazione',
+					'desc'  => 'Elimina i tempi di setup tra gli esercizi, massimizzando il tempo a disposizione che ogni utente può dedicare ai task. Permette di svolgere l\'esercitazione in qualsiasi ambiente.',
+				),
+				array(
+					'tone'  => 'light',
+					'icon'  => 'electro-vr-icon-efficace.webp',
+					'title' => 'Efficace e di veloce apprendimento',
+					'desc'  => 'Permette all\'utente di comprendere velocemente le modalità operative e di eseguire più volte i task prima di passare all\'esercitazione reale.',
+				),
+				array(
+					'tone'  => 'muted',
+					'icon'  => 'electro-vr-icon-monitoraggio.webp',
+					'title' => 'Monitoraggio dell\'apprendimento',
+					'desc'  => 'Monitoraggio di tutte le micro-azioni che portano alla realizzazione dei collegamenti elettrici e dei progressi nell\'apprendimento da parte dell\'utente. Elaborazione report valutativo della performance.',
+				),
+			);
+			?>
+			<div class="ih-pbenefici__grid">
+				<?php foreach ( $immensive_benefici as $immensive_ben ) : ?>
+					<article class="ih-pbenefici__card ih-pbenefici__card--<?php echo esc_attr( $immensive_ben['tone'] ); ?> ih-reveal">
+						<span class="ih-pbenefici__icon"><img src="<?php echo esc_url( $immensive_img . $immensive_ben['icon'] ); ?>" alt="" width="64" height="64" loading="lazy" decoding="async"></span>
+						<h3 class="ih-pbenefici__title"><?php echo esc_html( $immensive_ben['title'] ); ?></h3>
+						<p class="ih-pbenefici__desc"><?php echo esc_html( $immensive_ben['desc'] ); ?></p>
+					</article>
+				<?php endforeach; ?>
+			</div>
+		</div>
+	</section>
+
+	<section class="ih-pgap" id="ih-gap">
+		<div class="ih-container">
+			<h2 class="ih-pgap__heading"><?php esc_html_e( 'Colma il gap tra la fase di teoria e di pratica', 'immensive' ); ?></h2>
+
+			<div class="ih-pgap__steps">
+				<span class="ih-pgap__line ih-pgap__line--edge" aria-hidden="true"></span>
+
+				<div class="ih-pgap__step ih-reveal">
+					<span class="ih-pgap__num" aria-hidden="true">1</span>
+					<div class="ih-pgap__box">
+						<span class="ih-pgap__label"><?php esc_html_e( 'Teoria', 'immensive' ); ?></span>
+					</div>
+				</div>
+
+				<span class="ih-pgap__line" aria-hidden="true"></span>
+
+				<div class="ih-pgap__step ih-reveal">
+					<span class="ih-pgap__num" aria-hidden="true">2</span>
+					<div class="ih-pgap__box">
+						<span class="ih-pgap__logo">ELECTRO<span class="ih-pgap__logo-vr">VR</span><br><span class="ih-pgap__logo-sub">SIMULATOR</span></span>
+					</div>
+				</div>
+
+				<span class="ih-pgap__line" aria-hidden="true"></span>
+
+				<div class="ih-pgap__step ih-reveal">
+					<span class="ih-pgap__num" aria-hidden="true">3</span>
+					<div class="ih-pgap__box">
+						<span class="ih-pgap__label"><?php esc_html_e( 'Pratica', 'immensive' ); ?></span>
+					</div>
+				</div>
+
+				<span class="ih-pgap__line ih-pgap__line--edge" aria-hidden="true"></span>
+			</div>
+
+			<p class="ih-pgap__desc"><?php esc_html_e( 'L\'introduzione del sistema Electro VR Simulator nei corsi di formazione permette ai partecipanti di esercitarsi nella realizzazione di collegamenti elettrici in modo sicuro ed efficace, potendo ripetere gli esercizi diverse volte, in tantissime condizioni operative, finché non acquisiscono la sicurezza necessaria per svolgere le attività nei contesti reali.', 'immensive' ); ?></p>
+		</div>
+	</section>
+
 	<section class="ih-pdual" id="ih-contact">
 		<div class="ih-container ih-pdual__inner">
 			<div class="ih-pdual__col ih-reveal">
@@ -350,8 +354,8 @@ get_header();
 				<button type="button" class="ih-btn ih-btn--cyan" data-demo-modal-open><?php esc_html_e( 'Richiedi Demo', 'immensive' ); ?></button>
 			</div>
 			<div class="ih-pdual__col ih-reveal">
-				<p class="ih-pdual__label"><?php esc_html_e( "I'm a reseller in EU", 'immensive' ); ?></p>
-				<a class="ih-btn ih-btn--ghost" href="<?php echo esc_url( home_url( '/rivenditori/' ) ); ?>"><?php esc_html_e( 'Get More Info', 'immensive' ); ?></a>
+				<p class="ih-pdual__label"><?php esc_html_e( 'Sono un rivenditore', 'immensive' ); ?></p>
+				<a class="ih-btn ih-btn--pc" style="--pc:#f7971e" href="<?php echo esc_url( home_url( '/rivenditori/' ) ); ?>"><?php esc_html_e( 'Maggiori informazioni', 'immensive' ); ?></a>
 			</div>
 		</div>
 	</section>

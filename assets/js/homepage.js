@@ -676,7 +676,7 @@
 		var dettSlides = dettStage.querySelectorAll('.ih-pdett__slide');
 		var dettCurrent = 0;
 		var dettTimer = null;
-		var DETT_INTERVAL = 4000;
+		var DETT_INTERVAL = 7000;
 
 		var dettActivate = function (idx) {
 			dettCurrent = idx;

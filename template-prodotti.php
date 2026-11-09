@@ -114,7 +114,7 @@ get_header();
 			<div class="ih-hero__actions">
 				<a class="ih-btn ih-btn--outline" href="#ih-contact"><?php esc_html_e( 'Richiedi una Demo', 'immensive' ); ?></a>
 				<a class="ih-btn ih-btn--outline" href="<?php echo esc_url( home_url( '/piani/' ) ); ?>"><?php esc_html_e( 'Scopri i Piani', 'immensive' ); ?></a>
-				<a class="ih-btn ih-btn--outline" href="<?php echo esc_url( home_url( '/rivenditori/' ) ); ?>"><?php esc_html_e( 'Diventa Distributore', 'immensive' ); ?></a>
+				<a class="ih-btn ih-btn--outline" href="<?php echo esc_url( home_url( '/rivenditori/' ) ); ?>"><?php esc_html_e( 'Diventa Rivenditore', 'immensive' ); ?></a>
 			</div>
 
 			<div class="ih-hero__badges">

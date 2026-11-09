@@ -27,6 +27,11 @@ get_header();
 				<img src="<?php echo esc_url( $immensive_img . 'product-weld-vr.webp' ); ?>" alt="Weld VR Simulator" width="700" height="284">
 			</h1>
 			<p class="ih-pprod-hero__sub"><?php esc_html_e( 'Simulatore di Saldatura in Realtà Virtuale Immersiva', 'immensive' ); ?></p>
+			<div class="ih-pprod-hero__actions">
+				<button type="button" class="ih-btn ih-btn--outline" data-demo-modal-open><?php esc_html_e( 'Richiedi una Demo', 'immensive' ); ?></button>
+				<a class="ih-btn ih-btn--outline" href="<?php echo esc_url( home_url( '/piani/' ) ); ?>"><?php esc_html_e( 'Scopri i Piani', 'immensive' ); ?></a>
+				<a class="ih-btn ih-btn--outline" href="<?php echo esc_url( home_url( '/rivenditori/' ) ); ?>"><?php esc_html_e( 'Diventa Rivenditore', 'immensive' ); ?></a>
+			</div>
 		</div>
 	</section>
 
@@ -34,9 +39,11 @@ get_header();
 			<ul class="ih-pnav__links">
 				<li><a href="#ih-sistema" aria-label="Il sistema"><span class="ih-pnav__label"><?php esc_html_e( 'Il sistema', 'immensive' ); ?></span></a></li>
 				<li><a href="#ih-come-funziona" aria-label="Come Funziona"><span class="ih-pnav__label"><?php esc_html_e( 'Come Funziona', 'immensive' ); ?></span></a></li>
-				<li><a href="#ih-benefici" aria-label="Benefici"><span class="ih-pnav__label"><?php esc_html_e( 'Benefici', 'immensive' ); ?></span></a></li>
 				<li><a href="#ih-caratteristiche" aria-label="Caratteristiche"><span class="ih-pnav__label"><?php esc_html_e( 'Caratteristiche', 'immensive' ); ?></span></a></li>
 				<li><a href="#ih-dotazione" aria-label="Dotazione"><span class="ih-pnav__label"><?php esc_html_e( 'Dotazione', 'immensive' ); ?></span></a></li>
+				<li><a href="#ih-dettaglio" aria-label="Dettaglio"><span class="ih-pnav__label"><?php esc_html_e( 'Dettaglio', 'immensive' ); ?></span></a></li>
+				<li><a href="#ih-soluzioni" aria-label="Piani"><span class="ih-pnav__label"><?php esc_html_e( 'Piani', 'immensive' ); ?></span></a></li>
+				<li><a href="#ih-benefici" aria-label="Benefici"><span class="ih-pnav__label"><?php esc_html_e( 'Benefici', 'immensive' ); ?></span></a></li>
 				<li><a href="#ih-installazioni" aria-label="Installazioni"><span class="ih-pnav__label"><?php esc_html_e( 'Installazioni', 'immensive' ); ?></span></a></li>
 				<li><a href="#ih-contact" aria-label="Contattaci"><span class="ih-pnav__label"><?php esc_html_e( 'Contattaci', 'immensive' ); ?></span></a></li>
 			</ul>
@@ -57,10 +64,9 @@ get_header();
 		</div>
 	</section>
 
-	<section class="ih-pteach" style="background-image: url( '<?php echo esc_url( $immensive_img . 'hero-weld-vr.webp' ); ?>' );">
+	<section class="ih-pteach ih-pteach--flow" style="background-image: linear-gradient(160deg, #0b1a1f 0%, #2f8aa0 55%, #1d5d70 100%);">
 		<div class="ih-pteach__scrim" aria-hidden="true"></div>
 		<div class="ih-container ih-pteach__inner ih-reveal">
-			<p class="ih-pteach__eyebrow">Weld VR Simulator</p>
 			<h2 class="ih-pteach__title"><?php esc_html_e( 'Innova il tuo modo di insegnare le pratiche di saldatura', 'immensive' ); ?></h2>
 			<p class="ih-pteach__sub"><?php esc_html_e( 'Introduci il sistema Weld VR Simulator nei tuoi corsi di formazione ed offri ai tuoi studenti un\'esperienza efficace, coinvolgente e sicura.', 'immensive' ); ?></p>
 		</div>
@@ -82,89 +88,6 @@ get_header();
 		</div>
 	</section>
 
-	<section class="ih-pbenefici" id="ih-benefici">
-		<div class="ih-container">
-			<h2 class="ih-pbenefici__heading"><?php esc_html_e( 'Perché fare formazione con Weld VR Simulator', 'immensive' ); ?></h2>
-			<p class="ih-pbenefici__sub"><?php esc_html_e( 'I principali benefici per le Aziende, le Scuole, gli Enti formativi e le APL che scelgono di erogare percorsi formativi integrando il sistema Weld VR Simulator sono:', 'immensive' ); ?></p>
-
-			<?php
-			$immensive_benefici = array(
-				array(
-					'tone'  => 'dark',
-					'icon'  => 'icons/icon-eco-cyan.webp',
-					'title' => 'Zero rischi, zero impatto',
-					'desc'  => 'Nessun rischio di infortunio per l\'alunno e zero emissioni di carbonio e gas e zero rifiuti metallici.',
-				),
-				array(
-					'tone'  => 'light',
-					'icon'  => 'icons/icon-costi-cyan.webp',
-					'title' => 'Risparmio immediato e misurabile',
-					'desc'  => 'Elimina tutti i costi dei materiali necessari per le esercitazioni e massimizza il tempo dedicato agli esercizi.',
-				),
-				array(
-					'tone'  => 'muted',
-					'icon'  => 'icons/icon-efficace-cyan.webp',
-					'title' => 'Veloce, mirato, efficace',
-					'desc'  => 'Monitoraggio costante dei progressi di apprendimento; massimo tempo in arco per ogni allievo.',
-				),
-			);
-			?>
-			<div class="ih-pbenefici__grid">
-				<?php foreach ( $immensive_benefici as $immensive_ben ) : ?>
-					<article class="ih-pbenefici__card ih-pbenefici__card--<?php echo esc_attr( $immensive_ben['tone'] ); ?> ih-reveal">
-						<span class="ih-pbenefici__icon"><img src="<?php echo esc_url( $immensive_img . $immensive_ben['icon'] ); ?>" alt="" width="64" height="64" loading="lazy" decoding="async"></span>
-						<h3 class="ih-pbenefici__title"><?php echo esc_html( $immensive_ben['title'] ); ?></h3>
-						<p class="ih-pbenefici__desc"><?php echo esc_html( $immensive_ben['desc'] ); ?></p>
-					</article>
-				<?php endforeach; ?>
-			</div>
-
-			<div class="ih-pbenefici__actions">
-				<a class="ih-btn ih-btn--cyan ih-pbenefici__btn" href="https://www.immensive.it/brochure/weldvr/brochure_weld.pdf" target="_blank" rel="noopener"><?php esc_html_e( 'Scarica la Brochure', 'immensive' ); ?></a>
-				<a class="ih-btn ih-btn--ghost-dark ih-pbenefici__btn" href="https://www.immensive.it/brochure/weldvr/#page/1" target="_blank" rel="noopener"><?php esc_html_e( 'Sfoglia la Brochure', 'immensive' ); ?></a>
-			</div>
-		</div>
-	</section>
-
-	<section class="ih-pgap" id="ih-gap">
-		<div class="ih-container">
-			<h2 class="ih-pgap__heading"><?php esc_html_e( 'Colma il gap tra la fase di teoria e di pratica', 'immensive' ); ?></h2>
-
-			<div class="ih-pgap__steps">
-				<span class="ih-pgap__line ih-pgap__line--edge" aria-hidden="true"></span>
-
-				<div class="ih-pgap__step ih-reveal">
-					<span class="ih-pgap__num" aria-hidden="true">1</span>
-					<div class="ih-pgap__box">
-						<span class="ih-pgap__label"><?php esc_html_e( 'Teoria', 'immensive' ); ?></span>
-					</div>
-				</div>
-
-				<span class="ih-pgap__line" aria-hidden="true"></span>
-
-				<div class="ih-pgap__step ih-reveal">
-					<span class="ih-pgap__num" aria-hidden="true">2</span>
-					<div class="ih-pgap__box">
-						<span class="ih-pgap__logo">WELD<span class="ih-pgap__logo-vr">VR</span><br><span class="ih-pgap__logo-sub">SIMULATOR</span></span>
-					</div>
-				</div>
-
-				<span class="ih-pgap__line" aria-hidden="true"></span>
-
-				<div class="ih-pgap__step ih-reveal">
-					<span class="ih-pgap__num" aria-hidden="true">3</span>
-					<div class="ih-pgap__box">
-						<span class="ih-pgap__label"><?php esc_html_e( 'Pratica', 'immensive' ); ?></span>
-					</div>
-				</div>
-
-				<span class="ih-pgap__line ih-pgap__line--edge" aria-hidden="true"></span>
-			</div>
-
-			<p class="ih-pgap__desc"><?php esc_html_e( 'L\'introduzione del sistema Weld VR Simulator all\'interno di un corso di saldatura permette di colmare il naturale gap esistente tra la fase di teoria e la pratica di laboratorio.', 'immensive' ); ?></p>
-		</div>
-	</section>
-
 	<section class="ih-pfeat" id="ih-caratteristiche">
 		<div class="ih-container">
 			<h2 class="ih-pfeat__heading"><?php esc_html_e( 'Caratteristiche Principali', 'immensive' ); ?></h2>
@@ -172,23 +95,23 @@ get_header();
 			<?php
 			$immensive_features = array(
 				array(
-					'icon' => '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 12.5V5a1.5 1.5 0 0 1 3 0v6M11 11V3.5a1.5 1.5 0 0 1 3 0V11M14 11.5V5a1.5 1.5 0 0 1 3 0v8M17 9.5a1.5 1.5 0 0 1 3 0V15c0 3.9-3.1 7-7 7h-1c-2.2 0-3.8-.7-5-2l-3.5-4a1.4 1.4 0 0 1 2-2L8 12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+					'img'  => 'weld-vr-feat-mano.webp',
 					'desc' => 'Selezione della mano con la quale l\'allievo svolgerà la saldatura.',
 				),
 				array(
-					'icon' => '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 21l3.5-3.5M9 15l7-7M13 3l1.5 1.5L18 1l2 2-3.5 3.5L18 8l-6 6-4-4 6-6-1.5-1.5L13 3Z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+					'img'  => 'weld-vr-feat-tipi.webp',
 					'desc' => '3 tipi di saldatura: Smaw, Mig/Mag, Tig.',
 				),
 				array(
-					'icon' => '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 15a8 8 0 1 1 16 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M12 15l4.5-4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>',
+					'img'  => 'weld-vr-feat-gradi.webp',
 					'desc' => '2 Gradi di difficoltà. Adatto a principianti ed esperti.',
 				),
 				array(
-					'icon' => '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 16 16 4l4 4L8 20l-4-4Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M13 7l4 4M10 10l4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>',
+					'img'  => 'weld-vr-feat-giunti.webp',
 					'desc' => '34 tipi di giunti per simulare i principali casi reali di saldatura.',
 				),
 				array(
-					'icon' => '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v18M8 6l4-3 4 3M8 18l4 3 4-3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+					'img'  => 'weld-vr-feat-altezza.webp',
 					'desc' => 'Altezza regolabile del piano di lavoro per saldature eseguite in piedi o seduto.',
 				),
 				array(
@@ -196,11 +119,11 @@ get_header();
 					'desc' => 'Monitoraggio e analisi del processo di saldatura.',
 				),
 				array(
-					'icon' => '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 20V10M9 20V4M14 20v-7M19 20V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>',
+					'img'  => 'weld-vr-feat-report.webp',
 					'desc' => 'Report istantaneo dell\'esercizio con salvataggio dei risultati.',
 				),
 				array(
-					'icon' => '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="8.5" cy="8" r="2.8" stroke="currentColor" stroke-width="1.4"/><circle cx="16" cy="9" r="2.2" stroke="currentColor" stroke-width="1.4"/><path d="M3 19c0-3 2.5-5 5.5-5s5.5 2 5.5 5M14.5 14.5c2.5.2 4.5 2 4.5 4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>',
+					'img'  => 'weld-vr-feat-utenti.webp',
 					'desc' => 'Gestione utenti per un corretto monitoraggio dei progressi dell\'aula.',
 				),
 			);
@@ -208,7 +131,7 @@ get_header();
 			<div class="ih-pfeat__grid">
 				<?php foreach ( $immensive_features as $immensive_feat ) : ?>
 					<div class="ih-pfeat__item ih-reveal">
-						<span class="ih-pfeat__icon"><?php echo $immensive_feat['icon']; // phpcs:ignore WordPress.Security.EscapeOutput -- static inline SVG, not user input. ?></span>
+						<span class="ih-pfeat__icon"><?php if ( ! empty( $immensive_feat['img'] ) ) : ?><img src="<?php echo esc_url( $immensive_img . $immensive_feat['img'] ); ?>" alt="" width="40" height="40" loading="lazy" decoding="async"><?php else : echo $immensive_feat['icon']; // phpcs:ignore WordPress.Security.EscapeOutput -- static inline SVG, not user input. ?><?php endif; ?></span>
 						<p class="ih-pfeat__desc"><?php echo esc_html( $immensive_feat['desc'] ); ?></p>
 					</div>
 				<?php endforeach; ?>
@@ -294,12 +217,6 @@ get_header();
 							'desc'  => 'Struttura in acciaio con 3 scaffali per tutti gli accessori e supporti per torce',
 							'items' => array( 'Carrello con ruote' ),
 						),
-						array(
-							'title' => 'Valigia',
-							'image' => 'weld-vr-valigia.webp',
-							'desc'  => 'Permette al docente di monitorare le postazioni del laboratorio Weld VR durante le esercitazioni di saldatura',
-							'items' => array( '1 Notebook' ),
-						),
 					),
 				),
 				'lite' => array(
@@ -363,12 +280,6 @@ get_header();
 							'desc'  => 'Struttura in acciaio con 3 scaffali per tutti gli accessori e supporti per torce',
 							'items' => array( 'Carrello con ruote' ),
 						),
-						array(
-							'title' => 'Valigia',
-							'image' => 'weld-vr-valigia.webp',
-							'desc'  => 'Permette al docente di monitorare le postazioni del laboratorio Weld VR durante le esercitazioni di saldatura',
-							'items' => array( '1 Notebook' ),
-						),
 					),
 				),
 			);
@@ -409,6 +320,7 @@ get_header();
 						</ul>
 					</div>
 
+					<div class="ih-pdota__reqopt">
 					<div class="ih-pdota__block ih-pdota__block--req">
 						<h3 class="ih-pdota__section-heading"><?php esc_html_e( 'Requisiti', 'immensive' ); ?></h3>
 						<div class="ih-pdota__cards ih-pdota__cards--req">
@@ -458,74 +370,16 @@ get_header();
 							<?php endforeach; ?>
 						</div>
 					</div>
+					</div>
 
 				</div>
 			<?php endforeach; ?>
 		</div>
 	</section>
 
-	<section class="ih-pdett" id="ih-dettaglio">
-		<div class="ih-container">
-			<h2 class="ih-pdett__heading"><?php esc_html_e( 'Scoprilo nel Dettaglio', 'immensive' ); ?></h2>
-
-			<?php
-			$immensive_dettagli = array(
-				array(
-					'label' => 'Pinza portaelettrodo',
-					'image' => 'weld-vr-elettrodo.webp',
-					'desc'  => 'Pinza portaelettrodo con simulazione consumo',
-				),
-				array(
-					'label' => 'Sistema rotante',
-					'image' => 'weld-vr-sistema-rotante.webp',
-					'desc'  => 'Sistema rotante per simulazione dell’angolazione dell’elettrodo',
-				),
-				array(
-					'label' => 'Stand supporto',
-					'image' => 'weld-vr-stand.webp',
-					'desc'  => 'Stand supporto per tutte le posizioni come da norma UNI EN ISO 9606-1',
-				),
-				array(
-					'label' => 'Giunti fisici',
-					'image' => 'weld-vr-giunti.webp',
-					'desc'  => 'Giunti fisici per tutte le tipologie disponibili nel software',
-				),
-				array(
-					'label' => 'Weaving patterns',
-					'image' => 'weld-vr-weaving.webp',
-					'desc'  => 'Weaving Patterns: guide visive alle trame di saldatura',
-				),
-			);
-			?>
-
-			<div class="ih-pdett__stage ih-reveal" id="ih-dett">
-				<div class="ih-pdett__pills" role="tablist" aria-label="<?php esc_attr_e( 'Dettagli del prodotto', 'immensive' ); ?>">
-					<?php foreach ( $immensive_dettagli as $immensive_dett_i => $immensive_dett ) : ?>
-						<div class="ih-pdett__item" role="presentation">
-							<button type="button" class="ih-pdett__pill<?php echo 0 === $immensive_dett_i ? ' is-active' : ''; ?>" data-dett="<?php echo esc_attr( $immensive_dett_i ); ?>" role="tab" aria-selected="<?php echo 0 === $immensive_dett_i ? 'true' : 'false'; ?>"><?php echo esc_html( $immensive_dett['label'] ); ?></button>
-							<div class="ih-pdett__desc">
-								<div class="ih-pdett__desc-inner">
-									<p><?php echo esc_html( $immensive_dett['desc'] ); ?></p>
-								</div>
-							</div>
-						</div>
-					<?php endforeach; ?>
-				</div>
-
-				<div class="ih-pdett__slides">
-					<?php foreach ( $immensive_dettagli as $immensive_dett_i => $immensive_dett ) : ?>
-						<figure class="ih-pdett__slide<?php echo 0 === $immensive_dett_i ? ' is-active' : ''; ?>" data-dett-slide="<?php echo esc_attr( $immensive_dett_i ); ?>">
-							<img src="<?php echo esc_url( $immensive_img . $immensive_dett['image'] ); ?>" alt="<?php echo esc_attr( $immensive_dett['label'] ); ?>" loading="lazy" width="1672" height="941">
-						</figure>
-					<?php endforeach; ?>
-				</div>
-			</div>
-		</div>
-	</section>
-
 	<section class="ih-pcomp" id="ih-confronta">
 		<div class="ih-container">
-			<h2 class="ih-pcomp__heading"><?php esc_html_e( 'Confronta i Modelli', 'immensive' ); ?></h2>
+			<h2 class="ih-pcomp__heading"><?php esc_html_e( 'Confronta le Versioni', 'immensive' ); ?></h2>
 
 			<div class="ih-pcomp__switch" id="ih-comp-switch" role="tablist" aria-label="<?php esc_attr_e( 'Categoria di confronto', 'immensive' ); ?>">
 				<span class="ih-pcomp__switch-thumb" aria-hidden="true"></span>
@@ -633,6 +487,65 @@ get_header();
 		</div>
 	</section>
 
+	<section class="ih-pdett" id="ih-dettaglio">
+		<div class="ih-container">
+			<h2 class="ih-pdett__heading"><?php esc_html_e( 'Scoprilo nel Dettaglio', 'immensive' ); ?></h2>
+
+			<?php
+			$immensive_dettagli = array(
+				array(
+					'label' => 'Pinza portaelettrodo',
+					'image' => 'weld-vr-elettrodo.webp',
+					'desc'  => 'Pinza portaelettrodo con simulazione consumo',
+				),
+				array(
+					'label' => 'Sistema rotante',
+					'image' => 'weld-vr-sistema-rotante.webp',
+					'desc'  => 'Sistema rotante per simulazione dell’angolazione dell’elettrodo',
+				),
+				array(
+					'label' => 'Stand supporto',
+					'image' => 'weld-vr-stand.webp',
+					'desc'  => 'Stand supporto per tutte le posizioni come da norma UNI EN ISO 9606-1',
+				),
+				array(
+					'label' => 'Giunti fisici',
+					'image' => 'weld-vr-giunti.webp',
+					'desc'  => 'Giunti fisici per tutte le tipologie disponibili nel software',
+				),
+				array(
+					'label' => 'Weaving patterns',
+					'image' => 'weld-vr-weaving.webp',
+					'desc'  => 'Weaving Patterns: guide visive alle trame di saldatura',
+				),
+			);
+			?>
+
+			<div class="ih-pdett__stage ih-reveal" id="ih-dett">
+				<div class="ih-pdett__pills" role="tablist" aria-label="<?php esc_attr_e( 'Dettagli del prodotto', 'immensive' ); ?>">
+					<?php foreach ( $immensive_dettagli as $immensive_dett_i => $immensive_dett ) : ?>
+						<div class="ih-pdett__item" role="presentation">
+							<button type="button" class="ih-pdett__pill<?php echo 0 === $immensive_dett_i ? ' is-active' : ''; ?>" data-dett="<?php echo esc_attr( $immensive_dett_i ); ?>" role="tab" aria-selected="<?php echo 0 === $immensive_dett_i ? 'true' : 'false'; ?>"><?php echo esc_html( $immensive_dett['label'] ); ?></button>
+							<div class="ih-pdett__desc">
+								<div class="ih-pdett__desc-inner">
+									<p><?php echo esc_html( $immensive_dett['desc'] ); ?></p>
+								</div>
+							</div>
+						</div>
+					<?php endforeach; ?>
+				</div>
+
+				<div class="ih-pdett__slides">
+					<?php foreach ( $immensive_dettagli as $immensive_dett_i => $immensive_dett ) : ?>
+						<figure class="ih-pdett__slide<?php echo 0 === $immensive_dett_i ? ' is-active' : ''; ?>" data-dett-slide="<?php echo esc_attr( $immensive_dett_i ); ?>">
+							<img src="<?php echo esc_url( $immensive_img . $immensive_dett['image'] ); ?>" alt="<?php echo esc_attr( $immensive_dett['label'] ); ?>" loading="lazy" width="1672" height="941">
+						</figure>
+					<?php endforeach; ?>
+				</div>
+			</div>
+		</div>
+	</section>
+
 	<section class="ih-psol" id="ih-soluzioni">
 		<div class="ih-container">
 			<p class="ih-psol__eyebrow"><?php esc_html_e( 'Scegli come comprare Weld VR.', 'immensive' ); ?></p>
@@ -735,6 +648,50 @@ get_header();
 		</div>
 	</section>
 
+	<section class="ih-pbenefici" id="ih-benefici">
+		<div class="ih-container">
+			<h2 class="ih-pbenefici__heading"><?php esc_html_e( 'Perché fare formazione con Weld VR Simulator', 'immensive' ); ?></h2>
+			<p class="ih-pbenefici__sub"><?php esc_html_e( 'I principali benefici per le Aziende, le Scuole, gli Enti formativi e le APL che scelgono di erogare percorsi formativi integrando il sistema Weld VR Simulator sono:', 'immensive' ); ?></p>
+
+			<?php
+			$immensive_benefici = array(
+				array(
+					'tone'  => 'dark',
+					'icon'  => 'icons/icon-eco-cyan.webp',
+					'title' => 'Zero rischi, zero impatto',
+					'desc'  => 'Nessun rischio di infortunio per l\'alunno e zero emissioni di carbonio e gas e zero rifiuti metallici.',
+				),
+				array(
+					'tone'  => 'light',
+					'icon'  => 'icons/icon-costi-cyan.webp',
+					'title' => 'Risparmio immediato e misurabile',
+					'desc'  => 'Elimina tutti i costi dei materiali necessari per le esercitazioni e massimizza il tempo dedicato agli esercizi.',
+				),
+				array(
+					'tone'  => 'muted',
+					'icon'  => 'icons/icon-efficace-cyan.webp',
+					'title' => 'Veloce, mirato, efficace',
+					'desc'  => 'Monitoraggio costante dei progressi di apprendimento; massimo tempo in arco per ogni allievo.',
+				),
+			);
+			?>
+			<div class="ih-pbenefici__grid">
+				<?php foreach ( $immensive_benefici as $immensive_ben ) : ?>
+					<article class="ih-pbenefici__card ih-pbenefici__card--<?php echo esc_attr( $immensive_ben['tone'] ); ?> ih-reveal">
+						<span class="ih-pbenefici__icon"><img src="<?php echo esc_url( $immensive_img . $immensive_ben['icon'] ); ?>" alt="" width="64" height="64" loading="lazy" decoding="async"></span>
+						<h3 class="ih-pbenefici__title"><?php echo esc_html( $immensive_ben['title'] ); ?></h3>
+						<p class="ih-pbenefici__desc"><?php echo esc_html( $immensive_ben['desc'] ); ?></p>
+					</article>
+				<?php endforeach; ?>
+			</div>
+
+			<div class="ih-pbenefici__actions">
+				<a class="ih-btn ih-btn--cyan ih-pbenefici__btn" href="https://www.immensive.it/brochure/weldvr/brochure_weld.pdf" target="_blank" rel="noopener"><?php esc_html_e( 'Scarica la Brochure', 'immensive' ); ?></a>
+				<a class="ih-btn ih-btn--ghost-dark ih-pbenefici__btn" href="https://www.immensive.it/brochure/weldvr/#page/1" target="_blank" rel="noopener"><?php esc_html_e( 'Sfoglia la Brochure', 'immensive' ); ?></a>
+			</div>
+		</div>
+	</section>
+
 	<section class="ih-pinst" id="ih-installazioni">
 		<div class="ih-container ih-pinst__inner">
 			<p class="ih-pinst__text ih-reveal">
@@ -806,8 +763,8 @@ get_header();
 				<button type="button" class="ih-btn ih-btn--cyan" data-demo-modal-open><?php esc_html_e( 'Richiedi Demo', 'immensive' ); ?></button>
 			</div>
 			<div class="ih-pdual__col ih-reveal">
-				<p class="ih-pdual__label"><?php esc_html_e( "I'm a reseller in EU", 'immensive' ); ?></p>
-				<a class="ih-btn ih-btn--ghost" href="<?php echo esc_url( home_url( '/rivenditori/' ) ); ?>"><?php esc_html_e( 'Get More Info', 'immensive' ); ?></a>
+				<p class="ih-pdual__label"><?php esc_html_e( 'Sono un rivenditore', 'immensive' ); ?></p>
+				<a class="ih-btn ih-btn--pc" style="--pc:#69ceeb" href="<?php echo esc_url( home_url( '/rivenditori/' ) ); ?>"><?php esc_html_e( 'Maggiori informazioni', 'immensive' ); ?></a>
 			</div>
 		</div>
 	</section>

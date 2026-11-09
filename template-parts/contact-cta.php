@@ -7,6 +7,7 @@
  * - 'heading' big display heading
  * - 'label'   button text
  * - 'href'    button link
+ * - 'actions' optional list of buttons (label, href, class) shown instead of the single button
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -19,7 +20,8 @@ $immensive_cta = wp_parse_args(
 		'eyebrow' => '',
 		'heading' => 'CONTATTACI',
 		'label'   => __( 'Compila il Form', 'immensive' ),
-		'href'    => 'mailto:info@immensive.it',
+		'href'    => home_url( '/contatti/' ),
+		'actions' => array(),
 	)
 );
 ?>
@@ -30,8 +32,16 @@ $immensive_cta = wp_parse_args(
 				<p class="ih-contact__eyebrow"><?php echo esc_html( $immensive_cta['eyebrow'] ); ?></p>
 			<?php endif; ?>
 			<h2 class="ih-heading ih-heading--center"><?php echo esc_html( $immensive_cta['heading'] ); ?></h2>
-			<a class="ih-btn ih-btn--solid" href="<?php echo esc_url( $immensive_cta['href'] ); ?>">
-				<?php echo esc_html( $immensive_cta['label'] ); ?>
-			</a>
+			<?php if ( ! empty( $immensive_cta['actions'] ) ) : ?>
+				<div class="ih-contact__actions">
+					<?php foreach ( $immensive_cta['actions'] as $immensive_cta_action ) : ?>
+						<a class="ih-btn <?php echo esc_attr( $immensive_cta_action['class'] ); ?>" href="<?php echo esc_url( $immensive_cta_action['href'] ); ?>"><?php echo esc_html( $immensive_cta_action['label'] ); ?></a>
+					<?php endforeach; ?>
+				</div>
+			<?php else : ?>
+				<a class="ih-btn ih-btn--solid" href="<?php echo esc_url( $immensive_cta['href'] ); ?>">
+					<?php echo esc_html( $immensive_cta['label'] ); ?>
+				</a>
+			<?php endif; ?>
 		</div>
 	</section>
