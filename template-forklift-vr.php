@@ -243,6 +243,7 @@ get_header();
 
 	<section class="ih-pdota" id="ih-requisiti">
 		<div class="ih-container">
+			<div class="ih-pdota__reqopt">
 			<div class="ih-pdota__block ih-pdota__block--req">
 				<h3 class="ih-pdota__section-heading"><?php esc_html_e( 'Requisiti', 'immensive' ); ?></h3>
 				<?php
@@ -303,12 +304,8 @@ get_header();
 					</div>
 				<?php endforeach; ?>
 			</div>
-		</div>
-	</section>
 
-	<section class="ih-pdota" id="ih-opzioni">
-		<div class="ih-container">
-			<div class="ih-pdota__block ih-pdota__block--req">
+			<div class="ih-pdota__block ih-pdota__block--req" id="ih-opzioni">
 				<h3 class="ih-pdota__section-heading"><?php esc_html_e( 'Opzioni Disponibili', 'immensive' ); ?></h3>
 				<div class="ih-pdota__cards ih-pdota__cards--req">
 					<?php
@@ -357,6 +354,7 @@ get_header();
 						</article>
 					<?php endforeach; ?>
 				</div>
+			</div>
 			</div>
 		</div>
 	</section>
@@ -428,7 +426,7 @@ get_header();
 		</div>
 	</section>
 
-	<section class="ih-psol" id="ih-soluzioni">
+	<section class="ih-psol" id="ih-soluzioni" style="--pcr: 242, 185, 13; --pct: #101010;">
 		<div class="ih-container">
 			<p class="ih-psol__eyebrow"><?php esc_html_e( 'Scegli come comprare Forklift VR.', 'immensive' ); ?></p>
 
@@ -436,6 +434,10 @@ get_header();
 				<?php esc_html_e( 'Soluzioni di', 'immensive' ); ?><br>
 				<span class="ih-psol__heading-line">
 					<?php esc_html_e( 'Acquisto', 'immensive' ); ?>
+					<span class="ih-psol__price">
+						<span class="ih-psol__price-label"><?php esc_html_e( 'A partire da', 'immensive' ); ?></span>
+						<span class="ih-psol__price-value">&euro;40,00<span class="ih-psol__price-unit">/mo</span></span>
+					</span>
 				</span>
 			</h2>
 

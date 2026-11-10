@@ -546,7 +546,7 @@ get_header();
 		</div>
 	</section>
 
-	<section class="ih-psol" id="ih-soluzioni">
+	<section class="ih-psol" id="ih-soluzioni" style="--pcr: 105, 206, 235; --pct: #ffffff;">
 		<div class="ih-container">
 			<p class="ih-psol__eyebrow"><?php esc_html_e( 'Scegli come comprare Weld VR.', 'immensive' ); ?></p>
 

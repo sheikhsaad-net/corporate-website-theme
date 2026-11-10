@@ -13404,3 +13404,46 @@ body .ih-btn--pill:not(.ih-header__cta) {
 	z-index: 2;
 }
 
+
+/* Product pages: the plans ("Soluzioni di Acquisto") take the product colour
+   (--pcr = its RGB, set on the section) for the featured card, header pill
+   and ticks, instead of fixed cyan. */
+.ih-psol[style*="--pcr"] .ih-psol__card.is-featured {
+	border-color: rgba(var(--pcr), 0.55);
+	border-top-color: rgba(var(--pcr), 0.75);
+	background: linear-gradient(170deg, rgba(var(--pcr), 0.18), rgba(var(--pcr), 0.05) 50%, rgba(13, 13, 13, 0.32));
+}
+
+.ih-psol[style*="--pcr"] .ih-psol__card.is-featured:hover {
+	border-color: rgb(var(--pcr));
+	background: linear-gradient(170deg, rgba(var(--pcr), 0.24), rgba(var(--pcr), 0.07) 50%, rgba(13, 13, 13, 0.3));
+}
+
+.ih-psol[style*="--pcr"] .ih-psol__card.is-featured .ih-psol__card-head {
+	background: linear-gradient(180deg, rgba(var(--pcr), 0.95) 0%, rgba(var(--pcr), 0.72) 100%);
+}
+
+.ih-psol[style*="--pcr"] .ih-psol__card.is-featured .ih-psol__card-title,
+.ih-psol[style*="--pcr"] .ih-psol__card.is-featured .ih-psol__card-badge {
+	color: var(--pct, #fff);
+}
+
+.ih-psol[style*="--pcr"] .ih-psol__check {
+	color: rgb(var(--pcr));
+}
+
+/* Bottom "Voglio una demo / Sono un rivenditore" buttons: both take the
+   product's own colour (the page accent), same fill and border. */
+body .ih-pdual .ih-btn,
+body .ih-pdual .ih-btn:hover {
+	background-color: var(--ih-cyan);
+	border-color: var(--ih-cyan);
+	color: #101010;
+}
+
+body.page-template-template-firefighter-vr .ih-pdual .ih-btn,
+body.page-template-template-firefighter-vr-php .ih-pdual .ih-btn,
+body.page-template-template-electro-vr .ih-pdual .ih-btn,
+body.page-template-template-electro-vr-php .ih-pdual .ih-btn {
+	color: #fff;
+}

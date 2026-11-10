@@ -274,7 +274,7 @@ get_header();
 		</div>
 	</section>
 
-	<section class="ih-psol" id="ih-soluzioni">
+	<section class="ih-psol" id="ih-soluzioni" style="--pcr: 232, 80, 58; --pct: #ffffff;">
 		<div class="ih-container">
 			<p class="ih-psol__eyebrow"><?php esc_html_e( 'Scegli come comprare Firefighter VR.', 'immensive' ); ?></p>
 
@@ -282,6 +282,10 @@ get_header();
 				<?php esc_html_e( 'Soluzioni di', 'immensive' ); ?><br>
 				<span class="ih-psol__heading-line">
 					<?php esc_html_e( 'Acquisto', 'immensive' ); ?>
+					<span class="ih-psol__price">
+						<span class="ih-psol__price-label"><?php esc_html_e( 'A partire da', 'immensive' ); ?></span>
+						<span class="ih-psol__price-value">&euro;40,00<span class="ih-psol__price-unit">/mo</span></span>
+					</span>
 				</span>
 			</h2>
 

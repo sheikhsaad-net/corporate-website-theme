@@ -158,96 +158,128 @@ get_header();
 
 	<section class="ih-pdota" id="ih-dotazione">
 		<div class="ih-container">
-			<h2 class="ih-pdota__heading"><?php esc_html_e( 'Dotazione Kit Base', 'immensive' ); ?></h2>
+			<h2 class="ih-pdota__heading"><?php esc_html_e( 'Scopri le Versioni', 'immensive' ); ?></h2>
+
+			<div class="ih-pdota__switch" role="tablist" aria-label="<?php esc_attr_e( 'Versione del sistema', 'immensive' ); ?>">
+				<span class="ih-pdota__switch-thumb" aria-hidden="true"></span>
+				<button type="button" class="ih-pdota__switch-opt is-active" data-version="pro" role="tab" aria-selected="true"><?php esc_html_e( 'HTC', 'immensive' ); ?></button>
+				<button type="button" class="ih-pdota__switch-opt" data-version="lite" role="tab" aria-selected="false"><?php esc_html_e( 'Meta', 'immensive' ); ?></button>
+			</div>
 
 			<?php
-			// Only one kit exists on the source page — no Lite/Pro switch
-			// here, just the single panel markup .ih-pdota__panel normally
-			// renders inside the switch loop.
+			// Same switch as Firefighter VR. Requisiti = workstation + the
+			// headset of the chosen version; Opzioni = instructor workstation
+			// and trolley (same generic hardware/copy as Weld VR).
+			$immensive_workstation = array(
+				'title' => 'Workstation',
+				'image' => 'weld-vr-workstation.webp',
+				'desc'  => 'PC VR Ready ad elevate prestazioni grafiche necessario per offrire un\'esperienza fluida e di qualità.',
+				'items' => array( '1 Notebook' ),
+			);
+			$immensive_electro_options = array(
+				array(
+					'title' => 'Postazione Docente',
+					'image' => 'weld-vr-postazione-docente.webp',
+					'desc'  => 'Consente al docente di monitorare in tempo reale le operazioni di ogni postazione del laboratorio Electro VR durante le esercitazioni.',
+					'items' => array( '1 Notebook' ),
+				),
+				array(
+					'title' => 'Trolley',
+					'image' => 'weld-vr-trolley.webp',
+					'desc'  => 'Comodo borsone con ruote e manico per l\'alloggiamento e trasporto del kit Electro VR.',
+					'items' => array( '1 Borsone con ruote' ),
+				),
+			);
+			$immensive_kit_versions = array(
+				'pro'  => array(
+					'alt'       => 'Kit Base Electro VR Simulator con controller hand-tracking',
+					'title'     => 'Kit Versione HTC',
+					'requisiti' => array(
+						$immensive_workstation,
+						array(
+							'title' => 'Kit HTC Vive Pro Room-Scale VR',
+							'image' => 'vive-pro-2-full-kit-buy.webp',
+							'desc'  => 'Vive Pro – Full Kit è il sistema progettato da HTC per vivere un\'esperienza di realtà virtuale professionale. Si compone di:',
+							'items' => array( 'Visore HTC Vive Pro 2', '2 Stazioni di Base', '2 Supporti per camere', '2 Controller HTC Vive' ),
+						),
+					),
+				),
+				'lite' => array(
+					'alt'       => 'Kit Base Electro VR Simulator con controller hand-tracking',
+					'title'     => 'Kit Versione Meta',
+					'requisiti' => array(
+						$immensive_workstation,
+						array(
+							'title' => 'Kit Meta Quest',
+							'image' => 'metaQ2.webp',
+							'desc'  => 'Kit Meta Quest 3s è il sistema standalone che offre libertà di movimento totale, per un\'esperienza di realtà virtuale immersiva e immediata.',
+							'items' => array( 'Visore Meta Quest 3', '2 Controller Touch Plus' ),
+						),
+					),
+				),
+			);
+			$immensive_kit_items = array( 'Licenza software Electro VR', 'Controller hand-tracking' );
+			$immensive_contain   = array( 'vive-pro-2-full-kit-buy.webp', 'metaQ2.webp' );
 			?>
-			<div class="ih-pdota__panel" data-version-panel="base">
-				<div class="ih-pdota__row">
-					<div class="ih-pdota__media ih-reveal">
-						<img src="<?php echo esc_url( $immensive_img . 'electro-vr-dotazione-base.webp' ); ?>" alt="Kit Base Electro VR Simulator con controller hand-tracking" loading="lazy" width="1081" height="1081">
-					</div>
-					<div class="ih-pdota__content ih-reveal">
-						<h3 class="ih-pdota__title">Kit Base</h3>
-						<p class="ih-pdota__desc"><?php esc_html_e( 'Il simulatore Electro VR prevede un sistema di controller che replica la presenza delle mani all\'interno dell\'ambiente virtuale; a differenza della maggioranza dei joystick presenti sul mercato, i controller possono essere indossati senza dover necessariamente tenere le mani chiuse per reggere i dispositivi, in modo da usare l\'interazione di chiusura mano per simulare la prensione degli oggetti virtuali.', 'immensive' ); ?></p>
-						<div class="ih-pdota__list">
-							<div class="ih-pdota__item">
-								<span class="ih-pdota__check" aria-hidden="true">
-									<svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-								</span>
-								<span><?php esc_html_e( 'Licenza software Electro VR', 'immensive' ); ?></span>
-							</div>
-							<div class="ih-pdota__item">
-								<span class="ih-pdota__check" aria-hidden="true">
-									<svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-								</span>
-								<span><?php esc_html_e( 'Controller hand-tracking', 'immensive' ); ?></span>
+
+			<?php foreach ( $immensive_kit_versions as $immensive_kit_key => $immensive_kit ) : ?>
+				<div class="ih-pdota__panel" data-version-panel="<?php echo esc_attr( $immensive_kit_key ); ?>" <?php echo 'pro' === $immensive_kit_key ? '' : 'hidden'; ?>>
+
+					<div class="ih-pdota__row">
+						<div class="ih-pdota__media ih-reveal">
+							<img src="<?php echo esc_url( $immensive_img . 'electro-vr-dotazione-base.webp' ); ?>" alt="<?php echo esc_attr( $immensive_kit['alt'] ); ?>" loading="lazy" width="1081" height="1081">
+						</div>
+						<div class="ih-pdota__content ih-reveal">
+							<h3 class="ih-pdota__title"><?php echo esc_html( $immensive_kit['title'] ); ?></h3>
+							<p class="ih-pdota__desc"><?php esc_html_e( 'Il simulatore Electro VR prevede un sistema di controller che replica la presenza delle mani all\'interno dell\'ambiente virtuale.', 'immensive' ); ?></p>
+							<div class="ih-pdota__list">
+								<?php foreach ( $immensive_kit_items as $immensive_kit_item ) : ?>
+									<div class="ih-pdota__item">
+										<span class="ih-pdota__check" aria-hidden="true">
+											<svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+										</span>
+										<span><?php echo esc_html( $immensive_kit_item ); ?></span>
+									</div>
+								<?php endforeach; ?>
 							</div>
 						</div>
 					</div>
-				</div>
-			</div>
 
-			<div class="ih-pdota__block">
-				<h3 class="ih-pdota__section-heading"><?php esc_html_e( 'Opzioni Disponibili', 'immensive' ); ?></h3>
-				<div class="ih-pdota__cards ih-pdota__cards--opz">
-					<?php
-					// Same 4-card structure/images as Weld VR's Opzioni
-					// Disponibili (Postazione Docente, Trolley, Carrello
-					// Portautensili, Valigia) — this is the same generic
-					// hardware/accessories every Immensive simulator ships
-					// with, so it reuses Weld VR's existing assets/copy
-					// rather than duplicating them, with wording adapted to
-					// Electro VR where the source text was welding-specific.
-					$immensive_opzioni = array(
-						array(
-							'title' => 'Postazione Docente',
-							'image' => 'weld-vr-postazione-docente.webp',
-							'desc'  => 'Consente al docente di monitorare in tempo reale le operazioni di ogni postazione del laboratorio Electro VR durante le esercitazioni.',
-							'items' => array( '1 Notebook' ),
-						),
-						array(
-							'title' => 'Trolley',
-							'image' => 'weld-vr-trolley.webp',
-							'desc'  => 'Comodo borsone con ruote e manico per l\'alloggiamento e trasporto del kit Electro VR.',
-							'items' => array( '1 Borsone con ruote' ),
-						),
-						array(
-							'title' => 'Carrello Portautensili',
-							'image' => 'weld-vr-carrello.webp',
-							'desc'  => 'Struttura in acciaio con 3 scaffali per tutti gli accessori e supporti per il kit.',
-							'items' => array( 'Carrello con ruote' ),
-						),
-						array(
-							'title' => 'Valigia',
-							'image' => 'weld-vr-valigia.webp',
-							'desc'  => 'Valigia rigida per la protezione e il trasporto sicuro del kit Electro VR.',
-							'items' => array( '1 Notebook' ),
-						),
-					);
-					?>
-					<?php foreach ( $immensive_opzioni as $immensive_opz ) : ?>
-						<article class="ih-pdota__card ih-reveal">
-							<div class="ih-pdota__card-media" aria-hidden="true" style="background-image:url('<?php echo esc_url( $immensive_img . $immensive_opz['image'] ); ?>')"></div>
-							<div class="ih-pdota__card-body">
-								<h4 class="ih-pdota__card-title"><?php echo esc_html( $immensive_opz['title'] ); ?></h4>
-								<p class="ih-pdota__card-desc"><?php echo esc_html( $immensive_opz['desc'] ); ?></p>
-								<div class="ih-pdota__card-list">
-									<?php foreach ( $immensive_opz['items'] as $immensive_opz_item ) : ?>
-										<div class="ih-pdota__card-item">
-											<svg class="ih-pdota__card-check" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-											<span><?php echo esc_html( $immensive_opz_item ); ?></span>
-										</div>
+					<div class="ih-pdota__reqopt">
+						<?php
+						$immensive_blocks = array(
+							array( 'heading' => __( 'Requisiti', 'immensive' ), 'cards' => $immensive_kit['requisiti'], 'class' => 'ih-pdota__cards--req' ),
+							array( 'heading' => __( 'Opzioni Disponibili', 'immensive' ), 'cards' => $immensive_electro_options, 'class' => 'ih-pdota__cards--opz' ),
+						);
+						?>
+						<?php foreach ( $immensive_blocks as $immensive_block ) : ?>
+							<div class="ih-pdota__block">
+								<h3 class="ih-pdota__section-heading"><?php echo esc_html( $immensive_block['heading'] ); ?></h3>
+								<div class="ih-pdota__cards <?php echo esc_attr( $immensive_block['class'] ); ?>">
+									<?php foreach ( $immensive_block['cards'] as $immensive_card ) : ?>
+										<article class="ih-pdota__card ih-reveal">
+											<div class="ih-pdota__card-media<?php echo in_array( $immensive_card['image'], $immensive_contain, true ) ? ' ih-pdota__card-media--contain' : ''; ?>" aria-hidden="true" style="background-image:url('<?php echo esc_url( $immensive_img . $immensive_card['image'] ); ?>')"></div>
+											<div class="ih-pdota__card-body">
+												<h4 class="ih-pdota__card-title"><?php echo esc_html( $immensive_card['title'] ); ?></h4>
+												<p class="ih-pdota__card-desc"><?php echo esc_html( $immensive_card['desc'] ); ?></p>
+												<div class="ih-pdota__card-list">
+													<?php foreach ( $immensive_card['items'] as $immensive_card_item ) : ?>
+														<div class="ih-pdota__card-item">
+															<svg class="ih-pdota__card-check" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+															<span><?php echo esc_html( $immensive_card_item ); ?></span>
+														</div>
+													<?php endforeach; ?>
+												</div>
+											</div>
+										</article>
 									<?php endforeach; ?>
 								</div>
 							</div>
-						</article>
-					<?php endforeach; ?>
+						<?php endforeach; ?>
+					</div>
+
 				</div>
-			</div>
+			<?php endforeach; ?>
 		</div>
 	</section>
 
@@ -305,45 +337,6 @@ get_header();
 					</article>
 				<?php endforeach; ?>
 			</div>
-		</div>
-	</section>
-
-	<section class="ih-pgap" id="ih-gap">
-		<div class="ih-container">
-			<h2 class="ih-pgap__heading"><?php esc_html_e( 'Colma il gap tra la fase di teoria e di pratica', 'immensive' ); ?></h2>
-
-			<div class="ih-pgap__steps">
-				<span class="ih-pgap__line ih-pgap__line--edge" aria-hidden="true"></span>
-
-				<div class="ih-pgap__step ih-reveal">
-					<span class="ih-pgap__num" aria-hidden="true">1</span>
-					<div class="ih-pgap__box">
-						<span class="ih-pgap__label"><?php esc_html_e( 'Teoria', 'immensive' ); ?></span>
-					</div>
-				</div>
-
-				<span class="ih-pgap__line" aria-hidden="true"></span>
-
-				<div class="ih-pgap__step ih-reveal">
-					<span class="ih-pgap__num" aria-hidden="true">2</span>
-					<div class="ih-pgap__box">
-						<span class="ih-pgap__logo">ELECTRO<span class="ih-pgap__logo-vr">VR</span><br><span class="ih-pgap__logo-sub">SIMULATOR</span></span>
-					</div>
-				</div>
-
-				<span class="ih-pgap__line" aria-hidden="true"></span>
-
-				<div class="ih-pgap__step ih-reveal">
-					<span class="ih-pgap__num" aria-hidden="true">3</span>
-					<div class="ih-pgap__box">
-						<span class="ih-pgap__label"><?php esc_html_e( 'Pratica', 'immensive' ); ?></span>
-					</div>
-				</div>
-
-				<span class="ih-pgap__line ih-pgap__line--edge" aria-hidden="true"></span>
-			</div>
-
-			<p class="ih-pgap__desc"><?php esc_html_e( 'L\'introduzione del sistema Electro VR Simulator nei corsi di formazione permette ai partecipanti di esercitarsi nella realizzazione di collegamenti elettrici in modo sicuro ed efficace, potendo ripetere gli esercizi diverse volte, in tantissime condizioni operative, finché non acquisiscono la sicurezza necessaria per svolgere le attività nei contesti reali.', 'immensive' ); ?></p>
 		</div>
 	</section>
 

@@ -1598,7 +1598,7 @@
 		var popup = document.getElementById('ih-popup-8108');
 		if (!popup) { return; }
 		var KEY = 'ih-popup-8108-until';
-		var SNOOZE_DAYS = 7;
+		var SNOOZE_DAYS = 2;
 		try {
 			var until = parseInt(window.localStorage.getItem(KEY), 10);
 			if (until && until > Date.now()) { return; }
@@ -1618,8 +1618,10 @@
 		});
 		var cta = popup.querySelector('.ih-popup__cta');
 		if (cta) {
-			cta.addEventListener('click', function () {
-				try { window.sessionStorage.setItem(KEY, '1'); } catch (e) {}
+			cta.addEventListener('click', function (e) {
+				e.preventDefault();
+				try { window.sessionStorage.setItem(KEY, '1'); } catch (err) {}
+				close();
 			});
 		}
 		var snooze = popup.querySelector('[data-popup-snooze]');

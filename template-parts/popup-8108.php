@@ -32,7 +32,7 @@ $immensive_prodotti_url = $immensive_prodotti ? get_permalink( $immensive_prodot
 
 		<div class="ih-popup__actions">
 			<button type="button" class="ih-popup__snooze" data-popup-snooze><?php esc_html_e( 'Non mostrare più per qualche giorno', 'immensive' ); ?></button>
-			<a class="ih-popup__cta" href="<?php echo esc_url( $immensive_prodotti_url ); ?>" data-popup-close><?php esc_html_e( 'Scopri le soluzioni VR', 'immensive' ); ?></a>
+			<a class="ih-popup__cta" href="#" role="button" data-popup-close><?php esc_html_e( 'Scopri le soluzioni VR', 'immensive' ); ?></a>
 		</div>
 	</div>
 </div>
