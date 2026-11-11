@@ -185,7 +185,13 @@
 	(function () {
 		if (reduced || !('IntersectionObserver' in window)) { return; }
 		var sel = '.ih-sccprog__heading, .ih-sccwhat__heading, .ih-sccwho__heading, .ih-stats__title, .ih-testi__heading, .ih-inflow__heading, .ih-faq__heading, .ih-casi__heading, .ih-why__title, .ih-contact .ih-heading, .ih-showcase--static .ih-heading, .ih-norma__title, .ih-rshero__title, .ih-works__heading, .ih-successi__heading';
-		var heads = document.querySelectorAll(sel);
+		// Every other section heading on the site: any h2 named *__heading,
+		// *__title, *-heading, or the generic .ih-heading.
+		sel += ', h2[class*="__heading"], h2[class*="__title"], h2[class*="-heading"], h2.ih-heading, .ih-wr__title, .ih-phero--riv .ih-phero__title';
+		var skip = '.ih-popup, .ih-modal, #ih-demo-modal, #ih-video-modal, [data-no-split]';
+		var heads = Array.prototype.filter.call(document.querySelectorAll(sel), function (el) {
+			return !el.closest(skip) && !/group-title|__name|entry-title|widget-title/.test(el.className);
+		});
 		if (!heads.length) { return; }
 		var io = new IntersectionObserver(function (entries) {
 			entries.forEach(function (en) {
@@ -216,6 +222,26 @@
 				node.parentNode.replaceChild(frag, node);
 			});
 			el.classList.add('ih-split');
+			io.observe(el);
+		});
+	})();
+
+	/* ---- 5b. Intro text under headings: soft fade-up when it scrolls in ---- */
+	(function () {
+		if (reduced || !('IntersectionObserver' in window)) { return; }
+		var sel = 'p[class*="__sub"], p[class*="__lead"], p[class*="__intro"], p[class*="__eyebrow"], p[class*="__tagline"], .ih-section-intro, .ih-wr__desc';
+		var skip = '.ih-popup, .ih-modal, #ih-demo-modal, #ih-video-modal, [data-no-split]';
+		var els = Array.prototype.filter.call(document.querySelectorAll(sel), function (el) {
+			return !el.closest(skip);
+		});
+		if (!els.length) { return; }
+		var io = new IntersectionObserver(function (entries) {
+			entries.forEach(function (en) {
+				if (en.isIntersecting) { en.target.classList.add('is-in'); io.unobserve(en.target); }
+			});
+		}, { threshold: 0.2 });
+		els.forEach(function (el) {
+			el.classList.add('ih-fx-fade');
 			io.observe(el);
 		});
 	})();

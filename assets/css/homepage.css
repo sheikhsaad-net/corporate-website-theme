@@ -13937,3 +13937,72 @@ body .ih-pdett__item:hover {
 		radial-gradient(34% 40% at var(--gx, 20%) var(--gy, 34%), rgba(var(--pcr), 0.26), transparent 70%),
 		radial-gradient(36% 30% at 82% 72%, rgba(142, 184, 38, 0.06), transparent 70%);
 }
+
+/* Logo marquee now lives inside the "Simulatori altamente professionali" card:
+   compact, no full-bleed strip, soft faded edges. */
+.ih-wr__text .ih-wr__logos {
+	margin: 1.4rem 0 0;
+	padding: 0.5rem 0;
+	background: transparent;
+	box-shadow: none;
+	-webkit-mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
+	mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
+}
+
+.ih-wr__text .ih-wr__logos-track {
+	animation-duration: 26s;
+}
+
+.ih-wr__text .ih-wr__logos-group {
+	min-width: 34rem;
+	justify-content: flex-start;
+	gap: 1.8rem;
+	padding-right: 1.8rem;
+}
+
+.ih-wr__text .ih-wr__logo {
+	max-height: 46px;
+	max-width: 96px;
+	flex: none;
+}
+
+.ih-wr__text .ih-wr__logo-ph {
+	height: 34px;
+	padding: 0 0.9rem;
+	font-size: 0.6rem;
+}
+
+/* The scrolling track is far wider than the card; without this the grid column
+   grew to fit it and pushed the photo out. Keep both columns at their share. */
+.ih-wr__row > .ih-wr__text,
+.ih-wr__row > .ih-wr__media {
+	min-width: 0;
+}
+
+.ih-wr__text .ih-wr__logos {
+	width: 100%;
+	max-width: 100%;
+	min-width: 0;
+	contain: inline-size;
+}
+
+/* Intro text under section headings: gentle fade-up once it scrolls into view
+   (class added by effects.js, so nothing is hidden without JS). */
+.ih-fx-fade {
+	opacity: 0;
+	transform: translateY(18px);
+	transition: opacity 0.8s ease 0.25s, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.25s;
+}
+
+.ih-fx-fade.is-in {
+	opacity: 1;
+	transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.ih-fx-fade {
+		opacity: 1;
+		transform: none;
+		transition: none;
+	}
+}

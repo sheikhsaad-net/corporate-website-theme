@@ -97,32 +97,32 @@ get_header();
 					<div class="ih-wr__text">
 						<h3 class="ih-wr__title"><?php echo esc_html( $immensive_row['title'] ); ?></h3>
 						<p class="ih-wr__desc"><?php echo esc_html( $immensive_row['desc'] ); ?></p>
+						<?php if ( '02' === $immensive_row['num'] ) : ?>
+						<?php
+						// Award/partner logo marquee. Drop files into
+						// /assets/images/rivenditori/loghi/ to replace the placeholders.
+						$immensive_logo_files = glob( get_template_directory() . '/assets/images/rivenditori/loghi/*.{webp,png,svg,jpg}', GLOB_BRACE );
+						?>
+						<div class="ih-wr__logos" aria-hidden="true">
+							<div class="ih-wr__logos-track">
+								<?php for ( $immensive_g = 0; $immensive_g < 2; $immensive_g++ ) : ?>
+									<div class="ih-wr__logos-group">
+										<?php if ( $immensive_logo_files ) : ?>
+											<?php foreach ( $immensive_logo_files as $immensive_logo_file ) : ?>
+												<img class="ih-wr__logo" src="<?php echo esc_url( $immensive_img . 'rivenditori/loghi/' . basename( $immensive_logo_file ) ); ?>" alt="" loading="lazy">
+											<?php endforeach; ?>
+										<?php else : ?>
+											<?php for ( $immensive_l = 1; $immensive_l <= 8; $immensive_l++ ) : ?>
+												<span class="ih-wr__logo-ph">LOGO <?php echo esc_html( str_pad( (string) $immensive_l, 2, '0', STR_PAD_LEFT ) ); ?></span>
+											<?php endfor; ?>
+										<?php endif; ?>
+									</div>
+								<?php endfor; ?>
+							</div>
+						</div>
+						<?php endif; ?>
 					</div>
 				</article>
-				<?php if ( '02' === $immensive_row['num'] ) : ?>
-					<?php
-					// Award/partner logo marquee. Drop files into
-					// /assets/images/rivenditori/loghi/ to replace the placeholders.
-					$immensive_logo_files = glob( get_template_directory() . '/assets/images/rivenditori/loghi/*.{webp,png,svg,jpg}', GLOB_BRACE );
-					?>
-					<div class="ih-wr__logos" aria-hidden="true">
-						<div class="ih-wr__logos-track">
-							<?php for ( $immensive_g = 0; $immensive_g < 2; $immensive_g++ ) : ?>
-								<div class="ih-wr__logos-group">
-									<?php if ( $immensive_logo_files ) : ?>
-										<?php foreach ( $immensive_logo_files as $immensive_logo_file ) : ?>
-											<img class="ih-wr__logo" src="<?php echo esc_url( $immensive_img . 'rivenditori/loghi/' . basename( $immensive_logo_file ) ); ?>" alt="" loading="lazy">
-										<?php endforeach; ?>
-									<?php else : ?>
-										<?php for ( $immensive_l = 1; $immensive_l <= 8; $immensive_l++ ) : ?>
-											<span class="ih-wr__logo-ph">LOGO <?php echo esc_html( str_pad( (string) $immensive_l, 2, '0', STR_PAD_LEFT ) ); ?></span>
-										<?php endfor; ?>
-									<?php endif; ?>
-								</div>
-							<?php endfor; ?>
-						</div>
-					</div>
-				<?php endif; ?>
 			<?php endforeach; ?>
 		</div>
 	</section>
@@ -144,9 +144,6 @@ get_header();
 					<span class="ih-stat__number" data-count="10">0</span><span class="ih-stat__plus">+</span>
 					<p><?php esc_html_e( 'Premi ai prodotti', 'immensive' ); ?></p>
 				</div>
-			</div>
-			<div class="ih-stats__cta ih-reveal">
-				<a class="ih-btn ih-btn--solid" href="<?php echo esc_url( $immensive_contatti_url ); ?>"><?php esc_html_e( 'Diventa rivenditore', 'immensive' ); ?></a>
 			</div>
 		</div>
 	</section>

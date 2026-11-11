@@ -193,6 +193,7 @@ get_header();
 			);
 			$immensive_kit_versions = array(
 				'pro'  => array(
+					'image'     => 'electro-vr-dotazione-base.webp',
 					'alt'       => 'Kit Base Electro VR Simulator con controller hand-tracking',
 					'title'     => 'Kit Versione HTC',
 					'requisiti' => array(
@@ -206,6 +207,7 @@ get_header();
 					),
 				),
 				'lite' => array(
+					'image'     => 'electro-vr-dotazione-meta.webp',
 					'alt'       => 'Kit Base Electro VR Simulator con controller hand-tracking',
 					'title'     => 'Kit Versione Meta',
 					'requisiti' => array(
@@ -228,7 +230,7 @@ get_header();
 
 					<div class="ih-pdota__row">
 						<div class="ih-pdota__media ih-reveal">
-							<img src="<?php echo esc_url( $immensive_img . 'electro-vr-dotazione-base.webp' ); ?>" alt="<?php echo esc_attr( $immensive_kit['alt'] ); ?>" loading="lazy" width="1081" height="1081">
+							<img src="<?php echo esc_url( $immensive_img . $immensive_kit['image'] ); ?>" alt="<?php echo esc_attr( $immensive_kit['alt'] ); ?>" loading="lazy" width="1254" height="1254">
 						</div>
 						<div class="ih-pdota__content ih-reveal">
 							<h3 class="ih-pdota__title"><?php echo esc_html( $immensive_kit['title'] ); ?></h3>
