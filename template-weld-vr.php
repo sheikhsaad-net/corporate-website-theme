@@ -117,6 +117,7 @@ get_header();
 				array(
 					'icon' => '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="2.5" y="4.5" width="15" height="10" rx="1.5" stroke="currentColor" stroke-width="1.4"/><path d="M5 9.5l2-2 2 2 3-3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18.5" cy="16.5" r="4" stroke="currentColor" stroke-width="1.4"/><path d="M17 16.5h1v1.2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
 					'desc' => 'Monitoraggio e analisi del processo di saldatura.',
+					'img'  => 'weld-vr-feat-monitoraggio.webp',
 				),
 				array(
 					'img'  => 'weld-vr-feat-report.webp',

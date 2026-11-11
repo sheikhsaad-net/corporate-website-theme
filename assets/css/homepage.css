@@ -13909,3 +13909,31 @@ body .ih-pdett__item:hover {
 		color: #fff;
 	}
 }
+
+/* Product "Soluzioni di Acquisto": the soft glow on the left takes the product
+   colour (was a fixed cyan), and the bullet list uses dots instead of checks. */
+.ih-psol[style*="--pcr"]::before {
+	background:
+		radial-gradient(40% 32% at 20% 34%, rgba(var(--pcr), 0.2), transparent 70%),
+		radial-gradient(36% 30% at 82% 72%, rgba(142, 184, 38, 0.06), transparent 70%);
+}
+
+.ih-psol[style*="--pcr"] .ih-psol__check {
+	width: 7px;
+	height: 7px;
+	margin-top: 0.5rem;
+	border-radius: 50%;
+	background: rgb(var(--pcr));
+	color: rgb(var(--pcr));
+}
+
+.ih-psol[style*="--pcr"] .ih-psol__check svg {
+	display: none;
+}
+
+/* The product-colour glow follows the pointer (--gx/--gy set by homepage.js). */
+.ih-psol[style*="--pcr"]::before {
+	background:
+		radial-gradient(34% 40% at var(--gx, 20%) var(--gy, 34%), rgba(var(--pcr), 0.26), transparent 70%),
+		radial-gradient(36% 30% at 82% 72%, rgba(142, 184, 38, 0.06), transparent 70%);
+}

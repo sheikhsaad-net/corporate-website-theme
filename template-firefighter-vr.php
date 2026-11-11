@@ -153,17 +153,19 @@ get_header();
 			<?php
 			// The old Elementor page (ID 27524) contains the Vive kit; its
 			// February 2026 revision (ID 27525) contains the Meta Quest kit.
+			$immensive_ff_workstation = array(
+				'title' => 'Workstation',
+				'image' => 'weld-vr-workstation.webp',
+				'desc'  => 'PC VR Ready ad elevate prestazioni grafiche necessario per offrire un\'esperienza fluida e di qualità.',
+				'items' => array( '1 Notebook' ),
+			);
+			// Requisiti = workstation + the headset kit of the chosen version;
+			// Opzioni = instructor workstation + trolley (same as Electro VR).
 			$immensive_ff_common_options = array(
 				array(
 					'title' => 'Workstation Docente',
 					'image' => 'firefighter-vr-workstation-docente.webp',
 					'desc'  => 'Permette al docente di monitorare le postazioni del laboratorio Firefighter VR durante le esercitazioni di estinzione incendio.',
-					'items' => array( '1 Notebook' ),
-				),
-				array(
-					'title' => 'Workstation',
-					'image' => 'weld-vr-workstation.webp',
-					'desc'  => 'PC VR Ready ad elevate prestazioni grafiche necessario per offrire un\'esperienza fluida e di qualità.',
 					'items' => array( '1 Notebook' ),
 				),
 				array(
@@ -185,17 +187,16 @@ get_header();
 						'1 Travel case',
 						'1 Estintore con adattatori per HTC Vive Tracker',
 					),
-					'opzioni' => array_merge(
-						$immensive_ff_common_options,
+					'requisiti' => array(
+						$immensive_ff_workstation,
 						array(
-							array(
-								'title' => 'Kit HTC Vive Pro Room-Scale VR',
-								'image' => 'vive-pro-2-full-kit-buy.webp',
-								'desc'  => 'Vive Pro – Full Kit è il sistema progettato da HTC per un\'esperienza di realtà virtuale professionale. Si compone di:',
-								'items' => array( 'Visore HTC Vive Pro', '2 Stazioni di Base', '2 Supporti per camere', '2 Tracker Vive' ),
-							),
-						)
+							'title' => 'Kit HTC Vive Pro Room-Scale VR',
+							'image' => 'vive-pro-2-full-kit-buy.webp',
+							'desc'  => 'Vive Pro – Full Kit è il sistema progettato da HTC per un\'esperienza di realtà virtuale professionale. Si compone di:',
+							'items' => array( 'Visore HTC Vive Pro', '2 Stazioni di Base', '2 Supporti per camere', '2 Tracker Vive' ),
+						),
 					),
+					'opzioni' => $immensive_ff_common_options,
 				),
 				'lite' => array(
 					'image' => 'firefighter-vr-meta-kit.webp',
@@ -208,17 +209,16 @@ get_header();
 						'1 Travel case',
 						'1 Estintore con adattatori per controller Meta Quest 3',
 					),
-					'opzioni' => array_merge(
-						$immensive_ff_common_options,
+					'requisiti' => array(
+						$immensive_ff_workstation,
 						array(
-							array(
-								'title' => 'Kit Meta Quest',
-								'image' => 'metaQ2.webp',
-								'desc'  => 'Meta Quest 3 / 3S – Full Kit è un visore standalone di nuova generazione per un\'esperienza avanzata di realtà mista e virtuale. Si compone di:',
-								'items' => array( 'Visore Meta Quest 3 / 3S', '2 Controller Touch Plus' ),
-							),
-						)
+							'title' => 'Kit Meta Quest',
+							'image' => 'metaQ2.webp',
+							'desc'  => 'Meta Quest 3 / 3S – Full Kit è un visore standalone di nuova generazione per un\'esperienza avanzata di realtà mista e virtuale. Si compone di:',
+							'items' => array( 'Visore Meta Quest 3 / 3S', '2 Controller Touch Plus' ),
+						),
 					),
+					'opzioni' => $immensive_ff_common_options,
 				),
 			);
 			?>
@@ -246,27 +246,38 @@ get_header();
 						</div>
 					</div>
 
-					<div class="ih-pdota__block ih-pdota__block--req ih-pdota__block--ff-options">
-						<h3 class="ih-pdota__section-heading"><?php esc_html_e( 'Opzioni Disponibili', 'immensive' ); ?></h3>
-						<div class="ih-pdota__cards ih-pdota__cards--req">
-							<?php foreach ( $immensive_kit['opzioni'] as $immensive_opzione ) : ?>
-								<article class="ih-pdota__card ih-reveal">
-								<div class="ih-pdota__card-media<?php echo in_array( $immensive_opzione['image'], array( 'vive-pro-2-full-kit-buy.webp', 'metaQ2.webp' ), true ) ? ' ih-pdota__card-media--contain' : ''; ?>" aria-hidden="true" style="background-image:url('<?php echo esc_url( $immensive_img . $immensive_opzione['image'] ); ?>')"></div>
-									<div class="ih-pdota__card-body">
-										<h4 class="ih-pdota__card-title"><?php echo esc_html( $immensive_opzione['title'] ); ?></h4>
-										<p class="ih-pdota__card-desc"><?php echo esc_html( $immensive_opzione['desc'] ); ?></p>
-										<div class="ih-pdota__card-list">
-											<?php foreach ( $immensive_opzione['items'] as $immensive_opzione_item ) : ?>
-												<div class="ih-pdota__card-item">
-													<svg class="ih-pdota__card-check" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-													<span><?php echo esc_html( $immensive_opzione_item ); ?></span>
+					<div class="ih-pdota__reqopt">
+						<?php
+						$immensive_blocks  = array(
+							array( 'heading' => __( 'Requisiti', 'immensive' ), 'cards' => $immensive_kit['requisiti'], 'class' => 'ih-pdota__cards--req' ),
+							array( 'heading' => __( 'Opzioni Disponibili', 'immensive' ), 'cards' => $immensive_kit['opzioni'], 'class' => 'ih-pdota__cards--opz' ),
+						);
+						$immensive_contain = array( 'vive-pro-2-full-kit-buy.webp', 'metaQ2.webp' );
+						?>
+						<?php foreach ( $immensive_blocks as $immensive_block ) : ?>
+							<div class="ih-pdota__block">
+								<h3 class="ih-pdota__section-heading"><?php echo esc_html( $immensive_block['heading'] ); ?></h3>
+								<div class="ih-pdota__cards <?php echo esc_attr( $immensive_block['class'] ); ?>">
+									<?php foreach ( $immensive_block['cards'] as $immensive_card ) : ?>
+										<article class="ih-pdota__card ih-reveal">
+											<div class="ih-pdota__card-media<?php echo in_array( $immensive_card['image'], $immensive_contain, true ) ? ' ih-pdota__card-media--contain' : ''; ?>" aria-hidden="true" style="background-image:url('<?php echo esc_url( $immensive_img . $immensive_card['image'] ); ?>')"></div>
+											<div class="ih-pdota__card-body">
+												<h4 class="ih-pdota__card-title"><?php echo esc_html( $immensive_card['title'] ); ?></h4>
+												<p class="ih-pdota__card-desc"><?php echo esc_html( $immensive_card['desc'] ); ?></p>
+												<div class="ih-pdota__card-list">
+													<?php foreach ( $immensive_card['items'] as $immensive_card_item ) : ?>
+														<div class="ih-pdota__card-item">
+															<svg class="ih-pdota__card-check" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+															<span><?php echo esc_html( $immensive_card_item ); ?></span>
+														</div>
+													<?php endforeach; ?>
 												</div>
-											<?php endforeach; ?>
-										</div>
-									</div>
-								</article>
-							<?php endforeach; ?>
-						</div>
+											</div>
+										</article>
+									<?php endforeach; ?>
+								</div>
+							</div>
+						<?php endforeach; ?>
 					</div>
 
 				</div>

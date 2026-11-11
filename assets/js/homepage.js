@@ -466,6 +466,34 @@
 		}, { passive: true });
 	});
 
+	// "Soluzioni di acquisto" (product pages): the soft product-colour glow in
+	// the background follows the pointer, eased so it trails smoothly.
+	var solBg = document.querySelectorAll('.ih-psol[style*="--pcr"]');
+	if (solBg.length && !prefersReduced && window.matchMedia('(pointer: fine)').matches) {
+		Array.prototype.forEach.call(solBg, function (sec) {
+			var tx = 20, ty = 34, cx = 20, cy = 34, raf = null;
+			var step = function () {
+				cx += (tx - cx) * 0.08;
+				cy += (ty - cy) * 0.08;
+				sec.style.setProperty('--gx', cx.toFixed(2) + '%');
+				sec.style.setProperty('--gy', cy.toFixed(2) + '%');
+				if (Math.abs(tx - cx) > 0.05 || Math.abs(ty - cy) > 0.05) {
+					raf = window.requestAnimationFrame(step);
+				} else {
+					raf = null;
+				}
+			};
+			sec.addEventListener('mousemove', function (e) {
+				var r = sec.getBoundingClientRect();
+				tx = ((e.clientX - r.left) / r.width) * 100;
+				ty = ((e.clientY - r.top) / r.height) * 100;
+				if (!raf) {
+					raf = window.requestAnimationFrame(step);
+				}
+			});
+		});
+	}
+
 	// "Confronta i Modelli" Lite/Pro cards — same cursor-following glare
 	// trick as .ih-psol__card above, tracked per hit-area so only the
 	// hovered column's card glows.

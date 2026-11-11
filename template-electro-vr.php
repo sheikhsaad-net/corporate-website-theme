@@ -67,6 +67,7 @@ get_header();
 				<li><a href="#ih-come-funziona" aria-label="Come Funziona"><span class="ih-pnav__label"><?php esc_html_e( 'Come Funziona', 'immensive' ); ?></span></a></li>
 				<li><a href="#ih-caratteristiche" aria-label="Caratteristiche"><span class="ih-pnav__label"><?php esc_html_e( 'Caratteristiche', 'immensive' ); ?></span></a></li>
 				<li><a href="#ih-dotazione" aria-label="Dotazione"><span class="ih-pnav__label"><?php esc_html_e( 'Dotazione', 'immensive' ); ?></span></a></li>
+				<li><a href="#ih-soluzioni" aria-label="Piani"><span class="ih-pnav__label"><?php esc_html_e( 'Piani', 'immensive' ); ?></span></a></li>
 				<li><a href="#ih-benefici" aria-label="Benefici"><span class="ih-pnav__label"><?php esc_html_e( 'Benefici', 'immensive' ); ?></span></a></li>
 				<li><a href="#ih-contact" aria-label="Contattaci"><span class="ih-pnav__label"><?php esc_html_e( 'Contattaci', 'immensive' ); ?></span></a></li>
 			</ul>
@@ -280,6 +281,101 @@ get_header();
 
 				</div>
 			<?php endforeach; ?>
+		</div>
+	</section>
+
+	<section class="ih-psol" id="ih-soluzioni" style="--pcr: 204, 82, 33; --pct: #ffffff;">
+		<div class="ih-container">
+			<p class="ih-psol__eyebrow"><?php esc_html_e( 'Scegli come comprare Electro VR.', 'immensive' ); ?></p>
+
+			<h2 class="ih-psol__heading">
+				<?php esc_html_e( 'Soluzioni di', 'immensive' ); ?><br>
+				<span class="ih-psol__heading-line">
+					<?php esc_html_e( 'Acquisto', 'immensive' ); ?>
+					<span class="ih-psol__price">
+						<span class="ih-psol__price-label"><?php esc_html_e( 'A partire da', 'immensive' ); ?></span>
+						<span class="ih-psol__price-value">&euro;40,00<span class="ih-psol__price-unit">/mo</span></span>
+					</span>
+				</span>
+			</h2>
+
+			<?php
+			$immensive_soluzioni = array(
+				array(
+					'title'    => 'Lifetime',
+					'sub'      => 'Paghi una volta, usi per sempre',
+					'featured' => false,
+					'items'    => array(
+						'Pagamento una tantum',
+						'Nessun canone ricorrente',
+						'Solo aggiornamenti critici',
+						'Supporto base a ticket',
+					),
+				),
+				array(
+					'title'    => 'Lifetime + Manutenzione',
+					'sub'      => 'Proprietà a vita con assistenza continua',
+					'featured' => false,
+					'items'    => array(
+						'Pagamento una tantum + canone',
+						'Aggiornamenti software inclusi',
+						'Supporto prioritario',
+						'Sostituzione kit consumabili inclusa',
+					),
+				),
+				array(
+					'title'    => 'Abbonamento Annuale',
+					'sub'      => 'Il massimo servizio con flessibilità media',
+					'featured' => true,
+					'badge'    => 'Più scelto',
+					'items'    => array(
+						'Canone annuale',
+						'Aggiornamenti software inclusi',
+						'Supporto prioritario + onboarding',
+						'Sostituzione kit consumabili inclusa',
+					),
+				),
+				array(
+					'title'    => 'Abbonamento Mensile',
+					'sub'      => 'Massima flessibilità, zero vincoli',
+					'featured' => false,
+					'items'    => array(
+						'Canone mensile',
+						'Aggiornamenti software inclusi',
+						'Supporto standard',
+						'Sostituzione kit consumabili inclusa',
+					),
+				),
+			);
+			?>
+
+			<div class="ih-psol__grid">
+				<?php foreach ( $immensive_soluzioni as $immensive_sol ) : ?>
+					<article class="ih-psol__card<?php echo $immensive_sol['featured'] ? ' is-featured' : ''; ?> ih-reveal">
+						<span class="ih-psol__glare" aria-hidden="true"></span>
+						<div class="ih-psol__card-head">
+							<h3 class="ih-psol__card-title"><?php echo esc_html( $immensive_sol['title'] ); ?></h3>
+							<?php if ( ! empty( $immensive_sol['badge'] ) ) : ?>
+								<span class="ih-psol__card-badge"><?php echo esc_html( $immensive_sol['badge'] ); ?></span>
+							<?php endif; ?>
+						</div>
+						<div class="ih-psol__card-body">
+							<p class="ih-psol__card-sub"><?php echo esc_html( $immensive_sol['sub'] ); ?></p>
+							<ul class="ih-psol__list">
+								<?php foreach ( $immensive_sol['items'] as $immensive_sol_item ) : ?>
+									<li>
+										<span class="ih-psol__check" aria-hidden="true">
+											<svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+										</span>
+										<span><?php echo esc_html( $immensive_sol_item ); ?></span>
+									</li>
+								<?php endforeach; ?>
+							</ul>
+						</div>
+					</article>
+				<?php endforeach; ?>
+			</div>
+
 		</div>
 	</section>
 
