@@ -525,7 +525,7 @@ get_header();
 				<div class="ih-pdett__pills" role="tablist" aria-label="<?php esc_attr_e( 'Dettagli del prodotto', 'immensive' ); ?>">
 					<?php foreach ( $immensive_dettagli as $immensive_dett_i => $immensive_dett ) : ?>
 						<div class="ih-pdett__item" role="presentation">
-							<button type="button" class="ih-pdett__pill<?php echo 0 === $immensive_dett_i ? ' is-active' : ''; ?>" data-dett="<?php echo esc_attr( $immensive_dett_i ); ?>" role="tab" aria-selected="<?php echo 0 === $immensive_dett_i ? 'true' : 'false'; ?>"><?php echo esc_html( $immensive_dett['label'] ); ?></button>
+							<button type="button" class="ih-pdett__pill" data-dett="<?php echo esc_attr( $immensive_dett_i ); ?>" role="tab" aria-selected="false"><?php echo esc_html( $immensive_dett['label'] ); ?></button>
 							<div class="ih-pdett__desc">
 								<div class="ih-pdett__desc-inner">
 									<p><?php echo esc_html( $immensive_dett['desc'] ); ?></p>
@@ -536,8 +536,12 @@ get_header();
 				</div>
 
 				<div class="ih-pdett__slides">
+					<?php /* Default view (nothing open): the complete kit. */ ?>
+					<figure class="ih-pdett__slide ih-pdett__slide--kit is-active" data-dett-slide="kit">
+						<img src="<?php echo esc_url( $immensive_img . 'weld-vr-kit-completo.webp' ); ?>" alt="<?php esc_attr_e( 'Kit completo Weld VR Simulator', 'immensive' ); ?>" loading="lazy" width="1404" height="941">
+					</figure>
 					<?php foreach ( $immensive_dettagli as $immensive_dett_i => $immensive_dett ) : ?>
-						<figure class="ih-pdett__slide<?php echo 0 === $immensive_dett_i ? ' is-active' : ''; ?>" data-dett-slide="<?php echo esc_attr( $immensive_dett_i ); ?>">
+						<figure class="ih-pdett__slide" data-dett-slide="<?php echo esc_attr( $immensive_dett_i ); ?>">
 							<img src="<?php echo esc_url( $immensive_img . $immensive_dett['image'] ); ?>" alt="<?php echo esc_attr( $immensive_dett['label'] ); ?>" loading="lazy" width="1672" height="941">
 						</figure>
 					<?php endforeach; ?>

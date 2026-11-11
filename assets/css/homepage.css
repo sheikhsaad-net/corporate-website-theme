@@ -13159,7 +13159,7 @@ body.ih-leaving {
 /* Notes 06 Nov — smaller installations map (still crisp: the file is wider
    than the box it is shown in). */
 .ih-pinst__map {
-	max-width: 600px;
+	max-width: 760px;
 	margin-inline: auto;
 }
 
@@ -13446,4 +13446,466 @@ body.page-template-template-firefighter-vr-php .ih-pdual .ih-btn,
 body.page-template-template-electro-vr .ih-pdual .ih-btn,
 body.page-template-template-electro-vr-php .ih-pdual .ih-btn {
 	color: #fff;
+}
+
+/* Header menu hover: always the theme green, on every page (product pages
+   re-point --ih-cyan to their own colour, so the nav must not use it). */
+body .ih-nav .ih-nav__link:hover,
+body .ih-nav .menu-item-has-children:hover > .ih-nav__link,
+body .ih-nav .menu-item-has-children:focus-within > .ih-nav__link,
+body .ih-nav .ih-dropdown__item a:hover,
+body .ih-nav .ih-mega__card:hover .ih-mega__title {
+	color: var(--ih-green);
+}
+
+@media (min-width: 721px) {
+	body .ih--light-hero .ih-header:not(.is-scrolled) .ih-nav .ih-nav__link:hover,
+	body .ih--light-hero .ih-header:not(.is-scrolled) .ih-nav .menu-item-has-children:hover > .ih-nav__link {
+		color: var(--ih-green-dark);
+	}
+}
+
+/* Hero outline buttons (Richiedi una Demo / Scopri i Piani / Diventa
+   Rivenditore): glass on hover — frosted translucent fill, bright rim,
+   soft inner highlight. */
+body .ih-btn--outline {
+	-webkit-backdrop-filter: blur(10px) saturate(1.2);
+	backdrop-filter: blur(10px) saturate(1.2);
+}
+
+body .ih-btn--outline:hover,
+body .ih-hero__actions .ih-btn--outline:hover,
+body .ih-pprod-hero__actions .ih-btn--outline:hover {
+	color: #fff;
+	background: linear-gradient(180deg, rgba(255, 255, 255, 0.26) 0%, rgba(255, 255, 255, 0.08) 100%);
+	border-color: rgba(255, 255, 255, 0.55);
+	-webkit-backdrop-filter: blur(16px) saturate(1.5);
+	backdrop-filter: blur(16px) saturate(1.5);
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.45), inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+}
+
+body .ih-btn--outline::after {
+	background: radial-gradient(circle 5rem at var(--bx, 50%) var(--by, 50%), rgba(255, 255, 255, 0.3), transparent 70%);
+}
+
+/* No movement on any button, anywhere: buttons stay put on hover/focus
+   (colour, glow, glass and light effects remain). */
+body .ih-btn:hover,
+body .ih-btn:focus-visible,
+body .ih-btn:active,
+body .ih-cont-btn:hover,
+body .ih-shero__btn:hover,
+body .ih-band__btn:hover,
+body .ih-band__btn:focus-visible,
+body .ih-slide__cta:hover,
+body .ih-norma__cta:hover,
+body .ih-popup__cta:hover,
+body .ih-splithero__cta:hover,
+body .ih-header__cta:hover,
+body .ih-tco__submit:hover,
+body .ih-stats__cta:hover {
+	transform: none;
+	translate: none;
+}
+
+/* Product-colour buttons (Come Funziona, brochure, demo…): fill and border
+   in the product colour, white text (dark only on the yellow Forklift). */
+body .ih-btn--cyan,
+body .ih-btn--cyan:hover {
+	background-color: var(--ih-cyan);
+	border-color: var(--ih-cyan);
+	color: #fff;
+}
+
+body.page-template-template-forklift-vr .ih-btn--cyan,
+body.page-template-template-forklift-vr-php .ih-btn--cyan,
+body.page-template-template-forklift-vr .ih-btn--cyan:hover,
+body.page-template-template-forklift-vr-php .ih-btn--cyan:hover {
+	color: #101010;
+}
+
+/* Text on product-colour fills is white everywhere (switch pills, demo /
+   reseller buttons, product-colour buttons); only the yellow Forklift keeps
+   dark text for contrast. */
+body .ih-pcomp__switch-opt.is-active,
+body .ih-pdual .ih-btn,
+body .ih-pdual .ih-btn:hover,
+body .ih-btn--pc,
+body .ih-btn--pc:hover,
+body .ih-btn--cyan,
+body .ih-btn--cyan:hover {
+	color: #fff;
+}
+
+body.page-template-template-forklift-vr .ih-pcomp__switch-opt.is-active,
+body.page-template-template-forklift-vr-php .ih-pcomp__switch-opt.is-active,
+body.page-template-template-forklift-vr .ih-pdual .ih-btn,
+body.page-template-template-forklift-vr-php .ih-pdual .ih-btn,
+body.page-template-template-forklift-vr .ih-pdual .ih-btn:hover,
+body.page-template-template-forklift-vr-php .ih-pdual .ih-btn:hover,
+body.page-template-template-forklift-vr .ih-btn--cyan,
+body.page-template-template-forklift-vr-php .ih-btn--cyan,
+body.page-template-template-forklift-vr .ih-btn--cyan:hover,
+body.page-template-template-forklift-vr-php .ih-btn--cyan:hover {
+	color: #101010;
+}
+
+/* Forklift (yellow): version switch and other yellow-filled controls use
+   black text. */
+body.page-template-template-forklift-vr .ih-pdota__switch-opt.is-active,
+body.page-template-template-forklift-vr-php .ih-pdota__switch-opt.is-active {
+	color: #101010;
+}
+
+/* Same hover animation as the green "Compila il form" button on every solid
+   (filled) button: a light sweep across it plus a soft glow. The fill colour
+   itself never changes. */
+body .ih-btn--cyan:hover,
+body .ih-btn--pc:hover,
+body .ih-pdual .ih-btn:hover,
+body .ih-btn--solid:hover {
+	background-image: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.38) 50%, transparent 70%);
+	background-size: 250% 100%;
+	background-repeat: no-repeat;
+	animation: ih-shine 0.9s ease;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+body .ih-btn--cyan:hover,
+body .ih-btn--pc:hover,
+body .ih-pdual .ih-btn:hover {
+	box-shadow: 0 10px 30px color-mix(in srgb, var(--ih-cyan) 45%, transparent);
+}
+
+body .ih-btn--solid:hover {
+	box-shadow: 0 10px 30px rgba(142, 184, 38, 0.4);
+}
+
+/* "Scoprilo nel Dettaglio" heading centred (Weld + Forklift) */
+body .ih-pdett__heading,
+body .ih-pdett2__heading {
+	text-align: center;
+}
+
+/* Plan cards: hovering one must not cast its (large) shadow over the neighbouring cards.
+   Keep the hover shadow tight and downward-only so nothing spills sideways. */
+body .ih-psol__card,
+body .ih-psol__card:hover,
+body .ih-psol__card.is-featured,
+body .ih-psol__card.is-featured:hover {
+	box-shadow: 0 18px 30px -18px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+/* Demo / reseller buttons: outline-only in the product colour (all product pages). */
+body[class] .ih-pdual .ih-btn {
+	background-color: transparent;
+	border: 2px solid var(--ih-cyan);
+	color: #fff;
+	box-shadow: none;
+}
+
+body[class] .ih-pdual .ih-btn:hover {
+	background-color: color-mix(in srgb, var(--ih-cyan) 16%, transparent);
+	border-color: var(--ih-cyan);
+	color: #fff;
+	box-shadow: 0 8px 24px color-mix(in srgb, var(--ih-cyan) 28%, transparent);
+}
+
+/* Reseller button stays SOLID in the product colour (demo button is the outline one). */
+body[class] .ih-pdual .ih-btn.ih-btn--pc,
+body[class] .ih-pdual .ih-btn.ih-btn--pc:hover {
+	background-color: var(--ih-cyan);
+	border: 2px solid var(--ih-cyan);
+	color: #fff;
+}
+
+body.page-template-template-forklift-vr[class] .ih-pdual .ih-btn.ih-btn--pc,
+body.page-template-template-forklift-vr-php[class] .ih-pdual .ih-btn.ih-btn--pc,
+body.page-template-template-forklift-vr[class] .ih-pdual .ih-btn.ih-btn--pc:hover,
+body.page-template-template-forklift-vr-php[class] .ih-pdual .ih-btn.ih-btn--pc:hover {
+	color: #101010;
+}
+
+body[class] .ih-pdual .ih-btn.ih-btn--pc:hover {
+	box-shadow: 0 10px 30px color-mix(in srgb, var(--ih-cyan) 45%, transparent);
+}
+
+/* Border-only buttons (outline / ghost / ghost-dark): hover behaves like the
+   "Richiedi Demo" outline button — soft tint, glow and the shine sweep — and
+   keeps each button's own colours (no colour change, no movement). */
+body[class] .ih-btn--outline.ih-btn--outline:hover,
+body[class] .ih-btn--ghost.ih-btn--ghost:hover,
+body[class] .ih-btn--ghost-dark.ih-btn--ghost-dark:hover {
+	background-color: color-mix(in srgb, currentColor 14%, transparent);
+	background-image: linear-gradient(110deg, transparent 30%, color-mix(in srgb, currentColor 28%, transparent) 50%, transparent 70%);
+	background-size: 250% 100%;
+	background-repeat: no-repeat;
+	animation: ih-shine 0.9s ease;
+	box-shadow: 0 8px 24px color-mix(in srgb, currentColor 22%, transparent);
+	-webkit-backdrop-filter: blur(10px) saturate(1.2);
+	backdrop-filter: blur(10px) saturate(1.2);
+}
+
+body[class] .ih-btn--outline.ih-btn--outline:hover {
+	color: var(--ih-white);
+	border-color: rgba(255, 255, 255, 0.3);
+}
+
+body[class] .ih-btn--ghost.ih-btn--ghost:hover {
+	color: var(--ih-white);
+	border-color: rgba(255, 255, 255, 0.35);
+}
+
+body[class] .ih-btn--ghost-dark.ih-btn--ghost-dark:hover {
+	color: var(--ih-bg);
+	border-color: rgba(0, 0, 0, 0.25);
+}
+
+/* "Parla con un consulente" (Prodotti): same outline hover, keeps its black colours. */
+body[class] .ih-norma__cta.ih-norma__cta:hover {
+	background-color: color-mix(in srgb, currentColor 10%, transparent);
+	background-image: linear-gradient(110deg, transparent 30%, color-mix(in srgb, currentColor 18%, transparent) 50%, transparent 70%);
+	background-size: 250% 100%;
+	background-repeat: no-repeat;
+	animation: ih-shine 0.9s ease;
+	border-color: #111;
+	color: #111;
+	box-shadow: 0 8px 24px color-mix(in srgb, currentColor 18%, transparent);
+}
+
+/* Requisiti / Opzioni cards: one bullet per line on every product page. */
+body .ih-pdota__card-list {
+	grid-template-columns: 1fr;
+}
+
+/* Forklift VR "Scoprilo nel Dettaglio": the photos are dark, so the accordion
+   uses dark glass with white text (labels + descriptions). */
+body.page-template-template-forklift-vr .ih-pdett__item,
+body.page-template-template-forklift-vr-php .ih-pdett__item {
+	background: rgba(20, 20, 20, 0.45);
+	border-color: rgba(255, 255, 255, 0.22);
+	border-top-color: rgba(255, 255, 255, 0.4);
+}
+
+body.page-template-template-forklift-vr .ih-pdett__item:hover,
+body.page-template-template-forklift-vr-php .ih-pdett__item:hover,
+body.page-template-template-forklift-vr .ih-pdett__item:has(> .ih-pdett__pill.is-active),
+body.page-template-template-forklift-vr-php .ih-pdett__item:has(> .ih-pdett__pill.is-active) {
+	background: rgba(20, 20, 20, 0.6);
+}
+
+body.page-template-template-forklift-vr .ih-pdett__pill,
+body.page-template-template-forklift-vr-php .ih-pdett__pill,
+body.page-template-template-forklift-vr .ih-pdett__desc p,
+body.page-template-template-forklift-vr-php .ih-pdett__desc p {
+	color: #fff;
+}
+
+/* "Scoprilo nel Dettaglio" accordion tabs: glassy hover — brighter frosted
+   rim, inner highlight, soft glow and a light sheen sweep. No movement. */
+.ih-pdett__item {
+	position: relative;
+	transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.ih-pdett__item::before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	border-radius: inherit;
+	background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.35) 50%, transparent 70%);
+	background-size: 250% 100%;
+	background-position: 120% 0;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.ih-pdett__item:hover::before {
+	opacity: 1;
+	animation: ih-shine 0.9s ease;
+}
+
+body .ih-pdett__item:hover {
+	-webkit-backdrop-filter: blur(24px) saturate(1.8);
+	backdrop-filter: blur(24px) saturate(1.8);
+	border-color: rgba(255, 255, 255, 0.7);
+	box-shadow: 0 12px 34px rgba(0, 0, 0, 0.22), 0 0 0 1px rgba(255, 255, 255, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.7), inset 0 -1px 0 rgba(255, 255, 255, 0.12);
+}
+
+/* ==========================================================================
+   Confronta le Versioni — MOBILE: no sideways scroll. Lite/Pro pills on top,
+   then one card split in two halves (light = Lite, product colour = Pro); each
+   row shows its label full width with LITE / PRO values side by side.
+   ========================================================================== */
+@media (max-width: 720px) {
+	body .ih-pcomp__scroll {
+		overflow: visible;
+		padding: 1.5rem 0 0;
+	}
+
+	body .ih-pcomp__table {
+		min-width: 0;
+		max-width: 100%;
+	}
+
+	body .ih-pcomp__colbg,
+	body .ih-pcomp__hit,
+	body .ih-pcomp__glass,
+	body .ih-pcomp__title,
+	body .ih-pcomp__tabsrow > span[aria-hidden] {
+		display: none;
+	}
+
+	body .ih-pcomp__tabsrow {
+		grid-template-columns: 1fr 1fr;
+		column-gap: 0.6rem;
+		padding: 0 0.25rem;
+	}
+
+	body .ih-pcomp__tab {
+		min-height: 0;
+		margin-bottom: 0;
+		padding: 0.85rem 0.5rem 0.7rem;
+		font-size: 1.5rem;
+		border-radius: 22px 22px 0 0;
+	}
+
+	body .ih-pcomp__tab--lite {
+		background: var(--ih-white);
+		min-height: 0;
+	}
+
+	body .ih-pcomp__tab--pro {
+		background: var(--ih-cyan);
+		min-height: 0;
+	}
+
+	body .ih-pcomp__tab em {
+		margin-top: 0.35rem;
+		font-size: 0.85rem;
+	}
+
+	body .ih-pcomp__rows {
+		margin: 0 0.25rem;
+		padding: 0.25rem 0 0.5rem;
+		border-radius: 0 0 24px 24px;
+		background: linear-gradient(90deg, #ececec 50%, var(--ih-cyan) 50%);
+		box-shadow: 0 18px 40px rgba(31, 41, 51, 0.14);
+		overflow: hidden;
+	}
+
+	body .ih-pcomp__row {
+		grid-template-columns: 1fr 1fr;
+		column-gap: 0;
+		align-items: start;
+		border-bottom: 1px solid rgba(16, 16, 16, 0.08);
+	}
+
+	body .ih-pcomp__row:last-child {
+		border-bottom: none;
+	}
+
+	body .ih-pcomp__row-label {
+		grid-column: 1 / -1;
+		padding: 0.8rem 1rem 0.3rem;
+		text-align: left;
+		font-size: 0.78rem;
+		font-weight: 600;
+		border-bottom: none;
+		/* The label spans both halves, so it sits on grey + teal: keep it on a
+		   neutral chip so it stays readable across the split. */
+		color: #101010;
+	}
+
+	body .ih-pcomp__row-val {
+		flex-direction: column;
+		align-items: flex-start;
+		justify-content: flex-start;
+		gap: 0.3rem;
+		padding: 0.1rem 1rem 0.85rem;
+		border-bottom: none;
+		text-align: left;
+		font-size: 0.72rem;
+	}
+
+	body .ih-pcomp__row-val::before {
+		font-family: var(--ih-heading);
+		font-weight: 600;
+		font-size: 0.7rem;
+		letter-spacing: 0.04em;
+	}
+
+	body .ih-pcomp__row-val--lite::before {
+		content: 'LITE';
+		color: var(--ih-cyan-dark);
+	}
+
+	body .ih-pcomp__row-val--pro::before {
+		content: 'PRO';
+		color: rgba(255, 255, 255, 0.7);
+	}
+
+	body .ih-pcomp__row:last-child .ih-pcomp__row-label,
+	body .ih-pcomp__row:last-child .ih-pcomp__row-val {
+		border-bottom: none;
+	}
+}
+
+/* Mobile comparison card: rounded frosted-glass panel; the Lite half is a soft
+   white glow and the Pro half a feathered (blurred-edge) product-colour block. */
+@media (max-width: 720px) {
+	body .ih-pcomp__tabsrow {
+		z-index: 3;
+	}
+
+	body .ih-pcomp__rows {
+		position: relative;
+		margin: -14px 0.25rem 0;
+		padding: 1.4rem 0 0.6rem;
+		border-radius: 30px;
+		border: 1px solid rgba(255, 255, 255, 0.85);
+		background: rgba(238, 238, 238, 0.55);
+		-webkit-backdrop-filter: blur(16px) saturate(1.3);
+		backdrop-filter: blur(16px) saturate(1.3);
+		box-shadow: 0 18px 44px rgba(31, 41, 51, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+		overflow: hidden;
+		isolation: isolate;
+	}
+
+	body .ih-pcomp__rows::before,
+	body .ih-pcomp__rows::after {
+		content: '';
+		position: absolute;
+		top: 10px;
+		bottom: 10px;
+		z-index: -1;
+		pointer-events: none;
+		filter: blur(10px);
+	}
+
+	/* Lite half */
+	body .ih-pcomp__rows::before {
+		left: 10px;
+		right: calc(50% + 4px);
+		border-radius: 24px;
+		background: #fff;
+		opacity: 0.95;
+	}
+
+	/* Pro half */
+	body .ih-pcomp__rows::after {
+		left: calc(50% + 4px);
+		right: 10px;
+		border-radius: 24px;
+		background: var(--ih-cyan);
+	}
+
+	body .ih-pcomp__row {
+		position: relative;
+		border-bottom: 1px solid rgba(16, 16, 16, 0.08);
+	}
+
+	body .ih-pcomp__row-val--pro {
+		color: #fff;
+	}
 }

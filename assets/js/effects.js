@@ -337,22 +337,6 @@
 		});
 	})();
 
-	/* ---- 4. Magnetic buttons ---- */
-	(function () {
-		document.querySelectorAll('.ih-btn--solid, .ih-btn--ghost, .ih-btn--cyan').forEach(function (btn) {
-			if (btn.closest('form') || btn.closest('.ih-popup')) { return; }
-			var PULL = 0.22, LIMIT = 8;
-			btn.addEventListener('pointermove', function (e) {
-				var r = btn.getBoundingClientRect();
-				var x = (e.clientX - (r.left + r.width / 2)) * PULL;
-				var y = (e.clientY - (r.top + r.height / 2)) * PULL;
-				x = Math.max(-LIMIT, Math.min(LIMIT, x));
-				y = Math.max(-LIMIT, Math.min(LIMIT, y));
-				btn.style.translate = x.toFixed(1) + 'px ' + y.toFixed(1) + 'px';
-			});
-			btn.addEventListener('pointerleave', function () { btn.style.translate = ''; });
-		});
-	})();
 	/* ---- 12. Light beam following the pointer on every button ---- */
 	(function () {
 		document.querySelectorAll('.ih-btn').forEach(function (btn) {

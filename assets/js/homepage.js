@@ -673,13 +673,18 @@
 	var dettStage = document.getElementById('ih-dett');
 	if (dettStage) {
 		var dettPills = dettStage.querySelectorAll('.ih-pdett__pill');
-		var dettSlides = dettStage.querySelectorAll('.ih-pdett__slide');
-		var dettCurrent = 0;
+		var dettSlides = dettStage.querySelectorAll('.ih-pdett__slide:not(.ih-pdett__slide--kit)');
+		var dettKit = dettStage.querySelector('.ih-pdett__slide--kit');
+		// -1 = nothing open: the complete-kit image shows (default).
+		var dettCurrent = dettKit ? -1 : 0;
 		var dettTimer = null;
 		var DETT_INTERVAL = 7000;
 
 		var dettActivate = function (idx) {
 			dettCurrent = idx;
+			if (dettKit) {
+				dettKit.classList.toggle('is-active', idx < 0);
+			}
 			dettPills.forEach(function (p, i) {
 				p.classList.toggle('is-active', i === idx);
 				p.setAttribute('aria-selected', i === idx ? 'true' : 'false');
@@ -696,7 +701,7 @@
 			window.clearInterval(dettTimer);
 			if (!prefersReduced && dettSlides.length > 1) {
 				dettTimer = window.setInterval(function () {
-					dettActivate((dettCurrent + 1) % dettSlides.length);
+					dettActivate(dettCurrent + 1 >= dettSlides.length ? (dettKit ? -1 : 0) : dettCurrent + 1);
 				}, DETT_INTERVAL);
 			}
 		};
@@ -710,7 +715,9 @@
 			if (!pill) {
 				return;
 			}
-			dettActivate(Array.prototype.indexOf.call(dettPills, pill));
+			var pillIdx = Array.prototype.indexOf.call(dettPills, pill);
+			// Clicking the open pill closes it and brings the kit image back.
+			dettActivate(dettKit && pillIdx === dettCurrent ? -1 : pillIdx);
 			// Restart the clock so the user's pick gets a full interval.
 			dettStop();
 			dettStart();

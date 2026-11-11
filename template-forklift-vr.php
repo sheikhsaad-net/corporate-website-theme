@@ -151,7 +151,7 @@ get_header();
 
 	<section class="ih-pdota" id="ih-dotazione">
 		<div class="ih-container">
-			<h2 class="ih-pdota__heading"><?php esc_html_e( 'Scopri le tre Versioni', 'immensive' ); ?></h2>
+			<h2 class="ih-pdota__heading"><?php esc_html_e( 'Scopri le Versioni', 'immensive' ); ?></h2>
 
 			<div class="ih-pdota__switch" role="tablist" aria-label="<?php esc_attr_e( 'Versione del kit', 'immensive' ); ?>" style="--pdota-opts: 3;">
 				<span class="ih-pdota__switch-thumb" aria-hidden="true"></span>
@@ -359,69 +359,68 @@ get_header();
 		</div>
 	</section>
 
-	<section class="ih-pdett2" id="ih-dettaglio">
+	<section class="ih-pdett" id="ih-dettaglio">
 		<div class="ih-container">
-			<h2 class="ih-pdett2__heading"><?php esc_html_e( 'Scoprilo nel Dettaglio', 'immensive' ); ?></h2>
+			<h2 class="ih-pdett__heading"><?php esc_html_e( 'Scoprilo nel Dettaglio', 'immensive' ); ?></h2>
 
 			<?php
-			$immensive_dett2 = array(
+			// Same accordion + image stage as Weld VR. Nothing open = complete kit.
+			$immensive_dettagli = array(
 				array(
-					'image'  => 'forklift-vr-detail-comandi.webp',
-					'alt'    => 'Cambio, freno, volante e pedaliera del Forklift VR Simulator',
-					'groups' => array(
-						array(
-							'title' => 'Cambio/Freno',
-							'items' => array( 'Cambio marce', 'Freno di stazionamento' ),
-						),
-						array(
-							'title' => 'Volante/Pedali',
-							'items' => array( 'Volante', 'Pedaliera' ),
-						),
-					),
+					'label' => 'Modulo leve',
+					'image' => 'forklift-vr-modulo-leve.webp',
+					'desc'  => "Leva traslazione forche
+Leva brandeggio forche
+Leva allargamento forche
+Leva stringimento forche",
 				),
 				array(
-					'image'  => 'forklift-vr-detail-leve.webp',
-					'alt'    => 'Modulo leve del Forklift VR Simulator',
-					'groups' => array(
-						array(
-							'title' => 'Modulo Leve',
-							'items' => array(
-								'Leva traslazione forche',
-								'Leva brandeggio forche',
-								'Leva allargamento forche',
-								'Leva stringimento forche',
-							),
-						),
-						array(
-							'title' => 'Switch On/Off',
-							'items' => array( 'Switch on/off con chiave' ),
-						),
-					),
+					'label' => 'Volante',
+					'image' => 'forklift-vr-volante.webp',
+					'desc'  => 'Volante Logitech con pomello che simula quello reale',
+				),
+				array(
+					'label' => 'Switch on/off',
+					'image' => 'forklift-vr-switch.webp',
+					'desc'  => 'Switch on/off con chiave',
+				),
+				array(
+					'label' => 'Freno/ Cambio',
+					'image' => 'forklift-vr-freno-cambio.webp',
+					'desc'  => 'Freno di stazionamento e cambio marce',
+				),
+				array(
+					'label' => 'Pedaliera',
+					'image' => 'forklift-vr-pedaliera.webp',
+					'desc'  => 'Pedaliera',
 				),
 			);
 			?>
 
-			<div class="ih-pdett2__grid">
-				<?php foreach ( $immensive_dett2 as $immensive_dett2_pair ) : ?>
-					<figure class="ih-pdett2__img ih-reveal">
-						<img src="<?php echo esc_url( $immensive_img . $immensive_dett2_pair['image'] ); ?>" alt="<?php echo esc_attr( $immensive_dett2_pair['alt'] ); ?>" loading="lazy" width="500" height="500">
-					</figure>
-					<div class="ih-pdett2__panel ih-reveal">
-						<?php foreach ( $immensive_dett2_pair['groups'] as $immensive_dett2_group ) : ?>
-							<div>
-								<h4 class="ih-pdett2__group-title"><?php echo esc_html( $immensive_dett2_group['title'] ); ?></h4>
-								<div class="ih-pdota__card-list">
-									<?php foreach ( $immensive_dett2_group['items'] as $immensive_dett2_item ) : ?>
-										<div class="ih-pdota__card-item">
-											<svg class="ih-pdota__card-check" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-											<span><?php echo esc_html( $immensive_dett2_item ); ?></span>
-										</div>
-									<?php endforeach; ?>
+			<div class="ih-pdett__stage ih-reveal" id="ih-dett">
+				<div class="ih-pdett__pills" role="tablist" aria-label="<?php esc_attr_e( 'Dettagli del prodotto', 'immensive' ); ?>">
+					<?php foreach ( $immensive_dettagli as $immensive_dett_i => $immensive_dett ) : ?>
+						<div class="ih-pdett__item" role="presentation">
+							<button type="button" class="ih-pdett__pill" data-dett="<?php echo esc_attr( $immensive_dett_i ); ?>" role="tab" aria-selected="false"><?php echo esc_html( $immensive_dett['label'] ); ?></button>
+							<div class="ih-pdett__desc">
+								<div class="ih-pdett__desc-inner">
+									<p><?php echo nl2br( esc_html( $immensive_dett['desc'] ) ); ?></p>
 								</div>
 							</div>
-						<?php endforeach; ?>
-					</div>
-				<?php endforeach; ?>
+						</div>
+					<?php endforeach; ?>
+				</div>
+
+				<div class="ih-pdett__slides">
+					<figure class="ih-pdett__slide ih-pdett__slide--kit is-active" data-dett-slide="kit">
+						<img src="<?php echo esc_url( $immensive_img . 'forklift-vr-kit-completo.webp' ); ?>" alt="<?php esc_attr_e( 'Kit completo Forklift VR Simulator', 'immensive' ); ?>" loading="lazy" width="1507" height="784">
+					</figure>
+					<?php foreach ( $immensive_dettagli as $immensive_dett_i => $immensive_dett ) : ?>
+						<figure class="ih-pdett__slide" data-dett-slide="<?php echo esc_attr( $immensive_dett_i ); ?>">
+							<img src="<?php echo esc_url( $immensive_img . $immensive_dett['image'] ); ?>" alt="<?php echo esc_attr( $immensive_dett['label'] ); ?>" loading="lazy" width="1505" height="784">
+						</figure>
+					<?php endforeach; ?>
+				</div>
 			</div>
 		</div>
 	</section>
