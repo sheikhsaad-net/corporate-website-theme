@@ -8,6 +8,9 @@
  *                being viewed
  *   'wide_first' true  -> first card spans the row, the rest pair up
  *                false -> cards pair up and a trailing odd card spans
+ *   'tiles'      true  -> plain two-column tiles (no wide cards, no reveal),
+ *                         wrapped in .project-tiles — the concept layout used
+ *                         on Soluzioni Culturali Creative
  *
  * Which projects appear is set per project, in the "Mostra nelle pagine" box
  * on the project editor (see inc/portfolio.php) — tick this page and give a
@@ -26,6 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $immensive_pg_page_id = isset( $args['page_id'] ) ? (int) $args['page_id'] : 0;
 $immensive_pg_wide1st = ! empty( $args['wide_first'] );
+$immensive_pg_tiles   = ! empty( $args['tiles'] );
 
 $immensive_pg_items = function_exists( 'immensive_portfolio_for_page' )
 	? immensive_portfolio_for_page( $immensive_pg_page_id )
@@ -40,12 +44,14 @@ if ( ! $immensive_pg_items ) :
 	return;
 endif;
 ?>
-<div class="ih-sccprog__grid">
+<div class="<?php echo $immensive_pg_tiles ? 'project-tiles' : 'ih-sccprog__grid'; ?>">
 	<?php
 	foreach ( $immensive_pg_items as $immensive_pg_i => $immensive_pg_p ) :
 		$immensive_pg_is_last = ( $immensive_pg_total - 1 === $immensive_pg_i );
 
-		if ( $immensive_pg_wide1st ) {
+		if ( $immensive_pg_tiles ) {
+			$immensive_pg_wide = false;
+		} elseif ( $immensive_pg_wide1st ) {
 			// Wide opener, then pairs; a lone trailing card goes wide too
 			// rather than sitting in a half-empty row.
 			$immensive_pg_wide = ( 0 === $immensive_pg_i )
@@ -57,7 +63,7 @@ endif;
 
 		$immensive_pg_tech = wp_get_post_terms( $immensive_pg_p->ID, IMMENSIVE_TAX_TECNOLOGIA, array( 'fields' => 'names' ) );
 		?>
-		<a class="ih-sccp<?php echo $immensive_pg_wide ? ' ih-sccp--wide' : ''; ?> ih-reveal" href="<?php echo esc_url( get_permalink( $immensive_pg_p ) ); ?>">
+		<a class="ih-sccp<?php echo $immensive_pg_wide ? ' ih-sccp--wide' : ''; ?><?php echo $immensive_pg_tiles ? '' : ' ih-reveal'; ?>" href="<?php echo esc_url( get_permalink( $immensive_pg_p ) ); ?>">
 			<span class="ih-sccp__media" aria-hidden="true">
 				<?php
 				if ( has_post_thumbnail( $immensive_pg_p ) ) {

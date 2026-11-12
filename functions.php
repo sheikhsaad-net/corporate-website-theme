@@ -217,16 +217,97 @@ function immensive_preload_product_hero_image() {
 }
 add_action( 'wp_head', 'immensive_preload_product_hero_image', 1 );
 
-/** Preload the first slide image on the services landing page. */
-function immensive_preload_services_hero_image() {
+/** Servizi page (/servizi/): concept layout styles and scripts, this template only. */
+function immensive_servizi_assets() {
 	if ( ! is_page_template( 'template-altri-servizi.php' ) ) {
 		return;
 	}
-	$immensive_images = get_template_directory_uri() . '/assets/images/optimized/';
-	$immensive_srcset = $immensive_images . 'shero-archeoclub-768.webp 768w, ' . $immensive_images . 'shero-archeoclub-1920.webp 1920w';
-	echo '<link rel="preload" as="image" fetchpriority="high" imagesrcset="' . esc_attr( $immensive_srcset ) . '" imagesizes="100vw">' . "\n";
+	$immensive_dir = get_template_directory();
+	$immensive_uri = get_template_directory_uri();
+	wp_enqueue_style(
+		'immensive-servizi',
+		$immensive_uri . '/assets/css/servizi.css',
+		array( 'immensive-homepage' ),
+		filemtime( $immensive_dir . '/assets/css/servizi.css' )
+	);
+	wp_enqueue_script(
+		'immensive-servizi',
+		$immensive_uri . '/assets/js/servizi.js',
+		array(),
+		filemtime( $immensive_dir . '/assets/js/servizi.js' ),
+		true
+	);
 }
-add_action( 'wp_head', 'immensive_preload_services_hero_image', 1 );
+add_action( 'wp_enqueue_scripts', 'immensive_servizi_assets', 20 );
+
+/** Soluzioni Culturali Creative: concept layout styles and scripts, this template only. */
+function immensive_cultura_assets() {
+	if ( ! is_page_template( 'template-soluzioni-culturali.php' ) ) {
+		return;
+	}
+	$immensive_dir = get_template_directory();
+	$immensive_uri = get_template_directory_uri();
+	wp_enqueue_style(
+		'immensive-cultura',
+		$immensive_uri . '/assets/css/cultura.css',
+		array( 'immensive-homepage' ),
+		filemtime( $immensive_dir . '/assets/css/cultura.css' )
+	);
+	wp_enqueue_script(
+		'immensive-cultura',
+		$immensive_uri . '/assets/js/cultura.js',
+		array(),
+		filemtime( $immensive_dir . '/assets/js/cultura.js' ),
+		true
+	);
+}
+add_action( 'wp_enqueue_scripts', 'immensive_cultura_assets', 20 );
+
+/** Ricerca e Sviluppo: concept layout styles and scripts, this template only. */
+function immensive_ricerca_assets() {
+	if ( ! is_page_template( 'template-ricerca-sviluppo.php' ) ) {
+		return;
+	}
+	$immensive_dir = get_template_directory();
+	$immensive_uri = get_template_directory_uri();
+	wp_enqueue_style(
+		'immensive-ricerca',
+		$immensive_uri . '/assets/css/ricerca.css',
+		array( 'immensive-homepage' ),
+		filemtime( $immensive_dir . '/assets/css/ricerca.css' )
+	);
+	wp_enqueue_script(
+		'immensive-ricerca',
+		$immensive_uri . '/assets/js/ricerca.js',
+		array(),
+		filemtime( $immensive_dir . '/assets/js/ricerca.js' ),
+		true
+	);
+}
+add_action( 'wp_enqueue_scripts', 'immensive_ricerca_assets', 20 );
+
+/** Chi siamo: concept layout styles and scripts, this template only. */
+function immensive_chi_siamo_assets() {
+	if ( ! is_page_template( 'template-chi-siamo.php' ) ) {
+		return;
+	}
+	$immensive_dir = get_template_directory();
+	$immensive_uri = get_template_directory_uri();
+	wp_enqueue_style(
+		'immensive-chi-siamo',
+		$immensive_uri . '/assets/css/chi-siamo.css',
+		array( 'immensive-homepage' ),
+		filemtime( $immensive_dir . '/assets/css/chi-siamo.css' )
+	);
+	wp_enqueue_script(
+		'immensive-chi-siamo',
+		$immensive_uri . '/assets/js/chi-siamo.js',
+		array(),
+		filemtime( $immensive_dir . '/assets/js/chi-siamo.js' ),
+		true
+	);
+}
+add_action( 'wp_enqueue_scripts', 'immensive_chi_siamo_assets', 20 );
 
 /** Return responsive image data for a portfolio card attachment. */
 function immensive_portfolio_thumbnail_data( $attachment_id ) {

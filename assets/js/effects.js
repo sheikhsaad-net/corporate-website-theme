@@ -188,6 +188,8 @@
 		// Every other section heading on the site: any h2 named *__heading,
 		// *__title, *-heading, or the generic .ih-heading.
 		sel += ', h2[class*="__heading"], h2[class*="__title"], h2[class*="-heading"], h2.ih-heading, .ih-wr__title, .ih-phero--riv .ih-phero__title';
+		// Concept-layout pages (Servizi, Cultura, Ricerca, Chi siamo): every title.
+		sel += ', .svz h1, .svz h2';
 		var skip = '.ih-popup, .ih-modal, #ih-demo-modal, #ih-video-modal, [data-no-split]';
 		var heads = Array.prototype.filter.call(document.querySelectorAll(sel), function (el) {
 			return !el.closest(skip) && !/group-title|__name|entry-title|widget-title/.test(el.className);
@@ -230,17 +232,37 @@
 	(function () {
 		if (reduced || !('IntersectionObserver' in window)) { return; }
 		var sel = 'p[class*="__sub"], p[class*="__lead"], p[class*="__intro"], p[class*="__eyebrow"], p[class*="__tagline"], .ih-section-intro, .ih-wr__desc';
+		// Concept-layout pages: hero copy, section pills, intro paragraphs, CTAs.
+		sel += ', .svz .ih-new-top, .svz .ih-new-copy, .svz .ih-new-actions, .svz .ih-hero-base, .svz .eyebrow, .svz .lead, .svz .intro-copy p, .svz .section-head p, .svz .journey-intro, .svz .capability-intro, .svz .capability-note, .svz .gallery-intro, .svz .funding-note, .svz .body-copy p, .svz .about-lead, .svz .about-copy > *, .svz .about-method > .shell > p, .svz .svz-cta';
+		// ...and their cards, staggered within each row like the Prodotti cards.
+		var cardSel = '.svz .service-card, .svz .capability-card, .svz .process-step, .svz .sector-row, .svz .ih-sccp, .svz .about-method-card, .svz .ih-scccard, .svz .funding-card, .svz .named-testimonials .ih-testi__card, .svz .ih-sccaud';
+		sel += ', ' + cardSel;
 		var skip = '.ih-popup, .ih-modal, #ih-demo-modal, #ih-video-modal, [data-no-split]';
 		var els = Array.prototype.filter.call(document.querySelectorAll(sel), function (el) {
-			return !el.closest(skip);
+			// .ih-reveal blocks already have the theme's own reveal.
+			return !el.closest(skip) && !el.classList.contains('ih-reveal');
 		});
 		if (!els.length) { return; }
 		var io = new IntersectionObserver(function (entries) {
 			entries.forEach(function (en) {
-				if (en.isIntersecting) { en.target.classList.add('is-in'); io.unobserve(en.target); }
+				if (!en.isIntersecting) { return; }
+				var el = en.target;
+				el.classList.add('is-in');
+				io.unobserve(el);
+				// Once shown, hand the element back to its own transitions
+				// (card hovers must not inherit the fade's delay).
+				var wait = 1100 + (parseFloat(el.style.transitionDelay) || 0) * 1000;
+				window.setTimeout(function () {
+					el.classList.remove('ih-fx-fade', 'is-in');
+					el.style.transitionDelay = '';
+				}, wait);
 			});
-		}, { threshold: 0.2 });
+		}, { threshold: 0.15 });
 		els.forEach(function (el) {
+			if (el.matches(cardSel)) {
+				var i = Array.prototype.indexOf.call(el.parentElement.children, el);
+				el.style.transitionDelay = (0.05 + Math.min(i, 5) * 0.08).toFixed(2) + 's';
+			}
 			el.classList.add('ih-fx-fade');
 			io.observe(el);
 		});

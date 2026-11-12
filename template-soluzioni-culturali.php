@@ -2,16 +2,16 @@
 /**
  * Template Name: Immensive – Soluzioni Culturali Creative
  *
- * The "beni culturali" landing page, linked from the first card of the
- * "Due mondi, una missione" deck on Altri Servizi.
+ * Rebuilt from the approved concept (soluzioni-culturali-creative.html):
+ * statue hero with the VR-headset / wireframe reveal and topographic lines,
+ * "La cultura diventa esperienza" with the four cards, project tiles and
+ * "Per chi lavoriamo". Shared site header/footer, contact band and theme
+ * buttons are kept. Styles: assets/css/cultura.css (scoped under .svz);
+ * scripts: assets/js/cultura.js — both enqueued only here
+ * (immensive_cultura_assets() in functions.php).
  *
- * Follows the standard ih skeleton: pinned full-viewport hero + .ih-flow
- * scrolling over it, then the shared contact CTA and site footer.
- *
- * "Progetti realizzati" lists the projects placed on this page from the
- * "Mostra nelle pagine" box on each project (see inc/portfolio.php). The grid
- * rhythm from the design — one wide card, then pairs, wide again on a
- * trailing odd item — lives in template-parts/projects-grid.php.
+ * "Progetti realizzati" still lists the projects placed on this page from the
+ * "Mostra nelle pagine" box on each project (see inc/portfolio.php).
  *
  * @package Immensive
  */
@@ -25,6 +25,10 @@ $immensive_img = get_template_directory_uri() . '/assets/images/';
 // Contatti page for the CTA; falls back to the mail address if it's missing.
 $immensive_contatti     = get_page_by_path( 'contatti' );
 $immensive_contatti_url = $immensive_contatti ? get_permalink( $immensive_contatti ) : 'mailto:info@immensive.it';
+
+// "Esplora il portfolio": the Portfolio page, else the projects archive.
+$immensive_portfolio_page = get_page_by_path( 'portfolio' );
+$immensive_portfolio_href = $immensive_portfolio_page ? get_permalink( $immensive_portfolio_page ) : get_post_type_archive_link( IMMENSIVE_PORTFOLIO_POST_TYPE );
 
 /* What we build — the four coloured cards. 'tone' picks the skin. */
 $immensive_scc_what = array(
@@ -81,93 +85,103 @@ get_header();
 
 	<?php get_template_part( 'template-parts/site-header' ); ?>
 
-	<section class="ih-phero ih-phero--scc" id="ih-hero">
-		<span class="ih-scchero__media" aria-hidden="true">
-			<img src="<?php echo esc_url( $immensive_img . 'servizi/mission-beni-culturali.webp' ); ?>" alt="" fetchpriority="high" decoding="async">
-		</span>
-		<div class="ih-phero__inner ih-scchero__inner">
-			<h1 class="ih-scchero__title"><?php esc_html_e( 'Soluzioni culturali creative', 'immensive' ); ?></h1>
-		</div>
-	</section>
+	<main class="svz" id="contenuto">
 
-	<div class="ih-flow">
-
-		<section class="ih-sccintro">
-			<div class="ih-container">
-				<p class="ih-sccintro__text ih-reveal"><?php esc_html_e( "Da oltre 10 anni Immensive lavora nell'ambito dei beni culturali, unendo tecnologia e narrazione per dare nuova vita al patrimonio artistico, storico e territoriale. Attraverso percorsi interattivi multi-dispositivo, applicazioni in realtà virtuale e aumentata e ricostruzioni digitali, rendiamo accessibili ed esplorabili in modi nuovi musei, siti archeologici, monumenti e itinerari culturali.", 'immensive' ); ?></p>
+		<section class="immersive-hero vr-hero" id="inizio" data-page="cultura" aria-label="<?php esc_attr_e( 'Soluzioni Culturali Creative', 'immensive' ); ?>">
+			<div class="vr-background-lines" aria-hidden="true"></div>
+			<div class="vr-stage" aria-hidden="true">
+				<div class="vr-halo"></div>
+				<div class="vr-object">
+					<img class="vr-statue" src="<?php echo esc_url( $immensive_img . 'cultura/statua-vr.webp' ); ?>" width="1086" height="1448" alt="" fetchpriority="high" decoding="async">
+					<div class="vr-sheen"></div>
+					<div class="vr-device-layers">
+						<img class="vr-wire" src="<?php echo esc_url( $immensive_img . 'cultura/vr-wire.svg' ); ?>" alt="" width="1086" height="1448">
+						<img class="vr-headset" src="<?php echo esc_url( $immensive_img . 'cultura/vr-headset.webp' ); ?>" alt="" width="1086" height="1448">
+						<img class="vr-wire vr-wire-local" src="<?php echo esc_url( $immensive_img . 'cultura/vr-wire.svg' ); ?>" alt="" width="1086" height="1448">
+					</div>
+				</div>
+			</div>
+			<button class="vr-hit-area" type="button" aria-label="<?php esc_attr_e( 'Mostra o nascondi il visore VR', 'immensive' ); ?>" aria-pressed="false"></button>
+			<div class="vr-caption" aria-hidden="true"><?php esc_html_e( 'Patrimonio culturale.', 'immensive' ); ?><br><?php esc_html_e( 'Nuove dimensioni.', 'immensive' ); ?></div>
+			<div class="shell">
+				<p class="ih-new-top"><?php esc_html_e( 'Immensive / Soluzioni Culturali Creative', 'immensive' ); ?></p>
+				<h1><?php esc_html_e( 'Diamo forma', 'immensive' ); ?><br><?php esc_html_e( 'alle idee.', 'immensive' ); ?><br><span class="hero-outline"><?php esc_html_e( 'Vita alle', 'immensive' ); ?><br><?php esc_html_e( 'esperienze.', 'immensive' ); ?></span></h1>
+				<p class="ih-new-copy"><?php esc_html_e( 'Diamo nuova vita al patrimonio attraverso esperienze da esplorare. Narrazione, ricostruzione digitale e interazione avvicinano le persone a musei, luoghi e territori.', 'immensive' ); ?></p>
+				<div class="ih-new-actions">
+					<a class="ih-btn ih-btn--solid" href="#progetti-cultura"><?php esc_html_e( 'Esplora i progetti', 'immensive' ); ?></a>
+					<a class="ih-btn ih-btn--outline" href="<?php echo esc_url( $immensive_contatti_url ); ?>"><?php esc_html_e( 'Parliamo del tuo progetto', 'immensive' ); ?></a>
+				</div>
+				<div class="ih-hero-base">
+					<p><?php esc_html_e( 'Patrimonio, persone,', 'immensive' ); ?><br><?php esc_html_e( 'nuove prospettive.', 'immensive' ); ?></p>
+					<a class="scroll-cue" href="#progetti-cultura"><?php esc_html_e( 'Scorri per esplorare', 'immensive' ); ?> <span aria-hidden="true"></span>↓</a>
+				</div>
 			</div>
 		</section>
 
-		<section class="ih-sccwhat" id="ih-cosa-realizziamo">
-			<div class="ih-container">
-				<h2 class="ih-sccwhat__heading ih-reveal"><?php esc_html_e( 'Cosa realizziamo', 'immensive' ); ?></h2>
-
-				<span class="ih-sccwhat__mark" aria-hidden="true">
-					<span class="ih-sccwhat__mark-dot"></span>
-					<span class="ih-sccwhat__mark-stem"></span>
-				</span>
-
+		<section class="page-section">
+			<div class="shell culture-offer">
+				<div class="culture-intro">
+					<div class="eyebrow"><?php esc_html_e( 'Tecnologia al servizio della cultura', 'immensive' ); ?></div>
+					<h2 class="page-title"><?php esc_html_e( 'La cultura diventa esperienza', 'immensive' ); ?></h2>
+					<div class="body-copy">
+						<p><?php esc_html_e( 'Un luogo da conoscere, una storia da comprendere, un patrimonio da condividere. Ogni esperienza parte dai contenuti e dal pubblico a cui si rivolge.', 'immensive' ); ?></p>
+						<p><?php esc_html_e( 'Progettiamo soluzioni culturali creative per rendere musei, siti archeologici, monumenti e itinerari accessibili ed esplorabili con modalità nuove.', 'immensive' ); ?></p>
+					</div>
+					<p class="svz-cta"><a class="ih-btn ih-btn--ghost-dark" href="#progetti-cultura"><?php esc_html_e( 'Esplora i progetti', 'immensive' ); ?></a></p>
+				</div>
 				<div class="ih-sccwhat__grid">
-					<?php foreach ( $immensive_scc_what as $immensive_scc_card ) : ?>
-						<article class="ih-scccard ih-scccard--<?php echo esc_attr( $immensive_scc_card['tone'] ); ?> ih-reveal">
-							<h3 class="ih-scccard__label"><?php echo esc_html( $immensive_scc_card['label'] ); ?></h3>
-							<p class="ih-scccard__desc"><?php echo esc_html( $immensive_scc_card['desc'] ); ?></p>
+					<?php foreach ( $immensive_scc_what as $immensive_card ) : ?>
+						<article class="ih-scccard ih-scccard--<?php echo esc_attr( $immensive_card['tone'] ); ?>">
+							<h3 class="ih-scccard__label"><?php echo esc_html( $immensive_card['label'] ); ?></h3>
+							<p class="ih-scccard__desc"><?php echo esc_html( $immensive_card['desc'] ); ?></p>
 						</article>
 					<?php endforeach; ?>
 				</div>
 			</div>
 		</section>
 
+		<section class="project-gallery" id="progetti-cultura">
+			<div class="shell">
+				<div class="eyebrow"><?php esc_html_e( 'Progetti realizzati', 'immensive' ); ?></div>
+				<h2><?php esc_html_e( 'Il patrimonio,', 'immensive' ); ?><br><?php esc_html_e( 'messo in esperienza.', 'immensive' ); ?></h2>
+				<p class="gallery-intro"><?php esc_html_e( 'Dalle esigenze dei nostri clienti a soluzioni reali.', 'immensive' ); ?></p>
+				<?php get_template_part( 'template-parts/projects-grid', null, array( 'tiles' => true ) ); ?>
+				<p class="svz-cta"><a class="ih-btn ih-btn--outline" href="<?php echo esc_url( $immensive_portfolio_href ); ?>"><?php esc_html_e( 'Esplora il portfolio', 'immensive' ); ?></a></p>
+			</div>
+		</section>
+
 		<section class="ih-sccwho" id="ih-per-chi-lavoriamo">
 			<div class="ih-container">
-				<h2 class="ih-sccwho__heading ih-reveal"><?php esc_html_e( 'Per chi', 'immensive' ); ?><br><?php esc_html_e( 'lavoriamo', 'immensive' ); ?></h2>
-				<p class="ih-sccwho__sub ih-reveal"><?php esc_html_e( 'Collaboriamo con musei, enti pubblici, fondazioni, istituzioni culturali e aziende che vogliono valorizzare un patrimonio, un territorio o una tradizione, offrendo strumenti di divulgazione innovativi per un pubblico sempre più ampio e digitale.', 'immensive' ); ?></p>
-
+				<h2 class="ih-sccwho__heading"><?php esc_html_e( 'Per chi', 'immensive' ); ?><br><?php esc_html_e( 'lavoriamo', 'immensive' ); ?></h2>
+				<p class="ih-sccwho__sub"><?php esc_html_e( 'Collaboriamo con musei, enti pubblici, fondazioni, istituzioni culturali e aziende che vogliono valorizzare un patrimonio, un territorio o una tradizione, offrendo strumenti di divulgazione innovativi per un pubblico sempre più ampio e digitale.', 'immensive' ); ?></p>
 				<ul class="ih-sccwho__grid">
-					<?php foreach ( $immensive_scc_who as $immensive_scc_aud ) : ?>
-						<li class="ih-sccaud ih-reveal">
-							<span class="ih-sccaud__icon" aria-hidden="true"><?php echo $immensive_scc_aud['icon']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- trusted inline SVG. ?></span>
-							<span class="ih-sccaud__label"><?php echo wp_kses( $immensive_scc_aud['label'], array( 'br' => array() ) ); ?></span>
+					<?php foreach ( $immensive_scc_who as $immensive_aud ) : ?>
+						<li class="ih-sccaud">
+							<span class="ih-sccaud__icon" aria-hidden="true"><?php echo $immensive_aud['icon']; // phpcs:ignore WordPress.Security.EscapeOutput -- static inline SVG. ?></span>
+							<span class="ih-sccaud__label"><?php echo wp_kses( $immensive_aud['label'], array( 'br' => array() ) ); ?></span>
 						</li>
 					<?php endforeach; ?>
 				</ul>
 			</div>
 		</section>
 
-		<section class="ih-sccprog" id="ih-progetti-realizzati">
-			<div class="ih-container">
-				<h2 class="ih-sccprog__heading ih-reveal"><?php esc_html_e( 'Progetti', 'immensive' ); ?><br><?php esc_html_e( 'realizzati', 'immensive' ); ?></h2>
-				<p class="ih-sccprog__sub ih-reveal"><?php esc_html_e( 'Dalle esigenze dei nostri clienti a soluzioni reali.', 'immensive' ); ?></p>
+	</main>
 
-				<?php
-				get_template_part(
-					'template-parts/projects-grid',
-					null,
-					array(
-						'wide_first' => true,
-					)
-				);
-				?>
+	<?php
+	get_template_part(
+		'template-parts/contact-cta',
+		null,
+		array(
+			'eyebrow' => __( 'Hai un progetto in mente ?', 'immensive' ),
+			'heading' => __( 'Iniziamo', 'immensive' ),
+			'label'   => __( 'Contattaci', 'immensive' ),
+			'href'    => $immensive_contatti_url,
+		)
+	);
+	?>
 
-			</div>
-		</section>
+	<?php get_template_part( 'template-parts/site-footer' ); ?>
 
-		<?php
-		get_template_part(
-			'template-parts/contact-cta',
-			null,
-			array(
-				'eyebrow' => __( 'Hai un progetto in mente ?', 'immensive' ),
-				'heading' => __( 'Iniziamo', 'immensive' ),
-				'label'   => __( 'Contattaci', 'immensive' ),
-				'href'    => $immensive_contatti_url,
-			)
-		);
-		?>
-
-		<?php get_template_part( 'template-parts/site-footer' ); ?>
-
-	</div>
 </div>
 
 <?php
