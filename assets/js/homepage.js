@@ -466,6 +466,67 @@
 		}, { passive: true });
 	});
 
+	// Requisiti / Opzioni cards: every card in a panel gets the height of the
+	// tallest one, so neighbouring boxes line up (including the second row).
+	var reqoptBoxes = document.querySelectorAll('.ih-pdota__reqopt');
+	if (reqoptBoxes.length) {
+		var equalizeCards = function (box) {
+			var cards = box.querySelectorAll('.ih-pdota__card');
+			// Cards inside a hidden version panel have no box; leave them alone.
+			Array.prototype.forEach.call(cards, function (c) { c.style.minHeight = ''; });
+			if (!box.offsetParent || window.innerWidth <= 560) { return; }
+			// Group cards by visual row (same top edge) and equalise each row; a card
+			// alone in its row (e.g. the wrapped last option) keeps its natural height.
+			var rows = {};
+			Array.prototype.forEach.call(cards, function (c) {
+				if (!c.getClientRects().length) { return; }
+				var r = c.getBoundingClientRect();
+				var key = Math.round(r.top + window.pageYOffset);
+				var hit = null;
+				Object.keys(rows).forEach(function (k) {
+					if (Math.abs(k - key) <= 3) { hit = k; }
+				});
+				if (hit === null) { hit = key; rows[hit] = []; }
+				rows[hit].push({ el: c, h: r.height });
+			});
+			Object.keys(rows).forEach(function (k) {
+				var group = rows[k];
+				if (group.length < 2) { return; }
+				var max = 0;
+				group.forEach(function (g) { max = Math.max(max, g.h); });
+				group.forEach(function (g) { g.el.style.minHeight = Math.ceil(max) + 'px'; });
+			});
+		};
+		var equalizeAll = function () {
+			Array.prototype.forEach.call(reqoptBoxes, equalizeCards);
+		};
+		Array.prototype.forEach.call(reqoptBoxes, function (box) {
+			if ('ResizeObserver' in window) {
+				var lastW = 0;
+				var lastH = 0;
+				new ResizeObserver(function () {
+					var r = box.getBoundingClientRect();
+					if (Math.abs(r.width - lastW) > 0.5 || Math.abs(r.height - lastH) > 0.5) {
+						lastW = r.width;
+						equalizeCards(box);
+						lastH = box.getBoundingClientRect().height;
+					}
+				}).observe(box);
+			}
+		});
+		// Version switch (HTC/Meta, Lite/Pro, Vive/Meta...) swaps the visible cards:
+		// re-level once the new panel is showing.
+		document.addEventListener('click', function (e) {
+			if (e.target.closest && e.target.closest('.ih-pdota__switch-opt')) {
+				window.setTimeout(equalizeAll, 30);
+				window.setTimeout(equalizeAll, 350);
+			}
+		});
+		window.addEventListener('resize', equalizeAll);
+		window.addEventListener('load', equalizeAll);
+		equalizeAll();
+	}
+
 	// "Soluzioni di acquisto" (product pages): the soft product-colour glow in
 	// the background follows the pointer, eased so it trails smoothly.
 	var solBg = document.querySelectorAll('.ih-psol[style*="--pcr"]');

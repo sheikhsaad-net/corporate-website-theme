@@ -13458,6 +13458,17 @@ body .ih-nav .ih-mega__card:hover .ih-mega__title {
 	color: var(--ih-green);
 }
 
+/* Mobile menu (dark list: logo + name): product names stay white on hover. */
+@media (max-width: 720px) {
+	body .ih-nav .ih-mega__card .ih-mega__title,
+	body .ih-nav .ih-mega__card:hover .ih-mega__title,
+	body .ih-nav .ih-mega__card:focus-visible .ih-mega__title,
+	body .ih-nav .ih-mega__card:active .ih-mega__title,
+	body .ih-nav .ih-dropdown__item a:hover {
+		color: #fff;
+	}
+}
+
 @media (min-width: 721px) {
 	body .ih--light-hero .ih-header:not(.is-scrolled) .ih-nav .ih-nav__link:hover,
 	body .ih--light-hero .ih-header:not(.is-scrolled) .ih-nav .menu-item-has-children:hover > .ih-nav__link {
@@ -14005,4 +14016,11 @@ body .ih-pdett__item:hover {
 		transform: none;
 		transition: none;
 	}
+}
+
+/* Desktop "Prodotti" list (dark compact dropdown): names stay white on hover. */
+body .ih-nav .ih-mega--cols-4 .ih-mega__card .ih-mega__title,
+body .ih-nav .ih-mega--cols-4 .ih-mega__card:hover .ih-mega__title,
+body .ih-nav .ih-mega--cols-4 .ih-mega__card:focus-visible .ih-mega__title {
+	color: #fff;
 }
