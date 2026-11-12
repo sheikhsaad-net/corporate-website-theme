@@ -33,7 +33,7 @@ get_header();
 			</h1>
 			<div class="ih-phero__actions">
 				<a class="ih-btn ih-btn--solid" href="<?php echo esc_url( $immensive_contatti_url ); ?>"><?php esc_html_e( 'Richiedi informazioni', 'immensive' ); ?></a>
-				<a class="ih-btn ih-btn--ghost" href="<?php echo esc_url( $immensive_contatti_url ); ?>"><?php esc_html_e( 'Prenota una call di 30 minuti', 'immensive' ); ?></a>
+				<a class="ih-btn ih-btn--ghost" href="<?php echo esc_url( $immensive_contatti_url ); ?>" data-booking-open><?php esc_html_e( 'Prenota una call di 30 minuti', 'immensive' ); ?></a>
 			</div>
 			<div class="ih-phero__scroll" aria-hidden="true">
 				<span class="ih-phero__scroll-dot"></span>
@@ -156,8 +156,30 @@ get_header();
 			'heading' => 'CONTATTACI',
 			'actions' => array(
 				array( 'label' => __( 'Richiedi informazioni', 'immensive' ), 'href' => $immensive_contatti_url, 'class' => 'ih-btn--solid' ),
-				array( 'label' => __( 'Prenota una call di 30 minuti', 'immensive' ), 'href' => $immensive_contatti_url, 'class' => 'ih-btn--ghost' ),
+				array( 'label' => __( 'Prenota una call di 30 minuti', 'immensive' ), 'href' => $immensive_contatti_url, 'class' => 'ih-btn--ghost', 'booking' => true ),
 			),
+		)
+	);
+	?>
+
+	<?php
+	get_template_part(
+		'template-parts/booking-modal',
+		null,
+		array(
+			'eyebrow' => __( 'Programma rivenditori', 'immensive' ),
+			'title'   => __( 'Diventa rivenditore', 'immensive' ),
+			'sub'     => __( 'Prenota una call di 30 minuti con il nostro team commerciale: ti presentiamo il programma e le condizioni riservate ai partner.', 'immensive' ),
+			'points'  => array(
+				__( 'Come funziona il programma rivenditori autorizzati', 'immensive' ),
+				__( 'Margini, supporto commerciale e formazione sui prodotti', 'immensive' ),
+				__( 'Demo, materiali e primi passi per partire', 'immensive' ),
+			),
+			'extra'   => array(
+				'label'   => __( 'Tipo di attività', 'immensive' ),
+				'options' => array( 'Rivenditore tecnologico', 'Integratore di sistemi', 'Formazione e consulenza', 'Altro' ),
+			),
+			'topic'   => __( 'Call programma rivenditori', 'immensive' ),
 		)
 	);
 	?>

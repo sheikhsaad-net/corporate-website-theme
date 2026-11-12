@@ -119,7 +119,7 @@ get_header();
 				</p>
 				<div class="ih-psol__ctas">
 					<a class="ih-btn ih-btn--solid" href="<?php echo esc_url( $immensive_contatti_url ); ?>"><?php esc_html_e( 'Richiedi un Preventivo', 'immensive' ); ?></a>
-					<a class="ih-btn ih-btn--ghost" href="tel:+390813358542"><?php esc_html_e( 'Parla con un Consulente', 'immensive' ); ?></a>
+					<a class="ih-btn ih-btn--ghost" href="tel:+390813358542" data-booking-open><?php esc_html_e( 'Parla con un Consulente', 'immensive' ); ?></a>
 				</div>
 			</div>
 		</div>
@@ -335,6 +335,28 @@ get_header();
 	</section>
 
 	<?php get_template_part( 'template-parts/contact-cta' ); ?>
+
+	<?php
+	get_template_part(
+		'template-parts/booking-modal',
+		null,
+		array(
+			'eyebrow' => __( 'Consulenza gratuita', 'immensive' ),
+			'title'   => __( 'Parla con un consulente', 'immensive' ),
+			'sub'     => __( 'Scegli quando sentirci: in 30 minuti ti aiutiamo a individuare il piano di licenza più adatto alla tua realtà.', 'immensive' ),
+			'points'  => array(
+				__( 'Differenze tra Abbonamento Mensile, Lifetime e Lifetime + Manutenzione', 'immensive' ),
+				__( 'Il numero di postazioni e licenze che ti servono', 'immensive' ),
+				__( 'Preventivo su misura, senza impegno', 'immensive' ),
+			),
+			'extra'   => array(
+				'label'   => __( 'Piano di interesse', 'immensive' ),
+				'options' => array( 'Abbonamento Mensile', 'Lifetime', 'Lifetime + Manutenzione', 'Non so ancora' ),
+			),
+			'topic'   => __( 'Consulenza sui piani di licenza', 'immensive' ),
+		)
+	);
+	?>
 
 	<?php get_template_part( 'template-parts/site-footer' ); ?>
 

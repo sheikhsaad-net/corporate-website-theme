@@ -61,7 +61,6 @@ $immensive_img = get_template_directory_uri() . '/assets/images/';
 				<ul class="ih-footer__links">
 					<li><a href="<?php echo esc_url( home_url( '/soluzioni-culturali-creative/' ) ); ?>"><?php esc_html_e( 'Soluzioni Culturali Creative', 'immensive' ); ?></a></li>
 					<li><a href="<?php echo esc_url( home_url( '/ricerca/' ) ); ?>"><?php esc_html_e( 'Ricerca', 'immensive' ); ?></a></li>
-					<li><a href="<?php echo esc_url( home_url( '/innovazione/' ) ); ?>"><?php esc_html_e( 'Innovazione', 'immensive' ); ?></a></li>
 				</ul>
 				<a class="ih-footer__title ih-footer__title--link" href="<?php echo esc_url( home_url( '/portfolio/' ) ); ?>"><?php esc_html_e( 'Portfolio', 'immensive' ); ?></a>
 				<a class="ih-footer__title ih-footer__title--link" href="<?php echo esc_url( home_url( '/contatti/' ) ); ?>"><?php esc_html_e( 'Contatti', 'immensive' ); ?></a>

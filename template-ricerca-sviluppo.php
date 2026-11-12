@@ -95,7 +95,6 @@ get_header();
 
 		<section class="immersive-hero" id="inizio" data-page="ricerca" aria-label="<?php esc_attr_e( 'Ricerca e Sviluppo', 'immensive' ); ?>">
 			<div class="research-stage" aria-hidden="true">
-				<img src="<?php echo esc_url( $immensive_img . 'ricerca/ricerca-connessioni.webp' ); ?>" alt="" width="1200" height="900" fetchpriority="high" decoding="async">
 				<canvas></canvas>
 			</div>
 			<div class="shell">

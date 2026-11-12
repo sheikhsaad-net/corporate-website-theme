@@ -7,7 +7,8 @@
  * - 'heading' big display heading
  * - 'label'   button text
  * - 'href'    button link
- * - 'actions' optional list of buttons (label, href, class) shown instead of the single button
+ * - 'actions' optional list of buttons (label, href, class, booking) shown instead of the single button;
+ *             'booking' => true opens the "Prenota una call" popup (template-parts/booking-modal.php)
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -35,7 +36,7 @@ $immensive_cta = wp_parse_args(
 			<?php if ( ! empty( $immensive_cta['actions'] ) ) : ?>
 				<div class="ih-contact__actions">
 					<?php foreach ( $immensive_cta['actions'] as $immensive_cta_action ) : ?>
-						<a class="ih-btn <?php echo esc_attr( $immensive_cta_action['class'] ); ?>" href="<?php echo esc_url( $immensive_cta_action['href'] ); ?>"><?php echo esc_html( $immensive_cta_action['label'] ); ?></a>
+						<a class="ih-btn <?php echo esc_attr( $immensive_cta_action['class'] ); ?>" href="<?php echo esc_url( $immensive_cta_action['href'] ); ?>"<?php echo ! empty( $immensive_cta_action['booking'] ) ? ' data-booking-open' : ''; ?>><?php echo esc_html( $immensive_cta_action['label'] ); ?></a>
 					<?php endforeach; ?>
 				</div>
 			<?php else : ?>

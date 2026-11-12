@@ -59,7 +59,6 @@ function immensive_ih_templates() {
 		'template-portfolio.php',
 		'template-soluzioni-culturali.php',
 		'template-ricerca-sviluppo.php',
-		'template-innovazione.php',
 		'template-academy.php',
 	);
 }
@@ -285,6 +284,29 @@ function immensive_ricerca_assets() {
 	);
 }
 add_action( 'wp_enqueue_scripts', 'immensive_ricerca_assets', 20 );
+
+/** "Prenota una call" popup (UI only): Piani and Rivenditori. */
+function immensive_booking_assets() {
+	if ( ! is_page_template( array( 'template-piani.php', 'template-rivenditori.php' ) ) ) {
+		return;
+	}
+	$immensive_dir = get_template_directory();
+	$immensive_uri = get_template_directory_uri();
+	wp_enqueue_style(
+		'immensive-booking',
+		$immensive_uri . '/assets/css/booking.css',
+		array( 'immensive-homepage' ),
+		filemtime( $immensive_dir . '/assets/css/booking.css' )
+	);
+	wp_enqueue_script(
+		'immensive-booking',
+		$immensive_uri . '/assets/js/booking.js',
+		array(),
+		filemtime( $immensive_dir . '/assets/js/booking.js' ),
+		true
+	);
+}
+add_action( 'wp_enqueue_scripts', 'immensive_booking_assets', 20 );
 
 /** Chi siamo: concept layout styles and scripts, this template only. */
 function immensive_chi_siamo_assets() {
@@ -894,7 +916,6 @@ class Immensive_Nav_Walker extends Walker_Nav_Menu {
 
 			$photo_descriptions = array(
 				'ricerca'     => 'Progetti, sperimentazione e tecnologie emergenti',
-				'innovazione' => 'Soluzioni digitali e nuovi prodotti',
 			);
 			$photo_card_class = isset( $photo_descriptions[ $slug ] ) ? ' ih-mega__card--' . sanitize_html_class( $slug ) : '';
 			$output .= '<li class="ih-mega__item"><a class="ih-mega__card ih-mega__card--photo' . esc_attr( $photo_card_class ) . '" href="' . esc_url( $item->url ) . '"';
@@ -904,7 +925,6 @@ class Immensive_Nav_Walker extends Walker_Nav_Menu {
 			$output .= '>';
 			$photo_numbers = array(
 				'ricerca'     => array( '01', '1' ),
-				'innovazione' => array( '02', '2' ),
 			);
 			if ( isset( $photo_numbers[ $slug ] ) ) {
 				$output .= '<span class="ih-mega__number" aria-hidden="true"><span>0</span><span>' . esc_html( $photo_numbers[ $slug ][1] ) . '</span></span>';

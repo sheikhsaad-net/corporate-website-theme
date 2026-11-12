@@ -1,47 +1,91 @@
-/* Servizi page — hero point-sphere (orb), sector-row light flow and small
+/* Servizi page — hero art (WebGL liquid convergence), sector-row light flow and small
    layout helpers, ported from the approved concept. Loaded only on /servizi/. */
 (()=>{
  const reduced=matchMedia('(prefers-reduced-motion: reduce)'),fine=matchMedia('(hover:hover) and (pointer:fine)');
+ /* Hero art (WebGL): "Competenze diverse. Un unico progetto."
+    Five liquid-chrome drops (the competences) orbit a central form (the project), slowly flow
+    into it and merge into a single shape, then separate again. Labels follow the drops. */
  document.querySelectorAll('.orb-stage').forEach(stage=>{
-  const hero=stage.closest('.immersive-hero'),canvas=stage.querySelector('canvas'),ctx=canvas.getContext('2d');if(!ctx)return;
-  let w=1,h=1,dpr=1,t=0,frame=0,last=0,visible=true,px=0,py=0,tx=0,ty=0,mx=0,my=0,hover=0,hoverTarget=0;
-  const count=matchMedia('(max-width:760px)').matches?500:900;
-  const points=Array.from({length:count},(_,i)=>{const y=1-2*(i+.5)/count,a=i*2.3999632297,s=Math.sqrt(1-y*y);return {x:Math.cos(a)*s,y,z:Math.sin(a)*s,seed:i}});
-  const tags=[...stage.querySelectorAll('.orb-tag')];
-  function rotate(x,y,z,spin){const a=spin+px*.14,c=Math.cos(a),s=Math.sin(a);let xx=x*c+z*s,zz=z*c-x*s;const tilt=-.16+py*.1;return {x:xx,y:y*Math.cos(tilt)-zz*Math.sin(tilt),z:y*Math.sin(tilt)+zz*Math.cos(tilt)}}
-  function dimensions(){return {r:Math.min(w*.225,h*.245),cx:w*.53+px*5,cy:h*.51+py*4+Math.sin(t*.45)*7}}
-  function project(p,D){return {x:D.cx+p.x*D.r,y:D.cy+p.y*D.r,z:p.z,scale:1+p.z*.08}}
-  const phases=[-2.35,-.85,2.95,.45,1.70],tilts=[-1.05,-.35,.45,1.18,1.85],inclinations=[.70,1.10,.85,1.20,.95];
-  function orbit(i,a){const radius=1.15+i*.23,x=Math.cos(a)*radius,y=Math.sin(a)*radius*Math.cos(inclinations[i]),z=Math.sin(a)*radius*Math.sin(inclinations[i]),angle=tilts[i];return {x:x*Math.cos(angle)-y*Math.sin(angle),y:x*Math.sin(angle)+y*Math.cos(angle),z}}
-  function orbitPoint(i,a,D,spin){const p=orbit(i,a);return project(rotate(p.x,p.y,p.z,spin),D)}
-  function orbitHalf(D,spin,front){for(let i=0;i<5;i++){ctx.beginPath();let previous=orbitPoint(i,0,D,spin);for(let j=1;j<=180;j++){const p=orbitPoint(i,j/180*Math.PI*2,D,spin);if(((previous.z+p.z)/2>=0)===front){ctx.moveTo(previous.x,previous.y);ctx.lineTo(p.x,p.y)}previous=p}ctx.strokeStyle=`rgba(142,184,38,${front?.63+i*.035:.20+i*.015})`;ctx.lineWidth=front?1.25:.8;ctx.stroke()}}
-  function lineCurve(sample,D,spin,alpha){ctx.beginPath();for(let j=0;j<=110;j++){const q=sample(j/110*Math.PI*2);const p=project(rotate(q.x,q.y,q.z,spin),D);if(j===0)ctx.moveTo(p.x,p.y);else ctx.lineTo(p.x,p.y)}ctx.strokeStyle=`rgba(142,184,38,${alpha})`;ctx.lineWidth=1.05;ctx.stroke()}
-  function paint(now){frame=0;if(!visible||document.hidden)return;if(now-last<33&&!reduced.matches){frame=requestAnimationFrame(paint);return}const dt=Math.min((now-last)/1000,.05);last=now;if(!reduced.matches)t+=dt;px+=(tx-px)*.055;py+=(ty-py)*.055;hover+=(hoverTarget-hover)*.10;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);const D=dimensions(),spin=t*.032;
-   orbitHalf(D,spin,false);
-   const glow=ctx.createRadialGradient(D.cx,D.cy,D.r*.1,D.cx,D.cy,D.r*1.25);glow.addColorStop(0,'rgba(142,184,38,.065)');glow.addColorStop(1,'rgba(142,184,38,0)');ctx.fillStyle=glow;ctx.fillRect(0,0,w,h);
-   for(let lat=1;lat<5;lat++){const v=-Math.PI/2+lat/5*Math.PI,sy=Math.sin(v),sr=Math.cos(v);lineCurve(a=>{const ripple=1+.025*Math.sin(a*3+sy*5+t*.28);return {x:Math.cos(a)*sr*ripple,y:sy+.025*Math.sin(a*2+t*.2)*sr,z:Math.sin(a)*sr*ripple}},D,spin,.10+(lat%4===0?.055:0))}
-   for(let mer=0;mer<3;mer++){const a=mer/3*Math.PI;lineCurve(v=>({x:Math.cos(a)*Math.cos(v),y:Math.sin(v),z:Math.sin(a)*Math.cos(v)}),D,spin,.085)}
-   const screen=[];for(const p of points){const wave=1+.022*Math.sin(p.y*7+p.z*4+t*.3)+.012*Math.sin(p.x*11-t*.2);screen.push({...project(rotate(p.x*wave,p.y*wave,p.z*wave,spin),D),seed:p.seed})}screen.sort((a,b)=>a.z-b.z);
-   const influence=Math.min(155,D.r*.58);
-   if(hover>.01){const halo=ctx.createRadialGradient(mx,my,0,mx,my,influence);halo.addColorStop(0,`rgba(142,184,38,${hover*.10})`);halo.addColorStop(1,'rgba(142,184,38,0)');ctx.fillStyle=halo;ctx.fillRect(mx-influence,my-influence,influence*2,influence*2)}
-   for(const p of screen){const light=(p.z+1)/2,alpha=.10+light*.39,bright=p.seed%37===0;let dx=p.x-mx,dy=p.y-my,dist=Math.hypot(dx,dy);const near=Math.pow(Math.max(0,1-dist/influence),2)*hover*(.25+light*.75),push=near*25;const x=p.x+dx/(dist||1)*push,y=p.y+dy/(dist||1)*push;const r=142,g=184,b=38;ctx.fillStyle=near>.04?`rgba(${r},${g},${b},${Math.min(1,alpha+near*.45)})`:bright?`rgba(142,184,38,${Math.min(1,alpha+.07)})`:`rgba(142,184,38,${alpha})`;const radius=((bright?1.25:.65+light*.40)+near*.95)*p.scale;ctx.beginPath();ctx.arc(x,y,radius,0,Math.PI*2);ctx.fill()}
-   orbitHalf(D,spin,true);
-   // Anchors travel along actual 3D circles centred on the point sphere.
-   const placements=tags.map((tag,i)=>{const q=orbitPoint(i,phases[i]+t*(.035+i*.004),D,spin),side=q.x>=D.cx?1:-1,tw=tag.offsetWidth,th=tag.offsetHeight;let x=q.x+side*(tw*.5+24),y=q.y;return {tag,i,q,side,tw,th,x:Math.max(tw/2+10,Math.min(w-tw/2-10,x)),y:Math.max(th/2+16,Math.min(h-th/2-16,y))}});
-   // Keep every label clear of the editorial text, including during rotation.
-   const stageBox=stage.getBoundingClientRect(),obstacles=[...hero.querySelectorAll('h1,.ih-new-copy,.ih-new-actions,.ih-new-top')].map(e=>e.getBoundingClientRect());
-   placements.forEach(p=>{for(const b of obstacles){const left=b.left-stageBox.left,right=b.right-stageBox.left,top=b.top-stageBox.top,bottom=b.bottom-stageBox.top;if(p.x+p.tw/2>left-18&&p.x-p.tw/2<right+18&&p.y+p.th/2>top-18&&p.y-p.th/2<bottom+18)p.x=Math.min(w-p.tw/2-10,right+p.tw/2+24)}});
-   // Separate label rectangles while keeping the leader on its original orbit.
-   for(let pass=0;pass<5;pass++)for(let i=0;i<placements.length;i++)for(let j=i+1;j<placements.length;j++){const a=placements[i],b=placements[j],gap=(a.th+b.th)/2+40;if(Math.abs(a.x-b.x)<(a.tw+b.tw)/2+18&&Math.abs(a.y-b.y)<gap){const direction=a.y<=b.y?1:-1,shift=(gap-Math.abs(a.y-b.y))/2;a.y-=direction*shift;b.y+=direction*shift;a.y=Math.max(a.th/2+12,Math.min(h-a.th/2-12,a.y));b.y=Math.max(b.th/2+12,Math.min(h-b.th/2-12,b.y))}}
-   placements.forEach(p=>{for(const b of obstacles){const right=b.right-stageBox.left,top=b.top-stageBox.top,bottom=b.bottom-stageBox.top;if(p.x-p.tw/2<right+24&&p.y+p.th/2>top-24&&p.y-p.th/2<bottom+24)p.x=Math.min(w-p.tw/2-12,right+p.tw/2+30)}});
-   placements.forEach(({tag,i,q,side,tw,x,y})=>{tag.style.transform=`translate3d(${x.toFixed(2)}px,${y.toFixed(2)}px,0) translate(-50%,-50%)`;tag.style.opacity='.94';const edge=x-(x>=q.x?1:-1)*tw*.5,elbow=(edge+q.x)*.5;ctx.beginPath();ctx.moveTo(q.x,q.y);ctx.lineTo(elbow,y);ctx.lineTo(edge,y);ctx.strokeStyle='rgba(142,184,38,.52)';ctx.lineWidth=.9;ctx.stroke();ctx.beginPath();ctx.arc(q.x,q.y,2.7,0,Math.PI*2);ctx.fillStyle='#8EB826';ctx.fill();tag.dataset.orbit=String(i+1);tag.dataset.anchor=`${q.x.toFixed(1)},${q.y.toFixed(1)}`});
-   stage.classList.add('is-ready');stage.dataset.renderer='point-cloud';stage.dataset.phase=t.toFixed(2);stage.dataset.hover=hover.toFixed(2);if(!reduced.matches)frame=requestAnimationFrame(paint);
+  const hero=stage.closest('.immersive-hero'),canvas=stage.querySelector('canvas');
+  const gl=canvas.getContext('webgl',{alpha:true,premultipliedAlpha:true,antialias:false,depth:false,powerPreference:'high-performance'});
+  if(!gl){stage.classList.add('no-webgl');return}
+  const FS=`precision highp float;
+uniform vec2 uRes;uniform vec4 uB[6];
+const vec3 LIME=vec3(.557,.722,.149);
+float smin(float a,float b,float k){float h=clamp(.5+.5*(b-a)/k,0.,1.);return mix(b,a,h)-k*h*(1.-h);}
+float map(vec3 p){float d=length(p-uB[0].xyz)-uB[0].w;
+ for(int i=1;i<6;i++)d=smin(d,length(p-uB[i].xyz)-uB[i].w,.5);
+ return d;}
+vec3 nrm(vec3 p){vec2 e=vec2(.0012,0.);return normalize(vec3(map(p+e.xyy)-map(p-e.xyy),map(p+e.yxy)-map(p-e.yxy),map(p+e.yyx)-map(p-e.yyx)));}
+vec3 env(vec3 r){
+ vec3 c=vec3(.01,.012,.009);
+ c+=vec3(.9,.93,.86)*smoothstep(-.05,.95,r.y)*.42;
+ c+=vec3(1.)*pow(max(dot(r,normalize(vec3(-.8,.35,.5))),0.),140.)*.9;
+ c+=vec3(.85,.9,.8)*pow(max(dot(r,normalize(vec3(-.8,.35,.5))),0.),7.)*.22;
+ c+=vec3(1.)*exp(-abs(r.y-.05)*22.)*.28;
+ c+=LIME*pow(max(dot(r,normalize(vec3(.85,-.45,.3))),0.),2.)*1.35;
+ c+=LIME*pow(max(dot(r,normalize(vec3(.2,-1.,.1))),0.),3.)*.6;
+ return c;}
+void main(){
+ vec2 uv=(gl_FragCoord.xy-.5*uRes)/min(uRes.x,uRes.y);
+ vec3 ro=vec3(0.,0.,5.),rd=normalize(vec3(uv,-1.));
+ float t=0.,d=1.,glow=0.;bool hit=false;
+ for(int i=0;i<90;i++){vec3 p=ro+rd*t;d=map(p);glow+=exp(-max(d,0.)*7.)*.011;if(d<.0015){hit=true;break;}t+=d*.92;if(t>8.)break;}
+ vec3 col=vec3(0.);float a=0.;
+ if(hit){vec3 p=ro+rd*t,n=nrm(p),r=reflect(rd,n);
+  float fr=pow(1.-max(dot(n,-rd),0.),3.);
+  float near=0.;for(int i=0;i<6;i++){float q=length(p-uB[i].xyz)-uB[i].w;near+=exp(-max(q,0.)*9.);}
+  float sch=.18+.82*pow(1.-max(dot(n,-rd),0.),5.);
+  vec3 c=vec3(.01,.012,.009)+env(r)*sch*1.25;
+  c+=vec3(1.,1.,.96)*pow(max(dot(r,normalize(vec3(-.45,.75,.5))),0.),260.)*1.1;
+  c+=LIME*fr*.22;
+  c+=LIME*smoothstep(1.15,1.9,near)*.28*(1.-fr);
+  col=c;a=1.;}
+ vec3 halo=LIME*min(glow,1.)*.85;
+ col=col*a+halo*(1.-a);a=max(a,min(glow,1.)*.85);
+ col=col/(1.+col*.3);
+ gl_FragColor=vec4(col,a);
+}`;
+  const prog=program(gl,FS);if(!prog){stage.classList.add('no-webgl');return}
+  const uRes=gl.getUniformLocation(prog,'uRes'),uB=gl.getUniformLocation(prog,'uB');
+  const tags=[...stage.querySelectorAll('.orb-tag')],N=5,B=new Float32Array(24);
+  let w=1,h=1,t=0,last=0,raf=0,visible=true,px=0,py=0,tx=0,ty=0,tagW=[],tagH=[];
+  const ease=x=>x*x*(3-2*x);
+  function resize(){const r=stage.getBoundingClientRect();w=Math.max(1,r.width);h=Math.max(1,r.height);const cap=w<700?560:860,s=Math.min((devicePixelRatio||1)*.9,cap/Math.max(w,h));canvas.width=Math.round(w*s);canvas.height=Math.round(h*s);gl.viewport(0,0,canvas.width,canvas.height);tagW=tags.map(g=>g.offsetWidth||110);tagH=tags.map(g=>g.offsetHeight||34);start()}
+  function start(){if(!raf&&visible&&!document.hidden)raf=requestAnimationFrame(frame)}
+  // same camera as the shader: eye at z=5, focal 1, scale = min(w,h)
+  function toScreen(x,y,z){const m=Math.min(w,h),k=1/(5-z);return [w/2+x*k*m,h/2-y*k*m]}
+  function pose(i,a,radius,s){const yaw=px*.35,pitch=.42+py*.18;let x=Math.cos(a)*radius,y=Math.sin(t*.5+i*1.7)*.14*s,z=Math.sin(a)*radius;let c=Math.cos(yaw),q=Math.sin(yaw);[x,z]=[x*c+z*q,z*c-x*q];c=Math.cos(pitch);q=Math.sin(pitch);[y,z]=[y*c-z*q,y*q+z*c];return [x,y,z]}
+  function frame(now){raf=0;if(!visible||document.hidden)return;if(!reduced.matches&&now-last<33){raf=requestAnimationFrame(frame);return}
+   const dt=Math.min(.06,(now-last)/1000||0);last=now;if(!reduced.matches)t+=dt;else t=6.3;px+=(tx-px)*.05;py+=(ty-py)*.05;
+   const s=ease(.5-.5*Math.cos(t*.3+Math.PI*.9)),radius=.5+1.0*s;
+   B[0]=0;B[1]=Math.sin(t*.6)*.04;B[2]=0;B[3]=.6+.05*(1-s)+.015*Math.sin(t*1.3);
+   const pts=[];
+   for(let i=0;i<N;i++){const a=t*.2+i/N*Math.PI*2,p=pose(i,a,radius,s),o=4*(i+1);B[o]=p[0];B[o+1]=p[1];B[o+2]=p[2];B[o+3]=.34+.03*Math.sin(t*.9+i*2.1);pts.push({i,a,p})}
+   gl.useProgram(prog);gl.uniform2f(uRes,canvas.width,canvas.height);gl.uniform4fv(uB,B);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);gl.drawArrays(gl.TRIANGLES,0,3);
+   // labels sit on the outer orbit, outside the drops, and dim while everything merges
+   pts.forEach(({i,a})=>{const tg=tags[i];if(!tg)return;const o=pose(i,a,Math.max(radius,1.05),1),[sx,sy]=toScreen(o[0],o[1],o[2]),[cx,cy]=toScreen(0,0,0),dx=sx-cx,dy=sy-cy,l=Math.hypot(dx,dy)||1,ux=dx/l,uy=dy/l,tw=tagW[i],th=tagH[i],rs=.37/(5-o[2])*Math.min(w,h)+12;
+    let X=sx+ux*(rs+tw/2)-tw/2,Y=sy+uy*(rs*.75+th/2)-th/2;X=Math.max(2,Math.min(w-tw-2,X));Y=Math.max(2,Math.min(h-th-2,Y));
+    const depth=(o[2]+1.5)/3;tg.style.transform=`translate(${X.toFixed(1)}px,${Y.toFixed(1)}px)`;tg.style.opacity=((.35+.65*depth)*(.4+.6*s)).toFixed(2)});
+   stage.classList.add('is-ready');stage.dataset.renderer='liquid-convergence';
+   if(!reduced.matches)raf=requestAnimationFrame(frame);
   }
-  function start(){if(!frame&&visible&&!document.hidden)frame=requestAnimationFrame(paint)}
-  function resize(){const b=stage.getBoundingClientRect();w=b.width;h=b.height;dpr=Math.min(devicePixelRatio,1.6);canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);start()}
-  hero.addEventListener('pointermove',e=>{if(!fine.matches||reduced.matches)return;const b=hero.getBoundingClientRect(),s=stage.getBoundingClientRect();tx=(e.clientX-b.left)/b.width*2-1;ty=(e.clientY-b.top)/b.height*2-1;mx=e.clientX-s.left;my=e.clientY-s.top;const D=dimensions();hoverTarget=Math.hypot(mx-D.cx,my-D.cy)<D.r*1.08?1:0},{passive:true});hero.addEventListener('pointerleave',()=>{tx=ty=0;hoverTarget=0});
-  new ResizeObserver(resize).observe(stage);new IntersectionObserver(e=>{visible=e[0].isIntersecting;if(visible)start();else{cancelAnimationFrame(frame);frame=0}},{threshold:.01}).observe(hero);document.addEventListener('visibilitychange',()=>{cancelAnimationFrame(frame);frame=0;start()});reduced.addEventListener('change',()=>{cancelAnimationFrame(frame);frame=0;tx=ty=0;hover=hoverTarget=0;start()});resize();start();
+  hero.addEventListener('pointermove',e=>{if(e.pointerType==='touch'||reduced.matches||!fine.matches)return;const b=stage.getBoundingClientRect();tx=Math.max(-1,Math.min(1,(e.clientX-b.left)/b.width*2-1));ty=Math.max(-1,Math.min(1,(e.clientY-b.top)/b.height*2-1));start()});
+  hero.addEventListener('pointerleave',()=>{tx=ty=0});
+  canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();cancelAnimationFrame(raf);raf=0});
+  new ResizeObserver(resize).observe(stage);
+  new IntersectionObserver(([en])=>{visible=en.isIntersecting;if(visible)start();else{cancelAnimationFrame(raf);raf=0}},{threshold:.01}).observe(hero);
+  document.addEventListener('visibilitychange',()=>{cancelAnimationFrame(raf);raf=0;start()});
+  reduced.addEventListener('change',()=>{cancelAnimationFrame(raf);raf=0;tx=ty=0;start()});
+  resize();
  });
+ function program(gl,fs){
+  const mk=(type,src)=>{const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)){console.warn(gl.getShaderInfoLog(s));return null}return s};
+  const v=mk(gl.VERTEX_SHADER,'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'),f=mk(gl.FRAGMENT_SHADER,fs);if(!v||!f)return null;
+  const p=gl.createProgram();gl.attachShader(p,v);gl.attachShader(p,f);gl.linkProgram(p);if(!gl.getProgramParameter(p,gl.LINK_STATUS))return null;gl.useProgram(p);
+  const b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+  const l=gl.getAttribLocation(p,'p');gl.enableVertexAttribArray(l);gl.vertexAttribPointer(l,2,gl.FLOAT,false,0,0);return p;
+ }
 })();
 
 

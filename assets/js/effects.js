@@ -184,7 +184,7 @@
 	   text nodes are wrapped, so <br> and inline spans keep working. */
 	(function () {
 		if (reduced || !('IntersectionObserver' in window)) { return; }
-		var sel = '.ih-sccprog__heading, .ih-sccwhat__heading, .ih-sccwho__heading, .ih-stats__title, .ih-testi__heading, .ih-inflow__heading, .ih-faq__heading, .ih-casi__heading, .ih-why__title, .ih-contact .ih-heading, .ih-showcase--static .ih-heading, .ih-norma__title, .ih-rshero__title, .ih-works__heading, .ih-successi__heading';
+		var sel = '.ih-sccprog__heading, .ih-sccwhat__heading, .ih-sccwho__heading, .ih-stats__title, .ih-testi__heading, .ih-faq__heading, .ih-casi__heading, .ih-why__title, .ih-contact .ih-heading, .ih-showcase--static .ih-heading, .ih-norma__title, .ih-rshero__title, .ih-works__heading, .ih-successi__heading';
 		// Every other section heading on the site: any h2 named *__heading,
 		// *__title, *-heading, or the generic .ih-heading.
 		sel += ', h2[class*="__heading"], h2[class*="__title"], h2[class*="-heading"], h2.ih-heading, .ih-wr__title, .ih-phero--riv .ih-phero__title';
@@ -360,7 +360,7 @@
 
 	/* ---- 3. Tilt + glare on cards ---- */
 	(function () {
-		var sel = '.ih-reality-card, .ih-why-card, .ih-esplora-card, .ih-tool, .ih-acc--innov, .ih-acc--mission';
+		var sel = '.ih-reality-card, .ih-why-card, .ih-esplora-card, .ih-tool, .ih-acc--mission';
 		document.querySelectorAll(sel).forEach(function (card) {
 			var glare = document.createElement('span');
 			glare.className = 'ih-fx-glare';

@@ -54,7 +54,6 @@ function immensive_portfolio_placement_templates() {
 		'template-altri-servizi.php',
 		'template-soluzioni-culturali.php',
 		'template-ricerca-sviluppo.php',
-		'template-innovazione.php',
 	);
 }
 
