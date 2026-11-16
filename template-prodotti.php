@@ -34,7 +34,7 @@ get_header();
 				<div class="ih-hero__counter" aria-hidden="true">
 					<span class="ih-hero__counter-num" id="ih-hero-num">01</span>
 					<span class="ih-hero__counter-bar"></span>
-					<span class="ih-hero__counter-total">04</span>
+					<span class="ih-hero__counter-total">05</span>
 				</div>
 			</div>
 
@@ -76,6 +76,15 @@ get_header();
 						'slug'  => 'electro-vr',
 						'tag'   => 'Addestramento immersivo per operatori su impianti elettrici',
 						'color' => '#f7971e',
+					),
+					array(
+						'img'   => 'hero-crane-vr.webp',
+						'width' => 1434,
+						'height' => 807,
+						'name'  => 'Crane VR',
+						'slug'  => 'crane-vr',
+						'tag'   => 'Addestramento immersivo per operatori di gru',
+						'color' => '#f89520',
 					),
 				);
 				foreach ( $immensive_slides as $i => $slide ) :

@@ -9481,6 +9481,20 @@ body.page-template-template-forklift-vr-php .ih-psys__grid {
 	padding-right: calc(max(0px, (100% - var(--ih-max)) / 2) + 1.5rem);
 }
 
+/* ---------- Crane VR: single accent ---------- */
+body.page-template-template-crane-vr .ih,
+body.page-template-template-crane-vr-php .ih {
+	--ih-cyan: #F89520;
+	--ih-cyan-dark: #F89520;
+}
+
+/* Crane: the radiocomando is shown at about 720px on the 1920 artboard, not full column width. */
+body.page-template-template-crane-vr .ih-psys__media img,
+body.page-template-template-crane-vr-php .ih-psys__media img {
+	width: min(100%, 720px);
+	margin: 0 auto;
+}
+
 /* ---------- Electro VR: single accent ---------- */
 body.page-template-template-electro-vr .ih,
 body.page-template-template-electro-vr-php .ih {

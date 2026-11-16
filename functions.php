@@ -56,6 +56,7 @@ function immensive_ih_templates() {
 		'template-firefighter-vr.php',
 		'template-forklift-vr.php',
 		'template-electro-vr.php',
+		'template-crane-vr.php',
 		'template-portfolio.php',
 		'template-soluzioni-culturali.php',
 		'template-ricerca-sviluppo.php',
