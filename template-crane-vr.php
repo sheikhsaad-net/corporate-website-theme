@@ -203,21 +203,39 @@ get_header();
 			<div class="ih-pdota__block ih-pdota__block--req" id="ih-opzioni">
 				<h3 class="ih-pdota__section-heading"><?php esc_html_e( 'Opzioni Disponibili', 'immensive' ); ?></h3>
 				<div class="ih-pdota__cards ih-pdota__cards--req">
-					<article class="ih-pdota__card ih-reveal">
-						<div class="ih-pdota__card-media ih-pdota__card-media--contain" aria-hidden="true" style="background-image:url('<?php echo esc_url( $immensive_img . 'metaQ2.webp' ); ?>')"></div>
-						<div class="ih-pdota__card-body">
-							<h4 class="ih-pdota__card-title"><?php esc_html_e( 'Versione Meta', 'immensive' ); ?></h4>
-							<p class="ih-pdota__card-desc"><?php esc_html_e( 'Kit Meta Quest 3s è il sistema standalone che offre libertà di movimento totale, senza necessità di PC o cavi, per un\'esperienza di realtà virtuale immersiva e immediata.', 'immensive' ); ?></p>
-							<div class="ih-pdota__card-list">
-								<?php foreach ( array( 'Visore Meta Quest 3', '2 Controller Touch Plus' ) as $immensive_opz_item ) : ?>
-									<div class="ih-pdota__card-item">
-										<svg class="ih-pdota__card-check" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-										<span><?php echo esc_html( $immensive_opz_item ); ?></span>
-									</div>
-								<?php endforeach; ?>
+					<?php
+					$immensive_opzioni = array(
+						array(
+							'title' => 'Versione Meta',
+							'image' => 'metaQ2.webp',
+							'desc'  => 'Kit Meta Quest 3s è il sistema standalone che offre libertà di movimento totale, senza necessità di PC o cavi, per un\'esperienza di realtà virtuale immersiva e immediata.',
+							'items' => array( 'Visore Meta Quest 3', '2 Controller Touch Plus' ),
+						),
+						array(
+							'title' => 'Kit HTC Vive Pro Room-Scale VR',
+							'image' => 'vive-pro-2-full-kit-buy.webp',
+							'desc'  => 'Vive Pro – Full Kit è il sistema progettato da HTC per vivere un\'esperienza di realtà virtuale professionale. Si compone di:',
+							'items' => array( 'Visore HTC Vive Pro 2', '2 Stazioni di Base', '2 Supporti per camere', '2 Controller HTC Vive' ),
+						),
+					);
+					?>
+					<?php foreach ( $immensive_opzioni as $immensive_opz ) : ?>
+						<article class="ih-pdota__card ih-reveal">
+							<div class="ih-pdota__card-media ih-pdota__card-media--contain" aria-hidden="true" style="background-image:url('<?php echo esc_url( $immensive_img . $immensive_opz['image'] ); ?>')"></div>
+							<div class="ih-pdota__card-body">
+								<h4 class="ih-pdota__card-title"><?php echo esc_html( $immensive_opz['title'] ); ?></h4>
+								<p class="ih-pdota__card-desc"><?php echo esc_html( $immensive_opz['desc'] ); ?></p>
+								<div class="ih-pdota__card-list">
+									<?php foreach ( $immensive_opz['items'] as $immensive_opz_item ) : ?>
+										<div class="ih-pdota__card-item">
+											<svg class="ih-pdota__card-check" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+											<span><?php echo esc_html( $immensive_opz_item ); ?></span>
+										</div>
+									<?php endforeach; ?>
+								</div>
 							</div>
-						</div>
-					</article>
+						</article>
+					<?php endforeach; ?>
 				</div>
 			</div>
 			</div>
