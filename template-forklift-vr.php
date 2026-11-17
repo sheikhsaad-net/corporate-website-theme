@@ -101,7 +101,7 @@ get_header();
 		<div class="ih-container ih-pfunziona__media-wrap">
 			<div class="ih-pfunziona__media ih-reveal">
 				<img src="<?php echo esc_url( $immensive_img . 'forklift-vr-video-cover.jpg' ); ?>" alt="Forklift VR Simulator — guarda il video dimostrativo" loading="lazy" width="1912" height="1076">
-				<button type="button" class="ih-pfunziona__video" data-video-src="https://youtu.be/FMmfW44ZEL8" aria-label="<?php esc_attr_e( 'Riproduci il video Forklift VR', 'immensive' ); ?>"><span class="ih-pfunziona__play-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="m9 6 10 6-10 6V6Z" fill="currentColor"/></svg></span></button>
+				<button type="button" class="ih-pfunziona__video" data-video-src="https://youtu.be/FMmfW44ZEL8" aria-label="<?php esc_attr_e( 'Riproduci il video Forklift VR', 'immensive' ); ?>"><span class="ih-pfunziona__play-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6v12l9-6z" fill="currentColor"/></svg></span></button>
 			</div>
 		</div>
 	</section>
@@ -262,18 +262,15 @@ get_header();
 					),
 				);
 				$immensive_requisiti_by_version = array(
+					// Pro Plus: Workstation + the 3 front monitors (the HTC Vive kit
+					// is listed under "Opzioni Disponibili" instead).
 					'provr' => array(
+						$immensive_requisiti_standard[0],
 						array(
 							'title' => 'Versione Desktop con 3 monitor',
 							'image' => 'forklift-vr-pro-plus-monitors.webp',
 							'desc'  => 'Configurazione desktop con tre monitor per una visione panoramica dell\'ambiente di simulazione.',
 							'items' => array( '3 Monitor da 40”', 'Supporto Monitor' ),
-						),
-						array(
-							'title' => 'Kit HTC Vive Pro Room-Scale VR',
-							'image' => 'vive-pro-2-full-kit-buy.webp',
-							'desc'  => 'Vive Pro – Full Kit è il sistema progettato da HTC per vivere un\'esperienza di realtà virtuale professionale. Si compone di:',
-							'items' => array( 'Visore HTC Vive Pro', '2 Stazioni di Base', '2 Supporti per camere', '2 Tracker Vive' ),
 						),
 					),
 					'pro'  => $immensive_requisiti_standard,

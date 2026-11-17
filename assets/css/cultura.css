@@ -1458,3 +1458,5 @@
 /* the concept's ".svz a{color:inherit}" must not recolour theme buttons */
 .svz a.ih-btn--outline,.svz a.ih-btn--ghost{color:#fffefe}
 .svz a.ih-btn--ghost-dark{color:#101010}
+/* Hero accent words in brand green (beats the all-spans-white hero rule above; the split-word JS wraps words in spans) */
+.svz .immersive-hero h1 .hero-green,.svz .immersive-hero h1 .hero-green span{color:#8EB826}

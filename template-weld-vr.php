@@ -83,7 +83,7 @@ get_header();
 		<div class="ih-container ih-pfunziona__media-wrap">
 			<div class="ih-pfunziona__media ih-reveal">
 				<img src="<?php echo esc_url( $immensive_img . 'hero-weld-vr.webp' ); ?>" alt="Weld VR Simulator — guarda il video dimostrativo" loading="lazy" width="1080" height="608">
-				<button type="button" class="ih-pfunziona__video" data-video-src="https://youtu.be/Prhx4C9FEuY" aria-label="<?php esc_attr_e( 'Riproduci il video Weld VR', 'immensive' ); ?>"><span class="ih-pfunziona__play-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="m9 6 10 6-10 6V6Z" fill="currentColor"/></svg></span></button>
+				<button type="button" class="ih-pfunziona__video" data-video-src="https://youtu.be/Prhx4C9FEuY" aria-label="<?php esc_attr_e( 'Riproduci il video Weld VR', 'immensive' ); ?>"><span class="ih-pfunziona__play-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6v12l9-6z" fill="currentColor"/></svg></span></button>
 			</div>
 		</div>
 	</section>

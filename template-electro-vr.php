@@ -108,7 +108,7 @@ get_header();
 			<div class="ih-pfunziona__media ih-reveal">
 				<img src="<?php echo esc_url( $immensive_img . 'electro-vr-video-cover.webp' ); ?>" alt="Electro VR Simulator — guarda il video dimostrativo" loading="lazy" width="1671" height="940">
 				<button type="button" class="ih-pfunziona__video" data-video-src="https://youtu.be/QxBAtNBAwQY" aria-label="<?php esc_attr_e( 'Riproduci il video Electro VR', 'immensive' ); ?>">
-					<span class="ih-pfunziona__play-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="m9 6 10 6-10 6V6Z" fill="currentColor"/></svg></span>
+					<span class="ih-pfunziona__play-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6v12l9-6z" fill="currentColor"/></svg></span>
 				</button>
 			</div>
 		</div>

@@ -75,7 +75,7 @@ $immensive_img = get_template_directory_uri() . '/assets/images/';
 		<div class="ih-container">
 			<p class="ih-footer__copy">
 				&copy; <?php echo esc_html( gmdate( 'Y' ) ); ?> immensive s.r.l. | Sede legale Via Firenze 3, 81030 Parete (CE), Italia . P.iva: 04188380614 | Capitale sociale: &euro; 215.000,00 .
-				<a href="<?php echo esc_url( home_url( '/privacy-policy/' ) ); ?>">Privacy Policy</a> . <a href="<?php echo esc_url( home_url( '/cookie-policy/' ) ); ?>">Cookie Policy</a>
+				<a href="<?php echo esc_url( home_url( '/privacy-policy/' ) ); ?>">Privacy Policy</a> . <a href="<?php echo esc_url( home_url( '/cookie-policy/' ) ); ?>">Cookie Policy</a> . <a href="#" data-cookie-settings>Preferenze cookie</a>
 			</p>
 		</div>
 	</footer>

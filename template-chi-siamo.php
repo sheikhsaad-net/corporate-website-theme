@@ -23,7 +23,7 @@ get_header();
 
 <div class="ih">
 
-	<?php get_template_part( 'template-parts/site-header' ); ?>
+	<?php get_template_part( 'template-parts/site-header', null, array( 'service' => 'Servizi Digitali e Innovazione' ) ); ?>
 
 	<main class="svz" id="contenuto">
 
@@ -314,6 +314,8 @@ get_header();
 	?>
 
 	<?php get_template_part( 'template-parts/site-footer' ); ?>
+
+	<?php get_template_part( 'template-parts/demo-modal', null, array( 'product' => 'Servizi Digitali e Innovazione', 'variant' => 'service' ) ); ?>
 
 </div>
 

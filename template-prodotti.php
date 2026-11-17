@@ -85,21 +85,24 @@ get_header();
 						'slug'  => 'crane-vr',
 						'tag'   => 'Addestramento immersivo per operatori di gru',
 						'color' => '#f89520',
+						// Horizontal position of the person in the photo (0-1): the slide
+						// is framed on them, not on the middle of the picture.
+						'focus' => 0.27,
 					),
 				);
 				foreach ( $immensive_slides as $i => $slide ) :
 					?>
 					<article
-						class="ih-slide<?php echo 0 === $i ? ' is-active' : ''; ?>"
+						class="ih-slide<?php echo 0 === $i ? ' is-active' : ''; ?><?php echo isset( $slide['focus'] ) ? ' ih-slide--focus' : ''; ?>"
 						data-index="<?php echo (int) $i; ?>"
 						data-color="<?php echo esc_attr( $slide['color'] ); ?>"
-						style="--c:<?php echo esc_attr( $slide['color'] ); ?>"
+						style="--c:<?php echo esc_attr( $slide['color'] ); ?><?php echo isset( $slide['focus'] ) ? ';--fx:' . esc_attr( $slide['focus'] ) : ''; ?>"
 						tabindex="0"
 						role="button"
 						aria-label="<?php echo esc_attr( $slide['name'] ); ?>"
 					>
 						<?php $immensive_slide_base = pathinfo( $slide['img'], PATHINFO_FILENAME ); ?>
-						<img class="ih-slide__bg" src="<?php echo esc_url( $immensive_img . 'optimized/' . $immensive_slide_base . '-1536.webp' ); ?>" srcset="<?php echo esc_attr( esc_url( $immensive_img . 'optimized/' . $immensive_slide_base . '-768.webp' ) . ' 768w, ' . esc_url( $immensive_img . 'optimized/' . $immensive_slide_base . '-1536.webp' ) . ' 1536w' ); ?>" sizes="(max-width: 720px) 100vw, 52vw" alt="<?php echo esc_attr( $slide['name'] ); ?>" <?php echo 0 === $i ? 'fetchpriority="high" decoding="async"' : 'loading="lazy" decoding="async"'; ?> width="<?php echo (int) $slide['width']; ?>" height="<?php echo (int) $slide['height']; ?>">
+						<img class="ih-slide__bg" src="<?php echo esc_url( $immensive_img . 'optimized/' . $immensive_slide_base . '-1536.webp' ); ?>" srcset="<?php echo esc_attr( esc_url( $immensive_img . 'optimized/' . $immensive_slide_base . '-768.webp' ) . ' 768w, ' . esc_url( $immensive_img . 'optimized/' . $immensive_slide_base . '-1536.webp' ) . ' 1536w' ); ?>" sizes="<?php echo isset( $slide['focus'] ) ? '(max-width: 900px) 100vw, 76vw' : '(max-width: 720px) 100vw, 52vw'; ?>" alt="<?php echo esc_attr( $slide['name'] ); ?>" <?php echo 0 === $i ? 'fetchpriority="high" decoding="async"' : 'loading="lazy" decoding="async"'; ?> width="<?php echo (int) $slide['width']; ?>" height="<?php echo (int) $slide['height']; ?>">
 						<div class="ih-slide__shade" aria-hidden="true"></div>
 						<div class="ih-slide__body">
 							<h3 class="ih-slide__name"><?php echo esc_html( $slide['name'] ); ?></h3>

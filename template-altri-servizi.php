@@ -80,37 +80,6 @@ $immensive_steps = array(
 	array( 'title' => 'Validazione', 'desc' => 'Testiamo il sistema, perfezioniamo l’esperienza e prepariamo il rilascio.' ),
 );
 
-$immensive_capabilities = array(
-	array(
-		'label'  => 'Realtà estesa',
-		'title'  => 'Esperienze da vivere in prima persona',
-		'desc'   => 'Progettiamo modalità di interazione che portano i contenuti dentro lo spazio o le persone dentro un ambiente digitale.',
-		'tags'   => array( 'Virtual Reality', 'Augmented Reality', 'Mixed Reality' ),
-		'result' => 'Formazione, percorsi culturali e assistenza.',
-	),
-	array(
-		'label'  => '3D e simulazione',
-		'title'  => 'Esplorare prima di realizzare',
-		'desc'   => 'Ambienti e modelli tridimensionali diventano strumenti per visualizzare prodotti, valutare configurazioni e riprodurre procedure.',
-		'tags'   => array( 'Real-time 3D', 'Simulazione', 'Configuratori' ),
-		'result' => 'Visualizzazione, training e presentazione del prodotto.',
-	),
-	array(
-		'label'  => 'Web e mobile',
-		'title'  => 'La soluzione, dove serve',
-		'desc'   => 'Interfacce e applicazioni progettate per i dispositivi e i contesti in cui saranno utilizzate, con collegamenti ai sistemi esistenti.',
-		'tags'   => array( 'Web app', 'Desktop', 'iOS / Android' ),
-		'result' => 'Strumenti operativi, dashboard e servizi digitali.',
-	),
-	array(
-		'label'  => 'AI e integrazioni',
-		'title'  => 'Software che dialoga con i sistemi',
-		'desc'   => 'Integriamo funzionalità di intelligenza artificiale, sensori e dispositivi fisici nelle soluzioni sviluppate in base agli obiettivi del progetto.',
-		'tags'   => array( 'AI', 'Sensori', 'Hardware integration' ),
-		'result' => 'Automazione di attività specifiche e prototipi integrati.',
-	),
-);
-
 $immensive_projects = array(
 	array( 'slug' => 'veins-catheter-simulator', 'title' => 'Veins Catheter Simulator', 'pill' => 'Software desktop', 'img' => 'official-6a05f220-veins-catheter-hero.webp' ),
 	array( 'slug' => 'ai4hot', 'title' => 'AI4HOT', 'pill' => 'Piattaforma AI/IoT', 'img' => 'official-797cee52-ai4hot.webp' ),
@@ -127,7 +96,7 @@ get_header();
 
 <div class="ih">
 
-	<?php get_template_part( 'template-parts/site-header' ); ?>
+	<?php get_template_part( 'template-parts/site-header', null, array( 'service' => 'Servizi Digitali e Innovazione' ) ); ?>
 
 	<main class="svz" id="contenuto">
 
@@ -144,7 +113,7 @@ get_header();
 			</div>
 			<div class="shell">
 				<p class="ih-new-top"><?php esc_html_e( 'Software · Esperienze immersive · Sistemi interattivi', 'immensive' ); ?></p>
-				<h1><?php esc_html_e( 'Le idee prendono forma.', 'immensive' ); ?><br><?php esc_html_e( 'Le soluzioni diventano reali.', 'immensive' ); ?></h1>
+				<h1><?php esc_html_e( 'Le idee prendono forma.', 'immensive' ); ?><br><?php esc_html_e( 'Le soluzioni', 'immensive' ); ?> <span class="hero-green"><?php esc_html_e( 'diventano reali.', 'immensive' ); ?></span></h1>
 				<p class="ih-new-copy"><?php esc_html_e( 'Progettiamo software, esperienze immersive e sistemi interattivi per aziende ed enti. Dall’analisi alla realizzazione, scegliamo la tecnologia giusta per ogni esigenza.', 'immensive' ); ?></p>
 				<div class="ih-new-actions">
 					<a class="ih-btn ih-btn--solid" href="#servizi"><?php esc_html_e( 'Esplora i servizi', 'immensive' ); ?></a>
@@ -253,33 +222,6 @@ get_header();
 			</div>
 		</section>
 
-		<section class="tech capability-section" id="tecnologie" aria-labelledby="tech-title">
-			<div class="shell">
-				<div class="eyebrow"><?php esc_html_e( 'Competenze che si combinano', 'immensive' ); ?></div>
-				<h2 id="tech-title"><?php esc_html_e( 'Le tecnologie sono strumenti.', 'immensive' ); ?><br><?php esc_html_e( 'La soluzione viene prima.', 'immensive' ); ?></h2>
-				<p class="capability-intro"><?php esc_html_e( 'Ogni progetto richiede una combinazione diversa. Scegliamo gli strumenti in funzione dell’esperienza e dell’utilizzo previsto.', 'immensive' ); ?></p>
-				<div class="capability-grid">
-					<?php foreach ( $immensive_capabilities as $immensive_i => $immensive_cap ) : ?>
-						<article class="capability-card capability-card--<?php echo (int) ( $immensive_i + 1 ); ?>">
-							<span class="capability-index" aria-hidden="true"><?php echo esc_html( sprintf( '%02d', $immensive_i + 1 ) ); ?></span>
-							<div class="capability-copy">
-								<span class="tech-open-label"><?php echo esc_html( $immensive_cap['label'] ); ?></span>
-								<h3><?php echo esc_html( $immensive_cap['title'] ); ?></h3>
-								<p><?php echo esc_html( $immensive_cap['desc'] ); ?></p>
-								<div class="tech-labels">
-									<?php foreach ( $immensive_cap['tags'] as $immensive_tag ) : ?>
-										<span><?php echo esc_html( $immensive_tag ); ?></span>
-									<?php endforeach; ?>
-								</div>
-								<p class="tech-result"><strong><?php esc_html_e( 'Applicazioni', 'immensive' ); ?></strong><br><?php echo esc_html( $immensive_cap['result'] ); ?></p>
-							</div>
-						</article>
-					<?php endforeach; ?>
-				</div>
-				<p class="capability-note"><?php esc_html_e( 'L’analisi del contesto guida la scelta delle tecnologie e delle integrazioni.', 'immensive' ); ?></p>
-			</div>
-		</section>
-
 		<section class="project-gallery home-selection" id="progetti">
 			<div class="shell">
 				<div class="eyebrow"><?php esc_html_e( 'Progetti selezionati', 'immensive' ); ?></div>
@@ -320,6 +262,8 @@ get_header();
 	?>
 
 	<?php get_template_part( 'template-parts/site-footer' ); ?>
+
+	<?php get_template_part( 'template-parts/demo-modal', null, array( 'product' => 'Servizi Digitali e Innovazione', 'variant' => 'service' ) ); ?>
 
 </div>
 

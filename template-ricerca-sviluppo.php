@@ -89,12 +89,13 @@ get_header();
 
 <div class="ih">
 
-	<?php get_template_part( 'template-parts/site-header' ); ?>
+	<?php get_template_part( 'template-parts/site-header', null, array( 'service' => 'Ricerca e Sviluppo' ) ); ?>
 
 	<main class="svz" id="contenuto">
 
 		<section class="immersive-hero" id="inizio" data-page="ricerca" aria-label="<?php esc_attr_e( 'Ricerca e Sviluppo', 'immensive' ); ?>">
 			<div class="research-stage" aria-hidden="true">
+				<img src="<?php echo esc_url( $immensive_img . 'ricerca/ricerca-connessioni.webp' ); ?>" alt="" width="1200" height="900" fetchpriority="high" decoding="async">
 				<canvas></canvas>
 			</div>
 			<div class="shell">
@@ -214,6 +215,8 @@ get_header();
 	?>
 
 	<?php get_template_part( 'template-parts/site-footer' ); ?>
+
+	<?php get_template_part( 'template-parts/demo-modal', null, array( 'product' => 'Ricerca e Sviluppo', 'variant' => 'service' ) ); ?>
 
 </div>
 

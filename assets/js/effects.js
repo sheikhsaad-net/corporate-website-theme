@@ -516,4 +516,38 @@
 			band.addEventListener('pointerleave', function () { spot.classList.remove('is-on'); });
 		});
 	})();
+
+	/* ---- 6. Header turns light over light sections (services-side pages) ----
+	   Same rule as the approved prototype: the section under the header line
+	   (45px from the top) decides; light backgrounds get the light glass bar
+	   with dark text (.ih-header.is-over-light in homepage.css). */
+	(function () {
+		var header = document.getElementById('ih-header');
+		var main = document.querySelector('main.svz');
+		if (!header || !main) { return; }
+		var sections = Array.prototype.slice.call(main.children).filter(function (el) { return el.tagName === 'SECTION'; });
+		var pending = false;
+		function update() {
+			pending = false;
+			var target = null;
+			sections.forEach(function (el) {
+				var b = el.getBoundingClientRect();
+				if (!target && b.top <= 45 && b.bottom > 45) { target = el; }
+			});
+			/* Outside <main> (contact band, footer: both dark) there is no section: back to the dark bar. */
+			if (!target) { header.classList.remove('is-over-light'); return; }
+			var rgb = getComputedStyle(target).backgroundColor.match(/[\d.]+/g);
+			var light = false;
+			if (rgb && rgb.length >= 3 && (rgb.length < 4 || +rgb[3] > 0.2)) {
+				light = (+rgb[0] * 0.2126 + +rgb[1] * 0.7152 + +rgb[2] * 0.0722) > 150;
+			}
+			header.classList.toggle('is-over-light', light);
+		}
+		function schedule() {
+			if (!pending) { pending = true; requestAnimationFrame(update); }
+		}
+		window.addEventListener('scroll', schedule, { passive: true });
+		window.addEventListener('resize', schedule);
+		update();
+	})();
 })();

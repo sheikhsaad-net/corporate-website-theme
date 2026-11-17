@@ -8,6 +8,7 @@
  * info@immensive.it regardless of the site's admin_email setting.
  *
  * @param string $args['product'] Product name shown in the modal's intro line.
+ * @param string $args['variant'] 'service' = services-side pages: green theme, single "Azienda" field.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -15,8 +16,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 $immensive_demo_product = isset( $args['product'] ) ? $args['product'] : '';
+$immensive_demo_service = isset( $args['variant'] ) && 'service' === $args['variant'];
 ?>
-<div class="ih-modal" id="ih-demo-modal" aria-hidden="true">
+<div class="ih-modal<?php echo $immensive_demo_service ? ' ih-modal--green' : ''; ?>" id="ih-demo-modal" aria-hidden="true">
 	<div class="ih-modal__overlay" data-modal-close></div>
 	<div class="ih-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="ih-demo-modal-title">
 		<button type="button" class="ih-modal__close" data-modal-close aria-label="<?php esc_attr_e( 'Chiudi', 'immensive' ); ?>">
@@ -62,7 +64,7 @@ $immensive_demo_product = isset( $args['product'] ) ? $args['product'] : '';
 
 			<div class="ih-field">
 				<input class="ih-field__input" type="text" id="df-azienda" name="azienda" placeholder=" ">
-				<label class="ih-field__label" for="df-azienda"><?php esc_html_e( 'Istituto o Azienda', 'immensive' ); ?></label>
+				<label class="ih-field__label" for="df-azienda"><?php echo esc_html( $immensive_demo_service ? __( 'Azienda', 'immensive' ) : __( 'Istituto o Azienda', 'immensive' ) ); ?></label>
 			</div>
 
 			<div class="ih-field ih-field--area">
@@ -77,7 +79,7 @@ $immensive_demo_product = isset( $args['product'] ) ? $args['product'] : '';
 
 			<p class="ih-cont-form__status" id="ih-demo-form-status" role="status" aria-live="polite" hidden></p>
 
-			<button type="submit" class="ih-btn ih-btn--cyan ih-cont-form__submit"><?php esc_html_e( 'Invia Richiesta', 'immensive' ); ?></button>
+			<button type="submit" class="ih-btn <?php echo $immensive_demo_service ? 'ih-btn--solid' : 'ih-btn--cyan'; ?> ih-cont-form__submit"><?php esc_html_e( 'Invia Richiesta', 'immensive' ); ?></button>
 		</form>
 	</div>
 </div>

@@ -1,0 +1,169 @@
+/* Cookie banner — bottom left, compact. Self-contained (works on ih and plain pages). */
+.ck {
+	position: fixed;
+	left: 1rem;
+	bottom: 1rem;
+	z-index: 2000; /* above the site popups (up to 1001) */
+	box-sizing: border-box;
+	width: min(350px, calc(100vw - 2rem));
+	padding: 1.1rem 1.2rem 1.2rem;
+	overflow: hidden;
+	/* Frosted glass with a dark tint so the white text stays readable on light and dark pages:
+	   translucent smoke base, green glow, strong blur, bright hairline rim, soft inner light. */
+	border: 1px solid rgba(255, 255, 255, 0.28);
+	border-radius: 22px;
+	background:
+		radial-gradient(120% 90% at 0% 0%, rgba(142, 184, 38, 0.28), transparent 55%),
+		linear-gradient(145deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.02)),
+		rgba(18, 22, 16, 0.66);
+	-webkit-backdrop-filter: blur(26px) saturate(1.7);
+	backdrop-filter: blur(26px) saturate(1.7);
+	box-shadow:
+		0 24px 60px rgba(0, 0, 0, 0.4),
+		inset 0 1px 0 rgba(255, 255, 255, 0.35),
+		inset 0 -1px 0 rgba(255, 255, 255, 0.06);
+	color: #f2f5ec;
+	font: 400 12px/1.55 Montserrat, system-ui, -apple-system, 'Segoe UI', sans-serif;
+	animation: ck-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Sheen across the top edge */
+.ck::before {
+	content: '';
+	position: absolute;
+	inset: 0 0 auto 0;
+	height: 46%;
+	background: linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent);
+	border-radius: inherit;
+	pointer-events: none;
+}
+
+.ck > * {
+	position: relative;
+}
+
+.ck[hidden] {
+	display: none;
+}
+
+@keyframes ck-in {
+	from { opacity: 0; transform: translateY(14px) scale(0.98); }
+	to { opacity: 1; transform: none; }
+}
+
+.ck__title {
+	margin: 0 0 0.3rem;
+	font-size: 13px;
+	font-weight: 700;
+	color: #fff;
+}
+
+.ck__text {
+	margin: 0 0 0.85rem;
+	color: rgba(242, 245, 236, 0.9);
+}
+
+.ck__text a {
+	color: #cdf07a;
+	text-decoration: underline;
+	text-underline-offset: 2px;
+	white-space: nowrap;
+}
+
+.ck__prefs {
+	margin: 0 0 0.85rem;
+	border-top: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.ck__prefs[hidden] {
+	display: none;
+}
+
+.ck__row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.75rem;
+	padding: 0.55rem 0;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+	cursor: pointer;
+}
+
+.ck__row strong {
+	display: block;
+	font-size: 12px;
+	color: #fff;
+}
+
+.ck__row small {
+	display: block;
+	font-size: 11px;
+	color: rgba(242, 245, 236, 0.62);
+}
+
+.ck__row input {
+	flex: none;
+	width: 16px;
+	height: 16px;
+	accent-color: #8eb826;
+}
+
+.ck__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.45rem;
+}
+
+.ck__btn {
+	flex: 1 1 auto;
+	padding: 0.55rem 0.8rem;
+	border: 1px solid rgba(255, 255, 255, 0.3);
+	border-radius: 999px;
+	background: rgba(255, 255, 255, 0.1);
+	-webkit-backdrop-filter: blur(8px);
+	backdrop-filter: blur(8px);
+	color: #fff;
+	font: 600 11px/1 Montserrat, system-ui, sans-serif;
+	letter-spacing: 0.04em;
+	cursor: pointer;
+	transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.ck__btn[hidden] {
+	display: none;
+}
+
+.ck__btn:hover {
+	border-color: rgba(255, 255, 255, 0.7);
+	background: rgba(255, 255, 255, 0.2);
+}
+
+.ck__btn--solid {
+	border-color: rgba(190, 235, 80, 0.6);
+	background: linear-gradient(180deg, #9cc72e, #7fa51f);
+	box-shadow: 0 6px 18px rgba(142, 184, 38, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+	color: #0f1308;
+}
+
+.ck__btn--solid:hover {
+	border-color: rgba(205, 245, 100, 0.8);
+	background: linear-gradient(180deg, #aad637, #8eb826);
+}
+
+.ck__btn:focus-visible,
+.ck__text a:focus-visible {
+	outline: 2px solid #8eb826;
+	outline-offset: 2px;
+}
+
+@media (max-width: 480px) {
+	.ck {
+		left: 0.5rem;
+		bottom: 0.5rem;
+		width: calc(100vw - 1rem);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.ck { animation: none; }
+}

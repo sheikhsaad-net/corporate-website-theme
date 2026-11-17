@@ -14,9 +14,9 @@
  * - no "Scoprilo nel Dettaglio" accordion and no "Casi Reali" carousel;
  * - 8 Caratteristiche Principali (4 x 2) and 6 benefici.
  *
- * No video link has been provided yet, so the "Come Funziona" cover is a
- * plain image; give it a <button class="ih-pfunziona__video" data-video-src>
- * (see template-forklift-vr.php) once there is one.
+ * The "Come Funziona" cover opens the YouTube video in the shared video
+ * modal (<button class="ih-pfunziona__video" data-video-src>, same as
+ * template-forklift-vr.php).
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -93,6 +93,7 @@ get_header();
 		<div class="ih-container ih-pfunziona__media-wrap">
 			<div class="ih-pfunziona__media ih-reveal">
 				<img src="<?php echo esc_url( $immensive_img . 'crane-vr-video-cover.webp' ); ?>" alt="Operatore con visore e radiocomando in un cantiere virtuale con gru a torre" loading="lazy" width="1434" height="807">
+				<button type="button" class="ih-pfunziona__video" data-video-src="https://www.youtube.com/watch?v=7PgOWLJFPS4" aria-label="<?php esc_attr_e( 'Riproduci il video Crane VR', 'immensive' ); ?>"><span class="ih-pfunziona__play-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6v12l9-6z" fill="currentColor"/></svg></span></button>
 			</div>
 		</div>
 	</section>
@@ -419,6 +420,11 @@ get_header();
 	</div><!-- .ih-flow -->
 
 	<?php get_template_part( 'template-parts/demo-modal', null, array( 'product' => 'Crane VR Simulator' ) ); ?>
+	<div class="ih-video-modal" id="ih-video-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="<?php esc_attr_e( 'Video Crane VR', 'immensive' ); ?>">
+		<div class="ih-video-modal__overlay" data-video-modal-close></div>
+		<button type="button" class="ih-video-modal__close" data-video-modal-close aria-label="<?php esc_attr_e( 'Chiudi il video', 'immensive' ); ?>"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+		<div class="ih-video-modal__box"><video controls playsinline></video><iframe hidden title="<?php esc_attr_e( 'Video Crane VR su YouTube', 'immensive' ); ?>" src="" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+	</div>
 
 </div>
 

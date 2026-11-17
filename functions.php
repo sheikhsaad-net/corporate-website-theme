@@ -61,6 +61,7 @@ function immensive_ih_templates() {
 		'template-soluzioni-culturali.php',
 		'template-ricerca-sviluppo.php',
 		'template-academy.php',
+		'template-legale.php',
 	);
 }
 
@@ -150,6 +151,24 @@ function immensive_widgets_init() {
 	);
 }
 add_action( 'widgets_init', 'immensive_widgets_init' );
+
+/**
+ * Cookie banner: styles, script and markup on every front-end page.
+ * Consent is exposed to other scripts as window.immensiveConsent and the
+ * "immensive:consent" event (see assets/js/site-notice.js).
+ */
+function immensive_site_notice_assets() {
+	$immensive_dir = get_template_directory();
+	$immensive_uri = get_template_directory_uri();
+	wp_enqueue_style( 'immensive-site-notice', $immensive_uri . '/assets/css/site-notice.css', array(), filemtime( $immensive_dir . '/assets/css/site-notice.css' ) );
+	wp_enqueue_script( 'immensive-site-notice', $immensive_uri . '/assets/js/site-notice.js', array(), filemtime( $immensive_dir . '/assets/js/site-notice.js' ), true );
+}
+add_action( 'wp_enqueue_scripts', 'immensive_site_notice_assets' );
+
+function immensive_site_notice_markup() {
+	get_template_part( 'template-parts/site-notice' );
+}
+add_action( 'wp_footer', 'immensive_site_notice_markup', 5 );
 
 function immensive_scripts() {
 	$immensive_style = get_stylesheet_directory() . '/style.css';
@@ -640,7 +659,7 @@ function immensive_nav_fallback( $args ) {
 		__( 'Prodotti', 'immensive' ),
 		__( 'Piani', 'immensive' ),
 		__( 'Rivenditori', 'immensive' ),
-		__( 'Altri servizi', 'immensive' ),
+		__( 'Servizi', 'immensive' ),
 		__( 'Chi siamo', 'immensive' ),
 		__( 'Contatti', 'immensive' ),
 	);

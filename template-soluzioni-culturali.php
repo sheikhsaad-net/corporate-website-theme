@@ -83,7 +83,7 @@ get_header();
 
 <div class="ih">
 
-	<?php get_template_part( 'template-parts/site-header' ); ?>
+	<?php get_template_part( 'template-parts/site-header', null, array( 'service' => 'Soluzioni Culturali Creative' ) ); ?>
 
 	<main class="svz" id="contenuto">
 
@@ -105,7 +105,7 @@ get_header();
 			<div class="vr-caption" aria-hidden="true"><?php esc_html_e( 'Patrimonio culturale.', 'immensive' ); ?><br><?php esc_html_e( 'Nuove dimensioni.', 'immensive' ); ?></div>
 			<div class="shell">
 				<p class="ih-new-top"><?php esc_html_e( 'Immensive / Soluzioni Culturali Creative', 'immensive' ); ?></p>
-				<h1><?php esc_html_e( 'Diamo forma', 'immensive' ); ?><br><?php esc_html_e( 'alle idee.', 'immensive' ); ?><br><span class="hero-outline"><?php esc_html_e( 'Vita alle', 'immensive' ); ?><br><?php esc_html_e( 'esperienze.', 'immensive' ); ?></span></h1>
+				<h1><?php esc_html_e( 'Diamo forma', 'immensive' ); ?><br><?php esc_html_e( 'alle idee.', 'immensive' ); ?><br><span class="hero-outline"><?php esc_html_e( 'Vita alle', 'immensive' ); ?><br><span class="hero-green"><?php esc_html_e( 'esperienze.', 'immensive' ); ?></span></span></h1>
 				<p class="ih-new-copy"><?php esc_html_e( 'Diamo nuova vita al patrimonio attraverso esperienze da esplorare. Narrazione, ricostruzione digitale e interazione avvicinano le persone a musei, luoghi e territori.', 'immensive' ); ?></p>
 				<div class="ih-new-actions">
 					<a class="ih-btn ih-btn--solid" href="#progetti-cultura"><?php esc_html_e( 'Esplora i progetti', 'immensive' ); ?></a>
@@ -181,6 +181,8 @@ get_header();
 	?>
 
 	<?php get_template_part( 'template-parts/site-footer' ); ?>
+
+	<?php get_template_part( 'template-parts/demo-modal', null, array( 'product' => 'Soluzioni Culturali Creative', 'variant' => 'service' ) ); ?>
 
 </div>
 

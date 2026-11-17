@@ -47,9 +47,16 @@ $immensive_img = get_template_directory_uri() . '/assets/images/';
 			</nav>
 			<?php endif; ?>
 
-			<a class="ih-btn ih-btn--pill ih-header__cta" href="https://soluzioni.immensive.it/" target="_blank" rel="noopener">
-				<?php esc_html_e( 'Area Clienti', 'immensive' ); ?>
-			</a>
+			<?php if ( ! empty( $args['service'] ) ) : ?>
+				<?php // Services-side pages: the CTA opens the "Parliamo del tuo progetto" request popup (template-parts/demo-modal.php). ?>
+				<button type="button" class="ih-btn ih-btn--pill ih-header__cta" data-demo-modal-open>
+					<?php esc_html_e( 'Parliamo del tuo progetto', 'immensive' ); ?>
+				</button>
+			<?php else : ?>
+				<a class="ih-btn ih-btn--pill ih-header__cta" href="https://soluzioni.immensive.it/" target="_blank" rel="noopener">
+					<?php esc_html_e( 'Area Clienti', 'immensive' ); ?>
+				</a>
+			<?php endif; ?>
 
 			<?php if ( $immensive_show_nav ) : ?>
 			<button class="ih-burger" id="ih-burger" aria-expanded="false" aria-controls="ih-nav" aria-label="<?php esc_attr_e( 'Apri il menu', 'immensive' ); ?>">
